@@ -9,6 +9,10 @@
     "startCommand": "npm start",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 10,
-    "restartPolicyMaxRetries": 3
+    "restartPolicyMaxRetries": 3,
+    "crons": []
+  },
+  "env": {
+    "PORT": "4000"
   }
 }
