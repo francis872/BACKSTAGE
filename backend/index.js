@@ -8,7 +8,17 @@ const { computeTerritorialIndex, getLatestIndexSnapshot, detectGaps, simulateInf
 const app = express();
 const port = process.env.PORT || 4000;
 
-app.use(cors({ origin: 'http://localhost:3000' }));
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:3001'];
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 app.get('/health', (req, res) => {
