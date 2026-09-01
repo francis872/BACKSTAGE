@@ -12,7 +12,7 @@ ON CONFLICT (name) DO NOTHING;
 -- Ubicaciones base
 INSERT INTO locations (external_id, name, type, address, city, region, country, latitude, longitude, capacity)
 VALUES
-  ('mcd-001', 'McDonald\'s Centro', 'restaurant', 'Calle 123 #45-67', 'Bogotá', 'Cundinamarca', 'Colombia', 4.7110, -74.0721, 120),
+  ('mcd-001', 'McDonald''s Centro', 'restaurant', 'Calle 123 #45-67', 'Bogotá', 'Cundinamarca', 'Colombia', 4.7110, -74.0721, 120),
   ('sbux-001', 'Starbucks Parque', 'cafe', 'Carrera 15 #95-30', 'Bogotá', 'Cundinamarca', 'Colombia', 4.6693, -74.0536, 80),
   ('retail-001', 'Plaza Comercial Norte', 'retail', 'Avenida 20 #120-10', 'Bogotá', 'Cundinamarca', 'Colombia', 4.7501, -74.0650, 250),
   ('prop-001', 'Lote Vía La Calera', 'property', 'Km 3 Vía La Calera', 'Bogotá', 'Cundinamarca', 'Colombia', 4.7032, -74.0338, NULL),
@@ -261,4 +261,3 @@ JOIN (VALUES
   ('ter-002', 'services', 62.0, jsonb_build_object('notes', 'Servicios públicos rurales básicos'))
 ) AS v(external_id, dimension, score, details) ON tu.external_id = v.external_id
 ON CONFLICT (unit_id, dimension, measured_at) DO NOTHING;
-

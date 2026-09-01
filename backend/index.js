@@ -9,9 +9,10 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:3001'];
+const allowsAllOrigins = allowedOrigins.includes('*');
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowsAllOrigins || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -666,6 +667,10 @@ app.post('/territorial/units/:id/simulate', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`BACKSTAGE backend escuchando en http://localhost:${port}`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`BACKSTAGE backend escuchando en http://localhost:${port}`);
+  });
+}
+
+module.exports = app;
