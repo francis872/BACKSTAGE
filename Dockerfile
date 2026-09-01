@@ -7,6 +7,6 @@ RUN npm install --production
 
 FROM base AS runtime
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY backend . .
+COPY backend/ .
 EXPOSE 4000
 CMD ["node", "index.js"]
