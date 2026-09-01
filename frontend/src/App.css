@@ -1,16 +1,11 @@
-.app {
-  min-height: 100vh;
+.app-header > div:first-child p {
+  max-width: 52rem;
 }
 
-header {
-  display: grid;
-  gap: 0.5rem;
+section h2 {
+  margin: 0 0 0.65rem;
 }
 
-header h1 {
-  font-size: clamp(2rem, 3vw, 2.75rem);
-}
-
-header p {
-  max-width: 40rem;
+ul {
+  padding-left: 1.1rem;
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiUrl } from '../lib/api';
+import { apiRequest } from '../lib/api';
 
 const currency = new Intl.NumberFormat('es-CO', {
   style: 'currency',
@@ -14,8 +14,8 @@ function RealEstatePortfolio() {
 
   useEffect(() => {
     Promise.all([
-      fetch(apiUrl('/real-estate/portfolio')),
-      fetch(apiUrl('/real-estate/properties'))
+      apiRequest('/real-estate/portfolio'),
+      apiRequest('/real-estate/properties')
     ])
       .then(async ([portfolioResponse, propertiesResponse]) => {
         const [portfolioData, propertiesData] = await Promise.all([

@@ -208,10 +208,23 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT NOT NULL UNIQUE,
   name TEXT,
   password_hash TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'analyst',
+  role TEXT NOT NULL DEFAULT 'viewer',
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'users_role_check'
+  ) THEN
+    ALTER TABLE users
+      ADD CONSTRAINT users_role_check
+      CHECK (role IN ('admin', 'analyst', 'viewer'));
+  END IF;
+END
+$$;
 
 CREATE TABLE IF NOT EXISTS integration_sources (
   source_id SERIAL PRIMARY KEY,
@@ -349,3 +362,184 @@ CREATE TABLE IF NOT EXISTS territorial_simulations (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_territorial_simulations_unit_id ON territorial_simulations(unit_id);
+
+-- 8) Geostrategic MVP schema --------------------------------------------------
+CREATE TABLE IF NOT EXISTS organizations (
+  organization_id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  status TEXT NOT NULL DEFAULT 'active',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS roles (
+  role_id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  description TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS user_roles (
+  user_role_id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  role_id INTEGER NOT NULL REFERENCES roles(role_id) ON DELETE CASCADE,
+  organization_id INTEGER REFERENCES organizations(organization_id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(user_id, role_id, organization_id)
+);
+
+CREATE TABLE IF NOT EXISTS layer_catalog (
+  layer_id SERIAL PRIMARY KEY,
+  slug TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  description TEXT,
+  geometry_type TEXT NOT NULL,
+  source_name TEXT,
+  source_table TEXT NOT NULL,
+  id_column TEXT NOT NULL DEFAULT 'id',
+  name_column TEXT,
+  geom_column TEXT NOT NULL DEFAULT 'geom',
+  srid INTEGER NOT NULL DEFAULT 4326,
+  coverage TEXT,
+  style_json JSONB NOT NULL DEFAULT '{}',
+  min_zoom INTEGER NOT NULL DEFAULT 8,
+  max_zoom INTEGER NOT NULL DEFAULT 19,
+  confidence_level TEXT NOT NULL DEFAULT 'demo',
+  is_visible_default BOOLEAN NOT NULL DEFAULT false,
+  allowed_roles TEXT[] NOT NULL DEFAULT '{"viewer","analyst","admin"}',
+  status TEXT NOT NULL DEFAULT 'active',
+  layer_version TEXT NOT NULL DEFAULT '1.0.0',
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS business_locations (
+  business_location_id SERIAL PRIMARY KEY,
+  location_id INTEGER NOT NULL REFERENCES locations(location_id) ON DELETE CASCADE,
+  brand_name TEXT NOT NULL,
+  business_type TEXT NOT NULL DEFAULT 'store',
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  opened_at DATE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_business_locations_location_id ON business_locations(location_id);
+
+CREATE TABLE IF NOT EXISTS competitors (
+  competitor_id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  brand_name TEXT NOT NULL,
+  category TEXT NOT NULL DEFAULT 'restaurant',
+  address TEXT,
+  city TEXT,
+  latitude NUMERIC(9,6),
+  longitude NUMERIC(9,6),
+  geom geometry(Point,4326),
+  source_name TEXT,
+  source_updated_at DATE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_competitors_geom ON competitors USING gist(geom);
+
+CREATE TABLE IF NOT EXISTS points_of_interest (
+  poi_id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  address TEXT,
+  city TEXT,
+  latitude NUMERIC(9,6),
+  longitude NUMERIC(9,6),
+  geom geometry(Point,4326),
+  source_name TEXT,
+  source_updated_at DATE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_points_of_interest_geom ON points_of_interest USING gist(geom);
+
+CREATE TABLE IF NOT EXISTS territorial_zones (
+  zone_id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  zone_type TEXT NOT NULL DEFAULT 'district',
+  city TEXT,
+  population_total INTEGER,
+  geom geometry(Polygon,4326) NOT NULL,
+  source_name TEXT,
+  source_updated_at DATE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_territorial_zones_geom ON territorial_zones USING gist(geom);
+
+CREATE TABLE IF NOT EXISTS demographic_indicators (
+  demographic_indicator_id SERIAL PRIMARY KEY,
+  zone_id INTEGER NOT NULL REFERENCES territorial_zones(zone_id) ON DELETE CASCADE,
+  indicator_name TEXT NOT NULL,
+  value NUMERIC(14,2) NOT NULL,
+  as_of_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  source_name TEXT,
+  confidence_level TEXT NOT NULL DEFAULT 'demo',
+  data_mode TEXT NOT NULL DEFAULT 'demo',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_demographic_indicators_zone_indicator_date
+  ON demographic_indicators(zone_id, indicator_name, as_of_date);
+
+CREATE TABLE IF NOT EXISTS analysis_runs (
+  analysis_run_id SERIAL PRIMARY KEY,
+  project_name TEXT NOT NULL,
+  city TEXT,
+  objective TEXT,
+  criteria_weights JSONB NOT NULL DEFAULT '{}',
+  recommendation_text TEXT,
+  recommendation_payload JSONB,
+  metadata JSONB NOT NULL DEFAULT '{}',
+  requested_by_user_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL,
+  organization_id INTEGER REFERENCES organizations(organization_id) ON DELETE SET NULL,
+  status TEXT NOT NULL DEFAULT 'completed',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS analysis_results (
+  analysis_result_id SERIAL PRIMARY KEY,
+  analysis_run_id INTEGER NOT NULL REFERENCES analysis_runs(analysis_run_id) ON DELETE CASCADE,
+  rank_position INTEGER NOT NULL,
+  candidate_name TEXT NOT NULL,
+  location_id INTEGER REFERENCES locations(location_id) ON DELETE SET NULL,
+  score_total NUMERIC(6,2) NOT NULL,
+  score_by_dimension JSONB NOT NULL DEFAULT '{}',
+  metrics JSONB NOT NULL DEFAULT '{}',
+  explanation JSONB NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_analysis_results_run_rank ON analysis_results(analysis_run_id, rank_position);
+
+-- 9) Multi-organization hardening + audit logs ------------------------------
+ALTER TABLE locations ADD COLUMN IF NOT EXISTS organization_id INTEGER REFERENCES organizations(organization_id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS idx_locations_org_id ON locations(organization_id);
+
+ALTER TABLE risk_assessments ADD COLUMN IF NOT EXISTS organization_id INTEGER REFERENCES organizations(organization_id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS idx_risk_assessments_org_id ON risk_assessments(organization_id);
+
+ALTER TABLE recommendations ADD COLUMN IF NOT EXISTS organization_id INTEGER REFERENCES organizations(organization_id) ON DELETE SET NULL;
+ALTER TABLE recommendations ADD COLUMN IF NOT EXISTS requested_by_user_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS idx_recommendations_org_id ON recommendations(organization_id);
+
+ALTER TABLE layer_catalog ADD COLUMN IF NOT EXISTS organization_id INTEGER REFERENCES organizations(organization_id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS idx_layer_catalog_org_id ON layer_catalog(organization_id);
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+  audit_log_id SERIAL PRIMARY KEY,
+  organization_id INTEGER REFERENCES organizations(organization_id) ON DELETE SET NULL,
+  user_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL,
+  action TEXT NOT NULL,
+  resource_type TEXT NOT NULL,
+  resource_id TEXT,
+  request_method TEXT NOT NULL,
+  request_path TEXT NOT NULL,
+  status_code INTEGER NOT NULL,
+  metadata JSONB NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_org_created_at ON audit_logs(organization_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_user_created_at ON audit_logs(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_action ON audit_logs(action);

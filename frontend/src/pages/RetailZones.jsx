@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiUrl } from '../lib/api';
+import { apiRequest } from '../lib/api';
 
 const emptyForm = {
   name: '',
@@ -22,7 +22,7 @@ function RetailZones() {
   const loadZones = async () => {
     setLoading(true);
     try {
-      const res = await fetch(apiUrl('/retail-zones'));
+      const res = await apiRequest('/retail-zones');
       const data = await res.json();
       setZones(data);
     } catch (error) {
@@ -59,9 +59,9 @@ function RetailZones() {
     };
 
     try {
-      const url = editingId ? apiUrl(`/retail-zones/${editingId}`) : apiUrl('/retail-zones');
+      const path = editingId ? `/retail-zones/${editingId}` : '/retail-zones';
       const method = editingId ? 'PUT' : 'POST';
-      const res = await fetch(url, {
+      const res = await apiRequest(path, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -94,7 +94,7 @@ function RetailZones() {
   const handleDelete = async (id) => {
     if (!window.confirm('¿Eliminar esta zona retail?')) return;
     try {
-      const res = await fetch(apiUrl(`/retail-zones/${id}`), { method: 'DELETE' });
+      const res = await apiRequest(`/retail-zones/${id}`, { method: 'DELETE' });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || 'Error en el servidor');
       setMessage('Zona retail eliminada correctamente.');

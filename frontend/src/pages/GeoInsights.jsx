@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiUrl } from '../lib/api';
+import { apiRequest, apiUrl } from '../lib/api';
 
 const defaultSearch = {
   lat: '4.7110',
@@ -16,7 +16,7 @@ function GeoInsights() {
 
   const loadSummary = async () => {
     try {
-      const res = await fetch(apiUrl('/insights/summary'));
+      const res = await apiRequest('/insights/summary');
       const data = await res.json();
       setSummary(data);
     } catch {
@@ -27,7 +27,7 @@ function GeoInsights() {
   const loadNearby = async (search) => {
     setLoading(true);
     try {
-      const res = await fetch(
+      const res = await apiRequest(
         `${apiUrl('/locations/nearby')}?lat=${encodeURIComponent(search.lat)}&lng=${encodeURIComponent(
           search.lng
         )}&radius=${encodeURIComponent(search.radius)}`

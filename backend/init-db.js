@@ -4,7 +4,7 @@ const { pool } = require('./db');
 
 async function run() {
   try {
-    const schemaSql = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
+    const schemaSql = fs.readFileSync(path.join(__dirname, 'schema-full.sql'), 'utf8');
     await pool.query(schemaSql);
 
     console.log('Esquema de base de datos creado o actualizado correctamente.');

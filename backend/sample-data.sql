@@ -261,3 +261,236 @@ JOIN (VALUES
   ('ter-002', 'services', 62.0, jsonb_build_object('notes', 'Servicios públicos rurales básicos'))
 ) AS v(external_id, dimension, score, details) ON tu.external_id = v.external_id
 ON CONFLICT (unit_id, dimension, measured_at) DO NOTHING;
+
+-- Organizaciones, roles y asignación inicial
+INSERT INTO organizations (name, slug, status)
+VALUES ('BACKSTAGE Demo Organization', 'backstage-demo', 'active')
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO organizations (name, slug, status)
+VALUES ('BACKSTAGE Labs', 'backstage-labs', 'active')
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO roles (name, description)
+VALUES
+  ('admin', 'Control total de plataforma y administración'),
+  ('analyst', 'Ejecución de análisis y operaciones geoestratégicas'),
+  ('viewer', 'Consulta de resultados y capas')
+ON CONFLICT (name) DO NOTHING;
+
+WITH org AS (
+  SELECT organization_id FROM organizations WHERE slug = 'backstage-demo'
+),
+role_map AS (
+  SELECT role_id, name FROM roles WHERE name IN ('admin', 'analyst', 'viewer')
+),
+users_map AS (
+  SELECT user_id, role FROM users WHERE role IN ('admin', 'analyst', 'viewer')
+)
+INSERT INTO user_roles (user_id, role_id, organization_id)
+SELECT u.user_id, r.role_id, o.organization_id
+FROM users_map u
+JOIN role_map r ON r.name = u.role
+CROSS JOIN org o
+ON CONFLICT (user_id, role_id, organization_id) DO NOTHING;
+
+WITH org AS (
+  SELECT organization_id FROM organizations WHERE slug = 'backstage-labs'
+),
+role_map AS (
+  SELECT role_id, name FROM roles WHERE name = 'admin'
+),
+admin_user AS (
+  SELECT user_id FROM users WHERE email = 'admin@backstage.local'
+)
+INSERT INTO user_roles (user_id, role_id, organization_id)
+SELECT a.user_id, r.role_id, o.organization_id
+FROM admin_user a
+CROSS JOIN role_map r
+CROSS JOIN org o
+ON CONFLICT (user_id, role_id, organization_id) DO NOTHING;
+
+WITH org AS (
+  SELECT organization_id FROM organizations WHERE slug = 'backstage-demo'
+)
+UPDATE locations
+SET organization_id = (SELECT organization_id FROM org)
+WHERE organization_id IS NULL;
+
+WITH org AS (
+  SELECT organization_id FROM organizations WHERE slug = 'backstage-demo'
+)
+UPDATE risk_assessments
+SET organization_id = (SELECT organization_id FROM org)
+WHERE organization_id IS NULL;
+
+WITH org AS (
+  SELECT organization_id FROM organizations WHERE slug = 'backstage-demo'
+),
+admin_user AS (
+  SELECT user_id FROM users WHERE email = 'admin@backstage.local'
+)
+UPDATE recommendations
+SET organization_id = (SELECT organization_id FROM org),
+    requested_by_user_id = COALESCE(requested_by_user_id, (SELECT user_id FROM admin_user))
+WHERE organization_id IS NULL;
+
+WITH org AS (
+  SELECT organization_id FROM organizations WHERE slug = 'backstage-demo'
+)
+UPDATE analysis_runs
+SET organization_id = (SELECT organization_id FROM org)
+WHERE organization_id IS NULL;
+
+-- Caso demo: Expansión McDonald's Bogotá
+INSERT INTO business_locations (location_id, brand_name, business_type, is_active, opened_at)
+SELECT location_id, 'McDonald''s', 'restaurant', true, DATE '2020-01-01'
+FROM locations
+WHERE external_id = 'mcd-001'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO competitors (name, brand_name, category, address, city, latitude, longitude, geom, source_name, source_updated_at)
+VALUES
+  ('Burger King Zona T', 'Burger King', 'restaurant', 'Cra. 13 #83-24', 'Bogotá', 4.667650, -74.054200, ST_SetSRID(ST_MakePoint(-74.054200, 4.667650), 4326), 'Open data demo', CURRENT_DATE),
+  ('KFC Calle 100', 'KFC', 'restaurant', 'Calle 100 #14-50', 'Bogotá', 4.684500, -74.048900, ST_SetSRID(ST_MakePoint(-74.048900, 4.684500), 4326), 'Open data demo', CURRENT_DATE),
+  ('El Corral Andino', 'El Corral', 'restaurant', 'Calle 85 #11-53', 'Bogotá', 4.670220, -74.053810, ST_SetSRID(ST_MakePoint(-74.053810, 4.670220), 4326), 'Open data demo', CURRENT_DATE)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO points_of_interest (name, category, address, city, latitude, longitude, geom, source_name, source_updated_at)
+VALUES
+  ('Centro Comercial Andino', 'shopping_mall', 'Cra. 11 #82-71', 'Bogotá', 4.667950, -74.053520, ST_SetSRID(ST_MakePoint(-74.053520, 4.667950), 4326), 'Open data demo', CURRENT_DATE),
+  ('Universidad Javeriana', 'university', 'Carrera 7 #40-62', 'Bogotá', 4.628010, -74.064900, ST_SetSRID(ST_MakePoint(-74.064900, 4.628010), 4326), 'Open data demo', CURRENT_DATE),
+  ('Portal Norte TransMilenio', 'transport', 'Autopista Norte #174', 'Bogotá', 4.754500, -74.046300, ST_SetSRID(ST_MakePoint(-74.046300, 4.754500), 4326), 'Open data demo', CURRENT_DATE),
+  ('Centro Internacional', 'office', 'Calle 26 #13A-19', 'Bogotá', 4.612800, -74.070300, ST_SetSRID(ST_MakePoint(-74.070300, 4.612800), 4326), 'Open data demo', CURRENT_DATE),
+  ('Parque 93', 'poi', 'Cra. 11A #93A-10', 'Bogotá', 4.676300, -74.048900, ST_SetSRID(ST_MakePoint(-74.048900, 4.676300), 4326), 'Open data demo', CURRENT_DATE)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO territorial_zones (name, zone_type, city, population_total, geom, source_name, source_updated_at)
+VALUES
+  (
+    'Zona Norte Expandida',
+    'district',
+    'Bogotá',
+    52000,
+    ST_GeomFromText('POLYGON((-74.085 4.640,-74.020 4.640,-74.020 4.760,-74.085 4.760,-74.085 4.640))', 4326),
+    'DANE demo',
+    CURRENT_DATE
+  ),
+  (
+    'Zona Centro Expandida',
+    'district',
+    'Bogotá',
+    41000,
+    ST_GeomFromText('POLYGON((-74.100 4.560,-74.030 4.560,-74.030 4.640,-74.100 4.640,-74.100 4.560))', 4326),
+    'DANE demo',
+    CURRENT_DATE
+  )
+ON CONFLICT DO NOTHING;
+
+INSERT INTO demographic_indicators (zone_id, indicator_name, value, as_of_date, source_name, confidence_level, data_mode)
+SELECT zone_id, 'population_total', population_total::numeric, CURRENT_DATE, 'DANE demo', 'demo', 'demo'
+FROM territorial_zones
+ON CONFLICT DO NOTHING;
+
+INSERT INTO layer_catalog (
+  slug, name, category, description, geometry_type, source_name, source_table, id_column, name_column,
+  geom_column, srid, coverage, style_json, min_zoom, max_zoom, confidence_level, is_visible_default,
+  allowed_roles, status, layer_version
+)
+VALUES
+  (
+    'business-locations',
+    'Negocios propios',
+    'Negocios propios',
+    'Sucursales y puntos de operación del negocio',
+    'Point',
+    'BACKSTAGE demo',
+    'business_locations',
+    'business_location_id',
+    'brand_name',
+    'geom',
+    4326,
+    'Bogotá',
+    '{"color":"#3b82f6","radius":7}'::jsonb,
+    10,
+    20,
+    'demo',
+    true,
+    '{"viewer","analyst","admin"}',
+    'active',
+    '1.0.0'
+  ),
+  (
+    'competitors',
+    'Competidores',
+    'Competidores',
+    'Restaurantes competidores para análisis de intensidad competitiva',
+    'Point',
+    'Open data demo',
+    'competitors',
+    'competitor_id',
+    'name',
+    'geom',
+    4326,
+    'Bogotá',
+    '{"color":"#ef4444","radius":6}'::jsonb,
+    10,
+    20,
+    'demo',
+    true,
+    '{"viewer","analyst","admin"}',
+    'active',
+    '1.0.0'
+  ),
+  (
+    'points-of-interest',
+    'Puntos de interés',
+    'Puntos de interés',
+    'Centros comerciales, universidades, oficinas y nodos de transporte',
+    'Point',
+    'Open data demo',
+    'points_of_interest',
+    'poi_id',
+    'name',
+    'geom',
+    4326,
+    'Bogotá',
+    '{"color":"#22c55e","radius":5}'::jsonb,
+    10,
+    20,
+    'demo',
+    true,
+    '{"viewer","analyst","admin"}',
+    'active',
+    '1.0.0'
+  ),
+  (
+    'territorial-zones',
+    'Zonas territoriales',
+    'Límites administrativos',
+    'Polígonos de zonas para agregación demográfica',
+    'Polygon',
+    'DANE demo',
+    'territorial_zones',
+    'zone_id',
+    'name',
+    'geom',
+    4326,
+    'Bogotá',
+    '{"fillColor":"#1d4ed8","fillOpacity":0.25,"strokeColor":"#93c5fd"}'::jsonb,
+    9,
+    17,
+    'demo',
+    true,
+    '{"viewer","analyst","admin"}',
+    'active',
+    '1.0.0'
+  )
+ON CONFLICT (slug) DO NOTHING;
+
+WITH org AS (
+  SELECT organization_id FROM organizations WHERE slug = 'backstage-demo'
+)
+UPDATE layer_catalog
+SET organization_id = (SELECT organization_id FROM org)
+WHERE organization_id IS NULL;

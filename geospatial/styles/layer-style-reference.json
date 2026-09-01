@@ -1,0 +1,23 @@
+{
+  "business-locations": {
+    "geometryType": "Point",
+    "circleColor": "#3b82f6",
+    "circleRadius": 7
+  },
+  "competitors": {
+    "geometryType": "Point",
+    "circleColor": "#ef4444",
+    "circleRadius": 6
+  },
+  "points-of-interest": {
+    "geometryType": "Point",
+    "circleColor": "#22c55e",
+    "circleRadius": 5
+  },
+  "territorial-zones": {
+    "geometryType": "Polygon",
+    "fillColor": "#1d4ed8",
+    "fillOpacity": 0.25,
+    "lineColor": "#93c5fd"
+  }
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiUrl } from '../lib/api';
+import { apiRequest } from '../lib/api';
 
 const dimensionLabels = {
   education: 'Educación',
@@ -39,7 +39,7 @@ function EarthArt() {
   const loadUnits = async () => {
     setLoading(true);
     try {
-      const res = await fetch(apiUrl('/territorial/units'));
+      const res = await apiRequest('/territorial/units');
       const data = await res.json();
       setUnits(data);
       if (data.length > 0 && !selectedUnitId) {
@@ -57,8 +57,8 @@ function EarthArt() {
     if (!unitId) return;
     try {
       const [indexRes, gapsRes] = await Promise.all([
-        fetch(apiUrl(`/territorial/units/${unitId}/index`)),
-        fetch(apiUrl(`/territorial/units/${unitId}/gaps`))
+        apiRequest(`/territorial/units/${unitId}/index`),
+        apiRequest(`/territorial/units/${unitId}/gaps`)
       ]);
       setIndexSnapshot(indexRes.ok ? await indexRes.json() : null);
       setGaps(gapsRes.ok ? await gapsRes.json() : []);
@@ -81,7 +81,7 @@ function EarthArt() {
 
   const handleDetectGaps = async () => {
     try {
-      const res = await fetch(apiUrl(`/territorial/units/${selectedUnitId}/gaps/detect`), { method: 'POST' });
+      const res = await apiRequest(`/territorial/units/${selectedUnitId}/gaps/detect`, { method: 'POST' });
       const detected = await res.json();
       if (!res.ok) throw new Error(detected.error || 'Error en el servidor');
       setMessage(detected.length > 0 ? `Se detectaron ${detected.length} brecha(s) nueva(s).` : 'No se detectaron brechas nuevas.');
@@ -108,7 +108,7 @@ function EarthArt() {
     };
 
     try {
-      const res = await fetch(apiUrl(`/territorial/units/${selectedUnitId}/simulate`), {
+      const res = await apiRequest(`/territorial/units/${selectedUnitId}/simulate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiUrl } from '../lib/api';
+import { apiRequest } from '../lib/api';
 
 const initialForm = {
   risk_id: '',
@@ -18,7 +18,7 @@ function RiskComponents() {
   const loadComponents = async () => {
     setLoading(true);
     try {
-      const res = await fetch(apiUrl('/risk-components'));
+      const res = await apiRequest('/risk-components');
       const data = await res.json();
       setComponents(data);
     } catch (error) {
@@ -53,9 +53,9 @@ function RiskComponents() {
       notes: form.notes
     };
     try {
-      const url = editingId ? apiUrl(`/risk-components/${editingId}`) : apiUrl('/risk-components');
+      const path = editingId ? `/risk-components/${editingId}` : '/risk-components';
       const method = editingId ? 'PUT' : 'POST';
-      const res = await fetch(url, {
+      const res = await apiRequest(path, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -84,7 +84,7 @@ function RiskComponents() {
   const handleDelete = async (id) => {
     if (!window.confirm('¿Eliminar este componente de riesgo?')) return;
     try {
-      const res = await fetch(apiUrl(`/risk-components/${id}`), { method: 'DELETE' });
+      const res = await apiRequest(`/risk-components/${id}`, { method: 'DELETE' });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || 'Error en el servidor');
       setMessage('Componente de riesgo eliminado correctamente.');

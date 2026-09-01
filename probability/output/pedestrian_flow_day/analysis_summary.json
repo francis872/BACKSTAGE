@@ -1,0 +1,31 @@
+{
+  "thresholds":{
+    "quantile_q":0.2,
+    "threshold_ks":0.021811169,
+    "threshold_bhattacharyya":0.0062877684
+  },
+  "tail_thresholds":{
+    "left_tail":0.05,
+    "right_tail":0.95
+  },
+  "observation_evaluation":{
+    "value":14477.941832418,
+    "cdf":0.4961302754,
+    "survival_probability":0.5038697246,
+    "percentile_probability":0.4961302754,
+    "upper_tail_probability":0.5038697246,
+    "percentile":49.613,
+    "location":"central"
+  },
+  "selected_distribution":"Pearson3",
+  "selected_distribution_parameters":{
+    "shape_1":1.1143582856,
+    "loc":16103.562567132,
+    "scale":8510.8445720398
+  },
+  "integral_validation":{
+    "h_integral":1.0,
+    "f_integral":0.99968686
+  },
+  "heuristic_note":"La selección por umbrales de cuantiles sobre KS\/Bhattacharyya es una heurística experimental del proyecto para clasificación\/ranking de modelos, no una prueba universal."
+}

@@ -32,7 +32,12 @@ function createToken(user) {
   const payload = {
     sub: user.user_id,
     email: user.email,
+    name: user.name || null,
     role: user.role,
+    organization_id: user.organization_id || null,
+    organization_slug: user.organization_slug || null,
+    organization_name: user.organization_name || null,
+    memberships: Array.isArray(user.memberships) ? user.memberships : [],
   };
 
   return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
@@ -51,7 +56,12 @@ function authenticate(req, res, next) {
     req.user = {
       user_id: payload.sub,
       email: payload.email,
+      name: payload.name || null,
       role: payload.role,
+      organization_id: payload.organization_id || null,
+      organization_slug: payload.organization_slug || null,
+      organization_name: payload.organization_name || null,
+      memberships: Array.isArray(payload.memberships) ? payload.memberships : [],
     };
     next();
   } catch (error) {

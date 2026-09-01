@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiUrl } from '../lib/api';
+import { apiRequest } from '../lib/api';
 
 const baseForm = {
   location_id: '',
@@ -16,11 +16,19 @@ function Recommendations() {
   const [form, setForm] = useState(baseForm);
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState('');
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [analysisMessage, setAnalysisMessage] = useState('');
+  const [analysisForm, setAnalysisForm] = useState({
+    project_name: 'Expansión McDonald’s Bogotá',
+    city: 'Bogotá',
+    objective: 'Identificar la mejor ubicación para expansión considerando demanda, accesibilidad, competencia y riesgo.',
+    selectedCandidates: [],
+  });
 
   const loadRecommendations = async () => {
     setLoading(true);
     try {
-      const res = await fetch(apiUrl('/recommendations'));
+      const res = await apiRequest('/recommendations');
       const data = await res.json();
       setRecommendations(data);
     } catch (error) {
@@ -33,7 +41,7 @@ function Recommendations() {
 
   const loadLocations = async () => {
     try {
-      const res = await fetch(apiUrl('/locations'));
+      const res = await apiRequest('/locations');
       const data = await res.json();
       setLocations(data);
     } catch (error) {
@@ -84,9 +92,9 @@ function Recommendations() {
     };
 
     try {
-      const url = editingId ? apiUrl(`/recommendations/${editingId}`) : apiUrl('/recommendations');
+      const path = editingId ? `/recommendations/${editingId}` : '/recommendations';
       const method = editingId ? 'PUT' : 'POST';
-      const res = await fetch(url, {
+      const res = await apiRequest(path, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -116,7 +124,7 @@ function Recommendations() {
   const handleDelete = async (id) => {
     if (!window.confirm('¿Eliminar esta recomendación?')) return;
     try {
-      const res = await fetch(apiUrl(`/recommendations/${id}`), { method: 'DELETE' });
+      const res = await apiRequest(`/recommendations/${id}`, { method: 'DELETE' });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || 'Error en el servidor');
       setMessage('Recomendación eliminada correctamente.');
@@ -132,9 +140,126 @@ function Recommendations() {
     return location ? `${location.name} — ${location.city}` : null;
   };
 
+  const toggleCandidate = (locationId) => {
+    setAnalysisForm((prev) => {
+      const exists = prev.selectedCandidates.includes(locationId);
+      if (exists) {
+        return {
+          ...prev,
+          selectedCandidates: prev.selectedCandidates.filter((id) => id !== locationId),
+        };
+      }
+      return {
+        ...prev,
+        selectedCandidates: [...prev.selectedCandidates, locationId].slice(0, 4),
+      };
+    });
+  };
+
+  const runMcDonaldsAnalysis = async (event) => {
+    event.preventDefault();
+    setAnalysisMessage('');
+    setAnalysisResult(null);
+    if (analysisForm.selectedCandidates.length === 0) {
+      setAnalysisMessage('Selecciona al menos una ubicación candidata.');
+      return;
+    }
+    try {
+      const payload = {
+        project_name: analysisForm.project_name,
+        city: analysisForm.city,
+        objective: analysisForm.objective,
+        own_brand_name: 'McDonald%',
+        candidates: analysisForm.selectedCandidates.map((locationId) => {
+          const location = locations.find((item) => item.location_id === locationId);
+          return {
+            location_id: locationId,
+            name: location ? location.name : `Ubicación ${locationId}`,
+            city: location?.city || analysisForm.city,
+          };
+        }),
+      };
+      const res = await apiRequest('/analysis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudo ejecutar el análisis.');
+      setAnalysisResult(data);
+    } catch (error) {
+      setAnalysisMessage(`Error: ${error.message}`);
+    }
+  };
+
   return (
     <div>
       <h2>Recomendaciones</h2>
+      <div className="form-section">
+        <h3>Caso demo: Expansión McDonald’s Bogotá</h3>
+        <form onSubmit={runMcDonaldsAnalysis} className="entity-form">
+          <div className="field-row">
+            <label>Proyecto</label>
+            <input
+              value={analysisForm.project_name}
+              onChange={(event) => setAnalysisForm((prev) => ({ ...prev, project_name: event.target.value }))}
+              required
+            />
+          </div>
+          <div className="field-row">
+            <label>Ciudad</label>
+            <input
+              value={analysisForm.city}
+              onChange={(event) => setAnalysisForm((prev) => ({ ...prev, city: event.target.value }))}
+              required
+            />
+          </div>
+          <div className="field-row">
+            <label>Objetivo</label>
+            <textarea
+              rows="3"
+              value={analysisForm.objective}
+              onChange={(event) => setAnalysisForm((prev) => ({ ...prev, objective: event.target.value }))}
+              required
+            />
+          </div>
+          <div className="field-row">
+            <label>Ubicaciones candidatas (máximo 4)</label>
+            <div className="candidate-list">
+              {locations.map((location) => (
+                <label key={location.location_id} className="candidate-item">
+                  <input
+                    type="checkbox"
+                    checked={analysisForm.selectedCandidates.includes(location.location_id)}
+                    onChange={() => toggleCandidate(location.location_id)}
+                  />
+                  <span>{location.name} — {location.city}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className="form-actions">
+            <button type="submit">Ejecutar análisis geoestratégico</button>
+          </div>
+        </form>
+        {analysisMessage && <p className="message">{analysisMessage}</p>}
+        {analysisResult && (
+          <article className="form-section">
+            <p><strong>Recomendación:</strong> {analysisResult.recommendation}</p>
+            <p>ID de ejecución: {analysisResult.analysis_run_id}</p>
+            <div className="card-grid">
+              {analysisResult.ranking.map((row) => (
+                <div className="card" key={`${row.rank_position}-${row.candidate_name}`}>
+                  <h3>#{row.rank_position} {row.candidate_name}</h3>
+                  <p>Puntaje total: {row.score_total}</p>
+                  <pre>{JSON.stringify(row.score_by_dimension, null, 2)}</pre>
+                </div>
+              ))}
+            </div>
+          </article>
+        )}
+      </div>
+
       <div className="form-section">
         <h3>{editingId ? 'Editar recomendación' : 'Crear recomendación'}</h3>
         <form onSubmit={handleSubmit} className="entity-form">
