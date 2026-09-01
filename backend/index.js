@@ -43,6 +43,31 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'BACKSTAGE Intelligence Backend' });
 });
 
+// API info endpoint
+app.get('/', (req, res) => {
+  res.json({
+    service: 'BACKSTAGE Intelligence Backend',
+    version: '0.1.0',
+    endpoints: {
+      auth: '/auth',
+      locations: '/locations',
+      insights: '/insights',
+      realEstate: '/real-estate',
+      retailZones: '/retail-zones',
+      riskComponents: '/risk-components',
+      riskAssessments: '/risk-assessments',
+      recommendations: '/recommendations',
+      integrations: '/integrations',
+      scoring: '/scoring',
+      territorial: '/territorial',
+      users: '/users',
+      layers: '/layers',
+      analysis: '/analysis',
+      auditLogs: '/audit-logs'
+    }
+  });
+});
+
 app.use('/auth', authRoutes);
 app.use('/locations', locationsRoutes);
 app.use('/insights', insightsRoutes);
