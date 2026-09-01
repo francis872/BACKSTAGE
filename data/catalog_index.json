@@ -1,0 +1,30 @@
+﻿[
+    {
+        "dataset":  "/dataset/mapa-de-referencia",
+        "resource_page":  "https://datosabiertos.bogota.gov.co/dataset/mapa-de-referencia/resource/19f1cc44-fd33-4499-a7e9-6f5399b1966b",
+        "file_url":  "https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer",
+        "local_path":  "C:\\Users\\Usuario\\OneDrive\\Escritorio\\BACKSTAGE\\data\\mapa-de-referencia_MapServer",
+        "status":  "downloaded"
+    },
+    {
+        "dataset":  "/dataset/mapa-de-referencia",
+        "resource_page":  "https://datosabiertos.bogota.gov.co/dataset/mapa-de-referencia/resource/4fe79137-42ff-4fde-8708-85afdb0a83bc",
+        "file_url":  "https://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer?request=GetCapabilities\u0026amp;service=WMS",
+        "local_path":  "C:\\Users\\Usuario\\OneDrive\\Escritorio\\BACKSTAGE\\data\\mapa-de-referencia_WMSServer",
+        "status":  "downloaded"
+    },
+    {
+        "dataset":  "/dataset/mapa-de-referencia",
+        "resource_page":  "https://datosabiertos.bogota.gov.co/dataset/mapa-de-referencia/resource/da4d7dfc-b9d5-4ecc-a9e8-8d61ea304b3a",
+        "file_url":  "https://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WFSServer?request=GetCapabilities\u0026amp;service=WFS",
+        "local_path":  "C:\\Users\\Usuario\\OneDrive\\Escritorio\\BACKSTAGE\\data\\mapa-de-referencia_WFSServer",
+        "status":  "failed"
+    },
+    {
+        "dataset":  "/dataset/mapa-de-referencia",
+        "resource_page":  "https://datosabiertos.bogota.gov.co/dataset/mapa-de-referencia/resource/60238feb-317f-45ad-a460-3ae26bd74745",
+        "file_url":  "https://datosabiertos.bogota.gov.co/dataset/5bbe2592-55e0-49e3-9a51-73c2bc042b67/resource/60238feb-317f-45ad-a460-3ae26bd74745/download/gdb_mr_v06.26.zip",
+        "local_path":  "C:\\Users\\Usuario\\OneDrive\\Escritorio\\BACKSTAGE\\data\\mapa-de-referencia_gdb_mr_v06.26.zip",
+        "status":  "failed"
+    }
+]

@@ -1,0 +1,25 @@
+{
+  "name": "backstage-intelligence-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "API de BACKSTAGE Intelligence para recomendaciones de ubicación",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "db:init": "node init-db.js",
+    "migrate": "dotenv -e .env -- node-pg-migrate",
+    "migrate:up": "dotenv -e .env -- node-pg-migrate up",
+    "migrate:down": "dotenv -e .env -- node-pg-migrate down"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.4",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^7.1.0",
+    "node-pg-migrate": "^7.4.0"
+  }
+}

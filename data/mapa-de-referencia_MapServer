@@ -1,0 +1,582 @@
+<html lang="en">
+
+<head>
+<title>Mapa_Referencia/Mapa_Referencia (MapServer)</title>
+<link href="/arcgis/rest/static/main.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+
+<table width="100%" class="userTable">
+ <tr>
+ <td class="titlecell">
+ ArcGIS REST Services Directory
+ </td>
+ <td align="right">
+   <a href="https://serviciosgis.catastrobogota.gov.co/arcgis/login?returnUrl=https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services">Login</a>
+       </td>
+ </tr>
+</table>
+<table width="100%" class="navTable">
+<tr valign="top">
+<td class="breadcrumbs">
+<a href="/arcgis/rest/services">Home</a>
+
+  &gt; <a href="/arcgis/rest/services">services</a>
+  
+  &gt; <a href="/arcgis/rest/services/Mapa_Referencia">Mapa_Referencia</a>
+  
+  &gt; <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer">Mapa_Referencia (MapServer)</a>
+  </td>
+<td align="right">
+ <a href="https://serviciosgis.catastrobogota.gov.co/arcgis/help/en/rest/router.html?f=rest/services/Mapa_Referencia/Mapa_Referencia/MapServer" target="_blank">API Reference</a>
+</td>
+</tr>
+</table><table>
+  <tr>
+  <td class="apiref">
+  <a href="?f=pjson" target="_blank">JSON</a>
+     | <a href="https://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer?wsdl" target="">SOAP</a>
+     | <a href="https://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS" target="">WMS</a>
+     | <a href="https://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WFSServer?request=GetCapabilities&amp;service=WFS" target="">WFS</a>
+     | <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMTS/1.0.0/WMTSCapabilities.xml" target="">WMTS</a>
+    </td>
+  </tr>
+  </table>
+  <h2>Mapa_Referencia/Mapa_Referencia (MapServer)</h2>
+
+<div class="rbody">
+
+<b>View In:</b>
+&nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer?f=jsapi" target="_blank">ArcGIS JavaScript</a>
+&nbsp;&nbsp;<a href="https://www.arcgis.com/apps/mapviewer/index.html?basemapUrl=https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer&amp;source=sd" target="_blank">ArcGIS Online Map Viewer</a>
+
+  &nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/kml/mapImage.kmz">ArcGIS Earth</a>
+
+&nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer?f=pitemx" target="_blank">ArcGIS Pro</a>
+<br/><br/>
+
+<b>Service Description: </b> El Mapa de Referencia es el conjunto organizado de datos espaciales b&aacute;sicos, requeridos por la Administraci&oacute;n Distrital y la sociedad en general. Est&aacute; compuesto por 37 niveles de informaci&oacute;n estandarizados cuyo prop&oacute;sito es garantizar la unificaci&oacute;n de la cartograf&iacute;a bajo est&aacute;ndares m&iacute;nimos de calidad para integrar, intercambiar y usar la informaci&oacute;n de Bogot&aacute;. Su consolidaci&oacute;n es resultado del trabajo conjunto entre las entidades de: Secretar&iacute;a Distrital de Planeaci&oacute;n-SDP, Secretar&iacute;a Distrital de Movilidad-SDM, Instituto de Desarrollo Urbano-IDU, Empresa de Acueducto y Alcantarillado de Bogot&aacute; E.S.P.-EAAB, Servicios Postales Nacionales S.A. 4-72, Transmilenio S.A. y la Unidad Administrativa Especial de Catastro Distrital-UAECD. Representa los elementos b&aacute;sicos del territorio Distrital, del &aacute;rea urbana y rural, tales como: catastro, hidrograf&iacute;a, entidades territoriales y de planeamiento, topograf&iacute;a, transporte, nombres geogr&aacute;ficos y social.<br/><br/>
+
+<b>Map Name: </b> Mapa de Referencia Bogot&aacute; D.C.<br/><br/>
+
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/legend">Legend</a><br/><br/>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/layers">All Layers and Tables</a><br/><br/>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/legend?dynamicLayers=%5B%5D&">Dynamic Legend</a><br/><br/>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/layers?dynamicLayers=%5B%5D&">Dynamic All Layers</a><br/><br/>
+<b>Layers: </b>
+<ul>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/0">Nombre Geogr&aacute;fico</a> (0)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/1">Top&oacute;nimo</a> (1)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/2">Nombre geografico</a> (2)
+</li>
+</ul>
+  </li>
+</ul>
+  </li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/3">Control Terrestre</a> (3)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/4">Punto de control</a> (4)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/5">Punto Geodesico</a> (5)
+</li>
+</ul>
+  </li>
+</ul>
+  </li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/6">Transporte</a> (6)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/7">Transporte Terrestre</a> (7)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/8">Paraderos Zonales SITP</a> (8)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/9">Estaciones Troncales</a> (9)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/20">Patios SITP</a> (20)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/10">Malla Vial Integral</a> (10)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/11">Nomenclatura</a> (11)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/13">Malla Vial</a> (13)
+</li>
+</ul>
+  </li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/14">Puente</a> (14)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/15">Calzada</a> (15)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/16">Anden</a> (16)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/17">Separador</a> (17)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/18">Cicloruta</a> (18)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/19">Red Biciusuarios</a> (19)
+</li>
+</ul>
+  </li>
+</ul>
+  </li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/21">Relieve</a> (21)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/22">Elevaci&oacute;n</a> (22)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/23">Curva de nivel</a> (23)
+</li>
+</ul>
+  </li>
+</ul>
+  </li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/25">Hidrograf&iacute;a</a> (25)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/26">Corriente de agua</a> (26)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/27">Corriente de agua</a> (27)
+</li>
+</ul>
+  </li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/28">Superficie de agua</a> (28)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/29">Cuerpo de agua</a> (29)
+</li>
+</ul>
+  </li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/30">Zona hidrogr&aacute;fica</a> (30)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/55">Subzona Hidrografica</a> (55)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/31">Cuenca</a> (31)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/56">Subcuenca</a> (56)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/57">Microcuenca</a> (57)
+</li>
+</ul>
+  </li>
+</ul>
+  </li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/32">Catastro</a> (32)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/33">Nomenclatura</a> (33)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/34">Placa Domiciliaria</a> (34)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/35">Codigo Postal</a> (35)
+</li>
+</ul>
+  </li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/36">&Aacute;rea Catastral</a> (36)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/37">Sector catastral</a> (37)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/38">Lote</a> (38)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/39">Construccion</a> (39)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/40">Manzana</a> (40)
+</li>
+</ul>
+  </li>
+</ul>
+  </li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/41">Entidad Territorial y de Planeamiento</a> (41)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/42">&Aacute;rea de planeamiento</a> (42)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/43">Area urbanistica</a> (43)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/44">Unidad Planeamiento Local</a> (44)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/58">Unidad Planeamiento Rural</a> (58)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/45">Suelo</a> (45)
+</li>
+</ul>
+  </li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/46">Entidad territorial</a> (46)
+<ul>
+  <li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/47">Municipio</a> (47)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/48">Localidad</a> (48)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/49">Corregimiento</a> (49)
+</li>
+<li>
+<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/50">Centro poblado</a> (50)
+</li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+
+<b>Tables: </b>
+  <ul>
+  <li><a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/51">Estrato</a> (51)</li>
+    <li><a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/52">Uso</a> (52)</li>
+    <li><a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/53">Predio</a> (53)</li>
+    <li><a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/54">Estado Superficial</a> (54)</li>
+    </ul>
+  <b>Description: </b> El Mapa de Referencia es el conjunto organizado de datos espaciales b&aacute;sicos, requeridos por la Administraci&oacute;n Distrital y la sociedad en general. Est&aacute; compuesto por 37 niveles de informaci&oacute;n estandarizados cuyo prop&oacute;sito es garantizar la unificaci&oacute;n de la cartograf&iacute;a bajo est&aacute;ndares m&iacute;nimos de calidad para integrar, intercambiar y usar la informaci&oacute;n de Bogot&aacute;. Su consolidaci&oacute;n es resultado del trabajo conjunto entre las entidades de: Secretar&iacute;a Distrital de Planeaci&oacute;n-SDP, Secretar&iacute;a Distrital de Movilidad-SDM, Instituto de Desarrollo Urbano-IDU, Empresa de Acueducto y Alcantarillado de Bogot&aacute; E.S.P.-EAAB, Servicios Postales Nacionales S.A. 4-72, Transmilenio S.A. y la Unidad Administrativa Especial de Catastro Distrital-UAECD. Representa los elementos b&aacute;sicos del territorio Distrital, del &aacute;rea urbana y rural, tales como: catastro, hidrograf&iacute;a, entidades territoriales y de planeamiento, topograf&iacute;a, transporte, nombres geogr&aacute;ficos y social.<br/><br/>
+<b>Service Item Id: </b> 759da08feb83408b894e55f147c03db4<br/><br/>
+<b>Copyright Text: </b> Secretar&iacute;a Distrital de Planeaci&oacute;n - SDP, Secretar&iacute;a Distrital de Movilidad - SDM, Instituto de Desarrollo Urbano - IDU, Empresa de Acueducto y Alcantarillado de Bogot&aacute; E.S.P. - EAAB, Servicios Postales Nacionales S.A. 4-72, Transmilenio S.A. y la Unidad Administrativa Especial de Catastro Distrital - UAECD<br/> <br/>
+
+<b>Spatial Reference: </b>
+4326
+&nbsp;(4326)
+
+&nbsp;LatestVCSWkid(0)
+<br/><br/><br/>
+
+<b>Single Fused Map Cache: </b> true<br/><br/>
+
+<b>Tile Info: </b>
+ <ul>
+ 	<li><b>Height</b>: 256.0</li>
+	<li><b>Width</b>: 256.0</li>
+	<li><b>DPI</b>: 96.0</li>
+	<li>
+	    <b>Levels of Detail: </b> <i>18</i>
+	    <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 0
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/0/40/33">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/0/40/33">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 0.03807137609328448</li>
+		  		<li>Scale: 16000000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 1
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/1/80/66">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/1/81/67">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 0.01903568804664224</li>
+		  		<li>Scale: 8000000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 2
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/2/161/133">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/2/162/134">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 0.00951784402332112</li>
+		  		<li>Scale: 4000000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 3
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/3/323/266">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/3/325/268">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 0.00475892201166056</li>
+		  		<li>Scale: 2000000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 4
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/4/647/533">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/4/650/536">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 0.00237946100583028</li>
+		  		<li>Scale: 1000000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 5
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/5/1295/1067">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/5/1301/1073">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 0.00118973050291514</li>
+		  		<li>Scale: 500000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 6
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/6/2591/2134">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/6/2602/2147">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 5.9486525145757E-4</li>
+		  		<li>Scale: 250000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 7
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/7/5183/4268">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/7/5204/4295">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 2.97432625728785E-4</li>
+		  		<li>Scale: 125000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 8
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/8/10124/8337">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/8/10165/8389">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 1.5228550437313792E-4</li>
+		  		<li>Scale: 64000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 9
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/9/20248/16674">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/9/20331/16779">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 7.614275218656896E-5</li>
+		  		<li>Scale: 32000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 10
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/10/40497/33348">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/10/40662/33558">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 3.807137609328448E-5</li>
+		  		<li>Scale: 16000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 11
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/11/80995/66696">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/11/81325/67117">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 1.903568804664224E-5</li>
+		  		<li>Scale: 8000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 12
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/12/161991/133393">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/12/162650/134234">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 9.51784402332112E-6</li>
+		  		<li>Scale: 4000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 13
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/13/323982/266786">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/13/325300/268469">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 4.75892201166056E-6</li>
+		  		<li>Scale: 2000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 14
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/14/647964/533573">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/14/650600/536938">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 2.37946100583028E-6</li>
+		  		<li>Scale: 1000</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 15
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/15/1295928/1067146">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/15/1301200/1073877">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 1.18973050291514E-6</li>
+		  		<li>Scale: 500</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 16
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/16/2591857/2134293">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/16/2602401/2147754">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 5.9486525145757E-7</li>
+		  		<li>Scale: 250</li>
+		  	  </ul>
+	     	</ul>
+	        <ul>
+	       	  <li>
+	       	    <b>Level ID:</b> 17
+		       	    [ <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/17/5183715/4268586">Start Tile</a>, <a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/tile/17/5204803/4295508">End Tile</a> ]
+		       	  </li>
+	       	  <ul>
+		  		<li>Resolution: 2.97432625728785E-7</li>
+		  		<li>Scale: 125</li>
+		  	  </ul>
+	     	</ul>
+	        </li>
+	<li><b>Format</b>: MIXED</li>
+  <li><b>Compression Quality</b>: 75.0</li>
+  <li><b>Origin</b>: <i>X: </i> -400.0<br/>
+<i>Y: </i> 400.0<br/>
+</li>
+  <li><b>Spatial Reference</b>: 4326
+&nbsp;(4326)
+
+&nbsp;LatestVCSWkid(0)
+<br/></li>
+ </ul>
+<b>Storage Info: </b>
+  <ul>
+    <li><b>Storage Format</b>: esriMapCacheStorageModeCompactV2</li>
+    <li><b>Packet Size</b>: 128</li>
+  </ul>
+<b>Initial Extent: </b>
+<ul>
+  
+
+XMin: -74.24377491393234<br/>
+YMin: 4.58386259756722<br/>
+XMax: -73.94426893369983<br/>
+YMax: 4.788849925260869<br/>
+
+	Spatial Reference: 4326
+&nbsp;(0)
+
+&nbsp;LatestVCSWkid(0)
+<br/><br/>
+	</ul>
+
+<b>Full Extent: </b>
+<ul>
+  
+
+XMin: -74.978069382<br/>
+YMin: 3.69191986499999<br/>
+XMax: -72.928141815<br/>
+YMax: 5.29765695600003<br/>
+
+	Spatial Reference: 4326
+&nbsp;(0)
+
+&nbsp;LatestVCSWkid(0)
+<br/><br/>
+	</ul>
+
+<b>Units: </b> esriDecimalDegrees<br/><br/>
+
+<b>Supported Image Format Types: </b> PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP<br/><br/>
+
+<b>Document Info: </b>
+<ul>
+  
+
+Title: Mapa de Referencia Bogot&aacute; D.C.<br/>
+Author: <br/>
+Comments: El Mapa de Referencia es el conjunto organizado de datos espaciales b&aacute;sicos, requeridos por la Administraci&oacute;n Distrital y la sociedad en general. Est&aacute; compuesto por 37 niveles de informaci&oacute;n estandarizados cuyo prop&oacute;sito es garantizar la unificaci&oacute;n de la cartograf&iacute;a bajo est&aacute;ndares m&iacute;nimos de calidad para integrar, intercambiar y usar la informaci&oacute;n de Bogot&aacute;. Su consolidaci&oacute;n es resultado del trabajo conjunto entre las entidades de: Secretar&iacute;a Distrital de Planeaci&oacute;n-SDP, Secretar&iacute;a Distrital de Movilidad-SDM, Instituto de Desarrollo Urbano-IDU, Empresa de Acueducto y Alcantarillado de Bogot&aacute; E.S.P.-EAAB, Servicios Postales Nacionales S.A. 4-72, Transmilenio S.A. y la Unidad Administrativa Especial de Catastro Distrital-UAECD. Representa los elementos b&aacute;sicos del territorio Distrital, del &aacute;rea urbana y rural, tales como: catastro, hidrograf&iacute;a, entidades territoriales y de planeamiento, topograf&iacute;a, transporte, nombres geogr&aacute;ficos y social.<br/>
+Subject: El Mapa de Referencia es el conjunto organizado de datos espaciales b&aacute;sicos, requeridos por la Administraci&oacute;n Distrital y la sociedad en general.<br/>
+Category: <br/>
+Keywords: Catastro,Control terrestre,Transporte,Relieve,Hidrograf&iacute;a,Entidad territorial,&Aacute;rea de planeamiento,Top&oacute;nimos<br/>
+AntialiasingMode: None<br/>
+TextAntialiasingMode: Force<br/></ul>
+
+
+
+<b>Supports Dynamic Layers: </b> true<br/><br/>
+<b>Resampling: </b> false<br/><br/>
+<b>MaxRecordCount: </b> 1000<br/><br/>
+<b>MaxImageHeight: </b> 4096<br/><br/>
+<b>MaxImageWidth: </b> 4096<br/><br/>
+<b>Supported Query Formats: </b> JSON, geoJSON, PBF<br/><br/>
+<b>Supports Query Data Elements: </b> true<br/><br/>
+<b>Min Scale: </b> 16000000<br/><br/>
+<b>Max Scale: </b> 2000<br/><br/>
+<b>Supports Datum Transformation: </b> true<br/><br/>
+<br/><br/>
+<b>Child Resources</b>:
+&nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/info">Info</a>
+
+  &nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/dynamicLayer">Dynamic Layer</a>
+  <br/> <br/>
+<b>Supported Operations</b>:
+
+&nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/export?bbox=-74.24377491393234,4.58386259756722,-73.94426893369983,4.788849925260869">Export Map</a>
+
+&nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/identify">Identify</a>
+
+&nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/queryLegends">QueryLegends</a>
+
+&nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/queryDomains">QueryDomains</a>
+&nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/find">Find</a>
+
+&nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer?f=pjson&returnUpdates=true&">Return Updates</a>
+<!--
+
+&nbsp;&nbsp;<a href="/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/queryDataElements">Query Data Elements</a>
+
+ -->
+</div>
+
+<br/><br/>
+
+</body>
+
+</html>
