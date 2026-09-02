@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.use(authenticate, requireOrganizationContext, authorizeRoles(ROLES.ADMIN));
 router.get('/', controller.listAuditLogs);
+router.get('/chain-status', controller.verifyChain);
 
 module.exports = router;
-

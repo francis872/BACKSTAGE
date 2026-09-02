@@ -1,23 +1,42 @@
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'BACKSTAGE_DEFAULT_SECRET_CHANGE_ME';
 const JWT_EXPIRES_IN = '8h';
+const JWT_ISSUER = process.env.JWT_ISSUER || 'backstage-intelligence';
+const JWT_AUDIENCE = process.env.JWT_AUDIENCE || 'backstage-platform';
+const BCRYPT_ROUNDS = Number(process.env.BCRYPT_ROUNDS || 12);
 
 function createPasswordHash(password) {
-  const iterations = 100000;
-  const salt = crypto.randomBytes(16).toString('hex');
-  const derivedKey = crypto.pbkdf2Sync(password, salt, iterations, 64, 'sha512').toString('hex');
-  return `pbkdf2_sha512$${iterations}$${salt}$${derivedKey}`;
+  return bcrypt.hashSync(password, BCRYPT_ROUNDS);
+}
+
+function isLegacyHash(storedHash) {
+  return typeof storedHash === 'string' && storedHash.startsWith('pbkdf2_sha512$');
 }
 
 function verifyPassword(password, storedHash) {
-  if (!storedHash || !storedHash.startsWith('pbkdf2_sha512$')) {
+  if (!storedHash) {
+    return false;
+  }
+
+  if (storedHash.startsWith('$2')) {
+    return bcrypt.compareSync(password, storedHash);
+  }
+
+  if (!isLegacyHash(storedHash)) {
     return false;
   }
 
   const [, iterations, salt, hash] = storedHash.split('$');
-  const derivedKey = crypto.pbkdf2Sync(password, salt, Number(iterations), Buffer.from(hash, 'hex').length, 'sha512').toString('hex');
+  const derivedKey = crypto.pbkdf2Sync(
+    password,
+    salt,
+    Number(iterations),
+    Buffer.from(hash, 'hex').length,
+    'sha512'
+  ).toString('hex');
 
   const a = Buffer.from(hash, 'hex');
   const b = Buffer.from(derivedKey, 'hex');
@@ -40,7 +59,18 @@ function createToken(user) {
     memberships: Array.isArray(user.memberships) ? user.memberships : [],
   };
 
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return jwt.sign(payload, JWT_SECRET, {
+    expiresIn: JWT_EXPIRES_IN,
+    issuer: JWT_ISSUER,
+    audience: JWT_AUDIENCE,
+  });
+}
+
+function verifyToken(token) {
+  return jwt.verify(token, JWT_SECRET, {
+    issuer: JWT_ISSUER,
+    audience: JWT_AUDIENCE,
+  });
 }
 
 function authenticate(req, res, next) {
@@ -52,7 +82,7 @@ function authenticate(req, res, next) {
   const token = authHeader.split(' ')[1];
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET);
+    const payload = verifyToken(token);
     req.user = {
       user_id: payload.sub,
       email: payload.email,
@@ -84,7 +114,9 @@ function authorizeRole(requiredRole) {
 module.exports = {
   createPasswordHash,
   verifyPassword,
+  isLegacyHash,
   createToken,
+  verifyToken,
   authenticate,
   authorizeRole,
 };

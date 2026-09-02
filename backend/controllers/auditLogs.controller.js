@@ -12,7 +12,15 @@ const listAuditLogs = asyncHandler(async (req, res) => {
   res.json(rows);
 });
 
+const verifyChain = asyncHandler(async (req, res) => {
+  const status = await auditLogsService.verifyAuditChain(
+    req.organization.organization_id,
+    req.query.limit
+  );
+  res.json(status);
+});
+
 module.exports = {
   listAuditLogs,
+  verifyChain,
 };
-

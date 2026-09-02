@@ -79,3 +79,11 @@ Este modelo está diseñado para soportar casos de uso de retail, riesgo y locat
 - Índice Territorial por unidad (Educación, Salud, Infraestructura, Economía, Ambiente, Seguridad, Conectividad, Vivienda, Servicios): `GET /territorial/units/:id/index`, `POST /territorial/units/:id/index/recompute`.
 - Detector de brechas (población vs. infraestructura disponible): `GET /territorial/units/:id/gaps`, `POST /territorial/units/:id/gaps/detect`.
 - Motor predictivo "qué pasaría si" con comparación de alternativas: `POST /territorial/units/:id/simulate`.
+
+### Seguridad criptográfica
+
+- Password hashing con `bcrypt` para nuevos usuarios y migración transparente desde hashes legacy PBKDF2 al iniciar sesión.
+- JWT firmado y validado con `issuer` + `audience` para endurecer validación de tokens.
+- Auditoría con cadena hash (`prev_hash` + `event_hash`) para trazabilidad tamper-evident tipo blockchain sobre `audit_logs`.
+- Verificación de cadena por organización: `GET /audit-logs/chain-status`.
+- Canal WebSocket de eventos de seguridad en tiempo real: `ws://<host>/ws/security?token=<JWT>`.

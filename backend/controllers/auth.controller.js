@@ -1,5 +1,5 @@
 const { query } = require('../db');
-const { verifyPassword, createToken, createPasswordHash } = require('../auth');
+const { verifyPassword, createToken, createPasswordHash, isLegacyHash } = require('../auth');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/ApiError');
 const organizationService = require('../services/organization.service');
@@ -19,6 +19,13 @@ const login = asyncHandler(async (req, res) => {
   const valid = verifyPassword(password, user.password_hash);
   if (!valid) {
     throw new ApiError(401, 'Credenciales inválidas.');
+  }
+  if (isLegacyHash(user.password_hash)) {
+    const upgradedHash = createPasswordHash(password);
+    await query(
+      'UPDATE users SET password_hash = $1, updated_at = now() WHERE user_id = $2',
+      [upgradedHash, user.user_id]
+    );
   }
 
   const memberships = await organizationService.getUserMemberships(user.user_id);

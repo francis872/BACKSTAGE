@@ -1,7 +1,9 @@
 const express = require('express');
+const http = require('http');
 const cors = require('cors');
 const errorHandler = require('./middleware/errorHandler');
 const auditLogger = require('./middleware/auditLogger');
+const { attachSecurityWebSocketServer } = require('./realtime/wsServer');
 
 const authRoutes = require('./routes/auth.routes');
 const locationsRoutes = require('./routes/locations.routes');
@@ -63,7 +65,8 @@ app.get('/', (req, res) => {
       users: '/users',
       layers: '/layers',
       analysis: '/analysis',
-      auditLogs: '/audit-logs'
+      auditLogs: '/audit-logs',
+      securityEventsSocket: '/ws/security?token=<JWT>'
     }
   });
 });
@@ -90,7 +93,9 @@ app.get('/recommendation/example', getExampleRecommendation);
 app.use(errorHandler);
 
 if (require.main === module) {
-  app.listen(port, () => {
+  const server = http.createServer(app);
+  attachSecurityWebSocketServer(server);
+  server.listen(port, () => {
     console.log(`BACKSTAGE backend escuchando en http://localhost:${port}`);
   });
 }
