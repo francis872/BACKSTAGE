@@ -331,6 +331,8 @@ main {
 .menu-group button {
   text-align: left;
   width: 100%;
+  padding: 0.7rem 0.85rem;
+  border-radius: 12px;
 }
 
 .content-panel {
@@ -360,6 +362,68 @@ main {
   margin: 0;
   color: #8ea2bf;
   font-size: 0.88rem;
+}
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.8rem;
+}
+
+.workflow-card {
+  border: 1px solid #2a3d5e;
+  border-radius: 14px;
+  background: rgba(8, 22, 40, 0.84);
+  padding: 0.9rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.workflow-card h4 {
+  margin: 0;
+}
+
+.workflow-card p {
+  margin: 0;
+  color: #a9bdd8;
+  font-size: 0.92rem;
+}
+
+.probability-hero {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.probability-hero h2,
+.probability-hero p {
+  margin: 0;
+}
+
+.dataset-switcher {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.probability-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.9rem;
+}
+
+.probability-chart-card {
+  overflow: hidden;
+}
+
+.probability-chart-card h4 {
+  margin: 0 0 0.6rem;
+}
+
+.probability-chart-card img {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #2a3f62;
+  background: #081427;
 }
 
 .explorer-layout {

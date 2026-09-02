@@ -15,25 +15,27 @@ import TerritorialExplorer from './pages/TerritorialExplorer';
 import Reports from './pages/Reports';
 import AdvancedComparator from './pages/AdvancedComparator';
 import AuditLogsAdmin from './pages/AuditLogsAdmin';
+import ProbabilityEngine from './pages/ProbabilityEngine';
 import { apiRequest } from './lib/api';
 import { clearSession, getSessionUser, setSession } from './lib/auth';
 
 const menu = [
-  { key: 'mission-control', label: 'Centro de operaciones', group: 'BACKSTAGE' },
-  { key: 'territorial-explorer', label: 'Explorador territorial', group: 'BACKSTAGE' },
-  { key: 'portfolio-assets', label: 'Portafolio / Activos', group: 'Portafolio' },
-  { key: 'portfolio-projects', label: 'Portafolio / Proyectos', group: 'Portafolio' },
-  { key: 'portfolio-comparator', label: 'Portafolio / Comparador', group: 'Portafolio' },
-  { key: 'intelligence-evaluations', label: 'Inteligencia / Evaluaciones', group: 'Inteligencia' },
-  { key: 'intelligence-risks', label: 'Inteligencia / Riesgos', group: 'Inteligencia' },
-  { key: 'intelligence-opportunities', label: 'Inteligencia / Oportunidades', group: 'Inteligencia' },
-  { key: 'intelligence-recommendations', label: 'Inteligencia / Recomendaciones', group: 'Inteligencia' },
-  { key: 'earthart', label: 'EarthArt', group: 'EarthArt' },
-  { key: 'reports', label: 'Informes', group: 'Informes' },
-  { key: 'admin-users', label: 'Administración / Usuarios y roles', group: 'Administración' },
-  { key: 'admin-datasets', label: 'Administración / Fuentes y datasets', group: 'Administración' },
-  { key: 'admin-layer-catalog', label: 'Administración / Catálogo de capas', group: 'Administración' },
-  { key: 'admin-audit-logs', label: 'Administración / Auditoría de acciones', group: 'Administración' },
+  { key: 'mission-control', label: 'Centro de operaciones', group: 'Operación' },
+  { key: 'territorial-explorer', label: 'Explorador territorial', group: 'Operación' },
+  { key: 'earthart', label: 'EarthArt 2GIS', group: 'Operación' },
+  { key: 'portfolio-assets', label: 'Activos', group: 'Portafolio' },
+  { key: 'portfolio-projects', label: 'Proyectos', group: 'Portafolio' },
+  { key: 'portfolio-comparator', label: 'Comparador inteligente', group: 'Portafolio' },
+  { key: 'intelligence-evaluations', label: 'Evaluaciones', group: 'Inteligencia' },
+  { key: 'intelligence-risks', label: 'Riesgos', group: 'Inteligencia' },
+  { key: 'intelligence-opportunities', label: 'Oportunidades', group: 'Inteligencia' },
+  { key: 'intelligence-recommendations', label: 'Recomendaciones', group: 'Inteligencia' },
+  { key: 'probability-engine', label: 'Backstage Probability Engine', group: 'Inteligencia' },
+  { key: 'reports', label: 'Informes ejecutivos', group: 'Inteligencia' },
+  { key: 'admin-users', label: 'Usuarios y roles', group: 'Administración' },
+  { key: 'admin-datasets', label: 'Fuentes y datasets', group: 'Administración' },
+  { key: 'admin-layer-catalog', label: 'Catálogo de capas', group: 'Administración' },
+  { key: 'admin-audit-logs', label: 'Auditoría de acciones', group: 'Administración' },
 ];
 
 function App() {
@@ -96,6 +98,8 @@ function App() {
         return <GeoInsights />;
       case 'intelligence-recommendations':
         return <Recommendations />;
+      case 'probability-engine':
+        return <ProbabilityEngine onNavigate={setActivePage} />;
       case 'earthart':
         return <EarthArt />;
       case 'reports':
