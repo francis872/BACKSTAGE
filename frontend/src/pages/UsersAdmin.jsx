@@ -85,7 +85,7 @@ function UsersAdmin() {
         <h3>{editingId ? 'Editar usuario' : 'Crear usuario'}</h3>
         <form className="entity-form" onSubmit={submit}>
           <div className="field-row">
-            <label>Email</label>
+            <label>Correo electrónico</label>
             <input name="email" type="email" value={form.email} onChange={setField} required disabled={Boolean(editingId)} />
           </div>
           <div className="field-row">
@@ -95,14 +95,14 @@ function UsersAdmin() {
           <div className="field-row">
             <label>Rol</label>
             <select name="role" value={form.role} onChange={setField}>
-              <option value="admin">admin</option>
-              <option value="analyst">analyst</option>
-              <option value="viewer">viewer</option>
+              <option value="admin">Administrador</option>
+              <option value="analyst">Analista</option>
+              <option value="viewer">Consulta</option>
             </select>
           </div>
           {!editingId && (
             <div className="field-row">
-              <label>Password (mínimo 8)</label>
+              <label>Contraseña (mínimo 8)</label>
               <input name="password" type="password" value={form.password} onChange={setField} minLength={8} required />
             </div>
           )}

@@ -19,7 +19,7 @@ import { apiRequest } from './lib/api';
 import { clearSession, getSessionUser, setSession } from './lib/auth';
 
 const menu = [
-  { key: 'mission-control', label: 'Mission Control', group: 'BACKSTAGE' },
+  { key: 'mission-control', label: 'Centro de operaciones', group: 'BACKSTAGE' },
   { key: 'territorial-explorer', label: 'Explorador territorial', group: 'BACKSTAGE' },
   { key: 'portfolio-assets', label: 'Portafolio / Activos', group: 'Portafolio' },
   { key: 'portfolio-projects', label: 'Portafolio / Proyectos', group: 'Portafolio' },
@@ -196,6 +196,7 @@ function App() {
   };
 
   const isAdmin = sessionUser?.role === 'admin';
+  const hasOrganizations = publicOrganizations.length > 0;
 
   if (!sessionUser) {
     return (
@@ -224,7 +225,7 @@ function App() {
           {authMode === 'login' ? (
             <form onSubmit={handleLogin} className="entity-form auth-grid">
               <div className="field-row">
-                <label>Email</label>
+                <label>Correo electrónico</label>
                 <input
                   type="email"
                   value={authForm.email}
@@ -233,7 +234,7 @@ function App() {
                 />
               </div>
               <div className="field-row">
-                <label>Password</label>
+                <label>Contraseña</label>
                 <input
                   type="password"
                   value={authForm.password}
@@ -256,7 +257,7 @@ function App() {
                 />
               </div>
               <div className="field-row">
-                <label>Email</label>
+                <label>Correo electrónico</label>
                 <input
                   type="email"
                   value={registerForm.email}
@@ -265,7 +266,7 @@ function App() {
                 />
               </div>
               <div className="field-row">
-                <label>Password</label>
+                <label>Contraseña</label>
                 <input
                   type="password"
                   minLength={8}
@@ -280,6 +281,7 @@ function App() {
                   value={registerForm.organization_id}
                   onChange={(event) => setRegisterForm((prev) => ({ ...prev, organization_id: event.target.value }))}
                   required
+                  disabled={!hasOrganizations}
                 >
                   {publicOrganizations.map((organization) => (
                     <option key={organization.organization_id} value={organization.organization_id}>
@@ -288,9 +290,12 @@ function App() {
                   ))}
                 </select>
               </div>
-              <p className="auth-hint">El registro público crea cuentas con rol inicial viewer.</p>
+              {!hasOrganizations && (
+                <p className="message">No hay organizaciones disponibles para registro en este momento.</p>
+              )}
+              <p className="auth-hint">El registro público crea cuentas con rol inicial de consulta.</p>
               <div className="form-actions">
-                <button type="submit">Crear cuenta</button>
+                <button type="submit" disabled={!hasOrganizations}>Crear cuenta</button>
               </div>
             </form>
           )}
@@ -304,7 +309,7 @@ function App() {
     <div className="app shell">
       <aside className="side-nav">
         <div className="side-brand">
-          <p className="eyebrow">Mission Control</p>
+          <p className="eyebrow">Centro de operaciones</p>
           <h1>BACKSTAGE</h1>
         </div>
         <div className="identity-panel">

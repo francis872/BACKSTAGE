@@ -22,7 +22,7 @@ function MissionControl({ onNavigate }) {
 
   return (
     <section>
-      <h2>Mission Control</h2>
+      <h2>Centro de operaciones</h2>
       <p>Vista operativa para priorizar proyectos territoriales, riesgos y oportunidades.</p>
 
       <div className="metric-grid">
