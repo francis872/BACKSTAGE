@@ -238,23 +238,47 @@ async function verifyAuditChain(organizationId, limit = 500) {
   );
 
   let previousHash = null;
+  let hashedRows = 0;
+  let skippedLegacyRows = 0;
+
   for (const row of result.rows) {
+    const hasHashes = Boolean(row.prev_hash) || Boolean(row.event_hash);
+    if (!hasHashes) {
+      if (hashedRows > 0) {
+        return {
+          enabled: true,
+          valid: false,
+          checked: result.rows.length,
+          hashed_rows: hashedRows,
+          skipped_legacy_rows: skippedLegacyRows,
+          failed_at: row.audit_log_id,
+        };
+      }
+      skippedLegacyRows += 1;
+      continue;
+    }
+
     const expectedHash = sha256FromObject(stableHashPayload(row, previousHash));
-    if (row.prev_hash !== previousHash || row.event_hash !== expectedHash) {
+    if (!row.event_hash || row.prev_hash !== previousHash || row.event_hash !== expectedHash) {
       return {
         enabled: true,
         valid: false,
         checked: result.rows.length,
+        hashed_rows: hashedRows,
+        skipped_legacy_rows: skippedLegacyRows,
         failed_at: row.audit_log_id,
       };
     }
+    hashedRows += 1;
     previousHash = row.event_hash;
   }
 
   return {
     enabled: true,
-    valid: true,
+    valid: hashedRows > 0,
     checked: result.rows.length,
+    hashed_rows: hashedRows,
+    skipped_legacy_rows: skippedLegacyRows,
     tail_hash: previousHash,
   };
 }
