@@ -3,6 +3,7 @@ const { query, pool } = require('../db');
 const { publishSecurityEvent } = require('../realtime/securityEvents');
 
 let supportsHashChainColumnsCache = null;
+let hashChainBootstrapAttempted = false;
 
 function sanitizeBody(payload) {
   if (!payload || typeof payload !== 'object') return null;
@@ -39,13 +40,32 @@ async function supportsHashChainColumns() {
     return supportsHashChainColumnsCache;
   }
 
-  const result = await query(
+  let result = await query(
     `SELECT COUNT(*)::int AS total
      FROM information_schema.columns
      WHERE table_name = 'audit_logs'
        AND column_name IN ('prev_hash', 'event_hash')`
   );
-  supportsHashChainColumnsCache = Number(result.rows[0]?.total || 0) === 2;
+  let hasColumns = Number(result.rows[0]?.total || 0) === 2;
+  if (!hasColumns && !hashChainBootstrapAttempted) {
+    hashChainBootstrapAttempted = true;
+    try {
+      await query('ALTER TABLE audit_logs ADD COLUMN IF NOT EXISTS prev_hash text');
+      await query('ALTER TABLE audit_logs ADD COLUMN IF NOT EXISTS event_hash text');
+      await query('CREATE INDEX IF NOT EXISTS idx_audit_logs_event_hash ON audit_logs(event_hash)');
+      await query('CREATE INDEX IF NOT EXISTS idx_audit_logs_prev_hash ON audit_logs(prev_hash)');
+      result = await query(
+        `SELECT COUNT(*)::int AS total
+         FROM information_schema.columns
+         WHERE table_name = 'audit_logs'
+           AND column_name IN ('prev_hash', 'event_hash')`
+      );
+      hasColumns = Number(result.rows[0]?.total || 0) === 2;
+    } catch (error) {
+      hasColumns = false;
+    }
+  }
+  supportsHashChainColumnsCache = hasColumns;
   return supportsHashChainColumnsCache;
 }
 
