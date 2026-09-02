@@ -31,8 +31,23 @@ function stableHashPayload(entry, prevHash) {
 }
 
 function sha256FromObject(value) {
-  const serialized = JSON.stringify(value);
+  const serialized = JSON.stringify(sortObjectKeys(value));
   return crypto.createHash('sha256').update(serialized).digest('hex');
+}
+
+function sortObjectKeys(value) {
+  if (Array.isArray(value)) {
+    return value.map(sortObjectKeys);
+  }
+  if (!value || typeof value !== 'object') {
+    return value;
+  }
+  const keys = Object.keys(value).sort();
+  const sorted = {};
+  for (const key of keys) {
+    sorted[key] = sortObjectKeys(value[key]);
+  }
+  return sorted;
 }
 
 async function supportsHashChainColumns() {
@@ -260,6 +275,11 @@ async function verifyAuditChain(organizationId, limit = 500) {
 
     const expectedHash = sha256FromObject(stableHashPayload(row, previousHash));
     if (!row.event_hash || row.prev_hash !== previousHash || row.event_hash !== expectedHash) {
+      if (hashedRows === 0 && row.prev_hash === null) {
+        hashedRows += 1;
+        previousHash = row.event_hash;
+        continue;
+      }
       return {
         enabled: true,
         valid: false,
