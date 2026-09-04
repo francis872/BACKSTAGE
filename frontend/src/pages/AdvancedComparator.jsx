@@ -127,6 +127,10 @@ function AdvancedComparator() {
         <div className="stacked-sections">
           <article className="form-section">
             <h3>Ranking</h3>
+            <p className="auth-hint">
+              Método: <strong>{(result.ranking_method || 'topsis').toUpperCase()}</strong>
+              {result.analytics_job_id && <> · Ejecución registrada #{result.analytics_job_id}</>}
+            </p>
             <p><strong>Recomendación:</strong> {result.recommendation}</p>
             <div className="card-grid">
               {(result.ranking || []).map((row) => (
@@ -157,6 +161,34 @@ function AdvancedComparator() {
               </div>
             ))}
           </article>
+
+          {result.sensitivity && (
+            <article className="form-section">
+              <h3>Análisis de sensibilidad</h3>
+              <p className="auth-hint">
+                Qué tan estable es la recomendación si los pesos de los criterios cambiaran ±
+                {Math.round((result.sensitivity.perturbationPct || 0) * 100)}%. Ganador base:{' '}
+                <strong>{result.sensitivity.baseWinner}</strong> ·{' '}
+                {result.sensitivity.stability.stable
+                  ? 'el resultado es estable ante estas variaciones.'
+                  : `el ganador cambia en ${result.sensitivity.stability.changedScenarios} de ${result.sensitivity.stability.totalScenarios} escenarios.`}
+              </p>
+              <div className="card-grid">
+                {result.sensitivity.scenarios.map((scenario) => (
+                  <article
+                    className={`card ${scenario.winnerChanged ? 'sensitivity-changed' : ''}`}
+                    key={`${scenario.criterion}-${scenario.weightChange}`}
+                  >
+                    <p className="eyebrow">{formatDimensionLabel(scenario.criterion)} {scenario.weightChange}</p>
+                    <p>Ganador: <strong>{scenario.winner}</strong> ({scenario.winnerScore})</p>
+                    <p className="auth-hint">
+                      {scenario.winnerChanged ? 'El ganador cambia respecto al escenario base.' : 'Sin cambio respecto al escenario base.'}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </article>
+          )}
         </div>
       )}
     </section>

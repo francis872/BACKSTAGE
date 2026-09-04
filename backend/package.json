@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "test": "node --test domain/",
     "db:init": "node init-db.js",
     "migrate": "dotenv -e .env -- node-pg-migrate",
     "migrate:up": "dotenv -e .env -- node-pg-migrate up",

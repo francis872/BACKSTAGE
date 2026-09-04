@@ -919,7 +919,6 @@ button.secondary:hover {
   font-size: 13px;
   line-height: 1.7;
 }
-
 .weight-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -958,6 +957,21 @@ button.secondary:hover {
   height: 100%;
   border-radius: 4px;
   background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+}
+
+.card.sensitivity-changed {
+  border-color: rgba(255, 140, 66, 0.6);
+  background: rgba(255, 140, 66, 0.08);
+}
+
+.financial-panel {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(58, 74, 107, 0.3);
+}
+
+.financial-panel .metric-grid {
+  margin-top: 12px;
 }
 
 /* ==================== INFORMES ==================== */

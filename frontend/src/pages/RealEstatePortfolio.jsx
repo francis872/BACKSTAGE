@@ -7,10 +7,139 @@ const currency = new Intl.NumberFormat('es-CO', {
   maximumFractionDigits: 0
 });
 
+const initialAssumptions = {
+  netOperatingIncomeAnnual: '',
+  discountRatePct: '10',
+  annualCashFlow: '',
+  horizonYears: '10',
+};
+
+function FinancialAnalysisPanel({ property, onClose }) {
+  const [assumptions, setAssumptions] = useState(initialAssumptions);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setAssumptions((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const runAnalysis = async (event) => {
+    event.preventDefault();
+    setError('');
+    setResult(null);
+    setLoading(true);
+    try {
+      const propertyValue = Number(property.estimated_value);
+      const noi = Number(assumptions.netOperatingIncomeAnnual);
+      const discountRate = Number(assumptions.discountRatePct) / 100;
+      const annualCashFlow = Number(assumptions.annualCashFlow);
+      const horizonYears = Number(assumptions.horizonYears);
+
+      if (!noi || !annualCashFlow || !horizonYears) {
+        throw new Error('Completa ingreso operativo neto, flujo de caja anual y horizonte para calcular.');
+      }
+
+      const cashFlows = [-propertyValue, ...Array(horizonYears).fill(annualCashFlow)];
+
+      const [capRateRes, npvIrrRes, paybackRes] = await Promise.all([
+        apiRequest('/analytics/financial', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ algorithm: 'cap_rate', netOperatingIncome: noi, propertyValue }),
+        }),
+        apiRequest('/analytics/financial', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ algorithm: 'npv_irr', cashFlows, discountRate }),
+        }),
+        apiRequest('/analytics/financial', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ algorithm: 'payback', cashFlows, discountRate }),
+        }),
+      ]);
+      const [capRateData, npvIrrData, paybackData] = await Promise.all([
+        capRateRes.json(), npvIrrRes.json(), paybackRes.json(),
+      ]);
+      if (!capRateRes.ok) throw new Error(capRateData.error || 'Error calculando cap rate.');
+      if (!npvIrrRes.ok) throw new Error(npvIrrData.error || 'Error calculando VPN/TIR.');
+      if (!paybackRes.ok) throw new Error(paybackData.error || 'Error calculando payback.');
+
+      setResult({
+        capRate: capRateData.result.capRate,
+        npv: npvIrrData.result.npv,
+        irr: npvIrrData.result.irr,
+        payback: paybackData.result,
+        jobIds: [capRateData.analytics_job_id, npvIrrData.analytics_job_id, paybackData.analytics_job_id],
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="financial-panel">
+      <div className="score-row">
+        <h4>Análisis financiero — supuestos del usuario</h4>
+        <button type="button" className="secondary" onClick={onClose}>Cerrar</button>
+      </div>
+      <p className="auth-hint">
+        La inversión inicial usa el valor estimado observado ({currency.format(property.estimated_value)}).
+        El ingreso operativo neto y el flujo de caja anual son supuestos que tú defines, no datos observados.
+      </p>
+      <form className="entity-form" onSubmit={runAnalysis}>
+        <div className="field-row">
+          <label>Ingreso operativo neto anual (NOI, COP)</label>
+          <input name="netOperatingIncomeAnnual" type="number" value={assumptions.netOperatingIncomeAnnual} onChange={handleChange} required />
+        </div>
+        <div className="field-row">
+          <label>Flujo de caja anual proyectado (COP)</label>
+          <input name="annualCashFlow" type="number" value={assumptions.annualCashFlow} onChange={handleChange} required />
+        </div>
+        <div className="field-row">
+          <label>Horizonte (años)</label>
+          <input name="horizonYears" type="number" min="1" max="40" value={assumptions.horizonYears} onChange={handleChange} required />
+        </div>
+        <div className="field-row">
+          <label>Tasa de descuento anual (%)</label>
+          <input name="discountRatePct" type="number" step="0.1" value={assumptions.discountRatePct} onChange={handleChange} required />
+        </div>
+        <div className="form-actions">
+          <button type="submit" disabled={loading}>{loading ? 'Calculando...' : 'Calcular'}</button>
+        </div>
+      </form>
+      {error && <p className="message">{error}</p>}
+      {result && (
+        <div className="metric-grid">
+          <article className="metric-card"><span>Cap rate</span><strong>{result.capRate}%</strong></article>
+          <article className="metric-card"><span>VPN (a la tasa indicada)</span><strong>{currency.format(result.npv)}</strong></article>
+          <article className="metric-card">
+            <span>TIR</span>
+            <strong>{result.irr.irr != null ? `${(result.irr.irr * 100).toFixed(2)}%` : 'No definida'}</strong>
+          </article>
+          <article className="metric-card">
+            <span>Payback simple</span>
+            <strong>{result.payback.simple != null ? `${result.payback.simple} años` : 'No se recupera en el horizonte'}</strong>
+          </article>
+          <article className="metric-card">
+            <span>Payback descontado</span>
+            <strong>{result.payback.discounted != null ? `${result.payback.discounted} años` : 'No se recupera en el horizonte'}</strong>
+          </article>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function RealEstatePortfolio() {
   const [portfolio, setPortfolio] = useState(null);
   const [properties, setProperties] = useState([]);
   const [error, setError] = useState('');
+  const [analyzingPropertyId, setAnalyzingPropertyId] = useState(null);
 
   useEffect(() => {
     Promise.all([
@@ -64,6 +193,19 @@ function RealEstatePortfolio() {
                 <div><dt>Resiliencia territorial</dt><dd>{Number(property.risk_score * 100).toFixed(0)}/100</dd></div>
                 <div><dt>Uso del suelo</dt><dd>{property.zoning || 'Sin definir'}</dd></div>
               </dl>
+              <div className="card-actions">
+                <button
+                  type="button"
+                  onClick={() => setAnalyzingPropertyId(
+                    analyzingPropertyId === property.location_id ? null : property.location_id
+                  )}
+                >
+                  {analyzingPropertyId === property.location_id ? 'Ocultar análisis financiero' : 'Analizar financieramente'}
+                </button>
+              </div>
+              {analyzingPropertyId === property.location_id && (
+                <FinancialAnalysisPanel property={property} onClose={() => setAnalyzingPropertyId(null)} />
+              )}
             </article>
           ))}
         </div>
@@ -73,3 +215,4 @@ function RealEstatePortfolio() {
 }
 
 export default RealEstatePortfolio;
+

@@ -1,5 +1,7 @@
 const ApiError = require('../utils/ApiError');
 const analysisRepository = require('../repositories/analysis.repository');
+const multicriteria = require('../domain/analytics/multicriteria');
+const analyticsJobsRepository = require('../repositories/analyticsJobs.repository');
 
 const DEFAULT_WEIGHTS = {
   population_potential: 0.25,
@@ -157,7 +159,7 @@ async function resolveCandidatePoint(candidate, fallbackCity, organizationId) {
   });
 }
 
-async function scoreCandidates(payload, organizationId) {
+async function scoreCandidates(payload, organizationId, sessionUser) {
   const candidates = Array.isArray(payload.candidates) ? payload.candidates : [];
   if (candidates.length === 0) {
     throw new ApiError(400, 'Debes enviar al menos un candidato.');
@@ -175,28 +177,64 @@ async function scoreCandidates(payload, organizationId) {
       ownBrandName: payload.own_brand_name || 'McDonald%',
     });
     const scoreByDimension = buildDimensionScores(metrics);
-    const scoreTotal = Number(
-      Object.entries(scoreByDimension).reduce((acc, [criterion, score]) => acc + (score * weights[criterion]), 0).toFixed(2)
-    );
     const explanation = buildExplanation(metrics, scoreByDimension, weights);
 
     scoredCandidates.push({
       candidate_name: resolved.name,
       location_id: resolved.location_id,
       city: resolved.city,
-      score_total: scoreTotal,
       score_by_dimension: scoreByDimension,
       metrics,
       explanation,
     });
   }
 
-  const ranked = scoredCandidates
-    .slice()
-    .sort((a, b) => b.score_total - a.score_total)
-    .map((candidate, index) => ({ ...candidate, rank_position: index + 1 }));
+  // Real multicriteria ranking (TOPSIS): every dimension in
+  // buildDimensionScores() is already constructed so that "higher is
+  // better" (competition_intensity and territorial_risk are inverted at
+  // the source), so all criteria are benefit-oriented here.
+  const startedAt = Date.now();
+  const method = payload.ranking_method === 'weighted_sum' ? 'weighted_sum' : 'topsis';
+  const rankFn = method === 'weighted_sum' ? multicriteria.weightedSum : multicriteria.topsis;
+  const alternatives = scoredCandidates.map((c) => ({ name: c.candidate_name, criteria: c.score_by_dimension }));
+  const directions = Object.fromEntries(Object.keys(weights).map((key) => [key, 'benefit']));
 
-  return { ranked, weights };
+  let rankingResult;
+  let job = null;
+  try {
+    rankingResult = rankFn(alternatives, weights, { directions });
+    job = await analyticsJobsRepository.createJob({
+      organizationId,
+      requestedByUserId: sessionUser?.user_id || null,
+      algorithmName: `multicriteria.${method}`,
+      algorithmVersion: multicriteria.ALGORITHM_VERSION,
+      params: { weights, candidateCount: alternatives.length },
+      context: { module: 'comparador', project_name: payload.project_name || null },
+    });
+    await analyticsJobsRepository.completeJob(job.analytics_job_id, {
+      result: { ranking: rankingResult.ranking.map((r) => ({ name: r.name, scoreTotal: r.scoreTotal, rank: r.rank })) },
+      durationMs: Date.now() - startedAt,
+    });
+  } catch (error) {
+    if (job) {
+      await analyticsJobsRepository.failJob(job.analytics_job_id, { error: error.message, durationMs: Date.now() - startedAt });
+    }
+    throw new ApiError(400, `Error en el ranking multicriterio: ${error.message}`);
+  }
+
+  const scoreByName = new Map(scoredCandidates.map((c) => [c.candidate_name, c]));
+  const ranked = rankingResult.ranking.map((row) => {
+    const base = scoreByName.get(row.name);
+    return {
+      ...base,
+      score_total: row.scoreTotal,
+      rank_position: row.rank,
+      ranking_method: method,
+      analytics_job_id: job.analytics_job_id,
+    };
+  });
+
+  return { ranked, weights, rankingMethod: method, analyticsJobId: job.analytics_job_id };
 }
 
 function buildPairwiseComparison(ranked) {
@@ -234,7 +272,7 @@ async function runGeostrategicAnalysis(payload, sessionUser, organizationContext
     throw new ApiError(403, 'No hay organización activa para ejecutar análisis.');
   }
 
-  const { ranked, weights } = await scoreCandidates(payload, organizationId);
+  const { ranked, weights, rankingMethod, analyticsJobId } = await scoreCandidates(payload, organizationId, sessionUser);
   const run = await analysisRepository.createAnalysisRun({
     projectName: payload.project_name || 'Expansión McDonald’s Bogotá',
     city: payload.city || null,
@@ -245,6 +283,8 @@ async function runGeostrategicAnalysis(payload, sessionUser, organizationContext
     metadata: {
       analysis_type: payload.analysis_type || 'expansion',
       mode: payload.mode || 'standard',
+      ranking_method: rankingMethod,
+      analytics_job_id: analyticsJobId,
       note: 'El análisis usa radio geométrico y no isócronas.',
     },
   });
@@ -289,15 +329,32 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
     throw new ApiError(403, 'No hay organización activa para ejecutar comparación.');
   }
 
-  const { ranked, weights } = await scoreCandidates(payload, organizationId);
+  const { ranked, weights, rankingMethod, analyticsJobId } = await scoreCandidates(payload, organizationId, sessionUser);
+
+  let sensitivity = null;
+  if (ranked.length >= 2) {
+    const alternatives = ranked.map((r) => ({ name: r.candidate_name, criteria: r.score_by_dimension }));
+    const directions = Object.fromEntries(Object.keys(weights).map((key) => [key, 'benefit']));
+    try {
+      sensitivity = multicriteria.sensitivityAnalysis(alternatives, weights, {
+        directions, method: rankingMethod, perturbationPct: 0.15,
+      });
+    } catch {
+      sensitivity = null; // Sensitivity is best-effort context, never blocks the main ranking.
+    }
+  }
+
   return {
     compared_at: new Date().toISOString(),
     project_name: payload.project_name || 'Comparador avanzado',
     city: payload.city || null,
     criteria_weights: weights,
+    ranking_method: rankingMethod,
+    analytics_job_id: analyticsJobId,
     recommendation: buildRecommendation(ranked),
     ranking: ranked,
     pairwise: buildPairwiseComparison(ranked),
+    sensitivity,
   };
 }
 

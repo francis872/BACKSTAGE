@@ -20,6 +20,7 @@ const usersRoutes = require('./routes/users.routes');
 const layersRoutes = require('./routes/layers.routes');
 const analysisRoutes = require('./routes/analysis.routes');
 const auditLogsRoutes = require('./routes/auditLogs.routes');
+const analyticsRoutes = require('./routes/analytics.routes');
 const { getExampleRecommendation } = require('./controllers/recommendations.controller');
 
 const app = express();
@@ -65,6 +66,7 @@ app.get('/', (req, res) => {
       users: '/users',
       layers: '/layers',
       analysis: '/analysis',
+      analytics: '/analytics',
       auditLogs: '/audit-logs',
       securityEventsSocket: '/ws/security?token=<JWT>'
     }
@@ -85,6 +87,7 @@ app.use('/territorial', territorialRoutes);
 app.use('/users', usersRoutes);
 app.use('/layers', layersRoutes);
 app.use('/analysis', analysisRoutes);
+app.use('/analytics', analyticsRoutes);
 app.use('/audit-logs', auditLogsRoutes);
 
 // Backward compatibility with existing frontend route.
