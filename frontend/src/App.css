@@ -974,6 +974,62 @@ button.secondary:hover {
   margin-top: 12px;
 }
 
+/* ==================== RECOMENDACIONES (DASHBOARD DECISIONAL) ==================== */
+
+.recommendation-card {
+  border-left: 3px solid rgba(58, 74, 107, 0.4);
+}
+
+.recommendation-card.priority-critical { border-left-color: var(--danger); }
+.recommendation-card.priority-high { border-left-color: var(--accent-orange); }
+.recommendation-card.priority-medium { border-left-color: var(--accent-cyan); }
+.recommendation-card.priority-low { border-left-color: var(--text-secondary); }
+
+.status-pill.status-proposed { background: rgba(43, 127, 255, 0.15); color: var(--info); }
+.status-pill.status-under_review { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+.status-pill.status-approved { background: rgba(16, 217, 129, 0.15); color: var(--success); }
+.status-pill.status-rejected { background: rgba(255, 59, 48, 0.15); color: var(--danger); }
+.status-pill.status-in_progress { background: rgba(6, 214, 214, 0.15); color: var(--accent-cyan); }
+.status-pill.status-completed { background: rgba(16, 217, 129, 0.25); color: var(--success); }
+.status-pill.status-expired { background: rgba(148, 163, 184, 0.15); color: var(--text-secondary); }
+
+.status-pill.severity-alto { background: rgba(255, 59, 48, 0.15); color: var(--danger); }
+.status-pill.severity-medio { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+.status-pill.severity-bajo { background: rgba(16, 217, 129, 0.15); color: var(--success); }
+
+.review-controls {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(58, 74, 107, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.review-controls textarea {
+  padding: 8px 12px;
+  background: rgba(15, 23, 46, 0.5);
+  border: 1px solid rgba(58, 74, 107, 0.4);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.technical-detail {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(15, 23, 46, 0.6);
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  max-height: 220px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 /* ==================== INFORMES ==================== */
 
 .report-header {

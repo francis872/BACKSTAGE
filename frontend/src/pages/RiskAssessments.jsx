@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { apiRequest } from '../lib/api';
 
 const currency = new Intl.NumberFormat('es-CO', {
@@ -129,6 +129,37 @@ function RiskAssessments() {
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState('');
   const [simulatingId, setSimulatingId] = useState(null);
+  const [severityFilter, setSeverityFilter] = useState('');
+
+  const enrichedRows = useMemo(() => rows.map((row) => {
+    const indicators = [row.flood_risk, row.landslide_risk, row.crime_risk, row.climate_exposure]
+      .map((v) => Number(v))
+      .filter((v) => !Number.isNaN(v));
+    const avgRisk = indicators.length > 0 ? indicators.reduce((acc, v) => acc + v, 0) / indicators.length : null;
+    let severity = 's/d';
+    if (avgRisk != null) {
+      if (avgRisk >= 0.4) severity = 'alto';
+      else if (avgRisk >= 0.2) severity = 'medio';
+      else severity = 'bajo';
+    }
+    return { ...row, avgRisk, severity };
+  }), [rows]);
+
+  const summary = useMemo(() => {
+    const withRisk = enrichedRows.filter((r) => r.avgRisk != null);
+    const avg = withRisk.length > 0 ? withRisk.reduce((acc, r) => acc + r.avgRisk, 0) / withRisk.length : 0;
+    return {
+      total: enrichedRows.length,
+      alto: enrichedRows.filter((r) => r.severity === 'alto').length,
+      medio: enrichedRows.filter((r) => r.severity === 'medio').length,
+      bajo: enrichedRows.filter((r) => r.severity === 'bajo').length,
+      avgRiskPct: Number((avg * 100).toFixed(1)),
+    };
+  }, [enrichedRows]);
+
+  const visibleRows = severityFilter
+    ? enrichedRows.filter((row) => row.severity === severityFilter)
+    : enrichedRows;
 
   const loadData = async () => {
     setLoading(true);
@@ -220,6 +251,18 @@ function RiskAssessments() {
   return (
     <section>
       <h2>Evaluaciones de Riesgo</h2>
+
+      <div className="metric-grid">
+        <article className="metric-card"><span>Total evaluaciones</span><strong>{summary.total}</strong></article>
+        <article className="metric-card"><span>Riesgo promedio</span><strong>{summary.avgRiskPct}%</strong></article>
+        <article className="metric-card"><span>Riesgo alto</span><strong>{summary.alto}</strong></article>
+        <article className="metric-card"><span>Riesgo medio</span><strong>{summary.medio}</strong></article>
+        <article className="metric-card"><span>Riesgo bajo</span><strong>{summary.bajo}</strong></article>
+      </div>
+      <p className="auth-hint">
+        Riesgo = promedio de los 4 indicadores almacenados (inundación, deslizamiento, crimen, clima). Bandas: bajo &lt; 20%, medio 20-40%, alto ≥ 40% (umbrales configurables, no universales).
+      </p>
+
       <div className="form-section">
         <h3>{editingId ? 'Editar evaluación' : 'Crear evaluación'}</h3>
         <form onSubmit={submit} className="entity-form">
@@ -245,11 +288,26 @@ function RiskAssessments() {
         {message && <p className="message">{message}</p>}
       </div>
 
+      <div className="score-row">
+        <h3>Listado</h3>
+        <select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value)}>
+          <option value="">Todas las severidades</option>
+          <option value="alto">Riesgo alto</option>
+          <option value="medio">Riesgo medio</option>
+          <option value="bajo">Riesgo bajo</option>
+        </select>
+      </div>
+
       {loading ? <p>Cargando evaluaciones...</p> : (
         <div className="card-grid">
-          {rows.map((row) => (
+          {visibleRows.map((row) => (
             <article className="card" key={row.risk_id}>
-              <h3>{row.location_name || `Location #${row.location_id}`}</h3>
+              <div className="score-row">
+                <h3>{row.location_name || `Location #${row.location_id}`}</h3>
+                <span className={`status-pill severity-${row.severity}`}>
+                  {row.severity === 'alto' ? 'Riesgo alto' : row.severity === 'medio' ? 'Riesgo medio' : row.severity === 'bajo' ? 'Riesgo bajo' : 'Sin datos'}
+                </span>
+              </div>
               <p>Score: {row.score ?? 's/d'} · Ciudad: {row.city || 's/d'}</p>
               <p>Inundación {row.flood_risk ?? 's/d'} · Deslizamiento {row.landslide_risk ?? 's/d'}</p>
               <p>Crimen {row.crime_risk ?? 's/d'} · Clima {row.climate_exposure ?? 's/d'}</p>

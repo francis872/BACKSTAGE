@@ -114,14 +114,38 @@ adapters en `backend/infrastructure/external-apis/` (patrón ya usado por
 
 ## Épica 6 — Rediseño de Evaluaciones y Recomendaciones como dashboards
 
+**Estado: `done` (Recomendaciones), `partial` (Evaluaciones)**
+
+**Recomendaciones** se convirtió en un dashboard decisional real:
+- KPIs (total, pendientes de revisión, aprobadas, en progreso, completadas, rechazadas).
+- Estados con máquina de transición explícita (`proposed → under_review/approved/rejected`,
+  `approved → in_progress/expired`, `in_progress → completed/expired`), validada en backend
+  (`services/recommendations.service.js`, tabla `TRANSITIONS`), no solo en la UI.
+- Aprobar/rechazar exige justificación (`review_notes`), registra `reviewed_by_user_id` y
+  `reviewed_at`.
+- Botón "Generar recomendaciones desde un análisis": toma el ranking TOPSIS de una ejecución
+  real del Comparador Inteligente y crea recomendaciones vinculadas (`analysis_run_id`),
+  con prioridad y confianza derivadas del ranking (heurística documentada, no presentada
+  como verdad absoluta) y explicación de qué dimensiones la impulsan.
+- El formulario de creación manual quedó como acción secundaria; el detalle técnico (JSON
+  crudo) es opcional y colapsado, no la vista principal.
+- Verificado end-to-end en navegador: generación desde análisis, aprobación con
+  justificación, transición de estado y actualización de KPIs.
+
+**Evaluaciones de Riesgo** recibió una mejora acotada, no la reconstrucción completa:
+- KPIs (total, riesgo promedio, conteo por banda alto/medio/bajo) y filtro por severidad,
+  calculados de los 4 indicadores ya almacenados.
+- Conserva el patrón tarjeta + formulario CRUD; **no** se construyó el flujo guiado de
+  creación desde activo/proyecto/mapa, ni el detalle navegable con historial completo, ni
+  el mapa de evaluaciones que pide el documento. Esto queda pendiente como trabajo futuro
+  de UI, no como una limitación oculta.
+
+## Épica 7 — Dashboards, no formularios (Riesgos, Oportunidades)
+
 **Estado: `pending`**
 
-Evaluaciones de Riesgo ganó una capacidad real nueva (simulación Monte
-Carlo) pero conserva su listado tipo tarjetas + formulario CRUD; no se
-convirtió en el dashboard completo descrito (mapa + distribución por
-estado + evolución temporal + flujo guiado desde activo/proyecto/mapa).
-Recomendaciones no se tocó en esta fase. Ambas quedan pendientes como
-proyecto de UI propio, priorizable en una próxima fase.
+`RiskComponents.jsx` (menú "Riesgos") y `GeoInsights.jsx` (menú "Oportunidades") conservan
+el patrón tarjeta + formulario CRUD sin KPIs, mapa ni filtros. No se tocaron en esta fase.
 
 ## Resumen de verificación de esta fase
 
@@ -134,4 +158,7 @@ proyecto de UI propio, priorizable en una próxima fase.
 | RBAC granular por permiso | No — sigue con 3 roles (bloqueado como Épica 2A) |
 | Ningún modelo de ML presentado como entrenado sin dataset/evaluación | Correcto — no se entrenó ninguno (Épica 3 bloqueada explícitamente) |
 | Mapas BI, QGIS/PostGIS pipeline, APIs externas | Pendiente (Épicas 4 y 5) |
-| Evaluaciones/Recomendaciones como dashboards completos | Pendiente (Épica 6) |
+| Recomendaciones como dashboard decisional completo | Sí (Épica 6) |
+| Evaluaciones como dashboard completo (mapa, flujo guiado, historial) | Parcial — solo KPIs y filtro (Épica 6) |
+| Riesgos y Oportunidades como dashboards | Pendiente (Épica 7) |
+
