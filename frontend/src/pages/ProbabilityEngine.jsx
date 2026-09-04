@@ -29,6 +29,7 @@ function ProbabilityEngine({ onNavigate }) {
   const [summary, setSummary] = useState(null);
   const [analysisRuns, setAnalysisRuns] = useState([]);
   const [message, setMessage] = useState('');
+  const [expandedChart, setExpandedChart] = useState(null);
 
   useEffect(() => {
     let mounted = true;
@@ -140,14 +141,19 @@ function ProbabilityEngine({ onNavigate }) {
 
       <article className="form-section">
         <h3>Visualizaciones del motor</h3>
+        <p className="auth-hint">Haz clic en un gráfico para ampliarlo a tamaño completo.</p>
         <div className="probability-chart-grid">
           {CHARTS.map((chart) => (
-            <article className="card probability-chart-card" key={chart.file}>
+            <article
+              className={`card probability-chart-card ${expandedChart === chart.file ? 'expanded' : ''}`}
+              key={chart.file}
+            >
               <h4>{chart.label}</h4>
               <img
                 src={`/probability/output/${selectedDataset}/${chart.file}`}
                 alt={chart.label}
                 loading="lazy"
+                onClick={() => setExpandedChart((prev) => (prev === chart.file ? null : chart.file))}
               />
             </article>
           ))}

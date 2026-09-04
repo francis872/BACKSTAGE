@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiRequest, apiUrl } from '../lib/api';
+import { apiRequest } from '../lib/api';
 
 const defaultSearch = {
   lat: '4.7110',
@@ -28,10 +28,11 @@ function GeoInsights() {
     setLoading(true);
     try {
       const res = await apiRequest(
-        `${apiUrl('/locations/nearby')}?lat=${encodeURIComponent(search.lat)}&lng=${encodeURIComponent(
+        `/locations/nearby?lat=${encodeURIComponent(search.lat)}&lng=${encodeURIComponent(
           search.lng
         )}&radius=${encodeURIComponent(search.radius)}`
       );
+      if (!res.ok) throw new Error('No se pudieron cargar las ubicaciones cercanas.');
       const data = await res.json();
       setNearby(data);
       setMessage('');

@@ -150,6 +150,7 @@ vercel --prod
 Variables frontend mínimas:
 
 - `BACKEND_URL` = URL de backend desplegado en Vercel
+- `VITE_SECURITY_WS_URL` = `wss://<backend>/ws/security` para stream de seguridad en vivo (si no está disponible, la UI usa sondeo periódico)
 
 ## Git
 

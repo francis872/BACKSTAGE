@@ -1,6 +1,35 @@
 import { useEffect, useMemo, useState } from 'react';
 import { apiRequest } from '../lib/api';
 
+function formatDimensionLabel(key) {
+  return String(key)
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function DimensionBreakdown({ scores }) {
+  const entries = Object.entries(scores || {});
+  if (entries.length === 0) return null;
+  return (
+    <div className="dimension-breakdown">
+      {entries.map(([dimension, value]) => {
+        const numeric = Math.max(0, Math.min(100, Number(value) || 0));
+        return (
+          <div className="dimension-row" key={dimension}>
+            <div className="dimension-row-label">
+              <span>{formatDimensionLabel(dimension)}</span>
+              <strong>{numeric.toFixed(1)}</strong>
+            </div>
+            <div className="dimension-bar-track">
+              <div className="dimension-bar-fill" style={{ width: `${numeric}%` }} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function Reports() {
   const [analysisId, setAnalysisId] = useState('');
   const [availableRuns, setAvailableRuns] = useState([]);
@@ -114,9 +143,11 @@ function Reports() {
             <div className="card-grid">
               {(report.ranking || []).map((row) => (
                 <article className="card" key={`${row.rank_position}-${row.candidate_name}`}>
-                  <h3>#{row.rank_position} {row.candidate_name}</h3>
-                  <p>Puntaje total: {row.score_total}</p>
-                  <pre>{JSON.stringify(row.score_by_dimension, null, 2)}</pre>
+                  <div className="score-row">
+                    <h3>#{row.rank_position} {row.candidate_name}</h3>
+                    <span className="score">{row.score_total}</span>
+                  </div>
+                  <DimensionBreakdown scores={row.score_by_dimension} />
                 </article>
               ))}
             </div>

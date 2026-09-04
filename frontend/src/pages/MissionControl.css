@@ -1,0 +1,420 @@
+/* ==================== MISSION CONTROL STYLES ==================== */
+
+.mission-control {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 32px;
+}
+
+/* ==================== HERO SECTION ==================== */
+
+.mission-hero {
+  padding: 48px 40px;
+  background: linear-gradient(135deg, rgba(6, 214, 214, 0.1), rgba(43, 127, 255, 0.1));
+  border: 1px solid rgba(58, 74, 107, 0.4);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.hero-content {
+  max-width: 100%;
+}
+
+.hero-label {
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent-cyan);
+  opacity: 0.9;
+}
+
+.mission-hero h1 {
+  margin: 0 0 16px;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+
+.hero-desc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 600px;
+}
+
+/* ==================== KPI GRID ==================== */
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(36, 46, 75, 0.4);
+  border: 1px solid rgba(58, 74, 107, 0.4);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.kpi-card:hover {
+  background: rgba(36, 46, 75, 0.6);
+  border-color: rgba(6, 214, 214, 0.4);
+  transform: translateY(-4px);
+}
+
+.kpi-icon {
+  font-size: 32px;
+  opacity: 0.8;
+  min-width: 40px;
+}
+
+.kpi-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpi-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.kpi-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  letter-spacing: -0.5px;
+}
+
+/* ==================== SECTION HEADERS ==================== */
+
+.section-header {
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+
+.section-header p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ==================== WORKFLOW SECTION ==================== */
+
+.workflow-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.workflow-card {
+  padding: 32px;
+  background: rgba(36, 46, 75, 0.4);
+  border: 1px solid rgba(58, 74, 107, 0.4);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.workflow-card:hover {
+  background: rgba(36, 46, 75, 0.6);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 12px 32px rgba(6, 214, 214, 0.15);
+  transform: translateY(-4px);
+}
+
+.workflow-icon {
+  font-size: 40px;
+  opacity: 0.9;
+}
+
+.workflow-card h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.workflow-card p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.btn-workflow {
+  align-self: flex-start;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  color: var(--primary);
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.btn-workflow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(6, 214, 214, 0.2);
+}
+
+/* ==================== EXECUTIONS SECTION ==================== */
+
+.executions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.executions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.execution-card {
+  padding: 20px;
+  background: rgba(36, 46, 75, 0.4);
+  border: 1px solid rgba(58, 74, 107, 0.4);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.execution-card:hover {
+  background: rgba(36, 46, 75, 0.6);
+  border-color: rgba(6, 214, 214, 0.4);
+}
+
+.execution-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.execution-id {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--text-secondary);
+}
+
+.execution-badge {
+  font-size: 8px;
+  color: var(--accent-green);
+  opacity: 0.8;
+}
+
+.execution-card h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.execution-text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.execution-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-secondary {
+  flex: 1;
+  padding: 8px 12px;
+  background: rgba(43, 127, 255, 0.15);
+  color: var(--accent-blue);
+  border: 1px solid rgba(43, 127, 255, 0.3);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(43, 127, 255, 0.25);
+  border-color: var(--accent-blue);
+}
+
+.btn-tertiary {
+  flex: 1;
+  padding: 8px 12px;
+  background: rgba(58, 74, 107, 0.3);
+  color: var(--text-secondary);
+  border: 1px solid rgba(58, 74, 107, 0.4);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-tertiary:hover {
+  background: rgba(58, 74, 107, 0.5);
+  border-color: var(--text-secondary);
+}
+
+/* ==================== STATES ==================== */
+
+.loading-state {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.empty-state {
+  padding: 60px 40px;
+  text-align: center;
+  background: rgba(36, 46, 75, 0.2);
+  border: 1px solid rgba(58, 74, 107, 0.3);
+  border-radius: 10px;
+}
+
+.empty-state p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.empty-state p:first-child {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.message-alert {
+  padding: 16px 20px;
+  background: rgba(43, 127, 255, 0.1);
+  border: 1px solid rgba(43, 127, 255, 0.3);
+  border-radius: 8px;
+  color: var(--info);
+  font-size: 13px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 1400px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .workflow-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  .mission-control {
+    padding: 24px;
+    gap: 24px;
+  }
+  
+  .mission-hero {
+    padding: 32px 24px;
+  }
+  
+  .mission-hero h1 {
+    font-size: 28px;
+  }
+  
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .executions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .mission-control {
+    padding: 16px;
+    gap: 20px;
+  }
+  
+  .mission-hero {
+    padding: 24px 16px;
+  }
+  
+  .mission-hero h1 {
+    font-size: 24px;
+  }
+  
+  .hero-desc {
+    font-size: 13px;
+  }
+  
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .kpi-card {
+    padding: 16px;
+  }
+  
+  .kpi-value {
+    font-size: 24px;
+  }
+  
+  .workflow-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .workflow-card {
+    padding: 24px;
+  }
+  
+  .executions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .execution-actions {
+    flex-direction: column;
+  }
+}

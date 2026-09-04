@@ -1,5 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+
+// Authentication Pages
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+
+// Legacy Pages
 import RetailZones from './pages/RetailZones';
 import RiskComponents from './pages/RiskComponents';
 import Recommendations from './pages/Recommendations';
@@ -16,6 +24,7 @@ import Reports from './pages/Reports';
 import AdvancedComparator from './pages/AdvancedComparator';
 import AuditLogsAdmin from './pages/AuditLogsAdmin';
 import ProbabilityEngine from './pages/ProbabilityEngine';
+
 import { apiRequest } from './lib/api';
 import { clearSession, getSessionUser, setSession } from './lib/auth';
 
@@ -38,7 +47,17 @@ const menu = [
   { key: 'admin-audit-logs', label: 'Auditoría de acciones', group: 'Administración' },
 ];
 
-function App() {
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
+// Legacy App Component (original behavior)
+const LegacyApp = () => {
   const [activePage, setActivePage] = useState('mission-control');
   const [authForm, setAuthForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', organization_id: '' });
@@ -48,6 +67,7 @@ function App() {
   const [authMessage, setAuthMessage] = useState('');
   const [recommendation, setRecommendation] = useState('Cargando recomendación operativa...');
   const [switchingOrg, setSwitchingOrg] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     apiRequest('/recommendation/example')
@@ -147,45 +167,37 @@ function App() {
     event.preventDefault();
     setAuthMessage('');
     try {
-      const payload = {
-        name: registerForm.name || null,
-        email: registerForm.email,
-        password: registerForm.password,
-      };
-      if (registerForm.organization_id) {
-        payload.organization_id = Number(registerForm.organization_id);
-      }
-
       const res = await apiRequest('/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(registerForm),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'No se pudo crear la cuenta.');
-      setSession(data.token, data.user);
-      setSessionUser(data.user);
+      setAuthMessage(`Cuenta creada. Por favor inicia sesión.`);
+      setAuthMode('login');
       setRegisterForm({ name: '', email: '', password: '', organization_id: '' });
-      setAuthMessage(`Cuenta creada y sesión iniciada en ${data.user.organization_name}.`);
     } catch (error) {
       setAuthMessage(`Error: ${error.message}`);
     }
   };
 
-  const handleLogout = () => {
-    clearSession();
-    setSessionUser(null);
-    setAuthMessage('Sesión cerrada.');
+  const handleLogout = async () => {
+    try {
+      await apiRequest('/auth/logout', { method: 'POST' });
+    } finally {
+      clearSession();
+      setSessionUser(null);
+    }
   };
 
-  const handleOrganizationSwitch = async (organizationId) => {
-    setAuthMessage('');
+  const handleOrganizationSwitch = async (newOrgId) => {
     setSwitchingOrg(true);
     try {
-      const res = await apiRequest('/auth/switch-organization', {
+      const res = await apiRequest('/auth/organization-switch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ organization_id: Number(organizationId) }),
+        body: JSON.stringify({ organization_id: newOrgId }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'No se pudo cambiar de organización.');
@@ -294,9 +306,6 @@ function App() {
                   ))}
                 </select>
               </div>
-              {!hasOrganizations && (
-                <p className="message">No hay organizaciones disponibles para registro en este momento.</p>
-              )}
               <p className="auth-hint">El registro público crea cuentas con rol inicial de consulta.</p>
               <div className="form-actions">
                 <button type="submit" disabled={!hasOrganizations}>Crear cuenta</button>
@@ -311,7 +320,18 @@ function App() {
 
   return (
     <div className="app shell">
-      <aside className="side-nav">
+      <button
+        type="button"
+        className="mobile-nav-toggle"
+        aria-label={mobileNavOpen ? 'Cerrar menú' : 'Abrir menú'}
+        onClick={() => setMobileNavOpen((prev) => !prev)}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+      {mobileNavOpen && <div className="mobile-nav-backdrop" onClick={() => setMobileNavOpen(false)} />}
+      <aside className={`side-nav ${mobileNavOpen ? 'mobile-open' : ''}`}>
         <div className="side-brand">
           <p className="eyebrow">Centro de operaciones</p>
           <h1>BACKSTAGE</h1>
@@ -350,7 +370,10 @@ function App() {
                   key={item.key}
                   type="button"
                   className={activePage === item.key ? 'active' : ''}
-                  onClick={() => setActivePage(item.key)}
+                  onClick={() => {
+                    setActivePage(item.key);
+                    setMobileNavOpen(false);
+                  }}
                 >
                   {item.label}
                 </button>
@@ -360,7 +383,14 @@ function App() {
           {isAdmin && (
             <div className="menu-group">
               <h3>Desarrollo</h3>
-              <button type="button" className={activePage === 'dev-architecture' ? 'active' : ''} onClick={() => setActivePage('dev-architecture')}>
+              <button
+                type="button"
+                className={activePage === 'dev-architecture' ? 'active' : ''}
+                onClick={() => {
+                  setActivePage('dev-architecture');
+                  setMobileNavOpen(false);
+                }}
+              >
                 Arquitectura (técnico)
               </button>
             </div>
@@ -370,6 +400,35 @@ function App() {
 
       <main className="content-panel">{renderPage()}</main>
     </div>
+  );
+};
+
+// Main App Router
+function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* New Auth Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        
+        {/* New Dashboard Route (Protected) */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
+        
+        {/* Legacy Routes - Redirect to dashboard if new auth is used */}
+        <Route path="/" element={<LegacyApp />} />
+        
+        {/* Catch-all */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
 }
 

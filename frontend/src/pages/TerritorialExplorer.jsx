@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { apiRequest, apiUrl } from '../lib/api';
+import { apiRequest } from '../lib/api';
 
 function normalizeGeometryType(value) {
   const text = String(value || '').toLowerCase();
@@ -136,10 +136,19 @@ function TerritorialExplorer() {
     try {
       await Promise.all(activeLayers.map(async (layer) => {
         const response = await apiRequest(
-          `${apiUrl(`/layers/${layer.layer_id}/features`)}?bbox=${encodeURIComponent(bbox)}&limit=600`
+          `/layers/${layer.layer_id}/features?bbox=${encodeURIComponent(bbox)}&limit=600`
         );
+        if (!response.ok) {
+          let errorMessage = `No fue posible cargar capa ${layer.name}`;
+          try {
+            const errorBody = await response.json();
+            errorMessage = errorBody.error || errorMessage;
+          } catch {
+            // Response was not JSON (e.g. unexpected server error page); keep default message.
+          }
+          throw new Error(errorMessage);
+        }
         const geojson = await response.json();
-        if (!response.ok) throw new Error(geojson.error || `No fue posible cargar capa ${layer.name}`);
         renderLayerOnMap(layer, geojson);
       }));
     } catch (error) {
@@ -171,7 +180,8 @@ function TerritorialExplorer() {
   useEffect(() => {
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: 'https://demotiles.maplibre.org/style.json',
+      // Free, no-API-key dark vector basemap (OpenFreeMap) matching the operations-console aesthetic.
+      style: 'https://tiles.openfreemap.org/styles/dark',
       center: [-74.0721, 4.711],
       zoom: 11,
       attributionControl: true,
