@@ -1,4 +1,4 @@
-# 🚀 BACKSTAGE - Despliegue en Render.com
+﻿# ðŸš€ BACKSTAGE - Despliegue en Render.com
 
 ## Pasos para desplegar en Render (GRATIS y sin restricciones):
 
@@ -7,7 +7,7 @@
    - Sign up con GitHub (recomendado)
 
 ### 2. **Conectar repositorio**
-   - Dashboard → New → Web Service
+   - Dashboard â†’ New â†’ Web Service
    - Conectar repositorio: `BACKSTAGE`
    - Branch: `main`
 
@@ -20,16 +20,16 @@
    - **Plan:** Free (unlimited)
 
 ### 4. **Agregar PostgreSQL**
-   - Dashboard → New → PostgreSQL
+   - Dashboard â†’ New â†’ PostgreSQL
    - **Name:** `backstage-db`
    - **Region:** US East (misma que backend)
    - **Plan:** Free (10GB storage)
 
 ### 5. **Conectar Base de Datos al Backend**
    - Copiar `External Database URL` de PostgreSQL
-   - Ir a Backend Service → Environment
+   - Ir a Backend Service â†’ Environment
    - Agregar: `DATABASE_URL` = (URL de PostgreSQL)
-   - Deploy automático se dispara
+   - Deploy automÃ¡tico se dispara
 
 ### 6. **Verificar Deployments**
    ```bash
@@ -41,12 +41,12 @@
    ```
    VITE_API_URL=https://backstage-backend-xxxx.onrender.com
    ```
-   - Push a GitHub → Vercel redeploy automático
+   - Push a GitHub â†’ Vercel redeploy automÃ¡tico
 
 ---
 
 ## URLs Finales:
-- **Frontend:** https://frontend-seven-black-14.vercel.app
+- **Frontend:** https://backstage-intelligence.vercel.app
 - **Backend:** https://backstage-backend-xxxx.onrender.com
 - **Database:** Managed PostgreSQL en Render
 
@@ -54,4 +54,5 @@
 
 ## Tiempo Total: ~5 minutos
 
-¡Plataforma completamente operativa sin pagar nada! 🎉
+Â¡Plataforma completamente operativa sin pagar nada! ðŸŽ‰
+

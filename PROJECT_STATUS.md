@@ -1,42 +1,42 @@
-# 📊 BACKSTAGE Intelligence - Estado del Proyecto
+﻿# ðŸ“Š BACKSTAGE Intelligence - Estado del Proyecto
 
-## 🎯 Objetivo Completado
+## ðŸŽ¯ Objetivo Completado
 Crear una **plataforma integral de inteligencia empresarial** con:
-- ✅ Frontend interactivo (React)
-- ✅ Backend REST API (Express + PostgreSQL)
-- ✅ Análisis geoespacial (PostGIS)
-- ✅ Modelos de scoring y recomendaciones
-- ✅ Módulos especializados: EARTHART, Retail Intelligence, Real Estate Valuation
+- âœ… Frontend interactivo (React)
+- âœ… Backend REST API (Express + PostgreSQL)
+- âœ… AnÃ¡lisis geoespacial (PostGIS)
+- âœ… Modelos de scoring y recomendaciones
+- âœ… MÃ³dulos especializados: EARTHART, Retail Intelligence, Real Estate Valuation
 
 ---
 
-## ✅ LO QUE YA ESTÁ OPERATIVO
+## âœ… LO QUE YA ESTÃ OPERATIVO
 
-### 1. 🌐 Frontend en Vercel
-**URL:** https://frontend-seven-black-14.vercel.app
+### 1. ðŸŒ Frontend en Vercel
+**URL:** https://backstage-intelligence.vercel.app
 
 **Stack:**
 - React 18 + Vite
-- SPA con 6 módulos principales
+- SPA con 6 mÃ³dulos principales
 - Mapas interactivos (Leaflet)
-- Gráficos (Chart.js)
-- Tablas dinámicas
+- GrÃ¡ficos (Chart.js)
+- Tablas dinÃ¡micas
 
-**Módulos Implementados:**
+**MÃ³dulos Implementados:**
 1. **Dashboard** - Vista general de KPIs
-2. **Location Intelligence** - Análisis de ubicaciones
+2. **Location Intelligence** - AnÃ¡lisis de ubicaciones
 3. **Retail Analytics** - Zonas comerciales
 4. **Real Estate** - Valuaciones inmobiliarias
-5. **EARTHART** - Índice territorial
-6. **Risk Assessment** - Evaluación de riesgos
+5. **EARTHART** - Ãndice territorial
+6. **Risk Assessment** - EvaluaciÃ³n de riesgos
 
 **Deployment:**
-- ✅ Git: https://github.com/francis872/BACKSTAGE
-- ✅ Vercel: Auto-deploy en cada push
+- âœ… Git: https://github.com/francis872/BACKSTAGE
+- âœ… Vercel: Auto-deploy en cada push
 
 ---
 
-## ⏳ LO QUE FALTA (5 minutos de trabajo)
+## â³ LO QUE FALTA (5 minutos de trabajo)
 
 ### Backend + Base de Datos en Railway
 
@@ -50,142 +50,142 @@ Crear una **plataforma integral de inteligencia empresarial** con:
 6. [ ] cd backend && railway up
 7. [ ] railway exec node init-railway.js (sembrar datos)
 8. [ ] Copiar URL de Railway en .env.production
-9. [ ] git push (Vercel redeploy automático)
+9. [ ] git push (Vercel redeploy automÃ¡tico)
 ```
 
 **Resultado Esperado:**
-- ✓ Backend operativo en: `https://backstage-intelligence-prod.railway.app`
-- ✓ PostgreSQL con datos de ejemplo
-- ✓ Frontend conectado al backend real
+- âœ“ Backend operativo en: `https://backstage-intelligence-prod.railway.app`
+- âœ“ PostgreSQL con datos de ejemplo
+- âœ“ Frontend conectado al backend real
 
 **Tiempo:** 10 minutos
 
 ---
 
-## 📁 Estructura del Proyecto
+## ðŸ“ Estructura del Proyecto
 
 ```
 BACKSTAGE/
-├── frontend/                          # React SPA en Vercel
-│   ├── src/
-│   │   ├── pages/                    # 6 páginas principales
-│   │   ├── components/               # Componentes reutilizables
-│   │   ├── lib/
-│   │   │   └── api.js               # Helper para API
-│   │   └── App.jsx
-│   ├── api/
-│   │   └── index.js                 # Proxy a backend
-│   ├── package.json
-│   ├── vite.config.js
-│   ├── vercel.json
-│   └── .env.* (local, production)
-│
-├── backend/                           # Express.js API
-│   ├── index.js                      # Servidor principal
-│   ├── db.js                         # Pool PostgreSQL
-│   ├── auth.js                       # JWT auth
-│   ├── scoring.js                    # Modelo de scoring
-│   ├── earthart.js                   # Índice territorial
-│   ├── ingestion.js                  # Ingestion pipeline
-│   ├── migrations/                   # 7 migraciones SQL
-│   ├── schema.sql                    # Schema completo
-│   ├── sample-data.sql               # Datos de ejemplo
-│   ├── Dockerfile                    # Contenedor
-│   ├── railway.json                  # Config Railway
-│   ├── init-railway.js               # Init script
-│   └── package.json
-│
-├── data/                              # Datos geoespaciales Bogotá
-│   └── bogota-geospatial-sources.md
-│
-├── docs/                              # Documentación
-│   ├── ARCHITECTURE.md
-│   ├── API.md
-│   ├── EARTHART_GUIDE.md
-│   └── ...
-│
-├── docker-compose.yml                 # Stack local
-├── DEPLOYMENT_GUIDE.md                # ⭐ GUÍA PRINCIPAL
-├── RAILWAY_DEPLOYMENT.md              # Guía Railroad
-├── README.md                          # Principal
-└── .gitignore
+â”œâ”€â”€ frontend/                          # React SPA en Vercel
+â”‚   â”œâ”€â”€ src/
+â”‚   â”‚   â”œâ”€â”€ pages/                    # 6 pÃ¡ginas principales
+â”‚   â”‚   â”œâ”€â”€ components/               # Componentes reutilizables
+â”‚   â”‚   â”œâ”€â”€ lib/
+â”‚   â”‚   â”‚   â””â”€â”€ api.js               # Helper para API
+â”‚   â”‚   â””â”€â”€ App.jsx
+â”‚   â”œâ”€â”€ api/
+â”‚   â”‚   â””â”€â”€ index.js                 # Proxy a backend
+â”‚   â”œâ”€â”€ package.json
+â”‚   â”œâ”€â”€ vite.config.js
+â”‚   â”œâ”€â”€ vercel.json
+â”‚   â””â”€â”€ .env.* (local, production)
+â”‚
+â”œâ”€â”€ backend/                           # Express.js API
+â”‚   â”œâ”€â”€ index.js                      # Servidor principal
+â”‚   â”œâ”€â”€ db.js                         # Pool PostgreSQL
+â”‚   â”œâ”€â”€ auth.js                       # JWT auth
+â”‚   â”œâ”€â”€ scoring.js                    # Modelo de scoring
+â”‚   â”œâ”€â”€ earthart.js                   # Ãndice territorial
+â”‚   â”œâ”€â”€ ingestion.js                  # Ingestion pipeline
+â”‚   â”œâ”€â”€ migrations/                   # 7 migraciones SQL
+â”‚   â”œâ”€â”€ schema.sql                    # Schema completo
+â”‚   â”œâ”€â”€ sample-data.sql               # Datos de ejemplo
+â”‚   â”œâ”€â”€ Dockerfile                    # Contenedor
+â”‚   â”œâ”€â”€ railway.json                  # Config Railway
+â”‚   â”œâ”€â”€ init-railway.js               # Init script
+â”‚   â””â”€â”€ package.json
+â”‚
+â”œâ”€â”€ data/                              # Datos geoespaciales BogotÃ¡
+â”‚   â””â”€â”€ bogota-geospatial-sources.md
+â”‚
+â”œâ”€â”€ docs/                              # DocumentaciÃ³n
+â”‚   â”œâ”€â”€ ARCHITECTURE.md
+â”‚   â”œâ”€â”€ API.md
+â”‚   â”œâ”€â”€ EARTHART_GUIDE.md
+â”‚   â””â”€â”€ ...
+â”‚
+â”œâ”€â”€ docker-compose.yml                 # Stack local
+â”œâ”€â”€ DEPLOYMENT_GUIDE.md                # â­ GUÃA PRINCIPAL
+â”œâ”€â”€ RAILWAY_DEPLOYMENT.md              # GuÃ­a Railroad
+â”œâ”€â”€ README.md                          # Principal
+â””â”€â”€ .gitignore
 
 ```
 
 ---
 
-## 📊 Arquitectura Técnica
+## ðŸ“Š Arquitectura TÃ©cnica
 
-### Frontend → Backend → Database
+### Frontend â†’ Backend â†’ Database
 
 ```
 Usuario (Browser)
-    ↓
+    â†“
 Vercel (Frontend - React SPA)
-    ↓ API Calls (/api/*)
+    â†“ API Calls (/api/*)
 Vercel Serverless Functions (Proxy)
-    ↓ HTTP Requests
+    â†“ HTTP Requests
 Railway Backend (Express.js)
-    ↓ SQL Queries
+    â†“ SQL Queries
 Railway PostgreSQL + PostGIS
-    ↓ Geospatial Analysis
+    â†“ Geospatial Analysis
 ```
 
 ### Modelos de Datos
 
 **Tablas Principales:**
 1. `locations` - Ubicaciones con geom (PostGIS)
-2. `risk_assessments` - Evaluación de riesgos
+2. `risk_assessments` - EvaluaciÃ³n de riesgos
 3. `retail_zones` - Zonas comerciales
 4. `property_valuations` - Valuaciones inmobiliarias
-5. `earthart_territorial_index` - Índice EARTHART
+5. `earthart_territorial_index` - Ãndice EARTHART
 6. `integration_events` - Pipeline de ingestion
-7. `audit_log` - Auditoría
+7. `audit_log` - AuditorÃ­a
 
 ---
 
-## 🔄 Flujo de Datos
+## ðŸ”„ Flujo de Datos
 
-### 1. Ingestion (Datos Bogotá)
+### 1. Ingestion (Datos BogotÃ¡)
 ```
-Datos abiertos Bogotá (CSV)
-    → Backend Pipeline (ingestion.js)
-    → Validación
-    → PostgreSQL + Geom (PostGIS)
+Datos abiertos BogotÃ¡ (CSV)
+    â†’ Backend Pipeline (ingestion.js)
+    â†’ ValidaciÃ³n
+    â†’ PostgreSQL + Geom (PostGIS)
 ```
 
 ### 2. Processing (Scoring)
 ```
-Nueva ubicación
-    → Evaluación de riesgos (scoring.js)
-    → Cálculo de índices
-    → Puntuación final
-    → Almacenado en DB
+Nueva ubicaciÃ³n
+    â†’ EvaluaciÃ³n de riesgos (scoring.js)
+    â†’ CÃ¡lculo de Ã­ndices
+    â†’ PuntuaciÃ³n final
+    â†’ Almacenado en DB
 ```
 
-### 3. Presentación (Frontend)
+### 3. PresentaciÃ³n (Frontend)
 ```
-Usuario selecciona ubicación
-    → Frontend solicita /api/locations/:id
-    → Proxy → Backend → DB
-    → Visualización en mapas/gráficos
+Usuario selecciona ubicaciÃ³n
+    â†’ Frontend solicita /api/locations/:id
+    â†’ Proxy â†’ Backend â†’ DB
+    â†’ VisualizaciÃ³n en mapas/grÃ¡ficos
 ```
 
 ---
 
-## 📈 Características Incluidas
+## ðŸ“ˆ CaracterÃ­sticas Incluidas
 
 ### Dashboard
 - KPIs principales
 - Resumen de ubicaciones
-- Distribución de riesgos
+- DistribuciÃ³n de riesgos
 - Top zonas comerciales
 
 ### Location Intelligence
-- Búsqueda de ubicaciones
+- BÃºsqueda de ubicaciones
 - Mapa interactivo
 - Filtros por tipo/riesgo
-- Análisis por proximidad
+- AnÃ¡lisis por proximidad
 
 ### Retail Analytics
 - Zonas comerciales mapeadas
@@ -195,33 +195,33 @@ Usuario selecciona ubicación
 
 ### Real Estate
 - Valuaciones de propiedades
-- Proyecciones de apreciación
+- Proyecciones de apreciaciÃ³n
 - Potencial de desarrollo
 - Zonas
 
 ### EARTHART
-- Índice territorial
-- Detección de brechas
+- Ãndice territorial
+- DetecciÃ³n de brechas
 - Simulaciones de infraestructura
 - Recomendaciones
 
 ### Risk Assessment
-- Evaluación de riesgos por componente
-- Histórico de cambios
+- EvaluaciÃ³n de riesgos por componente
+- HistÃ³rico de cambios
 - Matriz de riesgo
 
 ---
 
-## 🚀 Próximos Pasos (Opcional)
+## ðŸš€ PrÃ³ximos Pasos (Opcional)
 
-Después de desplegar el backend:
+DespuÃ©s de desplegar el backend:
 
-1. **Integrar datos Bogotá reales**
+1. **Integrar datos BogotÃ¡ reales**
    - `data/bogota-geospatial-sources.md` lista fuentes
    - Ejecutar ingestion pipeline
-   - Backend automáticamente procesa
+   - Backend automÃ¡ticamente procesa
 
-2. **Agregar autenticación**
+2. **Agregar autenticaciÃ³n**
    - `backend/auth.js` ya tiene JWT
    - Implementar login en frontend
 
@@ -231,12 +231,12 @@ Después de desplegar el backend:
 
 4. **Escalabilidad**
    - Caching con Redis
-   - Índices PostgreSQL
+   - Ãndices PostgreSQL
    - Read replicas si crece
 
 ---
 
-## 🎓 Cómo Usar Ahora
+## ðŸŽ“ CÃ³mo Usar Ahora
 
 ### Localmente (Desarrollo)
 
@@ -255,44 +255,45 @@ npm run dev
 # - API: http://localhost:4000/api/*
 ```
 
-### En Producción (Después de Railway)
+### En ProducciÃ³n (DespuÃ©s de Railway)
 
 ```bash
-# Frontend: https://frontend-seven-black-14.vercel.app
+# Frontend: https://backstage-intelligence.vercel.app
 # Backend: https://backstage-intelligence-prod.railway.app
-# DB: Railway (automático)
+# DB: Railway (automÃ¡tico)
 ```
 
 ---
 
-## 📞 Soporte
+## ðŸ“ž Soporte
 
 **Archivos de referencia:**
-- `DEPLOYMENT_GUIDE.md` - Cómo desplegar paso a paso
-- `RAILWAY_DEPLOYMENT.md` - Específico para Railway
+- `DEPLOYMENT_GUIDE.md` - CÃ³mo desplegar paso a paso
+- `RAILWAY_DEPLOYMENT.md` - EspecÃ­fico para Railway
 - `backend/README.md` - API endpoints
 - `frontend/README.md` - Componentes React
-- `docs/API.md` - Especificación API completa
+- `docs/API.md` - EspecificaciÃ³n API completa
 
 ---
 
-## ⭐ Estado Resumen
+## â­ Estado Resumen
 
 ```
-┌─────────────────────────────────────────┐
-│  BACKSTAGE Intelligence                 │
-│                                         │
-│  Frontend:  ✅ OPERATIVO (Vercel)       │
-│  Backend:   ⏳ LISTO (sin desplegar)    │
-│  Database:  ⏳ LISTO (sin desplegar)    │
-│                                         │
-│  🚀 Tiempo para producción: 5 minutos   │
-└─────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  BACKSTAGE Intelligence                 â”‚
+â”‚                                         â”‚
+â”‚  Frontend:  âœ… OPERATIVO (Vercel)       â”‚
+â”‚  Backend:   â³ LISTO (sin desplegar)    â”‚
+â”‚  Database:  â³ LISTO (sin desplegar)    â”‚
+â”‚                                         â”‚
+â”‚  ðŸš€ Tiempo para producciÃ³n: 5 minutos   â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
-**¿Listo para desplegar el backend? ➡️ Ve a DEPLOYMENT_GUIDE.md**
+**Â¿Listo para desplegar el backend? âž¡ï¸ Ve a DEPLOYMENT_GUIDE.md**
 
 ---
 
-*Desarrollado con ❤️ usando React, Express, PostgreSQL y PostGIS*
-*Datos abiertos de Bogotá (datosabiertos.bogota.gov.co)*
+*Desarrollado con â¤ï¸ usando React, Express, PostgreSQL y PostGIS*
+*Datos abiertos de BogotÃ¡ (datosabiertos.bogota.gov.co)*
+

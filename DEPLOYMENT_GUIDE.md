@@ -1,28 +1,28 @@
-# 🚀 BACKSTAGE Intelligence - Guía de Despliegue Completo
+﻿# ðŸš€ BACKSTAGE Intelligence - GuÃ­a de Despliegue Completo
 
-## 📋 Estado Actual
+## ðŸ“‹ Estado Actual
 
 ```
-✅ FRONTEND (Vercel)
-   - URL: https://frontend-seven-black-14.vercel.app
+âœ… FRONTEND (Vercel)
+   - URL: https://backstage-intelligence.vercel.app
    - Stack: React + Vite
-   - Status: ✓ Operativo
+   - Status: âœ“ Operativo
 
-⏳ BACKEND (Por desplegar en Railway)
+â³ BACKEND (Por desplegar en Railway)
    - Stack: Express.js + PostgreSQL + PostGIS
-   - Status: ⚠️  Listo para desplegar, aún NO en producción
+   - Status: âš ï¸  Listo para desplegar, aÃºn NO en producciÃ³n
    - Lugar: backend/
 
-📦 Base de Datos
+ðŸ“¦ Base de Datos
    - PostgreSQL 15 + PostGIS
-   - Status: ⚠️  Necesita Railway o similar
+   - Status: âš ï¸  Necesita Railway o similar
 ```
 
-## 🚀 Despliegue Paso a Paso
+## ðŸš€ Despliegue Paso a Paso
 
-### Fase 1: Desplegar Backend + DB en Railway (⏱️  10 minutos)
+### Fase 1: Desplegar Backend + DB en Railway (â±ï¸  10 minutos)
 
-**Opción A: CLI de Railway (Recomendado)**
+**OpciÃ³n A: CLI de Railway (Recomendado)**
 
 ```bash
 # 1. Instalar Railway CLI
@@ -49,13 +49,13 @@ railway env
 # Copia el RAILWAY_PUBLIC_DOMAIN (ej: backstage-intelligence-prod.railway.app)
 ```
 
-**Opción B: GitHub Integration (Automático)**
+**OpciÃ³n B: GitHub Integration (AutomÃ¡tico)**
 
 1. Ve a https://railway.app
 2. Sign Up / Login
-3. "New Project" → "Deploy from GitHub"
+3. "New Project" â†’ "Deploy from GitHub"
 4. Conecta `francis872/BACKSTAGE`
-5. Railway automáticamente:
+5. Railway automÃ¡ticamente:
    - Lee el `Dockerfile` del backend
    - Crea PostgreSQL
    - Despliega en Railway
@@ -74,14 +74,14 @@ railway exec node init-railway.js
 ```
 
 Esto:
-- ✓ Crea extensión PostGIS
-- ✓ Ejecuta schema.sql
-- ✓ Corre migraciones
-- ✓ Siembra datos de ejemplo (ubicaciones, riesgos, zonas retail)
+- âœ“ Crea extensiÃ³n PostGIS
+- âœ“ Ejecuta schema.sql
+- âœ“ Corre migraciones
+- âœ“ Siembra datos de ejemplo (ubicaciones, riesgos, zonas retail)
 
 ### Fase 3: Actualizar Frontend en Vercel
 
-Una vez que el backend esté en Railway:
+Una vez que el backend estÃ© en Railway:
 
 ```bash
 # 1. Actualizar .env.production con URL de Railway
@@ -92,12 +92,12 @@ git add frontend/.env.production
 git commit -m "feat: point frontend to Railway backend"
 git push
 
-# 3. Vercel desplegará automáticamente
+# 3. Vercel desplegarÃ¡ automÃ¡ticamente
 ```
 
-## ✅ Verificación
+## âœ… VerificaciÃ³n
 
-### 1. Backend está activo
+### 1. Backend estÃ¡ activo
 ```bash
 curl https://backstage-intelligence-prod.railway.app/health
 # Respuesta esperada: {"status":"ok","service":"BACKSTAGE Intelligence Backend"}
@@ -110,68 +110,68 @@ curl https://backstage-intelligence-prod.railway.app/locations
 ```
 
 ### 3. Frontend conecta al backend
-- Abre: https://frontend-seven-black-14.vercel.app
-- Abre DevTools → Network
-- Debería haber requests a: `https://backstage-intelligence-prod.railway.app/...`
+- Abre: https://backstage-intelligence.vercel.app
+- Abre DevTools â†’ Network
+- DeberÃ­a haber requests a: `https://backstage-intelligence-prod.railway.app/...`
 
-## 📊 Arquitectura Final
+## ðŸ“Š Arquitectura Final
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                                                           │
-│  🌐 Frontend (Vercel)                                     │
-│  https://frontend-seven-black-14.vercel.app              │
-│  - React + Vite SPA                                      │
-│  - Proxy /api → Backend                                  │
-│                                                           │
-│          ↓ API Calls                                      │
-│                                                           │
-│  🚀 Backend (Railway)                                     │
-│  https://backstage-intelligence-prod.railway.app         │
-│  - Express.js REST API                                   │
-│  - CORS enabled                                          │
-│  - Routing: /locations, /scoring, /earthart, etc         │
-│                                                           │
-│          ↓ Queries                                        │
-│                                                           │
-│  🗄️  PostgreSQL (Railway)                                 │
-│  - PostGIS enabled                                       │
-│  - Schema completo (retail, risk, real estate, earthart) │
-│  - Datos de ejemplo (Bogotá)                             │
-│                                                           │
-└─────────────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                                                           â”‚
+â”‚  ðŸŒ Frontend (Vercel)                                     â”‚
+â”‚  https://backstage-intelligence.vercel.app              â”‚
+â”‚  - React + Vite SPA                                      â”‚
+â”‚  - Proxy /api â†’ Backend                                  â”‚
+â”‚                                                           â”‚
+â”‚          â†“ API Calls                                      â”‚
+â”‚                                                           â”‚
+â”‚  ðŸš€ Backend (Railway)                                     â”‚
+â”‚  https://backstage-intelligence-prod.railway.app         â”‚
+â”‚  - Express.js REST API                                   â”‚
+â”‚  - CORS enabled                                          â”‚
+â”‚  - Routing: /locations, /scoring, /earthart, etc         â”‚
+â”‚                                                           â”‚
+â”‚          â†“ Queries                                        â”‚
+â”‚                                                           â”‚
+â”‚  ðŸ—„ï¸  PostgreSQL (Railway)                                 â”‚
+â”‚  - PostGIS enabled                                       â”‚
+â”‚  - Schema completo (retail, risk, real estate, earthart) â”‚
+â”‚  - Datos de ejemplo (BogotÃ¡)                             â”‚
+â”‚                                                           â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
-## 📋 Endpoints Disponibles
+## ðŸ“‹ Endpoints Disponibles
 
 ### Health Check
-- `GET /health` → Status del backend
+- `GET /health` â†’ Status del backend
 
 ### Locations (Ubicaciones)
-- `GET /locations` → Todas las ubicaciones
-- `GET /locations/nearby?lat=4.71&lng=-74.07&radius=2000` → Cercanas
+- `GET /locations` â†’ Todas las ubicaciones
+- `GET /locations/nearby?lat=4.71&lng=-74.07&radius=2000` â†’ Cercanas
 
 ### Locations Analytics
-- `GET /locations/analytics/top-by-risk` → Top por riesgo
-- `GET /locations/analytics/by-type` → Agrupadas por tipo
+- `GET /locations/analytics/top-by-risk` â†’ Top por riesgo
+- `GET /locations/analytics/by-type` â†’ Agrupadas por tipo
 
 ### Scoring
-- `POST /locations/:id/score` → Evaluar ubicación
+- `POST /locations/:id/score` â†’ Evaluar ubicaciÃ³n
 
 ### Retail Intelligence
-- `GET /retail-zones` → Zonas comerciales
-- `GET /retail-zones/:id/analytics` → Analytics de zona
+- `GET /retail-zones` â†’ Zonas comerciales
+- `GET /retail-zones/:id/analytics` â†’ Analytics de zona
 
 ### Real Estate
-- `GET /property-valuations` → Valuaciones
-- `GET /property-valuations/:id` → Detalle
+- `GET /property-valuations` â†’ Valuaciones
+- `GET /property-valuations/:id` â†’ Detalle
 
 ### EARTHART
-- `GET /earthart/territorial-index` → Índice territorial
-- `GET /earthart/territorial-index/:id/gaps` → Brechas
-- `POST /earthart/territorial-index/:id/simulate` → Simular infraestructura
+- `GET /earthart/territorial-index` â†’ Ãndice territorial
+- `GET /earthart/territorial-index/:id/gaps` â†’ Brechas
+- `POST /earthart/territorial-index/:id/simulate` â†’ Simular infraestructura
 
-## 🔑 Variables de Entorno
+## ðŸ”‘ Variables de Entorno
 
 ### Frontend (.env.production)
 ```
@@ -183,51 +183,51 @@ BACKEND_URL=https://backstage-intelligence-prod.railway.app
 NODE_ENV=production
 DATABASE_URL=postgresql://... (auto-generada por Railway)
 PORT=3000 (auto-asignado por Railway)
-CORS_ORIGIN=https://frontend-seven-black-14.vercel.app
+CORS_ORIGIN=https://backstage-intelligence.vercel.app
 ```
 
-## 💰 Costos (Estimado)
+## ðŸ’° Costos (Estimado)
 
 | Servicio | Costo | Notas |
 |----------|-------|-------|
-| Railway Backend | $0/mes | Incluido en crédito gratis de $5 |
+| Railway Backend | $0/mes | Incluido en crÃ©dito gratis de $5 |
 | PostgreSQL | $0/mes | Gratis hasta 500MB |
 | Vercel Frontend | $0/mes | Hobby plan |
 | **TOTAL** | **$0/mes** | Primer mes gratis |
 
-*Después del primer mes: ~$10-15/mes (si crece BD)*
+*DespuÃ©s del primer mes: ~$10-15/mes (si crece BD)*
 
-## 🆘 Troubleshooting
+## ðŸ†˜ Troubleshooting
 
 ### "Cannot connect to database"
-→ La BD aún se está inicializando. Espera 2-3 minutos y reinicia:
+â†’ La BD aÃºn se estÃ¡ inicializando. Espera 2-3 minutos y reinicia:
 ```bash
 railway restart
 ```
 
 ### "CORS Error en frontend"
-→ Actualiza `CORS_ORIGIN` en Railway:
+â†’ Actualiza `CORS_ORIGIN` en Railway:
 ```bash
-railway variables set CORS_ORIGIN=https://frontend-seven-black-14.vercel.app
+railway variables set CORS_ORIGIN=https://backstage-intelligence.vercel.app
 ```
 
 ### "Empty database"
-→ Las migraciones no se ejecutaron. Ejecuta manualmente:
+â†’ Las migraciones no se ejecutaron. Ejecuta manualmente:
 ```bash
 cd backend
 railway exec npm run db:init
 ```
 
 ### "502 Bad Gateway"
-→ El backend se está iniciando. Espera 1-2 minutos.
+â†’ El backend se estÃ¡ iniciando. Espera 1-2 minutos.
 
 ### "API timeout"
-→ La BD está lenta. Verifica en Railway:
+â†’ La BD estÃ¡ lenta. Verifica en Railway:
 ```bash
 railway logs
 ```
 
-## 📚 Documentación Adicional
+## ðŸ“š DocumentaciÃ³n Adicional
 
 - [Backend API](./backend/README.md)
 - [Frontend Setup](./frontend/README.md)
@@ -235,8 +235,9 @@ railway logs
 
 ---
 
-**¿Listo para desplegar? 🚀**
+**Â¿Listo para desplegar? ðŸš€**
 
 Sigue los pasos de **Fase 1**, luego **Fase 2**, luego **Fase 3**. 
 
-¡En 15 minutos tendrás la stack completa en producción!
+Â¡En 15 minutos tendrÃ¡s la stack completa en producciÃ³n!
+
