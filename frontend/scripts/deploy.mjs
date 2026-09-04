@@ -18,14 +18,23 @@ console.log('> Deploying to Vercel production...');
 const output = run('vercel --prod --yes');
 console.log(output);
 
-// The CLI prints human-readable build logs followed by a trailing JSON
-// object. Extract just that JSON block (starts at the last standalone "{").
-const jsonStart = output.lastIndexOf('\n{');
-if (jsonStart === -1) {
-  console.error('No se encontró el bloque JSON de resultado. Aborta el aliasing.');
-  process.exit(1);
+// The CLI prints its final result as a JSON object; on some platforms
+// stdout only contains that JSON (no leading newline before it) while
+// human-readable build logs are streamed to stderr instead. Handle both
+// "pure JSON stdout" and "logs + trailing JSON" shapes.
+const trimmedOutput = output.trim();
+let jsonText;
+if (trimmedOutput.startsWith('{')) {
+  jsonText = trimmedOutput;
+} else {
+  const jsonStart = output.lastIndexOf('\n{');
+  if (jsonStart === -1) {
+    console.error('No se encontró el bloque JSON de resultado. Aborta el aliasing.');
+    process.exit(1);
+  }
+  jsonText = output.slice(jsonStart).trim();
 }
-const parsed = JSON.parse(output.slice(jsonStart).trim());
+const parsed = JSON.parse(jsonText);
 const deploymentUrl = parsed?.deployment?.url;
 
 if (!deploymentUrl) {
