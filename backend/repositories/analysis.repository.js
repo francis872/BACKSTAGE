@@ -330,6 +330,68 @@ async function removeProjectCandidate({ analysisRunId, locationId, organizationI
 }
 
 
+
+async function bumpDependencyVersion({ analysisRunId, organizationId, dependency }) {
+  const allowed = new Set(['candidates', 'comparison', 'probability', 'risk', 'recommendation']);
+  if (!allowed.has(dependency)) throw new Error('Dependencia operacional inválida.');
+  const key = `${dependency}_version`;
+  const result = await query(
+    `UPDATE analysis_runs
+     SET metadata = jsonb_set(
+       COALESCE(metadata, '{}'::jsonb),
+       ARRAY['dependency_versions', $1],
+       to_jsonb(COALESCE((metadata->'dependency_versions'->>$1)::int, 0) + 1),
+       true
+     ),
+     updated_at = now()
+     WHERE analysis_run_id = $2 AND organization_id = $3
+     RETURNING *`,
+    [key, analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
+async function syncDependencyVersion({ analysisRunId, organizationId, dependency, sourceDependency }) {
+  const allowed = new Set(['comparison', 'probability', 'risk', 'recommendation']);
+  const sources = new Set(['candidates', 'comparison', 'probability', 'risk']);
+  if (!allowed.has(dependency) || !sources.has(sourceDependency)) throw new Error('Dependencia operacional inválida.');
+  const targetKey = `${dependency}_version`;
+  const sourceKey = `${sourceDependency}_version`;
+  const result = await query(
+    `UPDATE analysis_runs
+     SET metadata = jsonb_set(
+       COALESCE(metadata, '{}'::jsonb),
+       ARRAY['dependency_versions', $1],
+       to_jsonb(COALESCE((metadata->'dependency_versions'->>$2)::int, 0)),
+       true
+     ),
+     updated_at = now()
+     WHERE analysis_run_id = $3 AND organization_id = $4
+     RETURNING *`,
+    [targetKey, sourceKey, analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
+async function resetWorkflowFromStage({ analysisRunId, organizationId, stage }) {
+  const removals = {
+    comparison: ['probability_completed_at','probability_completed_by_user_id','risk_reviewed_at','risk_reviewed_by_user_id','operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot'],
+    probability: ['probability_completed_at','probability_completed_by_user_id','risk_reviewed_at','risk_reviewed_by_user_id','operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot'],
+    risk: ['risk_reviewed_at','risk_reviewed_by_user_id','operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot'],
+    recommendation: ['operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot'],
+  };
+  const keys = removals[stage];
+  if (!keys) return null;
+  const expression = keys.map((_, i) => ` - ${i + 1}`).join('');
+  const result = await query(
+    `UPDATE analysis_runs SET metadata = COALESCE(metadata, '{}'::jsonb)${expression}, status = 'pending', updated_at = now()
+     WHERE analysis_run_id = ${keys.length + 1} AND organization_id = ${keys.length + 2}
+     RETURNING *`,
+    [...keys, analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
 async function invalidateDownstreamWorkflow({ analysisRunId, organizationId, reason, source = 'upstream_change' }) {
   const result = await query(
     `UPDATE analysis_runs
@@ -570,4 +632,7 @@ module.exports = {
   markComparisonCompleted,
   invalidateDownstreamWorkflow,
   clearWorkflowStale,
+  bumpDependencyVersion,
+  syncDependencyVersion,
+  resetWorkflowFromStage,
 };
