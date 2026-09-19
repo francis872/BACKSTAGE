@@ -56,18 +56,20 @@ function MissionControl({ onNavigate }) {
   const [refreshing, setRefreshing] = useState(false);
   const [message, setMessage] = useState('');
   const [creatingProject, setCreatingProject] = useState(false);
+  const [operationalEvents, setOperationalEvents] = useState([]);
 
   const load = useCallback(async (manual = false) => {
     manual ? setRefreshing(true) : setLoading(true);
     setMessage('');
 
     try {
-      const [summaryResult, runsResult, operationsResult, auditResult, chainResult] = await Promise.allSettled([
+      const [summaryResult, runsResult, operationsResult, auditResult, chainResult, eventsResult] = await Promise.allSettled([
         apiRequest('/insights/summary'),
         apiRequest('/analysis?limit=8'),
         apiRequest('/analysis/operations?limit=8'),
         apiRequest('/audit-logs?limit=6'),
         apiRequest('/audit-logs/chain-status'),
+        apiRequest('/operational-events?limit=20'),
       ]);
 
       if (summaryResult.status !== 'fulfilled' || !summaryResult.value.ok) {
@@ -102,6 +104,13 @@ function MissionControl({ onNavigate }) {
         setChainStatus(await chainResult.value.json());
       } else {
         setChainStatus(null);
+      }
+
+      if (eventsResult.status === 'fulfilled' && eventsResult.value.ok) {
+        const eventData = await eventsResult.value.json();
+        setOperationalEvents(Array.isArray(eventData) ? eventData : []);
+      } else {
+        setOperationalEvents([]);
       }
     } catch (error) {
       setMessage(error.message || 'No fue posible cargar el Centro de Operaciones.');
@@ -177,8 +186,26 @@ function MissionControl({ onNavigate }) {
       });
     }
 
+    operationalEvents
+      .filter((event) => event.severity === 'warning' || event.severity === 'critical')
+      .slice(0, 6)
+      .forEach((event) => {
+        result.push({
+          level: event.severity,
+          title: event.title,
+          detail: event.message || event.project_name || 'Evento operacional.',
+          target: event.target || 'mission-control',
+          context: event.analysis_run_id ? {
+            analysis_run_id: event.analysis_run_id,
+            project_name: event.project_name,
+            city: event.city,
+          } : null,
+          eventId: event.operational_event_id,
+        });
+      });
+
     return result;
-  }, [summary, chainStatus]);
+  }, [summary, chainStatus, operationalEvents]);
 
   const kpis = [
     ['Análisis totales', summary?.analyses_total ?? 0, (summary?.analyses_24h ?? 0) + ' en las últimas 24 h', FiActivity],
@@ -277,13 +304,13 @@ function MissionControl({ onNavigate }) {
           ) : alerts.length ? (
             <div className="alert-list">
               {alerts.map((alert) => (
-                <article className={'alert-item ' + alert.level} key={alert.title}>
+                <article className={'alert-item ' + alert.level} key={alert.eventId || alert.title}>
                   <FiAlertTriangle />
                   <div>
                     <strong>{alert.title}</strong>
                     <p>{alert.detail}</p>
                   </div>
-                  <button onClick={() => onNavigate(alert.target)}>Abrir</button>
+                  <button onClick={() => onNavigate(alert.target, alert.context || null)}>Abrir</button>
                 </article>
               ))}
             </div>
@@ -330,6 +357,27 @@ function MissionControl({ onNavigate }) {
           <button className="panel-action" onClick={() => onNavigate('admin-audit-logs')}>
             Abrir auditoría completa →
           </button>
+
+          {operationalEvents.length > 0 && (
+            <div className="operational-event-feed">
+              <p className="section-kicker">EVENTOS DEL WORKFLOW</p>
+              {operationalEvents.slice(0, 6).map((event) => (
+                <button
+                  type="button"
+                  key={event.operational_event_id}
+                  className={`operational-event ${event.severity}`}
+                  onClick={() => onNavigate(event.target || 'mission-control', event.analysis_run_id ? {
+                    analysis_run_id: event.analysis_run_id,
+                    project_name: event.project_name,
+                    city: event.city,
+                  } : null)}
+                >
+                  <span>{event.title}</span>
+                  <small>{event.project_name || 'Sistema'} · {dateTime(event.created_at)}</small>
+                </button>
+              ))}
+            </div>
+          )}
         </section>
       </div>
 
