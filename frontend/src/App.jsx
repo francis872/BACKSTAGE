@@ -123,7 +123,7 @@ const LegacyApp = () => {
       case 'intelligence-opportunities':
         return <GeoInsights />;
       case 'intelligence-recommendations':
-        return <Recommendations />;
+        return <Recommendations operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'probability-engine':
         return <ProbabilityEngine onNavigate={navigateOperational} operationalContext={operationalContext} />;
       case 'earthart':
