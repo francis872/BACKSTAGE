@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { connectOperationalRealtime } from '../lib/operationalRealtime';
 import {
   FiActivity,
   FiAlertTriangle,
@@ -57,6 +58,8 @@ function MissionControl({ onNavigate }) {
   const [message, setMessage] = useState('');
   const [creatingProject, setCreatingProject] = useState(false);
   const [operationalEvents, setOperationalEvents] = useState([]);
+  const [realtimeStatus, setRealtimeStatus] = useState('connecting');
+  const [commandingProject, setCommandingProject] = useState(null);
 
   const load = useCallback(async (manual = false) => {
     manual ? setRefreshing(true) : setLoading(true);
@@ -124,6 +127,31 @@ function MissionControl({ onNavigate }) {
     load();
   }, [load]);
 
+  useEffect(() => connectOperationalRealtime({
+    onStatus: setRealtimeStatus,
+    onEvent: () => load(false),
+  }), [load]);
+
+
+
+  const executeCommand = async (project, command) => {
+    setCommandingProject(project.analysis_run_id);
+    try {
+      const res = await apiRequest(`/analysis/${project.analysis_run_id}/commands`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudo ejecutar el comando.');
+      await load(false);
+      if (data.target) onNavigate(data.target, project);
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setCommandingProject(null);
+    }
+  };
 
   const createProject = async () => {
     const projectName = window.prompt('Nombre del proyecto operativo');
@@ -248,6 +276,9 @@ function MissionControl({ onNavigate }) {
           <span className={'system-status ' + (summary?.operational_status === 'operational' ? 'ok' : 'warn')}>
             <FiActivity />
             {loading ? 'Consultando' : summary?.operational_status === 'operational' ? 'Operación estable' : 'Requiere atención'}
+          </span>
+          <span className={'realtime-status ' + realtimeStatus}>
+            {realtimeStatus === 'connected' ? '● Tiempo real' : '○ Reconectando'}
           </span>
           <button className="refresh-btn" onClick={() => load(true)} disabled={refreshing}>
             <FiRefreshCw />
@@ -464,6 +495,20 @@ function MissionControl({ onNavigate }) {
                   <button onClick={() => onNavigate(project.workflow.target, project)}>
                     {project.workflow.next_action} →
                   </button>
+                  {project.workflow.state === 'stale' && (
+                    <button
+                      disabled={commandingProject === project.analysis_run_id}
+                      onClick={() => executeCommand(project, 'recalculate_comparison')}
+                    >
+                      {commandingProject === project.analysis_run_id ? 'Preparando…' : 'Recalcular'}
+                    </button>
+                  )}
+                  {project.workflow.state === 'probability_pending' && project.sla?.breached && (
+                    <button onClick={() => executeCommand(project, 'retry_probability')}>Reintentar probabilidad</button>
+                  )}
+                  {project.workflow.state === 'risk_review_pending' && project.sla?.breached && (
+                    <button onClick={() => executeCommand(project, 'reopen_risk_review')}>Reabrir riesgos</button>
+                  )}
                 </div>
               </article>
             ))}
