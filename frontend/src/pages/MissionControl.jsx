@@ -49,6 +49,7 @@ const actionName = (action) => {
 function MissionControl({ onNavigate }) {
   const [summary, setSummary] = useState(null);
   const [runs, setRuns] = useState([]);
+  const [operationalProjects, setOperationalProjects] = useState([]);
   const [auditRows, setAuditRows] = useState([]);
   const [chainStatus, setChainStatus] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -60,9 +61,10 @@ function MissionControl({ onNavigate }) {
     setMessage('');
 
     try {
-      const [summaryResult, runsResult, auditResult, chainResult] = await Promise.allSettled([
+      const [summaryResult, runsResult, operationsResult, auditResult, chainResult] = await Promise.allSettled([
         apiRequest('/insights/summary'),
         apiRequest('/analysis?limit=8'),
+        apiRequest('/analysis/operations?limit=8'),
         apiRequest('/audit-logs?limit=6'),
         apiRequest('/audit-logs/chain-status'),
       ]);
@@ -79,6 +81,13 @@ function MissionControl({ onNavigate }) {
         setRuns(Array.isArray(runsData) ? runsData : []);
       } else {
         setRuns([]);
+      }
+
+      if (operationsResult.status === 'fulfilled' && operationsResult.value.ok) {
+        const operationsData = await operationsResult.value.json();
+        setOperationalProjects(Array.isArray(operationsData) ? operationsData : []);
+      } else {
+        setOperationalProjects([]);
       }
 
       if (auditResult.status === 'fulfilled' && auditResult.value.ok) {
@@ -301,6 +310,40 @@ function MissionControl({ onNavigate }) {
           </button>
         </section>
       </div>
+
+
+      <section className="panel">
+        <div className="section-head">
+          <div>
+            <p className="section-kicker">ORQUESTACIÓN</p>
+            <h2>Proyectos en operación</h2>
+          </div>
+          <small>El Centro de Operaciones determina el siguiente paso según el estado real de cada análisis.</small>
+        </div>
+        {loading ? (
+          <p className="state">Calculando flujo operativo…</p>
+        ) : operationalProjects.length ? (
+          <div className="workflow-project-list">
+            {operationalProjects.map((project) => (
+              <article className="workflow-project" key={project.analysis_run_id}>
+                <div>
+                  <span className={'workflow-state ' + project.workflow.state}>{project.workflow.label}</span>
+                  <strong>{project.project_name || 'Proyecto sin nombre'}</strong>
+                  <p>{project.city || 'Sin ciudad'} · {project.result_count || 0} resultados vinculados</p>
+                </div>
+                <div className="workflow-project-action">
+                  <small>{project.recommendation_text || 'Aún no existe recomendación para este proyecto.'}</small>
+                  <button onClick={() => onNavigate(project.workflow.target, project)}>
+                    {project.workflow.next_action} →
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="state">No hay proyectos operativos registrados.</p>
+        )}
+      </section>
 
       <section className="panel">
         <div className="section-head">
