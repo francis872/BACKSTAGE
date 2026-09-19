@@ -27,6 +27,7 @@ import ProbabilityEngine from './pages/ProbabilityEngine';
 
 import { apiRequest } from './lib/api';
 import { clearSession, getSessionUser, setSession } from './lib/auth';
+import { clearStoredOperationalContext, getStoredOperationalContext, setStoredOperationalContext } from './lib/operationalContext';
 
 const menu = [
   { key: 'mission-control', label: 'Centro de operaciones', group: 'Operación' },
@@ -59,7 +60,7 @@ const ProtectedRoute = ({ children }) => {
 // Legacy App Component (original behavior)
 const LegacyApp = () => {
   const [activePage, setActivePage] = useState('mission-control');
-  const [operationalContext, setOperationalContext] = useState(null);
+  const [operationalContext, setOperationalContext] = useState(() => getStoredOperationalContext());
   const [authForm, setAuthForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', organization_id: '' });
   const [authMode, setAuthMode] = useState('login');
@@ -100,9 +101,58 @@ const LegacyApp = () => {
   }, []);
 
   const navigateOperational = (page, context = null) => {
-    if (context) setOperationalContext(context);
+    if (context?.analysis_run_id) {
+      const nextContext = {
+        analysis_run_id: Number(context.analysis_run_id),
+        project_name: context.project_name || null,
+        city: context.city || null,
+        organization_id: sessionUser?.organization_id || null,
+      };
+      setOperationalContext(nextContext);
+      setStoredOperationalContext(nextContext);
+    }
     setActivePage(page);
   };
+
+  useEffect(() => {
+    if (!sessionUser || !operationalContext?.analysis_run_id) return;
+
+    if (
+      operationalContext.organization_id &&
+      Number(operationalContext.organization_id) !== Number(sessionUser.organization_id)
+    ) {
+      clearStoredOperationalContext();
+      setOperationalContext(null);
+      return;
+    }
+
+    let cancelled = false;
+    apiRequest(`/analysis/${operationalContext.analysis_run_id}`)
+      .then(async (res) => {
+        if (!res.ok) throw new Error('Proyecto operativo no disponible.');
+        return res.json();
+      })
+      .then((run) => {
+        if (cancelled) return;
+        const validatedContext = {
+          analysis_run_id: Number(run.analysis_run_id),
+          project_name: run.project_name || null,
+          city: run.city || null,
+          organization_id: Number(sessionUser.organization_id),
+        };
+        setOperationalContext(validatedContext);
+        setStoredOperationalContext(validatedContext);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        clearStoredOperationalContext();
+        setOperationalContext(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionUser?.organization_id, operationalContext?.analysis_run_id]);
 
   const renderPage = () => {
     switch (activePage) {
@@ -193,6 +243,8 @@ const LegacyApp = () => {
       await apiRequest('/auth/logout', { method: 'POST' });
     } finally {
       clearSession();
+      clearStoredOperationalContext();
+      setOperationalContext(null);
       setSessionUser(null);
     }
   };
@@ -208,6 +260,8 @@ const LegacyApp = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'No se pudo cambiar de organización.');
       setSession(data.token, data.user);
+      clearStoredOperationalContext();
+      setOperationalContext(null);
       setSessionUser(data.user);
       setAuthMessage(`Organización activa: ${data.user.organization_name}.`);
     } catch (error) {
