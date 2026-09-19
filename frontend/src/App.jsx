@@ -458,7 +458,25 @@ const LegacyApp = () => {
         </nav>
       </aside>
 
-      <main className="content-panel">{renderPage()}</main>
+      <main className="content-panel">
+        {operationalContext?.analysis_run_id && (
+          <div className="active-operational-context">
+            <span>Proyecto activo</span>
+            <strong>{operationalContext.project_name || `Análisis #${operationalContext.analysis_run_id}`}</strong>
+            <small>#{operationalContext.analysis_run_id}{operationalContext.city ? ` · ${operationalContext.city}` : ''}</small>
+            <button
+              type="button"
+              onClick={() => {
+                clearStoredOperationalContext();
+                setOperationalContext(null);
+              }}
+            >
+              Cerrar contexto
+            </button>
+          </div>
+        )}
+        {renderPage()}
+      </main>
     </div>
   );
 };
