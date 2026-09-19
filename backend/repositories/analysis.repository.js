@@ -329,6 +329,57 @@ async function removeProjectCandidate({ analysisRunId, locationId, organizationI
   return result.rows[0] || null;
 }
 
+
+async function invalidateDownstreamWorkflow({ analysisRunId, organizationId, reason, source = 'upstream_change' }) {
+  const result = await query(
+    `UPDATE analysis_runs
+     SET metadata =
+       (COALESCE(metadata, '{}'::jsonb)
+         - 'probability_completed_at'
+         - 'probability_completed_by_user_id'
+         - 'risk_reviewed_at'
+         - 'risk_reviewed_by_user_id'
+         - 'operational_recommendation_generated_at'
+         - 'operational_recommendation_generated_by_user_id'
+         - 'operational_recommendation_count'
+         - 'operational_recommendation_reviewed_at'
+         - 'operational_recommendation_reviewed_by_user_id'
+         - 'operational_recommendation_decision'
+         - 'operational_recommendation_id'
+         - 'report_generated_at'
+         - 'report_generated_by_user_id'
+         - 'report_snapshot')
+       || jsonb_build_object(
+         'workflow_stale', true,
+         'workflow_stale_at', now(),
+         'workflow_stale_reason', $1,
+         'workflow_stale_source', $2
+       ),
+       status = 'pending',
+       updated_at = now()
+     WHERE analysis_run_id = $3 AND organization_id = $4
+     RETURNING *`,
+    [reason, source, analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
+async function clearWorkflowStale({ analysisRunId, organizationId }) {
+  const result = await query(
+    `UPDATE analysis_runs
+     SET metadata = COALESCE(metadata, '{}'::jsonb)
+       - 'workflow_stale'
+       - 'workflow_stale_at'
+       - 'workflow_stale_reason'
+       - 'workflow_stale_source',
+       updated_at = now()
+     WHERE analysis_run_id = $1 AND organization_id = $2
+     RETURNING *`,
+    [analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
 async function replaceAnalysisResults({ analysisRunId, ranked }) {
   await query('DELETE FROM analysis_results WHERE analysis_run_id = $1', [analysisRunId]);
   for (const candidate of ranked) {
@@ -481,7 +532,8 @@ async function listOperationalBoard({ organizationId, limit = 20 }) {
        ar.created_at,
        ar.updated_at,
        COUNT(res.analysis_result_id)::int AS result_count,
-       COUNT(res.location_id)::int AS linked_locations
+       COUNT(res.location_id)::int AS linked_locations,
+       (SELECT COUNT(*)::int FROM analysis_run_candidates arc WHERE arc.analysis_run_id = ar.analysis_run_id) AS candidate_count
      FROM analysis_runs ar
      LEFT JOIN analysis_results res ON res.analysis_run_id = ar.analysis_run_id
      WHERE ar.organization_id = $1
@@ -516,4 +568,6 @@ module.exports = {
   removeProjectCandidate,
   replaceAnalysisResults,
   markComparisonCompleted,
+  invalidateDownstreamWorkflow,
+  clearWorkflowStale,
 };
