@@ -30,11 +30,11 @@ function DimensionBreakdown({ scores }) {
   );
 }
 
-function AdvancedComparator() {
+function AdvancedComparator({ operationalContext }) {
   const [locations, setLocations] = useState([]);
   const [selectedCandidates, setSelectedCandidates] = useState([]);
-  const [city, setCity] = useState('Bogotá');
-  const [projectName, setProjectName] = useState('Comparador de ubicaciones');
+  const [city, setCity] = useState(operationalContext?.city || 'Bogotá');
+  const [projectName, setProjectName] = useState(operationalContext?.project_name || 'Comparador de ubicaciones');
   const [result, setResult] = useState(null);
   const [message, setMessage] = useState('');
 
