@@ -19,6 +19,7 @@ const territorialRoutes = require('./routes/territorial.routes');
 const usersRoutes = require('./routes/users.routes');
 const layersRoutes = require('./routes/layers.routes');
 const analysisRoutes = require('./routes/analysis.routes');
+const operationalEventsRoutes = require('./routes/operationalEvents.routes');
 const auditLogsRoutes = require('./routes/auditLogs.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const { getExampleRecommendation } = require('./controllers/recommendations.controller');
@@ -87,6 +88,7 @@ app.use('/territorial', territorialRoutes);
 app.use('/users', usersRoutes);
 app.use('/layers', layersRoutes);
 app.use('/analysis', analysisRoutes);
+app.use('/operational-events', operationalEventsRoutes);
 app.use('/analytics', analyticsRoutes);
 app.use('/audit-logs', auditLogsRoutes);
 
