@@ -343,6 +343,7 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
       throw new ApiError(409, 'El proyecto necesita al menos 2 candidatos persistidos antes de comparar.');
     }
     await analysisRepository.replaceAnalysisResults({ analysisRunId: payload.analysis_run_id, ranked });
+    await analysisRepository.clearWorkflowStale({ analysisRunId: payload.analysis_run_id, organizationId });
     run = await analysisRepository.markComparisonCompleted({
       analysisRunId: payload.analysis_run_id,
       organizationId,
@@ -499,8 +500,26 @@ async function addProjectCandidate(id, locationId, sessionUser, organizationCont
 async function removeProjectCandidate(id, locationId, sessionUser, organizationContext) {
   const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  const runBeforeChange = await getAnalysisRunById(id, organizationId);
   await analysisRepository.removeProjectCandidate({ analysisRunId: id, locationId, organizationId });
   const candidates = await listProjectCandidates(id, organizationId);
+  if (runBeforeChange.metadata?.comparison_completed_at || runBeforeChange.metadata?.probability_completed_at || runBeforeChange.metadata?.risk_reviewed_at) {
+    await analysisRepository.invalidateDownstreamWorkflow({
+      analysisRunId: Number(id),
+      organizationId,
+      reason: 'La selección de candidatos cambió después de ejecutar etapas dependientes.',
+      source: 'candidate_removed',
+    });
+    await operationalEvents.emit({
+      organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
+      eventType: 'workflow.stale', severity: 'critical',
+      title: 'Resultados desactualizados',
+      message: 'El proyecto cambió después de la última comparación. Recalcula el Comparador.',
+      target: 'portfolio-comparator',
+      dedupeKey: `workflow-stale:${id}`,
+      payload: { reason: 'candidate_removed', candidate_count: candidates.length },
+    });
+  }
   await operationalEvents.emit({
     organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
     eventType: 'candidate.removed', severity: candidates.length < 2 ? 'warning' : 'info',
@@ -658,6 +677,8 @@ function buildOperationalTimeline(run) {
   const recommendationReviewed = Boolean(metadata.operational_recommendation_reviewed_at);
   const recommendationDecision = metadata.operational_recommendation_decision || null;
   const reportGenerated = Boolean(metadata.report_generated_at);
+  const stale = Boolean(metadata.workflow_stale);
+  const stale = Boolean(metadata.workflow_stale);
 
   const steps = [
     {
@@ -672,21 +693,21 @@ function buildOperationalTimeline(run) {
       key: 'comparison',
       label: 'Comparación',
       target: 'portfolio-comparator',
-      status: hasComparison ? 'completed' : candidateCount >= 2 ? 'pending' : 'blocked',
+      status: stale ? 'stale' : hasComparison ? 'completed' : candidateCount >= 2 ? 'pending' : 'blocked',
       completed_at: hasComparison ? run.created_at : null,
     },
     {
       key: 'probability',
       label: 'Probabilidad',
       target: 'probability-engine',
-      status: probabilityCompleted ? 'completed' : hasComparison ? 'pending' : 'blocked',
+      status: stale ? 'stale' : probabilityCompleted ? 'completed' : hasComparison ? 'pending' : 'blocked',
       completed_at: metadata.probability_completed_at || null,
     },
     {
       key: 'risk',
       label: 'Riesgos',
       target: 'intelligence-evaluations',
-      status: riskReviewed ? 'completed' : probabilityCompleted ? 'pending' : 'blocked',
+      status: stale ? 'stale' : riskReviewed ? 'completed' : probabilityCompleted ? 'pending' : 'blocked',
       completed_at: metadata.risk_reviewed_at || null,
       detail: metadata.risk_review || null,
     },
@@ -694,7 +715,7 @@ function buildOperationalTimeline(run) {
       key: 'recommendation',
       label: 'Recomendación',
       target: 'intelligence-recommendations',
-      status: recommendationReviewed
+      status: stale ? 'stale' : recommendationReviewed
         ? (recommendationDecision === 'approved' ? 'completed' : 'rejected')
         : recommendationGenerated
           ? 'pending_review'
@@ -708,7 +729,7 @@ function buildOperationalTimeline(run) {
       key: 'completion',
       label: 'Cierre operativo',
       target: 'reports',
-      status: reportGenerated
+      status: stale ? 'blocked' : reportGenerated
         ? 'completed'
         : recommendationDecision === 'approved'
           ? 'pending'
@@ -737,6 +758,9 @@ function deriveOperationalState(run) {
   const recommendationDecision = metadata.operational_recommendation_decision || null;
   const reportGenerated = Boolean(metadata.report_generated_at);
 
+  if (stale) {
+    return { state: 'stale', label: 'Recalculo requerido', next_action: 'Recalcular Comparador', target: 'portfolio-comparator', blocked_reason: metadata.workflow_stale_reason || 'Datos de entrada modificados.' };
+  }
   if (run.status === 'failed') {
     return { state: 'blocked', label: 'Bloqueado', next_action: 'Revisar ejecución', target: 'reports' };
   }
@@ -778,7 +802,29 @@ function deriveOperationalState(run) {
 async function listOperationalBoard(organizationId, limit) {
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
   const rows = await analysisRepository.listOperationalBoard({ organizationId, limit });
-  return rows.map((run) => ({ ...run, workflow: deriveOperationalState(run), timeline: buildOperationalTimeline(run) }));
+  const now = Date.now();
+  return rows.map((run) => {
+    const workflow = deriveOperationalState(run);
+    const timeline = buildOperationalTimeline(run);
+    const referenceTime = new Date(run.updated_at || run.created_at).getTime();
+    const ageHours = Number.isNaN(referenceTime) ? 0 : (now - referenceTime) / 3600000;
+    const slaHours = workflow.state === 'probability_pending' ? 48 : workflow.state === 'risk_review_pending' ? 24 : workflow.state === 'recommendation_review_pending' ? 24 : 72;
+    const slaBreached = !['report_ready'].includes(workflow.state) && ageHours > slaHours;
+    const criticalRisk = Number(run.metadata?.risk_review?.counts?.critical || 0);
+    const priority = workflow.state === 'stale' || criticalRisk > 0 || slaBreached ? 'critical'
+      : ['blocked', 'recommendation_review_pending', 'recommendation_rejected'].includes(workflow.state) ? 'high'
+        : 'normal';
+    const health = workflow.state === 'report_ready' ? 100
+      : Math.max(0, Math.round(timeline.progress_pct - (workflow.state === 'stale' ? 35 : 0) - (slaBreached ? 15 : 0)));
+    return {
+      ...run, workflow, timeline, priority, health,
+      sla: { breached: slaBreached, age_hours: Number(ageHours.toFixed(1)), limit_hours: slaHours },
+      blocked_reason: workflow.blocked_reason || (slaBreached ? `La etapa actual supera el SLA de ${slaHours} horas.` : null),
+    };
+  }).sort((a, b) => {
+    const rank = { critical: 0, high: 1, normal: 2 };
+    return rank[a.priority] - rank[b.priority] || b.sla.age_hours - a.sla.age_hours;
+  });
 }
 
 
