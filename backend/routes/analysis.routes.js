@@ -11,6 +11,8 @@ router.post('/', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.runAnaly
 router.post('/compare', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.compareCandidates);
 router.get('/operations', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getOperationalBoard);
 router.get('/', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.listAnalysisRuns);
+router.get('/:id/risks', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getOperationalRisks);
+router.put('/:id/risks/review', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.reviewOperationalRisks);
 router.put('/:id/probability', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.saveProbabilityResult);
 router.get('/:id/probability', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getProbabilityResult);
 router.get('/:id/report', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getPrintableReport);
