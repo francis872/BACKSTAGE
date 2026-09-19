@@ -79,7 +79,7 @@ function ReviewControls({ recommendation, onReview }) {
   );
 }
 
-function Recommendations() {
+function Recommendations({ operationalContext, onNavigate }) {
   const [recommendations, setRecommendations] = useState([]);
   const [summary, setSummary] = useState(null);
   const [locations, setLocations] = useState([]);
@@ -87,7 +87,7 @@ function Recommendations() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const [selectedAnalysisRun, setSelectedAnalysisRun] = useState('');
+  const [selectedAnalysisRun, setSelectedAnalysisRun] = useState(() => operationalContext?.analysis_run_id ? String(operationalContext.analysis_run_id) : '');
   const [expandedId, setExpandedId] = useState(null);
 
   const loadAll = async (status) => {
@@ -145,7 +145,7 @@ function Recommendations() {
       const res = await apiRequest(`/recommendations/from-analysis/${selectedAnalysisRun}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topN: 3 }),
+        body: JSON.stringify({ topN: operationalContext?.analysis_run_id ? 1 : 3 }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'No se pudieron generar recomendaciones.');
@@ -168,6 +168,27 @@ function Recommendations() {
       <h2>Recomendaciones</h2>
       <p>Dashboard decisional: cada recomendación queda vinculada al análisis que la originó, con estado, prioridad y confianza trazables.</p>
 
+      {operationalContext?.analysis_run_id && (
+        <article className="form-section">
+          <p className="eyebrow">Proyecto operativo activo</p>
+          <h3>{operationalContext.project_name || `Análisis #${operationalContext.analysis_run_id}`}</h3>
+          <p className="auth-hint">
+            La recomendación de esta etapa combina ranking multicriterio, resultado probabilístico y riesgos revisados.
+            BACKSTAGE genera la propuesta, pero un analista debe aprobarla o rechazarla con justificación.
+          </p>
+          <div className="form-actions">
+            <button type="button" onClick={() => setSelectedAnalysisRun(String(operationalContext.analysis_run_id))}>
+              Usar este proyecto
+            </button>
+            {onNavigate && (
+              <button type="button" className="secondary" onClick={() => onNavigate('mission-control')}>
+                Volver al Centro de Operaciones
+              </button>
+            )}
+          </div>
+        </article>
+      )}
+
       {summary && (
         <div className="metric-grid">
           <article className="metric-card"><span>Total</span><strong>{summary.total}</strong></article>
@@ -182,8 +203,7 @@ function Recommendations() {
       <article className="form-section">
         <h3>Generar recomendaciones desde un análisis</h3>
         <p className="auth-hint">
-          Toma el ranking multicriterio (TOPSIS) de una ejecución del Comparador Inteligente y propone
-          recomendaciones para sus mejores candidatos, vinculadas al análisis de origen.
+          Combina el ranking multicriterio del proyecto con el resultado del Motor Probabilístico y la revisión de riesgos. La salida queda como propuesta y requiere decisión humana.
         </p>
         <form onSubmit={generateFromAnalysis} className="entity-form">
           <div className="field-row">
