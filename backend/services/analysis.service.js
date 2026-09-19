@@ -678,7 +678,6 @@ function buildOperationalTimeline(run) {
   const recommendationDecision = metadata.operational_recommendation_decision || null;
   const reportGenerated = Boolean(metadata.report_generated_at);
   const stale = Boolean(metadata.workflow_stale);
-  const stale = Boolean(metadata.workflow_stale);
 
   const steps = [
     {
@@ -757,6 +756,7 @@ function deriveOperationalState(run) {
   const recommendationReviewed = Boolean(metadata.operational_recommendation_reviewed_at);
   const recommendationDecision = metadata.operational_recommendation_decision || null;
   const reportGenerated = Boolean(metadata.report_generated_at);
+  const stale = Boolean(metadata.workflow_stale);
 
   if (stale) {
     return { state: 'stale', label: 'Recalculo requerido', next_action: 'Recalcular Comparador', target: 'portfolio-comparator', blocked_reason: metadata.workflow_stale_reason || 'Datos de entrada modificados.' };
