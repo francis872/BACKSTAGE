@@ -173,22 +173,67 @@ async function reviewRecommendation(id, organizationId, sessionUser, { decision,
      RETURNING *`,
     [decision, sessionUser.user_id, notes || null, id, organizationId]
   );
-  return updated.rows[0];
+  const row = updated.rows[0];
+  if (row?.analysis_run_id && (decision === 'approved' || decision === 'rejected')) {
+    await query(
+      `UPDATE analysis_runs
+       SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object(
+         'operational_recommendation_reviewed_at', now(),
+         'operational_recommendation_reviewed_by_user_id', $1,
+         'operational_recommendation_decision', $2,
+         'operational_recommendation_id', $3
+       ),
+       updated_at = now()
+       WHERE analysis_run_id = $4 AND organization_id = $5`,
+      [sessionUser.user_id, decision, row.recommendation_id, row.analysis_run_id, organizationId]
+    );
+  }
+  return row;
 }
 
-function inferPriority(rankPosition) {
+function inferPriority(rankPosition, riskClassification) {
+  if (riskClassification?.severity === 'critical') return 'critical';
+  if (riskClassification?.severity === 'high') return 'high';
   if (rankPosition === 1) return 'high';
   if (rankPosition === 2) return 'medium';
   return 'low';
 }
 
-function buildExpectedImpact(candidate) {
+function buildExpectedImpact(candidate, probabilityResult, riskClassification) {
   const dims = Object.entries(candidate.score_by_dimension || {})
     .sort((a, b) => b[1] - a[1])
     .slice(0, 2)
     .map(([key]) => key.replace(/_/g, ' '));
-  if (dims.length === 0) return 'Impacto esperado no cuantificado por el motor multicriterio.';
-  return `Impulsado principalmente por: ${dims.join(' y ')}.`;
+  const parts = [];
+  if (dims.length > 0) parts.push(`Fortalezas principales: ${dims.join(' y ')}.`);
+  if (probabilityResult?.selected_distribution) {
+    const survival = Number(probabilityResult.observation_evaluation?.survival_probability);
+    parts.push(
+      Number.isFinite(survival)
+        ? `Motor probabilístico: ${probabilityResult.selected_distribution}, cola derecha ${(survival * 100).toFixed(1)}%.`
+        : `Motor probabilístico: ${probabilityResult.selected_distribution}.`
+    );
+  }
+  if (riskClassification?.severity && riskClassification.severity !== 'missing') {
+    parts.push(`Riesgo territorial: ${riskClassification.severity} (${((riskClassification.average || 0) * 100).toFixed(1)}% promedio).`);
+  }
+  return parts.join(' ') || 'Impacto esperado no cuantificado con la información disponible.';
+}
+
+function classifyCandidateRisk(candidate, riskRows) {
+  const row = (riskRows || []).find((item) => Number(item.location_id) === Number(candidate.location_id));
+  if (!row || !row.risk_id) return { severity: 'missing', average: null, max_component: null };
+  const values = [row.flood_risk, row.landslide_risk, row.crime_risk, row.climate_exposure]
+    .map(Number)
+    .filter(Number.isFinite);
+  if (!values.length) return { severity: 'missing', average: null, max_component: null };
+  const average = values.reduce((sum, value) => sum + value, 0) / values.length;
+  const maxComponent = Math.max(...values);
+  let severity = 'low';
+  if (average >= 0.70 || maxComponent >= 0.80) severity = 'critical';
+  else if (average >= 0.40) severity = 'high';
+  else if (average >= 0.20) severity = 'medium';
+  return { severity, average: Number(average.toFixed(4)), max_component: Number(maxComponent.toFixed(4)) };
 }
 
 /**
@@ -202,6 +247,17 @@ function buildExpectedImpact(candidate) {
 async function generateFromAnalysisRun(analysisRunId, organizationId, sessionUser, { topN = 1 } = {}) {
   const run = await analysisRepository.getAnalysisRunByIdForOrganization(analysisRunId, organizationId);
   if (!run) throw new ApiError(404, 'Análisis no encontrado.');
+
+  const probabilityResult = run.metadata?.probability_result || null;
+  const riskReviewed = Boolean(run.metadata?.risk_reviewed_at);
+  if (!probabilityResult) {
+    throw new ApiError(409, 'Debes completar el Motor Probabilístico antes de generar la recomendación operacional.');
+  }
+  if (!riskReviewed) {
+    throw new ApiError(409, 'Debes completar la revisión de riesgos antes de generar la recomendación operacional.');
+  }
+
+  const riskRows = await analysisRepository.getOperationalRisksByRun({ analysisRunId, organizationId });
   const candidates = (run.ranking || []).slice(0, Math.max(1, Math.min(topN, run.ranking.length)));
   if (candidates.length === 0) {
     throw new ApiError(400, 'El análisis no tiene candidatos en su ranking.');
@@ -209,8 +265,7 @@ async function generateFromAnalysisRun(analysisRunId, organizationId, sessionUse
 
   const created = [];
   for (const candidate of candidates) {
-    if (!candidate.location_id) continue; // skip coordinate-only candidates with no stored location
-    // Avoid duplicating a recommendation already generated for the same run+candidate.
+    if (!candidate.location_id) continue;
     const existing = await query(
       `SELECT recommendation_id FROM recommendations
        WHERE analysis_run_id = $1 AND location_id = $2 AND organization_id = $3`,
@@ -218,28 +273,75 @@ async function generateFromAnalysisRun(analysisRunId, organizationId, sessionUse
     );
     if (existing.rows.length > 0) continue;
 
+    const riskClassification = classifyCandidateRisk(candidate, riskRows);
+    const probabilityObservation = probabilityResult.observation_evaluation || {};
+    const confidenceBase = Number(candidate.score_total || 0) / 100;
+    const riskPenalty = riskClassification.severity === 'critical' ? 0.25
+      : riskClassification.severity === 'high' ? 0.15
+        : riskClassification.severity === 'medium' ? 0.05 : 0;
+    const confidence = Math.max(0, Math.min(1, confidenceBase - riskPenalty));
+
+    const resultPayload = {
+      candidate_name: candidate.candidate_name,
+      score_total: candidate.score_total,
+      score_by_dimension: candidate.score_by_dimension,
+      probability: {
+        dataset_key: probabilityResult.dataset_key,
+        selected_distribution: probabilityResult.selected_distribution,
+        percentile: probabilityObservation.percentile ?? null,
+        cdf: probabilityObservation.cdf ?? null,
+        survival_probability: probabilityObservation.survival_probability ?? null,
+      },
+      risk: riskClassification,
+      rationale: {
+        ranking_position: candidate.rank_position,
+        ranking_score: candidate.score_total,
+        risk_adjusted_confidence: Number(confidence.toFixed(4)),
+        human_review_required: true,
+      },
+    };
+
     const inserted = await query(
       `INSERT INTO recommendations
          (location_id, query_type, parameters, result, score, organization_id, requested_by_user_id,
           title, priority, confidence, expected_impact, analysis_run_id, status)
-       VALUES ($1, 'multicriteria_ranking', $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'proposed')
+       VALUES ($1, 'operational_decision', $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'proposed')
        RETURNING *`,
       [
         candidate.location_id,
-        { analysis_run_id: analysisRunId, rank_position: candidate.rank_position, weights: run.criteria_weights },
-        { candidate_name: candidate.candidate_name, score_total: candidate.score_total, score_by_dimension: candidate.score_by_dimension },
+        {
+          analysis_run_id: Number(analysisRunId),
+          rank_position: candidate.rank_position,
+          weights: run.criteria_weights,
+          probability_completed_at: run.metadata?.probability_completed_at || null,
+          risk_reviewed_at: run.metadata?.risk_reviewed_at || null,
+        },
+        resultPayload,
         candidate.score_total,
         organizationId,
         sessionUser.user_id,
         `${run.project_name}: ${candidate.candidate_name}`,
-        inferPriority(candidate.rank_position),
-        Number((candidate.score_total / 100).toFixed(4)),
-        buildExpectedImpact(candidate),
+        inferPriority(candidate.rank_position, riskClassification),
+        Number(confidence.toFixed(4)),
+        buildExpectedImpact(candidate, probabilityResult, riskClassification),
         analysisRunId,
       ]
     );
     created.push(inserted.rows[0]);
   }
+
+  await query(
+    `UPDATE analysis_runs
+     SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object(
+       'operational_recommendation_generated_at', now(),
+       'operational_recommendation_generated_by_user_id', $1,
+       'operational_recommendation_count', $2
+     ),
+     updated_at = now()
+     WHERE analysis_run_id = $3 AND organization_id = $4`,
+    [sessionUser.user_id, created.length, analysisRunId, organizationId]
+  );
+
   return created;
 }
 
