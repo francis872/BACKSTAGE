@@ -27,6 +27,21 @@ const compareCandidates = asyncHandler(async (req, res) => {
 });
 
 
+
+const getOperationalRisks = asyncHandler(async (req, res) => {
+  const result = await analysisService.getOperationalRisks(req.params.id, req.organization?.organization_id);
+  res.json(result);
+});
+
+const reviewOperationalRisks = asyncHandler(async (req, res) => {
+  const result = await analysisService.reviewOperationalRisks(
+    req.params.id,
+    req.user || null,
+    req.organization || null
+  );
+  res.json(result);
+});
+
 const saveProbabilityResult = asyncHandler(async (req, res) => {
   const result = await analysisService.saveProbabilityResult(
     req.params.id,
@@ -56,4 +71,6 @@ module.exports = {
   getOperationalBoard,
   saveProbabilityResult,
   getProbabilityResult,
+  getOperationalRisks,
+  reviewOperationalRisks,
 };
