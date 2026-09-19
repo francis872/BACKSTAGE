@@ -594,6 +594,68 @@ async function listOperationalBoard(organizationId, limit) {
   return rows.map((run) => ({ ...run, workflow: deriveOperationalState(run) }));
 }
 
+
+async function generateOperationalReport(id, sessionUser, organizationContext) {
+  const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+
+  const run = await getAnalysisRunById(id, organizationId);
+  const metadata = run.metadata || {};
+  if (!metadata.probability_completed_at) {
+    throw new ApiError(409, 'El proyecto no ha completado el análisis probabilístico.');
+  }
+  if (!metadata.risk_reviewed_at) {
+    throw new ApiError(409, 'El proyecto no ha completado la revisión de riesgos.');
+  }
+  if (metadata.operational_recommendation_decision !== 'approved') {
+    throw new ApiError(409, 'La recomendación operacional debe estar aprobada antes de cerrar el proyecto.');
+  }
+
+  const recommendation = await analysisRepository.getLatestOperationalRecommendation({
+    analysisRunId: id,
+    organizationId,
+  });
+  if (!recommendation || recommendation.status !== 'approved') {
+    throw new ApiError(409, 'No existe una recomendación operacional aprobada para este proyecto.');
+  }
+
+  const riskRows = await analysisRepository.getOperationalRisksByRun({ analysisRunId: id, organizationId });
+  const snapshot = {
+    workflow_version: 1,
+    project_name: run.project_name,
+    city: run.city,
+    top_candidate: run.ranking?.[0] || null,
+    probability_result: metadata.probability_result || null,
+    risk_review: metadata.risk_review || null,
+    recommendation: {
+      recommendation_id: recommendation.recommendation_id,
+      status: recommendation.status,
+      title: recommendation.title,
+      priority: recommendation.priority,
+      confidence: recommendation.confidence,
+      expected_impact: recommendation.expected_impact,
+      decision_notes: recommendation.review_notes,
+    },
+    evaluated_risk_locations: riskRows.length,
+  };
+
+  const updated = await analysisRepository.markReportGenerated({
+    analysisRunId: id,
+    organizationId,
+    userId: sessionUser?.user_id || null,
+    snapshot,
+  });
+  if (!updated) throw new ApiError(404, 'Análisis no encontrado.');
+
+  return {
+    analysis_run_id: Number(id),
+    workflow_state: 'report_ready',
+    completed: true,
+    completed_at: updated.metadata?.report_generated_at || updated.updated_at,
+    snapshot,
+  };
+}
+
 async function getPrintableReport(id, organizationId) {
   const run = await getAnalysisRunById(id, organizationId);
   const generatedAt = new Date().toISOString();
@@ -625,6 +687,7 @@ module.exports = {
   getAnalysisRunById,
   listAnalysisRuns,
   getPrintableReport,
+  generateOperationalReport,
   listOperationalBoard,
   saveProbabilityResult,
   getProbabilityResult,
