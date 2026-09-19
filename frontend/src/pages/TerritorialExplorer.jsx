@@ -19,7 +19,7 @@ function parseCoordinateSearch(text) {
   return { lat, lng };
 }
 
-function TerritorialExplorer() {
+function TerritorialExplorer({ operationalContext, onNavigate }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const popupRef = useRef(null);
@@ -29,6 +29,8 @@ function TerritorialExplorer() {
   const [message, setMessage] = useState('');
   const [searchText, setSearchText] = useState('');
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [locations, setLocations] = useState([]);
+  const [projectCandidates, setProjectCandidates] = useState([]);
 
   const visibleLayers = useMemo(() => layers.filter((layer) => layer.visible), [layers]);
 
@@ -226,6 +228,61 @@ function TerritorialExplorer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layers, mapLoaded]);
 
+
+  useEffect(() => {
+    apiRequest('/locations')
+      .then((res) => res.json())
+      .then((data) => setLocations(Array.isArray(data) ? data : []))
+      .catch(() => setLocations([]));
+  }, []);
+
+  const loadProjectCandidates = async () => {
+    if (!operationalContext?.analysis_run_id) {
+      setProjectCandidates([]);
+      return;
+    }
+    try {
+      const res = await apiRequest(`/analysis/${operationalContext.analysis_run_id}/candidates`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudieron cargar los candidatos.');
+      setProjectCandidates(Array.isArray(data) ? data : []);
+    } catch (error) {
+      setMessage(error.message);
+    }
+  };
+
+  useEffect(() => {
+    loadProjectCandidates();
+  }, [operationalContext?.analysis_run_id]);
+
+  const toggleProjectCandidate = async (locationId) => {
+    if (!operationalContext?.analysis_run_id) {
+      setMessage('Selecciona o crea un proyecto operativo antes de guardar candidatos.');
+      return;
+    }
+    const selected = projectCandidates.some((item) => Number(item.location_id) === Number(locationId));
+    try {
+      const res = await apiRequest(
+        selected
+          ? `/analysis/${operationalContext.analysis_run_id}/candidates/${locationId}`
+          : `/analysis/${operationalContext.analysis_run_id}/candidates`,
+        selected
+          ? { method: 'DELETE' }
+          : {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ location_id: locationId }),
+            }
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudo actualizar el candidato.');
+      setProjectCandidates(Array.isArray(data) ? data : []);
+      setMessage('');
+    } catch (error) {
+      setMessage(error.message);
+    }
+  };
+
   const handleToggleLayer = (layerId) => {
     setLayers((prev) => prev.map((layer) => (
       layer.layer_id === layerId ? { ...layer, visible: !layer.visible } : layer
@@ -284,6 +341,39 @@ function TerritorialExplorer() {
             <button type="button" className="secondary" onClick={() => syncLayerFeatures(layers)}>Recargar capas</button>
           </div>
         </form>
+
+
+        {operationalContext?.analysis_run_id && (
+          <div className="form-section">
+            <p className="eyebrow">Proyecto activo</p>
+            <h3>{operationalContext.project_name || `Análisis #${operationalContext.analysis_run_id}`}</h3>
+            <p>{projectCandidates.length} / 6 candidatos seleccionados</p>
+            <div className="candidate-list">
+              {locations.map((location) => {
+                const selected = projectCandidates.some((item) => Number(item.location_id) === Number(location.location_id));
+                return (
+                  <label key={location.location_id} className="candidate-item">
+                    <input
+                      type="checkbox"
+                      checked={selected}
+                      onChange={() => toggleProjectCandidate(location.location_id)}
+                    />
+                    <span>{location.name} — {location.city || 'Sin ciudad'}</span>
+                  </label>
+                );
+              })}
+            </div>
+            <div className="form-actions">
+              <button
+                type="button"
+                disabled={projectCandidates.length < 2}
+                onClick={() => onNavigate && onNavigate('portfolio-comparator', operationalContext)}
+              >
+                Comparar {projectCandidates.length} ubicaciones
+              </button>
+            </div>
+          </div>
+        )}
 
         {loadingLayers ? (
           <p>Cargando catálogo de capas...</p>
