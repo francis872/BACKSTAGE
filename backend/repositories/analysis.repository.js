@@ -227,6 +227,33 @@ async function listAnalysisRuns({ organizationId, limit = 20 }) {
   return result.rows;
 }
 
+
+async function listOperationalBoard({ organizationId, limit = 20 }) {
+  const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100);
+  const result = await query(
+    `SELECT
+       ar.analysis_run_id,
+       ar.project_name,
+       ar.city,
+       ar.objective,
+       ar.status,
+       ar.recommendation_text,
+       ar.metadata,
+       ar.created_at,
+       ar.updated_at,
+       COUNT(res.analysis_result_id)::int AS result_count,
+       COUNT(res.location_id)::int AS linked_locations
+     FROM analysis_runs ar
+     LEFT JOIN analysis_results res ON res.analysis_run_id = ar.analysis_run_id
+     WHERE ar.organization_id = $1
+     GROUP BY ar.analysis_run_id
+     ORDER BY ar.updated_at DESC
+     LIMIT $2`,
+    [organizationId, safeLimit]
+  );
+  return result.rows;
+}
+
 module.exports = {
   findLocationById,
   buildCandidateFromCoordinates,
@@ -237,4 +264,5 @@ module.exports = {
   getAnalysisRunById,
   getAnalysisRunByIdForOrganization,
   listAnalysisRuns,
+  listOperationalBoard,
 };
