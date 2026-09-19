@@ -261,6 +261,71 @@ async function getProbabilityResult({ analysisRunId, organizationId }) {
   return result.rows[0] || null;
 }
 
+
+async function getOperationalRisksByRun({ analysisRunId, organizationId }) {
+  const result = await query(
+    `WITH project_locations AS (
+       SELECT DISTINCT ar.location_id
+       FROM analysis_results ar
+       JOIN analysis_runs run ON run.analysis_run_id = ar.analysis_run_id
+       WHERE ar.analysis_run_id = $1
+         AND run.organization_id = $2
+         AND ar.location_id IS NOT NULL
+     ),
+     latest_risks AS (
+       SELECT DISTINCT ON (ra.location_id)
+         ra.risk_id,
+         ra.location_id,
+         ra.assessed_at,
+         ra.flood_risk,
+         ra.landslide_risk,
+         ra.crime_risk,
+         ra.climate_exposure,
+         ra.score,
+         ra.details
+       FROM risk_assessments ra
+       JOIN project_locations pl ON pl.location_id = ra.location_id
+       WHERE ra.organization_id = $2
+       ORDER BY ra.location_id, ra.assessed_at DESC, ra.risk_id DESC
+     )
+     SELECT
+       pl.location_id,
+       l.name AS location_name,
+       l.city,
+       lr.risk_id,
+       lr.assessed_at,
+       lr.flood_risk,
+       lr.landslide_risk,
+       lr.crime_risk,
+       lr.climate_exposure,
+       lr.score,
+       lr.details
+     FROM project_locations pl
+     JOIN locations l ON l.location_id = pl.location_id
+     LEFT JOIN latest_risks lr ON lr.location_id = pl.location_id
+     ORDER BY l.name ASC`,
+    [analysisRunId, organizationId]
+  );
+  return result.rows;
+}
+
+async function saveRiskReview({ analysisRunId, organizationId, userId, riskSummary }) {
+  const result = await query(
+    `UPDATE analysis_runs
+     SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object(
+       'risk_review', $1::jsonb,
+       'risk_reviewed_at', now(),
+       'risk_reviewed_by_user_id', $2
+     ),
+     updated_at = now()
+     WHERE analysis_run_id = $3
+       AND organization_id = $4
+     RETURNING analysis_run_id, metadata, updated_at`,
+    [JSON.stringify(riskSummary || {}), userId || null, analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
 async function listOperationalBoard({ organizationId, limit = 20 }) {
   const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100);
   const result = await query(
@@ -300,4 +365,6 @@ module.exports = {
   listOperationalBoard,
   saveProbabilityResult,
   getProbabilityResult,
+  getOperationalRisksByRun,
+  saveRiskReview,
 };
