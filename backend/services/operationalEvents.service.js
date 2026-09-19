@@ -1,5 +1,6 @@
 const ApiError = require('../utils/ApiError');
 const repository = require('../repositories/operationalEvents.repository');
+const { publishOperationalEvent } = require('../realtime/operationalEvents');
 
 const ALLOWED_SEVERITIES = new Set(['info', 'success', 'warning', 'critical']);
 
@@ -7,10 +8,12 @@ async function emit(input) {
   if (!input?.organizationId || !input?.eventType || !input?.title) {
     throw new ApiError(500, 'Evento operacional incompleto.');
   }
-  return repository.emitEvent({
+  const event = await repository.emitEvent({
     ...input,
     severity: ALLOWED_SEVERITIES.has(input.severity) ? input.severity : 'info',
   });
+  publishOperationalEvent(event);
+  return event;
 }
 
 async function list(organizationId, options = {}) {
