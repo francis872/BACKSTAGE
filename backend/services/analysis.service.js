@@ -420,6 +420,52 @@ async function listAnalysisRuns(organizationId, limit) {
 
 
 
+
+async function createOperationalProject(payload, sessionUser, organizationContext) {
+  const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  const projectName = String(payload.project_name || '').trim();
+  if (!projectName) throw new ApiError(400, 'project_name es obligatorio.');
+  return analysisRepository.createOperationalProject({
+    projectName,
+    city: payload.city || null,
+    objective: payload.objective || 'Evaluar y comparar ubicaciones candidatas.',
+    requestedByUserId: sessionUser?.user_id || null,
+    organizationId,
+  });
+}
+
+async function listProjectCandidates(id, organizationId) {
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  await getAnalysisRunById(id, organizationId);
+  return analysisRepository.listProjectCandidates({ analysisRunId: id, organizationId });
+}
+
+async function addProjectCandidate(id, locationId, sessionUser, organizationContext) {
+  const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  await getAnalysisRunById(id, organizationId);
+  const existing = await analysisRepository.listProjectCandidates({ analysisRunId: id, organizationId });
+  if (existing.length >= 6 && !existing.some((row) => Number(row.location_id) === Number(locationId))) {
+    throw new ApiError(409, 'El proyecto admite máximo 6 candidatos.');
+  }
+  const saved = await analysisRepository.addProjectCandidate({
+    analysisRunId: id,
+    locationId,
+    organizationId,
+    userId: sessionUser?.user_id || null,
+  });
+  if (!saved) throw new ApiError(404, 'Ubicación no encontrada en la organización.');
+  return listProjectCandidates(id, organizationId);
+}
+
+async function removeProjectCandidate(id, locationId, sessionUser, organizationContext) {
+  const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  await analysisRepository.removeProjectCandidate({ analysisRunId: id, locationId, organizationId });
+  return listProjectCandidates(id, organizationId);
+}
+
 function validateProbabilityPayload(payload) {
   if (!payload || typeof payload !== 'object') throw new ApiError(400, 'Resultado probabilístico inválido.');
   if (!payload.dataset_key) throw new ApiError(400, 'dataset_key es obligatorio.');
@@ -544,6 +590,7 @@ async function reviewOperationalRisks(id, sessionUser, organizationContext) {
 function buildOperationalTimeline(run) {
   const metadata = run.metadata || {};
   const resultCount = Number(run.result_count || 0);
+  const candidateCount = Number(run.candidate_count || 0);
   const hasComparison = resultCount > 0;
   const probabilityCompleted = Boolean(metadata.probability_completed_at);
   const riskReviewed = Boolean(metadata.risk_reviewed_at);
@@ -554,10 +601,18 @@ function buildOperationalTimeline(run) {
 
   const steps = [
     {
+      key: 'exploration',
+      label: 'Candidatos',
+      target: 'territorial-explorer',
+      status: candidateCount >= 2 ? 'completed' : 'pending',
+      completed_at: candidateCount >= 2 ? run.updated_at : null,
+      count: candidateCount,
+    },
+    {
       key: 'comparison',
       label: 'Comparación',
       target: 'portfolio-comparator',
-      status: hasComparison ? 'completed' : 'pending',
+      status: hasComparison ? 'completed' : candidateCount >= 2 ? 'pending' : 'blocked',
       completed_at: hasComparison ? run.created_at : null,
     },
     {
@@ -613,6 +668,7 @@ function buildOperationalTimeline(run) {
 function deriveOperationalState(run) {
   const metadata = run.metadata || {};
   const resultCount = Number(run.result_count || 0);
+  const candidateCount = Number(run.candidate_count || 0);
   const probabilityCompleted = Boolean(metadata.probability_completed_at);
   const riskReviewed = Boolean(metadata.risk_reviewed_at);
   const riskReview = metadata.risk_review || null;
@@ -624,8 +680,14 @@ function deriveOperationalState(run) {
   if (run.status === 'failed') {
     return { state: 'blocked', label: 'Bloqueado', next_action: 'Revisar ejecución', target: 'reports' };
   }
-  if (resultCount === 0) {
+  if (candidateCount === 0 && resultCount === 0) {
     return { state: 'exploring', label: 'Exploración', next_action: 'Explorar territorio', target: 'territorial-explorer' };
+  }
+  if (candidateCount === 1 && resultCount === 0) {
+    return { state: 'selecting_candidates', label: '1 candidato', next_action: 'Seleccionar más candidatos', target: 'territorial-explorer' };
+  }
+  if (candidateCount >= 2 && resultCount === 0) {
+    return { state: 'candidates_ready', label: 'Candidatos listos', next_action: 'Comparar ubicaciones', target: 'portfolio-comparator' };
   }
   if (!probabilityCompleted) {
     return { state: 'probability_pending', label: 'Probabilidad pendiente', next_action: 'Abrir motor probabilístico', target: 'probability-engine' };
@@ -749,6 +811,10 @@ async function getPrintableReport(id, organizationId) {
 module.exports = {
   runGeostrategicAnalysis,
   compareCandidates,
+  createOperationalProject,
+  listProjectCandidates,
+  addProjectCandidate,
+  removeProjectCandidate,
   getAnalysisRunById,
   listAnalysisRuns,
   getPrintableReport,
