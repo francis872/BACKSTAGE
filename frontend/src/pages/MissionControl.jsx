@@ -330,6 +330,31 @@ function MissionControl({ onNavigate }) {
                   <span className={'workflow-state ' + project.workflow.state}>{project.workflow.label}</span>
                   <strong>{project.project_name || 'Proyecto sin nombre'}</strong>
                   <p>{project.city || 'Sin ciudad'} · {project.result_count || 0} resultados vinculados</p>
+                  {project.timeline && (
+                    <div className="project-timeline">
+                      <div className="timeline-progress">
+                        <span style={{ width: `${project.timeline.progress_pct}%` }} />
+                      </div>
+                      <div className="timeline-steps">
+                        {project.timeline.steps.map((step) => (
+                          <button
+                            type="button"
+                            key={step.key}
+                            className={`timeline-step ${step.status}`}
+                            onClick={() => step.status !== 'blocked' && onNavigate(step.target, project)}
+                            disabled={step.status === 'blocked'}
+                            title={step.completed_at ? `${step.label}: ${dateTime(step.completed_at)}` : step.label}
+                          >
+                            <span className="timeline-dot" />
+                            <span>{step.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                      <small className="timeline-summary">
+                        {project.timeline.completed_steps}/{project.timeline.total_steps} etapas · {project.timeline.progress_pct}% completado
+                      </small>
+                    </div>
+                  )}
                 </div>
                 <div className="workflow-project-action">
                   <small>{project.recommendation_text || 'Aún no existe recomendación para este proyecto.'}</small>
