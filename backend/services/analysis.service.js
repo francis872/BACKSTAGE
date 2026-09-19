@@ -541,10 +541,78 @@ async function reviewOperationalRisks(id, sessionUser, organizationContext) {
   return { ...summary, reviewed: true, reviewed_at: updated.metadata?.risk_reviewed_at || updated.updated_at };
 }
 
+function buildOperationalTimeline(run) {
+  const metadata = run.metadata || {};
+  const resultCount = Number(run.result_count || 0);
+  const hasComparison = resultCount > 0;
+  const probabilityCompleted = Boolean(metadata.probability_completed_at);
+  const riskReviewed = Boolean(metadata.risk_reviewed_at);
+  const recommendationGenerated = Boolean(metadata.operational_recommendation_generated_at);
+  const recommendationReviewed = Boolean(metadata.operational_recommendation_reviewed_at);
+  const recommendationDecision = metadata.operational_recommendation_decision || null;
+  const reportGenerated = Boolean(metadata.report_generated_at);
+
+  const steps = [
+    {
+      key: 'comparison',
+      label: 'Comparación',
+      target: 'portfolio-comparator',
+      status: hasComparison ? 'completed' : 'pending',
+      completed_at: hasComparison ? run.created_at : null,
+    },
+    {
+      key: 'probability',
+      label: 'Probabilidad',
+      target: 'probability-engine',
+      status: probabilityCompleted ? 'completed' : hasComparison ? 'pending' : 'blocked',
+      completed_at: metadata.probability_completed_at || null,
+    },
+    {
+      key: 'risk',
+      label: 'Riesgos',
+      target: 'intelligence-evaluations',
+      status: riskReviewed ? 'completed' : probabilityCompleted ? 'pending' : 'blocked',
+      completed_at: metadata.risk_reviewed_at || null,
+      detail: metadata.risk_review || null,
+    },
+    {
+      key: 'recommendation',
+      label: 'Recomendación',
+      target: 'intelligence-recommendations',
+      status: recommendationReviewed
+        ? (recommendationDecision === 'approved' ? 'completed' : 'rejected')
+        : recommendationGenerated
+          ? 'pending_review'
+          : riskReviewed
+            ? 'pending'
+            : 'blocked',
+      completed_at: metadata.operational_recommendation_reviewed_at || metadata.operational_recommendation_generated_at || null,
+      decision: recommendationDecision,
+    },
+    {
+      key: 'completion',
+      label: 'Cierre operativo',
+      target: 'reports',
+      status: reportGenerated
+        ? 'completed'
+        : recommendationDecision === 'approved'
+          ? 'pending'
+          : 'blocked',
+      completed_at: metadata.report_generated_at || null,
+    },
+  ];
+
+  return {
+    steps,
+    completed_steps: steps.filter((step) => step.status === 'completed').length,
+    total_steps: steps.length,
+    progress_pct: Number(((steps.filter((step) => step.status === 'completed').length / steps.length) * 100).toFixed(1)),
+  };
+}
+
 function deriveOperationalState(run) {
   const metadata = run.metadata || {};
   const resultCount = Number(run.result_count || 0);
-  const hasRecommendation = Boolean(run.recommendation_text);
   const probabilityCompleted = Boolean(metadata.probability_completed_at);
   const riskReviewed = Boolean(metadata.risk_reviewed_at);
   const riskReview = metadata.risk_review || null;
@@ -559,9 +627,6 @@ function deriveOperationalState(run) {
   if (resultCount === 0) {
     return { state: 'exploring', label: 'Exploración', next_action: 'Explorar territorio', target: 'territorial-explorer' };
   }
-  if (!hasRecommendation) {
-    return { state: 'candidates_ready', label: 'Candidatos listos', next_action: 'Comparar ubicaciones', target: 'portfolio-comparator' };
-  }
   if (!probabilityCompleted) {
     return { state: 'probability_pending', label: 'Probabilidad pendiente', next_action: 'Abrir motor probabilístico', target: 'probability-engine' };
   }
@@ -573,7 +638,7 @@ function deriveOperationalState(run) {
       state: riskReview?.counts?.critical > 0 ? 'critical_risk_reviewed' : 'recommendation_pending',
       label: riskReview?.counts?.critical > 0 ? 'Riesgo crítico revisado' : 'Recomendación pendiente',
       next_action: 'Generar recomendación',
-      target: 'intelligence-recommendations'
+      target: 'intelligence-recommendations',
     };
   }
   if (!recommendationReviewed) {
@@ -583,15 +648,15 @@ function deriveOperationalState(run) {
     return { state: 'recommendation_rejected', label: 'Recomendación rechazada', next_action: 'Revisar proyecto', target: 'intelligence-recommendations' };
   }
   if (!reportGenerated) {
-    return { state: 'recommended', label: 'Recomendación aprobada', next_action: 'Generar informe', target: 'reports' };
+    return { state: 'recommended', label: 'Recomendación aprobada', next_action: 'Completar flujo', target: 'reports' };
   }
-  return { state: 'report_ready', label: 'Informe listo', next_action: 'Abrir informe', target: 'reports' };
+  return { state: 'report_ready', label: 'Flujo completado', next_action: 'Abrir resultado', target: 'reports' };
 }
 
 async function listOperationalBoard(organizationId, limit) {
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
   const rows = await analysisRepository.listOperationalBoard({ organizationId, limit });
-  return rows.map((run) => ({ ...run, workflow: deriveOperationalState(run) }));
+  return rows.map((run) => ({ ...run, workflow: deriveOperationalState(run), timeline: buildOperationalTimeline(run) }));
 }
 
 
