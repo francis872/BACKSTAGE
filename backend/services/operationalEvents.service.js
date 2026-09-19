@@ -29,4 +29,20 @@ async function summary(organizationId) {
   return repository.getAlertSummary({ organizationId });
 }
 
-module.exports = { emit, list, alerts, summary };
+async function acknowledge(eventId, sessionUser, organizationContext) {
+  const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  const row = await repository.acknowledgeEvent({ eventId, organizationId, userId: sessionUser?.user_id });
+  if (!row) throw new ApiError(404, 'Alerta no encontrada.');
+  return row;
+}
+
+async function resolve(eventId, sessionUser, organizationContext) {
+  const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  const row = await repository.resolveEvent({ eventId, organizationId, userId: sessionUser?.user_id });
+  if (!row) throw new ApiError(404, 'Alerta no encontrada.');
+  return row;
+}
+
+module.exports = { emit, list, alerts, summary, acknowledge, resolve };
