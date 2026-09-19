@@ -326,6 +326,50 @@ async function saveRiskReview({ analysisRunId, organizationId, userId, riskSumma
   return result.rows[0] || null;
 }
 
+
+async function getLatestOperationalRecommendation({ analysisRunId, organizationId }) {
+  const result = await query(
+    `SELECT
+       recommendation_id,
+       location_id,
+       query_type,
+       result,
+       score,
+       title,
+       priority,
+       confidence,
+       expected_impact,
+       status,
+       reviewed_by_user_id,
+       review_notes,
+       reviewed_at
+     FROM recommendations
+     WHERE analysis_run_id = $1
+       AND organization_id = $2
+     ORDER BY requested_at DESC, recommendation_id DESC
+     LIMIT 1`,
+    [analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
+async function markReportGenerated({ analysisRunId, organizationId, userId, snapshot }) {
+  const result = await query(
+    `UPDATE analysis_runs
+     SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object(
+       'report_generated_at', now(),
+       'report_generated_by_user_id', $1,
+       'report_snapshot', $2::jsonb
+     ),
+     updated_at = now()
+     WHERE analysis_run_id = $3
+       AND organization_id = $4
+     RETURNING analysis_run_id, metadata, updated_at`,
+    [userId || null, JSON.stringify(snapshot || {}), analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
 async function listOperationalBoard({ organizationId, limit = 20 }) {
   const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100);
   const result = await query(
@@ -367,4 +411,6 @@ module.exports = {
   getProbabilityResult,
   getOperationalRisksByRun,
   saveRiskReview,
+  getLatestOperationalRecommendation,
+  markReportGenerated,
 };
