@@ -159,7 +159,7 @@ const LegacyApp = () => {
       case 'mission-control':
         return <MissionControl onNavigate={navigateOperational} />;
       case 'territorial-explorer':
-        return <TerritorialExplorer operationalContext={operationalContext} />;
+        return <TerritorialExplorer operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'portfolio-assets':
         return <RealEstatePortfolio />;
       case 'portfolio-projects':
