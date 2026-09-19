@@ -24,12 +24,14 @@ function formatPercent(value) {
   return `${(Number(value || 0) * 100).toFixed(2)}%`;
 }
 
-function ProbabilityEngine({ onNavigate }) {
+function ProbabilityEngine({ onNavigate, operationalContext }) {
   const [selectedDataset, setSelectedDataset] = useState(DATASETS[0].key);
   const [summary, setSummary] = useState(null);
   const [analysisRuns, setAnalysisRuns] = useState([]);
   const [message, setMessage] = useState('');
   const [expandedChart, setExpandedChart] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [savedForProject, setSavedForProject] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -70,6 +72,36 @@ function ProbabilityEngine({ onNavigate }) {
     };
   }, []);
 
+
+  const persistProbabilityResult = async () => {
+    if (!operationalContext?.analysis_run_id || !summary) return;
+    setSaving(true);
+    setMessage('');
+    try {
+      const res = await apiRequest(`/analysis/${operationalContext.analysis_run_id}/probability`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          dataset_key: selectedDataset,
+          dataset_label: selectedDatasetLabel,
+          selected_distribution: summary.selected_distribution,
+          observation_evaluation: summary.observation_evaluation || {},
+          integral_validation: summary.integral_validation || {},
+          heuristic_note: summary.heuristic_note || null,
+          source: 'probability-engine',
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudo registrar el resultado probabilístico.');
+      setSavedForProject(true);
+      setMessage(`Resultado probabilístico registrado en el proyecto #${operationalContext.analysis_run_id}.`);
+    } catch (error) {
+      setMessage(`Error: ${error.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const selectedDatasetLabel = useMemo(
     () => DATASETS.find((item) => item.key === selectedDataset)?.label || selectedDataset,
     [selectedDataset]
@@ -89,6 +121,17 @@ function ProbabilityEngine({ onNavigate }) {
           <button type="button" onClick={() => onNavigate('reports')}>Abrir informe ejecutivo</button>
         </div>
       </article>
+
+      {operationalContext?.analysis_run_id && (
+        <article className="form-section">
+          <p className="eyebrow">Proyecto operativo activo</p>
+          <h3>{operationalContext.project_name || `Análisis #${operationalContext.analysis_run_id}`}</h3>
+          <p className="auth-hint">
+            Análisis #{operationalContext.analysis_run_id} · {operationalContext.city || 'Sin ciudad'}.
+            El resultado probabilístico que confirmes quedará asociado a esta ejecución.
+          </p>
+        </article>
+      )}
 
       <article className="form-section">
         <h3>Dataset activo</h3>
@@ -136,6 +179,20 @@ function ProbabilityEngine({ onNavigate }) {
             </article>
           </div>
           <p className="auth-hint">{summary.heuristic_note}</p>
+          {operationalContext?.analysis_run_id ? (
+            <div className="form-actions">
+              <button type="button" onClick={persistProbabilityResult} disabled={saving}>
+                {saving ? 'Registrando…' : savedForProject ? 'Resultado registrado' : 'Confirmar resultado en proyecto'}
+              </button>
+              {savedForProject && (
+                <button type="button" className="secondary" onClick={() => onNavigate('mission-control')}>
+                  Volver al Centro de Operaciones
+                </button>
+              )}
+            </div>
+          ) : (
+            <p className="message">Abre este motor desde un proyecto del Centro de Operaciones para registrar el resultado.</p>
+          )}
         </article>
       )}
 
