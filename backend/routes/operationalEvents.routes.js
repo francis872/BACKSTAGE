@@ -10,4 +10,7 @@ router.get('/', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), contro
 router.get('/alerts', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.listAlerts);
 router.get('/summary', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getSummary);
 
+router.put('/:id/acknowledge', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.acknowledgeEvent);
+router.put('/:id/resolve', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.resolveEvent);
+
 module.exports = router;
