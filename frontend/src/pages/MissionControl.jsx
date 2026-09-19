@@ -55,6 +55,7 @@ function MissionControl({ onNavigate }) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [message, setMessage] = useState('');
+  const [creatingProject, setCreatingProject] = useState(false);
 
   const load = useCallback(async (manual = false) => {
     manual ? setRefreshing(true) : setLoading(true);
@@ -113,6 +114,27 @@ function MissionControl({ onNavigate }) {
   useEffect(() => {
     load();
   }, [load]);
+
+
+  const createProject = async () => {
+    const projectName = window.prompt('Nombre del proyecto operativo');
+    if (!projectName?.trim()) return;
+    setCreatingProject(true);
+    try {
+      const res = await apiRequest('/analysis/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ project_name: projectName.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudo crear el proyecto.');
+      onNavigate('territorial-explorer', data);
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setCreatingProject(false);
+    }
+  };
 
   const alerts = useMemo(() => {
     if (!summary) return [];
@@ -318,7 +340,12 @@ function MissionControl({ onNavigate }) {
             <p className="section-kicker">ORQUESTACIÓN</p>
             <h2>Proyectos en operación</h2>
           </div>
-          <small>El Centro de Operaciones determina el siguiente paso según el estado real de cada análisis.</small>
+          <div className="hero-actions">
+            <small>El Centro de Operaciones determina el siguiente paso según el estado real de cada análisis.</small>
+            <button className="refresh-btn" type="button" onClick={createProject} disabled={creatingProject}>
+              {creatingProject ? 'Creando…' : 'Nuevo proyecto'}
+            </button>
+          </div>
         </div>
         {loading ? (
           <p className="state">Calculando flujo operativo…</p>
@@ -329,7 +356,7 @@ function MissionControl({ onNavigate }) {
                 <div>
                   <span className={'workflow-state ' + project.workflow.state}>{project.workflow.label}</span>
                   <strong>{project.project_name || 'Proyecto sin nombre'}</strong>
-                  <p>{project.city || 'Sin ciudad'} · {project.result_count || 0} resultados vinculados</p>
+                  <p>{project.city || 'Sin ciudad'} · {project.candidate_count || 0} candidatos · {project.result_count || 0} resultados</p>
                   {project.timeline && (
                     <div className="project-timeline">
                       <div className="timeline-progress">
