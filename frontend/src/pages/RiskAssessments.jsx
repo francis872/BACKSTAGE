@@ -109,7 +109,55 @@ function RiskSimulationPanel({ row, onClose }) {
       </form>
       {error && <p className="message">{error}</p>}
       {result && (
-        <div className="metric-grid">
+  
+      {operationalContext?.analysis_run_id && (
+        <div className="form-section">
+          <p className="eyebrow">Proyecto operativo activo</p>
+          <h3>{operationalContext.project_name || `Análisis #${operationalContext.analysis_run_id}`}</h3>
+          {projectRisk ? (
+            <>
+              <div className="metric-grid">
+                <article className="metric-card"><span>Cobertura</span><strong>{projectRisk.coverage_pct}%</strong></article>
+                <article className="metric-card"><span>Críticos</span><strong>{projectRisk.counts?.critical || 0}</strong></article>
+                <article className="metric-card"><span>Altos</span><strong>{projectRisk.counts?.high || 0}</strong></article>
+                <article className="metric-card"><span>Sin evaluación</span><strong>{projectRisk.counts?.missing || 0}</strong></article>
+              </div>
+              <p className="auth-hint">
+                Regla operativa BACKSTAGE: bajo &lt;20%, medio 20–40%, alto 40–70%, crítico ≥70%;
+                un componente individual ≥80% también clasifica la ubicación como crítica.
+              </p>
+              <div className="card-grid">
+                {(projectRisk.locations || []).map((location) => (
+                  <article className="card" key={location.location_id}>
+                    <h4>{location.location_name}</h4>
+                    <p>{location.city || 'Sin ciudad'} · Severidad: <strong>{location.classification?.severity}</strong></p>
+                    <p>Promedio: {location.classification?.average == null ? 'Sin evaluación' : `${(location.classification.average * 100).toFixed(1)}%`}</p>
+                  </article>
+                ))}
+              </div>
+              <div className="form-actions">
+                <button
+                  type="button"
+                  onClick={confirmProjectRiskReview}
+                  disabled={reviewingProject || (projectRisk.counts?.missing || 0) > 0}
+                >
+                  {reviewingProject ? 'Registrando revisión…' : projectRisk.reviewed ? 'Riesgos revisados' : 'Confirmar revisión de riesgos'}
+                </button>
+                {projectRisk.reviewed && onNavigate && (
+                  <button type="button" className="secondary" onClick={() => onNavigate('mission-control')}>
+                    Volver al Centro de Operaciones
+                  </button>
+                )}
+              </div>
+              {(projectRisk.counts?.missing || 0) > 0 && (
+                <p className="message">No se puede cerrar esta etapa hasta evaluar todas las ubicaciones vinculadas al proyecto.</p>
+              )}
+            </>
+          ) : <p className="auth-hint">Cargando riesgos vinculados al proyecto…</p>}
+        </div>
+      )}
+
+      <div className="metric-grid">
           <article className="metric-card"><span>P5 (optimista)</span><strong>{currency.format(result.result.p5)}</strong></article>
           <article className="metric-card"><span>P50 (mediana)</span><strong>{currency.format(result.result.p50)}</strong></article>
           <article className="metric-card"><span>P95 (adverso)</span><strong>{currency.format(result.result.p95)}</strong></article>
@@ -121,7 +169,7 @@ function RiskSimulationPanel({ row, onClose }) {
   );
 }
 
-function RiskAssessments() {
+function RiskAssessments({ operationalContext, onNavigate }) {
   const [rows, setRows] = useState([]);
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -130,6 +178,8 @@ function RiskAssessments() {
   const [message, setMessage] = useState('');
   const [simulatingId, setSimulatingId] = useState(null);
   const [severityFilter, setSeverityFilter] = useState('');
+  const [projectRisk, setProjectRisk] = useState(null);
+  const [reviewingProject, setReviewingProject] = useState(false);
 
   const enrichedRows = useMemo(() => rows.map((row) => {
     const indicators = [row.flood_risk, row.landslide_risk, row.crime_risk, row.climate_exposure]
@@ -183,6 +233,38 @@ function RiskAssessments() {
   useEffect(() => {
     loadData();
   }, []);
+
+
+  useEffect(() => {
+    if (!operationalContext?.analysis_run_id) {
+      setProjectRisk(null);
+      return;
+    }
+    apiRequest(`/analysis/${operationalContext.analysis_run_id}/risks`)
+      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if (!ok) throw new Error(data.error || 'No se pudo cargar el riesgo operativo.');
+        setProjectRisk(data);
+      })
+      .catch((error) => setMessage(`Error: ${error.message}`));
+  }, [operationalContext?.analysis_run_id]);
+
+  const confirmProjectRiskReview = async () => {
+    if (!operationalContext?.analysis_run_id) return;
+    setReviewingProject(true);
+    setMessage('');
+    try {
+      const res = await apiRequest(`/analysis/${operationalContext.analysis_run_id}/risks/review`, { method: 'PUT' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudo cerrar la revisión de riesgos.');
+      setProjectRisk(data);
+      setMessage('Revisión de riesgos registrada en el proyecto.');
+    } catch (error) {
+      setMessage(`Error: ${error.message}`);
+    } finally {
+      setReviewingProject(false);
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
