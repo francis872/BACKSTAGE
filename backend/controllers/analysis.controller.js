@@ -26,6 +26,22 @@ const compareCandidates = asyncHandler(async (req, res) => {
   res.status(201).json(result);
 });
 
+
+const saveProbabilityResult = asyncHandler(async (req, res) => {
+  const result = await analysisService.saveProbabilityResult(
+    req.params.id,
+    req.body || {},
+    req.user || null,
+    req.organization || null
+  );
+  res.json(result);
+});
+
+const getProbabilityResult = asyncHandler(async (req, res) => {
+  const result = await analysisService.getProbabilityResult(req.params.id, req.organization?.organization_id);
+  res.json(result);
+});
+
 const getPrintableReport = asyncHandler(async (req, res) => {
   const report = await analysisService.getPrintableReport(req.params.id, req.organization?.organization_id);
   res.json(report);
@@ -38,4 +54,6 @@ module.exports = {
   compareCandidates,
   getPrintableReport,
   getOperationalBoard,
+  saveProbabilityResult,
+  getProbabilityResult,
 };
