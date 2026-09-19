@@ -7,6 +7,10 @@ const controller = require('../controllers/analysis.controller');
 const router = express.Router();
 
 router.use(authenticate, requireOrganizationContext);
+router.post('/projects', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.createOperationalProject);
+router.get('/:id/candidates', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.listProjectCandidates);
+router.post('/:id/candidates', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.addProjectCandidate);
+router.delete('/:id/candidates/:locationId', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.removeProjectCandidate);
 router.post('/', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.runAnalysis);
 router.post('/compare', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.compareCandidates);
 router.get('/operations', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getOperationalBoard);
