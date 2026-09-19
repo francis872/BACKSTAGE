@@ -45,6 +45,18 @@ function AdvancedComparator({ operationalContext, onNavigate }) {
       .catch(() => setLocations([]));
   }, []);
 
+
+  useEffect(() => {
+    if (!operationalContext?.analysis_run_id) return;
+    apiRequest(`/analysis/${operationalContext.analysis_run_id}/candidates`)
+      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if (!ok) throw new Error(data.error || 'No se pudieron cargar candidatos del proyecto.');
+        setSelectedCandidates((Array.isArray(data) ? data : []).map((row) => Number(row.location_id)));
+      })
+      .catch((error) => setMessage(`Error: ${error.message}`));
+  }, [operationalContext?.analysis_run_id]);
+
   const toggleCandidate = (locationId) => {
     setSelectedCandidates((prev) => {
       const exists = prev.includes(locationId);
@@ -64,6 +76,7 @@ function AdvancedComparator({ operationalContext, onNavigate }) {
 
     try {
       const payload = {
+        analysis_run_id: operationalContext?.analysis_run_id || undefined,
         project_name: projectName,
         city,
         candidates: selectedCandidates.map((locationId) => {
