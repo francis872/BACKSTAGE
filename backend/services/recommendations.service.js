@@ -1,6 +1,7 @@
 const { query } = require('../db');
 const ApiError = require('../utils/ApiError');
 const analysisRepository = require('../repositories/analysis.repository');
+const operationalEvents = require('./operationalEvents.service');
 
 const STATUSES = ['proposed', 'under_review', 'approved', 'rejected', 'in_progress', 'completed', 'expired'];
 const PRIORITIES = ['low', 'medium', 'high', 'critical'];
@@ -188,6 +189,19 @@ async function reviewRecommendation(id, organizationId, sessionUser, { decision,
       [sessionUser.user_id, decision, row.recommendation_id, row.analysis_run_id, organizationId]
     );
   }
+  if (row?.analysis_run_id) {
+    await operationalEvents.emit({
+      organizationId,
+      analysisRunId: Number(row.analysis_run_id),
+      actorUserId: sessionUser?.user_id,
+      eventType: `recommendation.${decision}`,
+      severity: decision === 'rejected' ? 'warning' : decision === 'approved' ? 'success' : 'info',
+      title: decision === 'approved' ? 'Recomendación aprobada' : decision === 'rejected' ? 'Recomendación rechazada' : 'Recomendación actualizada',
+      message: notes || `Estado de recomendación: ${decision}.`,
+      target: decision === 'approved' ? 'reports' : 'intelligence-recommendations',
+      payload: { recommendation_id: row.recommendation_id, decision },
+    });
+  }
   return row;
 }
 
@@ -341,6 +355,18 @@ async function generateFromAnalysisRun(analysisRunId, organizationId, sessionUse
      WHERE analysis_run_id = $3 AND organization_id = $4`,
     [sessionUser.user_id, created.length, analysisRunId, organizationId]
   );
+
+  await operationalEvents.emit({
+    organizationId,
+    analysisRunId: Number(analysisRunId),
+    actorUserId: sessionUser?.user_id,
+    eventType: 'recommendation.generated',
+    severity: 'warning',
+    title: 'Recomendación pendiente de decisión humana',
+    message: `${created.length} recomendación(es) operacional(es) generadas.`,
+    target: 'intelligence-recommendations',
+    payload: { recommendation_count: created.length },
+  });
 
   return created;
 }
