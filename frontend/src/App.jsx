@@ -59,6 +59,7 @@ const ProtectedRoute = ({ children }) => {
 // Legacy App Component (original behavior)
 const LegacyApp = () => {
   const [activePage, setActivePage] = useState('mission-control');
+  const [operationalContext, setOperationalContext] = useState(null);
   const [authForm, setAuthForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', organization_id: '' });
   const [authMode, setAuthMode] = useState('login');
@@ -98,18 +99,23 @@ const LegacyApp = () => {
     }, {});
   }, []);
 
+  const navigateOperational = (page, context = null) => {
+    if (context) setOperationalContext(context);
+    setActivePage(page);
+  };
+
   const renderPage = () => {
     switch (activePage) {
       case 'mission-control':
-        return <MissionControl onNavigate={setActivePage} />;
+        return <MissionControl onNavigate={navigateOperational} />;
       case 'territorial-explorer':
-        return <TerritorialExplorer />;
+        return <TerritorialExplorer operationalContext={operationalContext} />;
       case 'portfolio-assets':
         return <RealEstatePortfolio />;
       case 'portfolio-projects':
         return <RetailZones />;
       case 'portfolio-comparator':
-        return <AdvancedComparator />;
+        return <AdvancedComparator operationalContext={operationalContext} />;
       case 'intelligence-evaluations':
         return <RiskAssessments />;
       case 'intelligence-risks':
@@ -119,11 +125,11 @@ const LegacyApp = () => {
       case 'intelligence-recommendations':
         return <Recommendations />;
       case 'probability-engine':
-        return <ProbabilityEngine onNavigate={setActivePage} />;
+        return <ProbabilityEngine onNavigate={navigateOperational} operationalContext={operationalContext} />;
       case 'earthart':
         return <EarthArt />;
       case 'reports':
-        return <Reports />;
+        return <Reports operationalContext={operationalContext} />;
       case 'admin-users':
         return <UsersAdmin />;
       case 'admin-datasets':
