@@ -103,6 +103,17 @@ const getPrintableReport = asyncHandler(async (req, res) => {
   res.json(report);
 });
 
+const executeOperationalCommand = asyncHandler(async (req, res) => {
+  const result = await analysisService.executeOperationalCommand(
+    req.params.id,
+    req.body?.command,
+    req.body || {},
+    req.user || null,
+    req.organization || null
+  );
+  res.json(result);
+});
+
 module.exports = {
   runAnalysis,
   createOperationalProject,
