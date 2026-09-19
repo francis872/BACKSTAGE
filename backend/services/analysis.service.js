@@ -331,33 +331,46 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
 
   const { ranked, weights, rankingMethod, analyticsJobId } = await scoreCandidates(payload, organizationId, sessionUser);
 
-  const run = await analysisRepository.createAnalysisRun({
-    projectName: payload.project_name || 'Comparador avanzado',
-    city: payload.city || null,
-    objective: payload.objective || 'Comparar ubicaciones candidatas y priorizar la mejor alternativa.',
-    criteriaWeights: weights,
-    requestedByUserId: sessionUser?.user_id || null,
-    organizationId,
-    metadata: {
-      analysis_type: 'comparison',
-      mode: payload.mode || 'standard',
-      ranking_method: rankingMethod,
-      analytics_job_id: analyticsJobId,
-      comparison_started_from: payload.source || 'advanced-comparator',
-    },
-  });
-
-  for (const candidate of ranked) {
-    await analysisRepository.insertAnalysisResult({
-      analysisRunId: run.analysis_run_id,
-      rankPosition: candidate.rank_position,
-      candidateName: candidate.candidate_name,
-      locationId: candidate.location_id,
-      scoreTotal: candidate.score_total,
-      scoreByDimension: candidate.score_by_dimension,
-      metrics: candidate.metrics,
-      explanation: { criteria: candidate.explanation },
+  let run;
+  if (payload.analysis_run_id) {
+    run = await getAnalysisRunById(payload.analysis_run_id, organizationId);
+    const persistedCandidates = await analysisRepository.listProjectCandidates({
+      analysisRunId: payload.analysis_run_id,
+      organizationId,
     });
+    if (persistedCandidates.length < 2) {
+      throw new ApiError(409, 'El proyecto necesita al menos 2 candidatos persistidos antes de comparar.');
+    }
+    await analysisRepository.replaceAnalysisResults({ analysisRunId: payload.analysis_run_id, ranked });
+    run = await analysisRepository.markComparisonCompleted({
+      analysisRunId: payload.analysis_run_id,
+      organizationId,
+      criteriaWeights: weights,
+      metadata: {
+        analysis_type: 'comparison',
+        mode: payload.mode || 'standard',
+        ranking_method: rankingMethod,
+        analytics_job_id: analyticsJobId,
+        comparison_started_from: payload.source || 'advanced-comparator',
+      },
+    });
+  } else {
+    run = await analysisRepository.createAnalysisRun({
+      projectName: payload.project_name || 'Comparador avanzado',
+      city: payload.city || null,
+      objective: payload.objective || 'Comparar ubicaciones candidatas y priorizar la mejor alternativa.',
+      criteriaWeights: weights,
+      requestedByUserId: sessionUser?.user_id || null,
+      organizationId,
+      metadata: {
+        analysis_type: 'comparison',
+        mode: payload.mode || 'standard',
+        ranking_method: rankingMethod,
+        analytics_job_id: analyticsJobId,
+        comparison_started_from: payload.source || 'advanced-comparator',
+      },
+    });
+    await analysisRepository.replaceAnalysisResults({ analysisRunId: run.analysis_run_id, ranked });
   }
 
   const recommendationText = buildRecommendation(ranked);
