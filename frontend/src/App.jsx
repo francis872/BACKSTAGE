@@ -117,7 +117,7 @@ const LegacyApp = () => {
       case 'portfolio-comparator':
         return <AdvancedComparator operationalContext={operationalContext} />;
       case 'intelligence-evaluations':
-        return <RiskAssessments />;
+        return <RiskAssessments operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'intelligence-risks':
         return <RiskComponents />;
       case 'intelligence-opportunities':
