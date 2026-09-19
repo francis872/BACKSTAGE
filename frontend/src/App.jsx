@@ -129,7 +129,7 @@ const LegacyApp = () => {
       case 'earthart':
         return <EarthArt />;
       case 'reports':
-        return <Reports operationalContext={operationalContext} />;
+        return <Reports operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'admin-users':
         return <UsersAdmin />;
       case 'admin-datasets':
