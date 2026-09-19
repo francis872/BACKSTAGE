@@ -262,6 +262,103 @@ async function getProbabilityResult({ analysisRunId, organizationId }) {
 }
 
 
+
+async function createOperationalProject({ projectName, city, objective, requestedByUserId, organizationId }) {
+  const result = await query(
+    `INSERT INTO analysis_runs
+       (project_name, city, objective, criteria_weights, requested_by_user_id, organization_id, metadata, status)
+     VALUES ($1, $2, $3, '{}'::jsonb, $4, $5, $6, 'pending')
+     RETURNING *`,
+    [projectName, city || null, objective || null, requestedByUserId || null, organizationId, {
+      analysis_type: 'operational_project',
+      workflow_created_at: new Date().toISOString(),
+    }]
+  );
+  return result.rows[0];
+}
+
+async function listProjectCandidates({ analysisRunId, organizationId }) {
+  const result = await query(
+    `SELECT
+       arc.analysis_run_candidate_id,
+       arc.analysis_run_id,
+       arc.location_id,
+       arc.selected_at,
+       l.name,
+       l.city,
+       l.address,
+       l.latitude,
+       l.longitude,
+       l.category
+     FROM analysis_run_candidates arc
+     JOIN analysis_runs ar ON ar.analysis_run_id = arc.analysis_run_id
+     JOIN locations l ON l.location_id = arc.location_id
+     WHERE arc.analysis_run_id = $1
+       AND ar.organization_id = $2
+     ORDER BY arc.selected_at ASC`,
+    [analysisRunId, organizationId]
+  );
+  return result.rows;
+}
+
+async function addProjectCandidate({ analysisRunId, locationId, organizationId, userId }) {
+  const result = await query(
+    `INSERT INTO analysis_run_candidates (analysis_run_id, location_id, selected_by_user_id)
+     SELECT ar.analysis_run_id, l.location_id, $4
+     FROM analysis_runs ar
+     JOIN locations l ON l.location_id = $2 AND l.organization_id = $3
+     WHERE ar.analysis_run_id = $1 AND ar.organization_id = $3
+     ON CONFLICT (analysis_run_id, location_id) DO UPDATE SET selected_at = analysis_run_candidates.selected_at
+     RETURNING *`,
+    [analysisRunId, locationId, organizationId, userId || null]
+  );
+  return result.rows[0] || null;
+}
+
+async function removeProjectCandidate({ analysisRunId, locationId, organizationId }) {
+  const result = await query(
+    `DELETE FROM analysis_run_candidates arc
+     USING analysis_runs ar
+     WHERE arc.analysis_run_id = ar.analysis_run_id
+       AND arc.analysis_run_id = $1
+       AND arc.location_id = $2
+       AND ar.organization_id = $3
+     RETURNING arc.*`,
+    [analysisRunId, locationId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
+async function replaceAnalysisResults({ analysisRunId, ranked }) {
+  await query('DELETE FROM analysis_results WHERE analysis_run_id = $1', [analysisRunId]);
+  for (const candidate of ranked) {
+    await insertAnalysisResult({
+      analysisRunId,
+      rankPosition: candidate.rank_position,
+      candidateName: candidate.candidate_name,
+      locationId: candidate.location_id,
+      scoreTotal: candidate.score_total,
+      scoreByDimension: candidate.score_by_dimension,
+      metrics: candidate.metrics,
+      explanation: { criteria: candidate.explanation },
+    });
+  }
+}
+
+async function markComparisonCompleted({ analysisRunId, organizationId, criteriaWeights, metadata }) {
+  const result = await query(
+    `UPDATE analysis_runs
+     SET criteria_weights = $1,
+         metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb || jsonb_build_object('comparison_completed_at', now()),
+         status = 'completed',
+         updated_at = now()
+     WHERE analysis_run_id = $3 AND organization_id = $4
+     RETURNING *`,
+    [criteriaWeights || {}, JSON.stringify(metadata || {}), analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
 async function getOperationalRisksByRun({ analysisRunId, organizationId }) {
   const result = await query(
     `WITH project_locations AS (
@@ -413,4 +510,10 @@ module.exports = {
   saveRiskReview,
   getLatestOperationalRecommendation,
   markReportGenerated,
+  createOperationalProject,
+  listProjectCandidates,
+  addProjectCandidate,
+  removeProjectCandidate,
+  replaceAnalysisResults,
+  markComparisonCompleted,
 };
