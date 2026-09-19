@@ -2,6 +2,7 @@ const ApiError = require('../utils/ApiError');
 const analysisRepository = require('../repositories/analysis.repository');
 const multicriteria = require('../domain/analytics/multicriteria');
 const analyticsJobsRepository = require('../repositories/analyticsJobs.repository');
+const operationalEvents = require('./operationalEvents.service');
 
 const DEFAULT_WEIGHTS = {
   population_potential: 0.25,
@@ -403,6 +404,13 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
     }
   }
 
+  await operationalEvents.emit({
+    organizationId, analysisRunId: run.analysis_run_id, actorUserId: sessionUser?.user_id,
+    eventType: 'comparison.completed', severity: 'success', title: 'Comparación completada',
+    message: `${ranked.length} ubicaciones comparadas. Siguiente etapa: motor probabilístico.`,
+    target: 'probability-engine', payload: { ranking_method: rankingMethod, candidate_count: ranked.length },
+  });
+
   return {
     analysis_run_id: run.analysis_run_id,
     compared_at: run.created_at,
@@ -439,13 +447,19 @@ async function createOperationalProject(payload, sessionUser, organizationContex
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
   const projectName = String(payload.project_name || '').trim();
   if (!projectName) throw new ApiError(400, 'project_name es obligatorio.');
-  return analysisRepository.createOperationalProject({
+  const project = await analysisRepository.createOperationalProject({
     projectName,
     city: payload.city || null,
     objective: payload.objective || 'Evaluar y comparar ubicaciones candidatas.',
     requestedByUserId: sessionUser?.user_id || null,
     organizationId,
   });
+  await operationalEvents.emit({
+    organizationId, analysisRunId: project.analysis_run_id, actorUserId: sessionUser?.user_id,
+    eventType: 'project.created', severity: 'info', title: 'Proyecto operativo creado',
+    message: project.project_name, target: 'territorial-explorer',
+  });
+  return project;
 }
 
 async function listProjectCandidates(id, organizationId) {
@@ -469,14 +483,33 @@ async function addProjectCandidate(id, locationId, sessionUser, organizationCont
     userId: sessionUser?.user_id || null,
   });
   if (!saved) throw new ApiError(404, 'Ubicación no encontrada en la organización.');
-  return listProjectCandidates(id, organizationId);
+  const candidates = await listProjectCandidates(id, organizationId);
+  await operationalEvents.emit({
+    organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
+    eventType: candidates.length >= 2 ? 'candidates.ready' : 'candidate.selected',
+    severity: candidates.length >= 2 ? 'success' : 'info',
+    title: candidates.length >= 2 ? 'Candidatos listos para comparar' : 'Candidato seleccionado',
+    message: `${candidates.length} candidato(s) persistidos en el proyecto.`,
+    target: candidates.length >= 2 ? 'portfolio-comparator' : 'territorial-explorer',
+    payload: { candidate_count: candidates.length, location_id: Number(locationId) },
+  });
+  return candidates;
 }
 
 async function removeProjectCandidate(id, locationId, sessionUser, organizationContext) {
   const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
   await analysisRepository.removeProjectCandidate({ analysisRunId: id, locationId, organizationId });
-  return listProjectCandidates(id, organizationId);
+  const candidates = await listProjectCandidates(id, organizationId);
+  await operationalEvents.emit({
+    organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
+    eventType: 'candidate.removed', severity: candidates.length < 2 ? 'warning' : 'info',
+    title: 'Candidato eliminado',
+    message: candidates.length < 2 ? 'El proyecto ya no tiene suficientes candidatos para comparar.' : `${candidates.length} candidatos permanecen seleccionados.`,
+    target: 'territorial-explorer',
+    payload: { candidate_count: candidates.length, location_id: Number(locationId) },
+  });
+  return candidates;
 }
 
 function validateProbabilityPayload(payload) {
@@ -514,6 +547,12 @@ async function saveProbabilityResult(id, payload, sessionUser, organizationConte
     userId: sessionUser?.user_id || null,
   });
   if (!updated) throw new ApiError(404, 'Análisis no encontrado.');
+  await operationalEvents.emit({
+    organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
+    eventType: 'probability.completed', severity: 'success', title: 'Análisis probabilístico completado',
+    message: `Distribución seleccionada: ${probabilityResult.selected_distribution}.`,
+    target: 'intelligence-evaluations', payload: { dataset_key: probabilityResult.dataset_key, selected_distribution: probabilityResult.selected_distribution },
+  });
   return { analysis_run_id: Number(id), probability_completed: true, probability_result: probabilityResult, updated_at: updated.updated_at };
 }
 
@@ -597,6 +636,14 @@ async function reviewOperationalRisks(id, sessionUser, organizationContext) {
     },
   });
   if (!updated) throw new ApiError(404, 'Análisis no encontrado.');
+  await operationalEvents.emit({
+    organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
+    eventType: 'risk.reviewed',
+    severity: summary.counts.critical > 0 ? 'critical' : summary.counts.high > 0 ? 'warning' : 'success',
+    title: summary.counts.critical > 0 ? 'Riesgo crítico detectado' : 'Revisión de riesgos completada',
+    message: `Críticos: ${summary.counts.critical}. Altos: ${summary.counts.high}. Cobertura: ${summary.coverage_pct}%.`,
+    target: 'intelligence-recommendations', payload: { counts: summary.counts, coverage_pct: summary.coverage_pct },
+  });
   return { ...summary, reviewed: true, reviewed_at: updated.metadata?.risk_reviewed_at || updated.updated_at };
 }
 
@@ -786,6 +833,13 @@ async function generateOperationalReport(id, sessionUser, organizationContext) {
     snapshot,
   });
   if (!updated) throw new ApiError(404, 'Análisis no encontrado.');
+
+  await operationalEvents.emit({
+    organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
+    eventType: 'workflow.completed', severity: 'success', title: 'Flujo operativo completado',
+    message: `El proyecto ${run.project_name} completó todas las etapas operativas.`,
+    target: 'mission-control',
+  });
 
   return {
     analysis_run_id: Number(id),
