@@ -1180,3 +1180,5 @@ button.secondary:hover {
     font-size: 24px;
   }
 }
+
+.active-operational-context{display:flex;align-items:center;gap:10px;margin:18px 28px 0;padding:10px 13px;border:1px solid rgba(6,214,214,.24);border-radius:10px;background:rgba(6,214,214,.06);color:var(--text-secondary);font-size:10px}.active-operational-context>span{text-transform:uppercase;letter-spacing:.08em;color:var(--accent-cyan);font-weight:800}.active-operational-context>strong{color:var(--text-primary);font-size:11px}.active-operational-context>small{margin-right:auto}.active-operational-context>button{border:0;background:transparent;color:var(--accent-cyan);font-size:10px;font-weight:700;cursor:pointer}@media(max-width:760px){.active-operational-context{margin:62px 14px 0;flex-wrap:wrap}.active-operational-context>small{margin-right:0}.active-operational-context>button{margin-left:auto}}
