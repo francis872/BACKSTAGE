@@ -418,11 +418,89 @@ async function getProbabilityResult(id, organizationId) {
   return result;
 }
 
+
+const RISK_THRESHOLDS = Object.freeze({
+  medium: 0.20,
+  high: 0.40,
+  critical: 0.70,
+  criticalComponent: 0.80,
+});
+
+function classifyOperationalRisk(row) {
+  if (!row.risk_id) return { severity: 'missing', average: null, max_component: null, critical_component: null };
+  const components = {
+    flood_risk: row.flood_risk,
+    landslide_risk: row.landslide_risk,
+    crime_risk: row.crime_risk,
+    climate_exposure: row.climate_exposure,
+  };
+  const valid = Object.entries(components)
+    .map(([key, value]) => [key, Number(value)])
+    .filter(([, value]) => Number.isFinite(value));
+  if (!valid.length) return { severity: 'missing', average: null, max_component: null, critical_component: null };
+  const average = valid.reduce((sum, [, value]) => sum + value, 0) / valid.length;
+  const [maxKey, maxValue] = valid.reduce((max, item) => item[1] > max[1] ? item : max, valid[0]);
+  let severity = 'low';
+  if (average >= RISK_THRESHOLDS.critical || maxValue >= RISK_THRESHOLDS.criticalComponent) severity = 'critical';
+  else if (average >= RISK_THRESHOLDS.high) severity = 'high';
+  else if (average >= RISK_THRESHOLDS.medium) severity = 'medium';
+  return {
+    severity,
+    average: Number(average.toFixed(4)),
+    max_component: Number(maxValue.toFixed(4)),
+    critical_component: maxValue >= RISK_THRESHOLDS.criticalComponent ? maxKey : null,
+  };
+}
+
+async function getOperationalRisks(id, organizationId) {
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  await getAnalysisRunById(id, organizationId);
+  const rows = await analysisRepository.getOperationalRisksByRun({ analysisRunId: id, organizationId });
+  const locations = rows.map((row) => ({ ...row, classification: classifyOperationalRisk(row) }));
+  const counts = locations.reduce((acc, row) => {
+    acc[row.classification.severity] = (acc[row.classification.severity] || 0) + 1;
+    return acc;
+  }, { low: 0, medium: 0, high: 0, critical: 0, missing: 0 });
+  return {
+    analysis_run_id: Number(id),
+    thresholds: RISK_THRESHOLDS,
+    total_locations: locations.length,
+    assessed_locations: locations.length - counts.missing,
+    coverage_pct: locations.length ? Number((((locations.length - counts.missing) / locations.length) * 100).toFixed(1)) : 0,
+    counts,
+    requires_attention: counts.high > 0 || counts.critical > 0 || counts.missing > 0,
+    locations,
+  };
+}
+
+async function reviewOperationalRisks(id, sessionUser, organizationContext) {
+  const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
+  const summary = await getOperationalRisks(id, organizationId);
+  if (summary.counts.missing > 0) {
+    throw new ApiError(409, 'No se puede cerrar la revisión: hay ubicaciones del proyecto sin evaluación de riesgo.');
+  }
+  const updated = await analysisRepository.saveRiskReview({
+    analysisRunId: id,
+    organizationId,
+    userId: sessionUser?.user_id || null,
+    riskSummary: {
+      counts: summary.counts,
+      coverage_pct: summary.coverage_pct,
+      requires_attention: summary.requires_attention,
+      thresholds: summary.thresholds,
+    },
+  });
+  if (!updated) throw new ApiError(404, 'Análisis no encontrado.');
+  return { ...summary, reviewed: true, reviewed_at: updated.metadata?.risk_reviewed_at || updated.updated_at };
+}
+
 function deriveOperationalState(run) {
   const metadata = run.metadata || {};
   const resultCount = Number(run.result_count || 0);
   const hasRecommendation = Boolean(run.recommendation_text);
   const probabilityCompleted = Boolean(metadata.probability_completed_at);
+  const riskReviewed = Boolean(metadata.risk_reviewed_at);
+  const riskReview = metadata.risk_review || null;
   const reportGenerated = Boolean(metadata.report_generated_at);
 
   if (run.status === 'failed') {
@@ -436,6 +514,12 @@ function deriveOperationalState(run) {
   }
   if (!probabilityCompleted) {
     return { state: 'probability_pending', label: 'Probabilidad pendiente', next_action: 'Abrir motor probabilístico', target: 'probability-engine' };
+  }
+  if (!riskReviewed) {
+    return { state: 'risk_review_pending', label: 'Riesgos por revisar', next_action: 'Revisar riesgos', target: 'intelligence-evaluations' };
+  }
+  if (riskReview?.counts?.critical > 0) {
+    return { state: 'critical_risk_reviewed', label: 'Riesgo crítico revisado', next_action: 'Revisar recomendación', target: 'intelligence-recommendations' };
   }
   if (!reportGenerated) {
     return { state: 'recommended', label: 'Recomendación lista', next_action: 'Generar informe', target: 'reports' };
@@ -483,4 +567,6 @@ module.exports = {
   listOperationalBoard,
   saveProbabilityResult,
   getProbabilityResult,
+  getOperationalRisks,
+  reviewOperationalRisks,
 };
