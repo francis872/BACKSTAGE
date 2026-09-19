@@ -501,6 +501,9 @@ function deriveOperationalState(run) {
   const probabilityCompleted = Boolean(metadata.probability_completed_at);
   const riskReviewed = Boolean(metadata.risk_reviewed_at);
   const riskReview = metadata.risk_review || null;
+  const recommendationGenerated = Boolean(metadata.operational_recommendation_generated_at);
+  const recommendationReviewed = Boolean(metadata.operational_recommendation_reviewed_at);
+  const recommendationDecision = metadata.operational_recommendation_decision || null;
   const reportGenerated = Boolean(metadata.report_generated_at);
 
   if (run.status === 'failed') {
@@ -518,11 +521,22 @@ function deriveOperationalState(run) {
   if (!riskReviewed) {
     return { state: 'risk_review_pending', label: 'Riesgos por revisar', next_action: 'Revisar riesgos', target: 'intelligence-evaluations' };
   }
-  if (riskReview?.counts?.critical > 0) {
-    return { state: 'critical_risk_reviewed', label: 'Riesgo crítico revisado', next_action: 'Revisar recomendación', target: 'intelligence-recommendations' };
+  if (!recommendationGenerated) {
+    return {
+      state: riskReview?.counts?.critical > 0 ? 'critical_risk_reviewed' : 'recommendation_pending',
+      label: riskReview?.counts?.critical > 0 ? 'Riesgo crítico revisado' : 'Recomendación pendiente',
+      next_action: 'Generar recomendación',
+      target: 'intelligence-recommendations'
+    };
+  }
+  if (!recommendationReviewed) {
+    return { state: 'recommendation_review_pending', label: 'Recomendación por revisar', next_action: 'Revisar recomendación', target: 'intelligence-recommendations' };
+  }
+  if (recommendationDecision === 'rejected') {
+    return { state: 'recommendation_rejected', label: 'Recomendación rechazada', next_action: 'Revisar proyecto', target: 'intelligence-recommendations' };
   }
   if (!reportGenerated) {
-    return { state: 'recommended', label: 'Recomendación lista', next_action: 'Generar informe', target: 'reports' };
+    return { state: 'recommended', label: 'Recomendación aprobada', next_action: 'Generar informe', target: 'reports' };
   }
   return { state: 'report_ready', label: 'Informe listo', next_action: 'Abrir informe', target: 'reports' };
 }
