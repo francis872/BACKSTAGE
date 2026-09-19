@@ -30,8 +30,8 @@ function DimensionBreakdown({ scores }) {
   );
 }
 
-function Reports() {
-  const [analysisId, setAnalysisId] = useState('');
+function Reports({ operationalContext }) {
+  const [analysisId, setAnalysisId] = useState(() => operationalContext?.analysis_run_id ? String(operationalContext.analysis_run_id) : '');
   const [availableRuns, setAvailableRuns] = useState([]);
   const [report, setReport] = useState(null);
   const [message, setMessage] = useState('');
@@ -45,7 +45,7 @@ function Reports() {
         if (!mounted) return;
         const rows = Array.isArray(data) ? data : [];
         setAvailableRuns(rows);
-        if (rows.length > 0) {
+        if (rows.length > 0 && !operationalContext?.analysis_run_id) {
           setAnalysisId(String(rows[0].analysis_run_id));
         }
       })
