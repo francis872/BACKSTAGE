@@ -18,4 +18,12 @@ const getSummary = asyncHandler(async (req, res) => {
   res.json(await service.summary(req.organization?.organization_id));
 });
 
-module.exports = { listEvents, listAlerts, getSummary };
+const acknowledgeEvent = asyncHandler(async (req, res) => {
+  res.json(await service.acknowledge(req.params.id, req.user || null, req.organization || null));
+});
+
+const resolveEvent = asyncHandler(async (req, res) => {
+  res.json(await service.resolve(req.params.id, req.user || null, req.organization || null));
+});
+
+module.exports = { listEvents, listAlerts, getSummary, acknowledgeEvent, resolveEvent };
