@@ -331,27 +331,74 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
 
   const { ranked, weights, rankingMethod, analyticsJobId } = await scoreCandidates(payload, organizationId, sessionUser);
 
+  const run = await analysisRepository.createAnalysisRun({
+    projectName: payload.project_name || 'Comparador avanzado',
+    city: payload.city || null,
+    objective: payload.objective || 'Comparar ubicaciones candidatas y priorizar la mejor alternativa.',
+    criteriaWeights: weights,
+    requestedByUserId: sessionUser?.user_id || null,
+    organizationId,
+    metadata: {
+      analysis_type: 'comparison',
+      mode: payload.mode || 'standard',
+      ranking_method: rankingMethod,
+      analytics_job_id: analyticsJobId,
+      comparison_started_from: payload.source || 'advanced-comparator',
+    },
+  });
+
+  for (const candidate of ranked) {
+    await analysisRepository.insertAnalysisResult({
+      analysisRunId: run.analysis_run_id,
+      rankPosition: candidate.rank_position,
+      candidateName: candidate.candidate_name,
+      locationId: candidate.location_id,
+      scoreTotal: candidate.score_total,
+      scoreByDimension: candidate.score_by_dimension,
+      metrics: candidate.metrics,
+      explanation: { criteria: candidate.explanation },
+    });
+  }
+
+  const recommendationText = buildRecommendation(ranked);
+  await analysisRepository.setAnalysisRecommendation(
+    run.analysis_run_id,
+    recommendationText,
+    {
+      top_candidate: ranked[0] || null,
+      ranking: ranked.map((candidate) => ({
+        rank_position: candidate.rank_position,
+        candidate_name: candidate.candidate_name,
+        location_id: candidate.location_id,
+        score_total: candidate.score_total,
+      })),
+    }
+  );
+
   let sensitivity = null;
   if (ranked.length >= 2) {
     const alternatives = ranked.map((r) => ({ name: r.candidate_name, criteria: r.score_by_dimension }));
     const directions = Object.fromEntries(Object.keys(weights).map((key) => [key, 'benefit']));
     try {
       sensitivity = multicriteria.sensitivityAnalysis(alternatives, weights, {
-        directions, method: rankingMethod, perturbationPct: 0.15,
+        directions,
+        method: rankingMethod,
+        perturbationPct: 0.15,
       });
     } catch {
-      sensitivity = null; // Sensitivity is best-effort context, never blocks the main ranking.
+      sensitivity = null;
     }
   }
 
   return {
-    compared_at: new Date().toISOString(),
+    analysis_run_id: run.analysis_run_id,
+    compared_at: run.created_at,
     project_name: payload.project_name || 'Comparador avanzado',
     city: payload.city || null,
     criteria_weights: weights,
     ranking_method: rankingMethod,
     analytics_job_id: analyticsJobId,
-    recommendation: buildRecommendation(ranked),
+    recommendation: recommendationText,
     ranking: ranked,
     pairwise: buildPairwiseComparison(ranked),
     sensitivity,
