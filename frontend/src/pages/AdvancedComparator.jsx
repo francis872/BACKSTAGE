@@ -30,7 +30,7 @@ function DimensionBreakdown({ scores }) {
   );
 }
 
-function AdvancedComparator({ operationalContext }) {
+function AdvancedComparator({ operationalContext, onNavigate }) {
   const [locations, setLocations] = useState([]);
   const [selectedCandidates, setSelectedCandidates] = useState([]);
   const [city, setCity] = useState(operationalContext?.city || 'Bogotá');
@@ -84,6 +84,9 @@ function AdvancedComparator({ operationalContext }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'No se pudo ejecutar la comparación.');
       setResult(data);
+      if (data.analysis_run_id) {
+        setMessage(`Comparación persistida como proyecto operativo #${data.analysis_run_id}.`);
+      }
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
@@ -125,6 +128,28 @@ function AdvancedComparator({ operationalContext }) {
 
       {result && (
         <div className="stacked-sections">
+          <article className="form-section">
+            <p className="eyebrow">Proyecto operativo</p>
+            <h3>Análisis # {result.analysis_run_id}</h3>
+            <p className="auth-hint">
+              Esta comparación ya está persistida y puede continuar por el flujo operacional.
+            </p>
+            {onNavigate && result.analysis_run_id && (
+              <div className="form-actions">
+                <button
+                  type="button"
+                  onClick={() => onNavigate('probability-engine', {
+                    analysis_run_id: result.analysis_run_id,
+                    project_name: result.project_name,
+                    city: result.city,
+                  })}
+                >
+                  Continuar al Motor Probabilístico
+                </button>
+              </div>
+            )}
+          </article>
+
           <article className="form-section">
             <h3>Ranking</h3>
             <p className="auth-hint">
