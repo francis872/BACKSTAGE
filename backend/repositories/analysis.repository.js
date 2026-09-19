@@ -184,7 +184,7 @@ async function getAnalysisRunByIdForOrganization(analysisRunId, organizationId) 
   const runResult = await query(
     `SELECT
       analysis_run_id, project_name, city, objective, criteria_weights,
-      recommendation_text, recommendation_payload, status, created_at, updated_at, organization_id
+      recommendation_text, recommendation_payload, metadata, status, created_at, updated_at, organization_id
      FROM analysis_runs
      WHERE analysis_run_id = $1
        ${filterByOrg ? 'AND organization_id = $2' : ''}`,
@@ -228,6 +228,39 @@ async function listAnalysisRuns({ organizationId, limit = 20 }) {
 }
 
 
+
+async function saveProbabilityResult({ analysisRunId, organizationId, probabilityResult, userId }) {
+  const result = await query(
+    `UPDATE analysis_runs
+     SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object(
+       'probability_result', $1::jsonb,
+       'probability_completed_at', now(),
+       'probability_completed_by_user_id', $2
+     ),
+     updated_at = now()
+     WHERE analysis_run_id = $3
+       AND organization_id = $4
+     RETURNING analysis_run_id, metadata, updated_at`,
+    [JSON.stringify(probabilityResult || {}), userId || null, analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
+async function getProbabilityResult({ analysisRunId, organizationId }) {
+  const result = await query(
+    `SELECT
+       analysis_run_id,
+       metadata->'probability_result' AS probability_result,
+       metadata->>'probability_completed_at' AS probability_completed_at,
+       metadata->>'probability_completed_by_user_id' AS probability_completed_by_user_id
+     FROM analysis_runs
+     WHERE analysis_run_id = $1
+       AND organization_id = $2`,
+    [analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
 async function listOperationalBoard({ organizationId, limit = 20 }) {
   const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100);
   const result = await query(
@@ -265,4 +298,6 @@ module.exports = {
   getAnalysisRunByIdForOrganization,
   listAnalysisRuns,
   listOperationalBoard,
+  saveProbabilityResult,
+  getProbabilityResult,
 };
