@@ -344,6 +344,7 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
     }
     await analysisRepository.replaceAnalysisResults({ analysisRunId: payload.analysis_run_id, ranked });
     await analysisRepository.clearWorkflowStale({ analysisRunId: payload.analysis_run_id, organizationId });
+    await analysisRepository.syncDependencyVersion({ analysisRunId: payload.analysis_run_id, organizationId, dependency: 'comparison', sourceDependency: 'candidates' });
     run = await analysisRepository.markComparisonCompleted({
       analysisRunId: payload.analysis_run_id,
       organizationId,
@@ -484,6 +485,22 @@ async function addProjectCandidate(id, locationId, sessionUser, organizationCont
     userId: sessionUser?.user_id || null,
   });
   if (!saved) throw new ApiError(404, 'Ubicación no encontrada en la organización.');
+  const runAfterSelection = await getAnalysisRunById(id, organizationId);
+  await analysisRepository.bumpDependencyVersion({ analysisRunId: Number(id), organizationId, dependency: 'candidates' });
+  if (runAfterSelection.metadata?.comparison_completed_at || runAfterSelection.metadata?.probability_completed_at || runAfterSelection.metadata?.risk_reviewed_at) {
+    await analysisRepository.invalidateDownstreamWorkflow({
+      analysisRunId: Number(id), organizationId,
+      reason: 'La selección de candidatos cambió después de ejecutar etapas dependientes.',
+      source: 'candidate_added',
+    });
+    await operationalEvents.emit({
+      organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
+      eventType: 'workflow.stale', severity: 'critical', title: 'Resultados desactualizados',
+      message: 'Se agregó un candidato después de la última comparación. Recalcula el Comparador.',
+      target: 'portfolio-comparator', dedupeKey: `workflow-stale:${id}`,
+      payload: { reason: 'candidate_added' },
+    });
+  }
   const candidates = await listProjectCandidates(id, organizationId);
   await operationalEvents.emit({
     organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
@@ -502,6 +519,7 @@ async function removeProjectCandidate(id, locationId, sessionUser, organizationC
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
   const runBeforeChange = await getAnalysisRunById(id, organizationId);
   await analysisRepository.removeProjectCandidate({ analysisRunId: id, locationId, organizationId });
+  await analysisRepository.bumpDependencyVersion({ analysisRunId: Number(id), organizationId, dependency: 'candidates' });
   const candidates = await listProjectCandidates(id, organizationId);
   if (runBeforeChange.metadata?.comparison_completed_at || runBeforeChange.metadata?.probability_completed_at || runBeforeChange.metadata?.risk_reviewed_at) {
     await analysisRepository.invalidateDownstreamWorkflow({
@@ -566,6 +584,7 @@ async function saveProbabilityResult(id, payload, sessionUser, organizationConte
     userId: sessionUser?.user_id || null,
   });
   if (!updated) throw new ApiError(404, 'Análisis no encontrado.');
+  await analysisRepository.syncDependencyVersion({ analysisRunId: Number(id), organizationId, dependency: 'probability', sourceDependency: 'comparison' });
   await operationalEvents.emit({
     organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
     eventType: 'probability.completed', severity: 'success', title: 'Análisis probabilístico completado',
@@ -655,6 +674,7 @@ async function reviewOperationalRisks(id, sessionUser, organizationContext) {
     },
   });
   if (!updated) throw new ApiError(404, 'Análisis no encontrado.');
+  await analysisRepository.syncDependencyVersion({ analysisRunId: Number(id), organizationId, dependency: 'risk', sourceDependency: 'probability' });
   await operationalEvents.emit({
     organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
     eventType: 'risk.reviewed',
@@ -919,6 +939,40 @@ async function getPrintableReport(id, organizationId) {
       updated_at: run.updated_at,
     },
   };
+}
+
+
+async function executeOperationalCommand(id, command, payload, sessionUser, organizationContext) {
+  const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  const run = await getAnalysisRunById(id, organizationId);
+  const commands = new Set(['recalculate_comparison', 'retry_probability', 'reopen_risk_review', 'regenerate_recommendation', 'reset_from_stage']);
+  if (!commands.has(command)) throw new ApiError(400, 'Comando operacional no soportado.');
+
+  let target;
+  let stage;
+  if (command === 'recalculate_comparison') { stage = 'comparison'; target = 'portfolio-comparator'; }
+  if (command === 'retry_probability') { stage = 'probability'; target = 'probability-engine'; }
+  if (command === 'reopen_risk_review') { stage = 'risk'; target = 'intelligence-evaluations'; }
+  if (command === 'regenerate_recommendation') { stage = 'recommendation'; target = 'intelligence-recommendations'; }
+  if (command === 'reset_from_stage') {
+    stage = payload?.stage;
+    target = ({ comparison:'portfolio-comparator', probability:'probability-engine', risk:'intelligence-evaluations', recommendation:'intelligence-recommendations' })[stage];
+    if (!target) throw new ApiError(400, 'Etapa de reinicio inválida.');
+  }
+
+  const updated = await analysisRepository.resetWorkflowFromStage({ analysisRunId: Number(id), organizationId, stage });
+  if (!updated) throw new ApiError(404, 'Proyecto operativo no encontrado.');
+
+  await operationalEvents.emit({
+    organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
+    eventType: 'workflow.command', severity: 'info',
+    title: 'Comando operacional ejecutado',
+    message: `${command}: el workflow fue reabierto desde ${stage}.`,
+    target, payload: { command, stage, previous_state: run.status },
+  });
+
+  return { analysis_run_id: Number(id), command, stage, target, status: 'ready' };
 }
 
 module.exports = {
