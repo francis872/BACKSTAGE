@@ -1,6 +1,37 @@
 const asyncHandler = require('../utils/asyncHandler');
 const analysisService = require('../services/analysis.service');
 
+
+const createOperationalProject = asyncHandler(async (req, res) => {
+  const result = await analysisService.createOperationalProject(req.body || {}, req.user || null, req.organization || null);
+  res.status(201).json(result);
+});
+
+const listProjectCandidates = asyncHandler(async (req, res) => {
+  const rows = await analysisService.listProjectCandidates(req.params.id, req.organization?.organization_id);
+  res.json(rows);
+});
+
+const addProjectCandidate = asyncHandler(async (req, res) => {
+  const rows = await analysisService.addProjectCandidate(
+    req.params.id,
+    req.body?.location_id,
+    req.user || null,
+    req.organization || null
+  );
+  res.json(rows);
+});
+
+const removeProjectCandidate = asyncHandler(async (req, res) => {
+  const rows = await analysisService.removeProjectCandidate(
+    req.params.id,
+    req.params.locationId,
+    req.user || null,
+    req.organization || null
+  );
+  res.json(rows);
+});
+
 const runAnalysis = asyncHandler(async (req, res) => {
   const result = await analysisService.runGeostrategicAnalysis(req.body || {}, req.user || null, req.organization || null);
   res.status(201).json(result);
@@ -74,6 +105,10 @@ const getPrintableReport = asyncHandler(async (req, res) => {
 
 module.exports = {
   runAnalysis,
+  createOperationalProject,
+  listProjectCandidates,
+  addProjectCandidate,
+  removeProjectCandidate,
   getAnalysisById,
   listAnalysisRuns,
   compareCandidates,
