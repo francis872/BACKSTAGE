@@ -57,6 +57,16 @@ const getProbabilityResult = asyncHandler(async (req, res) => {
   res.json(result);
 });
 
+
+const generateOperationalReport = asyncHandler(async (req, res) => {
+  const result = await analysisService.generateOperationalReport(
+    req.params.id,
+    req.user || null,
+    req.organization || null
+  );
+  res.json(result);
+});
+
 const getPrintableReport = asyncHandler(async (req, res) => {
   const report = await analysisService.getPrintableReport(req.params.id, req.organization?.organization_id);
   res.json(report);
@@ -68,6 +78,7 @@ module.exports = {
   listAnalysisRuns,
   compareCandidates,
   getPrintableReport,
+  generateOperationalReport,
   getOperationalBoard,
   saveProbabilityResult,
   getProbabilityResult,
