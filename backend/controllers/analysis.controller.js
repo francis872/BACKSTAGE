@@ -16,6 +16,11 @@ const listAnalysisRuns = asyncHandler(async (req, res) => {
   res.json(rows);
 });
 
+const getOperationalBoard = asyncHandler(async (req, res) => {
+  const rows = await analysisService.listOperationalBoard(req.organization?.organization_id, req.query?.limit);
+  res.json(rows);
+});
+
 const compareCandidates = asyncHandler(async (req, res) => {
   const result = await analysisService.compareCandidates(req.body || {}, req.user || null, req.organization || null);
   res.status(201).json(result);
@@ -32,4 +37,5 @@ module.exports = {
   listAnalysisRuns,
   compareCandidates,
   getPrintableReport,
+  getOperationalBoard,
 };
