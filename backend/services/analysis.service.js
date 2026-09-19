@@ -372,6 +372,52 @@ async function listAnalysisRuns(organizationId, limit) {
 }
 
 
+
+function validateProbabilityPayload(payload) {
+  if (!payload || typeof payload !== 'object') throw new ApiError(400, 'Resultado probabilístico inválido.');
+  if (!payload.dataset_key) throw new ApiError(400, 'dataset_key es obligatorio.');
+  if (!payload.selected_distribution) throw new ApiError(400, 'selected_distribution es obligatorio.');
+  const observation = payload.observation_evaluation || {};
+  const numericFields = ['percentile', 'cdf', 'survival_probability'];
+  numericFields.forEach((field) => {
+    if (observation[field] != null && !Number.isFinite(Number(observation[field]))) {
+      throw new ApiError(400, `observation_evaluation.${field} debe ser numérico.`);
+    }
+  });
+}
+
+async function saveProbabilityResult(id, payload, sessionUser, organizationContext) {
+  const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  await getAnalysisRunById(id, organizationId);
+  validateProbabilityPayload(payload);
+  const probabilityResult = {
+    dataset_key: payload.dataset_key,
+    dataset_label: payload.dataset_label || payload.dataset_key,
+    selected_distribution: payload.selected_distribution,
+    observation_evaluation: payload.observation_evaluation || {},
+    integral_validation: payload.integral_validation || {},
+    heuristic_note: payload.heuristic_note || null,
+    source: payload.source || 'probability-engine',
+    recorded_at: new Date().toISOString(),
+  };
+  const updated = await analysisRepository.saveProbabilityResult({
+    analysisRunId: id,
+    organizationId,
+    probabilityResult,
+    userId: sessionUser?.user_id || null,
+  });
+  if (!updated) throw new ApiError(404, 'Análisis no encontrado.');
+  return { analysis_run_id: Number(id), probability_completed: true, probability_result: probabilityResult, updated_at: updated.updated_at };
+}
+
+async function getProbabilityResult(id, organizationId) {
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  const result = await analysisRepository.getProbabilityResult({ analysisRunId: id, organizationId });
+  if (!result) throw new ApiError(404, 'Análisis no encontrado.');
+  return result;
+}
+
 function deriveOperationalState(run) {
   const metadata = run.metadata || {};
   const resultCount = Number(run.result_count || 0);
@@ -435,4 +481,6 @@ module.exports = {
   listAnalysisRuns,
   getPrintableReport,
   listOperationalBoard,
+  saveProbabilityResult,
+  getProbabilityResult,
 };
