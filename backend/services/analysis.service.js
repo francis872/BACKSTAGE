@@ -371,6 +371,38 @@ async function listAnalysisRuns(organizationId, limit) {
   return analysisRepository.listAnalysisRuns({ organizationId, limit });
 }
 
+
+function deriveOperationalState(run) {
+  const metadata = run.metadata || {};
+  const resultCount = Number(run.result_count || 0);
+  const hasRecommendation = Boolean(run.recommendation_text);
+  const probabilityCompleted = Boolean(metadata.probability_completed_at);
+  const reportGenerated = Boolean(metadata.report_generated_at);
+
+  if (run.status === 'failed') {
+    return { state: 'blocked', label: 'Bloqueado', next_action: 'Revisar ejecución', target: 'reports' };
+  }
+  if (resultCount === 0) {
+    return { state: 'exploring', label: 'Exploración', next_action: 'Explorar territorio', target: 'territorial-explorer' };
+  }
+  if (!hasRecommendation) {
+    return { state: 'candidates_ready', label: 'Candidatos listos', next_action: 'Comparar ubicaciones', target: 'portfolio-comparator' };
+  }
+  if (!probabilityCompleted) {
+    return { state: 'probability_pending', label: 'Probabilidad pendiente', next_action: 'Abrir motor probabilístico', target: 'probability-engine' };
+  }
+  if (!reportGenerated) {
+    return { state: 'recommended', label: 'Recomendación lista', next_action: 'Generar informe', target: 'reports' };
+  }
+  return { state: 'report_ready', label: 'Informe listo', next_action: 'Abrir informe', target: 'reports' };
+}
+
+async function listOperationalBoard(organizationId, limit) {
+  if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
+  const rows = await analysisRepository.listOperationalBoard({ organizationId, limit });
+  return rows.map((run) => ({ ...run, workflow: deriveOperationalState(run) }));
+}
+
 async function getPrintableReport(id, organizationId) {
   const run = await getAnalysisRunById(id, organizationId);
   const generatedAt = new Date().toISOString();
@@ -402,4 +434,5 @@ module.exports = {
   getAnalysisRunById,
   listAnalysisRuns,
   getPrintableReport,
+  listOperationalBoard,
 };
