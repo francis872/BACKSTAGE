@@ -145,6 +145,18 @@ function MissionControl({ onNavigate }) {
     }
   };
 
+
+  const updateAlert = async (eventId, action) => {
+    try {
+      const res = await apiRequest(`/operational-events/${eventId}/${action}`, { method: 'PUT' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudo actualizar la alerta.');
+      await load(true);
+    } catch (error) {
+      setMessage(error.message);
+    }
+  };
+
   const alerts = useMemo(() => {
     if (!summary) return [];
 
@@ -310,7 +322,15 @@ function MissionControl({ onNavigate }) {
                     <strong>{alert.title}</strong>
                     <p>{alert.detail}</p>
                   </div>
-                  <button onClick={() => onNavigate(alert.target, alert.context || null)}>Abrir</button>
+                  <div className="alert-actions">
+                    <button onClick={() => onNavigate(alert.target, alert.context || null)}>Abrir</button>
+                    {alert.eventId && (
+                      <>
+                        <button onClick={() => updateAlert(alert.eventId, 'acknowledge')}>Reconocer</button>
+                        <button onClick={() => updateAlert(alert.eventId, 'resolve')}>Resolver</button>
+                      </>
+                    )}
+                  </div>
                 </article>
               ))}
             </div>
@@ -402,7 +422,12 @@ function MissionControl({ onNavigate }) {
             {operationalProjects.map((project) => (
               <article className="workflow-project" key={project.analysis_run_id}>
                 <div>
-                  <span className={'workflow-state ' + project.workflow.state}>{project.workflow.label}</span>
+                  <div className="project-control-badges">
+                    <span className={'workflow-state ' + project.workflow.state}>{project.workflow.label}</span>
+                    <span className={'priority-badge ' + project.priority}>{project.priority}</span>
+                    <span className="health-badge">Health {project.health}%</span>
+                    {project.sla?.breached && <span className="sla-badge">SLA vencido · {project.sla.age_hours}h</span>}
+                  </div>
                   <strong>{project.project_name || 'Proyecto sin nombre'}</strong>
                   <p>{project.city || 'Sin ciudad'} · {project.candidate_count || 0} candidatos · {project.result_count || 0} resultados</p>
                   {project.timeline && (
@@ -432,7 +457,10 @@ function MissionControl({ onNavigate }) {
                   )}
                 </div>
                 <div className="workflow-project-action">
-                  <small>{project.recommendation_text || 'Aún no existe recomendación para este proyecto.'}</small>
+                  <small>{project.blocked_reason || project.recommendation_text || 'Aún no existe recomendación para este proyecto.'}</small>
+                  {project.workflow.state === 'stale' && (
+                    <strong className="stale-warning">Resultados STALE: las etapas dependientes deben recalcularse.</strong>
+                  )}
                   <button onClick={() => onNavigate(project.workflow.target, project)}>
                     {project.workflow.next_action} →
                   </button>
