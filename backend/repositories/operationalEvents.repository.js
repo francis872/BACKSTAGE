@@ -89,4 +89,28 @@ async function resolveEvent({ eventId, organizationId, userId }) {
   return result.rows[0] || null;
 }
 
-module.exports = { emitEvent, listEvents, getAlertSummary, acknowledgeEvent, resolveEvent };
+
+async function resolveByDedupeKey({ organizationId, dedupeKey }) {
+  const result = await query(
+    `UPDATE operational_events
+     SET resolved_at = now()
+     WHERE organization_id = $1
+       AND dedupe_key = $2
+       AND resolved_at IS NULL
+     RETURNING *`,
+    [organizationId, dedupeKey]
+  );
+  return result.rows;
+}
+
+async function listOrganizationsWithActiveRuns() {
+  const result = await query(
+    `SELECT DISTINCT organization_id
+     FROM analysis_runs
+     WHERE status <> 'archived'
+     ORDER BY organization_id`
+  );
+  return result.rows.map((row) => Number(row.organization_id));
+}
+
+module.exports = { emitEvent, listEvents, getAlertSummary, acknowledgeEvent, resolveEvent, resolveByDedupeKey, listOrganizationsWithActiveRuns };
