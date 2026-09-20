@@ -3,6 +3,7 @@ const analysisRepository = require('../repositories/analysis.repository');
 const multicriteria = require('../domain/analytics/multicriteria');
 const analyticsJobsRepository = require('../repositories/analyticsJobs.repository');
 const operationalEvents = require('./operationalEvents.service');
+const commandExecution = require('./commandExecution.service');
 
 const DEFAULT_WEIGHTS = {
   population_potential: 0.25,
@@ -945,7 +946,6 @@ async function getPrintableReport(id, organizationId) {
 async function executeOperationalCommand(id, command, payload, sessionUser, organizationContext) {
   const organizationId = organizationContext?.organization_id || sessionUser?.organization_id;
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
-  const run = await getAnalysisRunById(id, organizationId);
   const commands = new Set(['recalculate_comparison', 'retry_probability', 'reopen_risk_review', 'regenerate_recommendation', 'reset_from_stage']);
   if (!commands.has(command)) throw new ApiError(400, 'Comando operacional no soportado.');
 
@@ -961,18 +961,33 @@ async function executeOperationalCommand(id, command, payload, sessionUser, orga
     if (!target) throw new ApiError(400, 'Etapa de reinicio inválida.');
   }
 
-  const updated = await analysisRepository.resetWorkflowFromStage({ analysisRunId: Number(id), organizationId, stage });
-  if (!updated) throw new ApiError(404, 'Proyecto operativo no encontrado.');
+  const source = payload?.source || 'manual';
+  const tracked = await commandExecution.executeTracked({
+    organizationId,
+    analysisRunId: Number(id),
+    actorUserId: sessionUser?.user_id || null,
+    source,
+    command,
+    stage,
+    inputPayload: { stage, reason: payload?.reason || null },
+  }, async (correlationId) => {
+    const run = await getAnalysisRunById(id, organizationId);
+    const updated = await analysisRepository.resetWorkflowFromStage({ analysisRunId: Number(id), organizationId, stage });
+    if (!updated) throw new ApiError(404, 'Proyecto operativo no encontrado.');
 
-  await operationalEvents.emit({
-    organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
-    eventType: 'workflow.command', severity: 'info',
-    title: 'Comando operacional ejecutado',
-    message: `${command}: el workflow fue reabierto desde ${stage}.`,
-    target, payload: { command, stage, previous_state: run.status, source: payload?.source || 'manual' },
+    const result = { analysis_run_id: Number(id), command, stage, target, status: 'ready', correlation_id: correlationId };
+    await operationalEvents.emit({
+      organizationId, analysisRunId: Number(id), actorUserId: sessionUser?.user_id,
+      eventType: 'workflow.command', severity: 'info',
+      title: 'Comando operacional ejecutado',
+      message: `${command}: el workflow fue reabierto desde ${stage}.`,
+      target,
+      payload: { command, stage, previous_state: run.status, source, correlation_id: correlationId },
+    });
+    return result;
   });
 
-  return { analysis_run_id: Number(id), command, stage, target, status: 'ready' };
+  return { ...tracked.result, execution_id: tracked.execution.command_execution_id };
 }
 
 module.exports = {
