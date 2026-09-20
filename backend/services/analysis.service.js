@@ -991,4 +991,5 @@ module.exports = {
   getProbabilityResult,
   getOperationalRisks,
   reviewOperationalRisks,
+  executeOperationalCommand,
 };
