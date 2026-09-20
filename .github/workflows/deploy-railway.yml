@@ -1,39 +1,105 @@
-name: Deploy Backend to Railway
+name: Validate and Deploy BACKSTAGE
 
 on:
   push:
     branches: [main]
     paths:
       - "backend/**"
+      - "frontend/**"
       - ".github/workflows/deploy-railway.yml"
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: backstage
+          POSTGRES_PASSWORD: backstage
+          POSTGRES_DB: backstage_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U backstage -d backstage_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://backstage:backstage@localhost:5432/backstage_ci
+      JWT_SECRET: ci-only-secret
+      NODE_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: backend
+        run: npm test
+
+      - name: Enable PostGIS in CI database
+        env:
+          PGPASSWORD: backstage
+        run: psql -h localhost -U backstage -d backstage_ci -c "CREATE EXTENSION IF NOT EXISTS postgis;"
+
+      - name: Apply all database migrations
+        working-directory: backend
+        run: npx node-pg-migrate up
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
   deploy:
+    needs: validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Deploy to Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          cd backend
-          railway up --detach
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
 
-      - name: Initialize Database
+      - name: Apply Railway database migrations
+        working-directory: backend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          cd backend
-          sleep 30
-          railway exec node init-railway.js || true
+        run: railway exec npx node-pg-migrate up
 
-      - name: Get Railway URL
+      - name: Deploy backend to Railway
+        working-directory: backend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          cd backend
-          railway service list
+        run: railway up --detach
+
+      - name: Verify Railway service
+        working-directory: backend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: railway service list
