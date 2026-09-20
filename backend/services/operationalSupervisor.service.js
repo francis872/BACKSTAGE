@@ -3,6 +3,7 @@ const eventsService = require('./operationalEvents.service');
 const eventsRepository = require('../repositories/operationalEvents.repository');
 const { publishOperationalEvent } = require('../realtime/operationalEvents');
 const autoRecovery = require('./autoRecovery.service');
+const metrics = require('./operationalMetrics.service');
 
 const DEFAULT_INTERVAL_MS = 5 * 60 * 1000;
 let timer = null;
@@ -120,6 +121,7 @@ async function runSupervisorCycle() {
   if (running) return { skipped: true };
   running = true;
   const startedAt = Date.now();
+  metrics.markSupervisorStart();
   let organizations = 0;
   let projects = 0;
   try {
@@ -132,7 +134,12 @@ async function runSupervisorCycle() {
         await reconcileProject(project, organizationId);
       }
     }
-    return { organizations, projects, duration_ms: Date.now() - startedAt };
+    const durationMs = Date.now() - startedAt;
+    metrics.recordSupervisorCycle({ durationMs, projects });
+    return { organizations, projects, duration_ms: durationMs };
+  } catch (error) {
+    metrics.recordSupervisorCycle({ durationMs: Date.now() - startedAt, projects, error: true });
+    throw error;
   } finally {
     running = false;
   }
