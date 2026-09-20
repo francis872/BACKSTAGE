@@ -1,5 +1,6 @@
 const asyncHandler = require('../utils/asyncHandler');
 const metrics = require('../services/operationalMetrics.service');
+const commandExecution = require('../services/commandExecution.service');
 
 const health = asyncHandler(async (req, res) => {
   res.json(await metrics.health());
@@ -17,4 +18,13 @@ const diagnostics = asyncHandler(async (req, res) => {
   return res.json(result);
 });
 
-module.exports = { health, operationalMetrics, diagnostics };
+const executions = asyncHandler(async (req, res) => {
+  const organizationId = req.organization?.organization_id || req.user?.organization_id;
+  res.json(await commandExecution.list({
+    organizationId,
+    analysisRunId: req.query.analysis_run_id || null,
+    limit: req.query.limit || 30,
+  }));
+});
+
+module.exports = { health, operationalMetrics, diagnostics, executions };
