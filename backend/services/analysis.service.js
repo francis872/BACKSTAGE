@@ -969,7 +969,7 @@ async function executeOperationalCommand(id, command, payload, sessionUser, orga
     eventType: 'workflow.command', severity: 'info',
     title: 'Comando operacional ejecutado',
     message: `${command}: el workflow fue reabierto desde ${stage}.`,
-    target, payload: { command, stage, previous_state: run.status },
+    target, payload: { command, stage, previous_state: run.status, source: payload?.source || 'manual' },
   });
 
   return { analysis_run_id: Number(id), command, stage, target, status: 'ready' };
