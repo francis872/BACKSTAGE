@@ -62,13 +62,14 @@ function MissionControl({ onNavigate }) {
   const [commandingProject, setCommandingProject] = useState(null);
   const [technicalHealth, setTechnicalHealth] = useState(null);
   const [operationalMetrics, setOperationalMetrics] = useState(null);
+  const [commandExecutions, setCommandExecutions] = useState([]);
 
   const load = useCallback(async (manual = false) => {
     manual ? setRefreshing(true) : setLoading(true);
     setMessage('');
 
     try {
-      const [summaryResult, runsResult, operationsResult, auditResult, chainResult, eventsResult, healthResult, metricsResult] = await Promise.allSettled([
+      const [summaryResult, runsResult, operationsResult, auditResult, chainResult, eventsResult, healthResult, metricsResult, executionsResult] = await Promise.allSettled([
         apiRequest('/insights/summary'),
         apiRequest('/analysis?limit=8'),
         apiRequest('/analysis/operations?limit=8'),
@@ -77,6 +78,7 @@ function MissionControl({ onNavigate }) {
         apiRequest('/operational-events?limit=20'),
         apiRequest('/operations/health'),
         apiRequest('/operations/metrics'),
+        apiRequest('/operations/executions?limit=12'),
       ]);
 
       if (summaryResult.status !== 'fulfilled' || !summaryResult.value.ok) {
@@ -118,6 +120,11 @@ function MissionControl({ onNavigate }) {
 
       if (metricsResult.status === 'fulfilled' && metricsResult.value.ok) setOperationalMetrics(await metricsResult.value.json());
       else setOperationalMetrics(null);
+
+      if (executionsResult.status === 'fulfilled' && executionsResult.value.ok) {
+        const executionData = await executionsResult.value.json();
+        setCommandExecutions(Array.isArray(executionData) ? executionData : []);
+      } else setCommandExecutions([]);
 
       if (eventsResult.status === 'fulfilled' && eventsResult.value.ok) {
         const eventData = await eventsResult.value.json();
@@ -544,6 +551,36 @@ function MissionControl({ onNavigate }) {
         ) : (
           <p className="state">No hay proyectos operativos registrados.</p>
         )}
+      </section>
+
+      <section className="panel">
+        <div className="section-head">
+          <div>
+            <p className="section-kicker">COMMAND AUDIT</p>
+            <h2>Historial de comandos</h2>
+          </div>
+          <small>Acciones manuales y automáticas con correlación completa.</small>
+        </div>
+        {commandExecutions.length ? (
+          <div className="table-wrap">
+            <table>
+              <thead><tr><th>Comando</th><th>Origen</th><th>Proyecto</th><th>Estado</th><th>Duración</th><th>Correlación</th><th>Inicio</th></tr></thead>
+              <tbody>
+                {commandExecutions.map((execution) => (
+                  <tr key={execution.command_execution_id}>
+                    <td><strong>{actionName(execution.command)}</strong><small>{execution.stage || '—'}</small></td>
+                    <td>{execution.source}</td>
+                    <td>#{execution.analysis_run_id || '—'}</td>
+                    <td><span className={'run-status ' + execution.status}>{execution.status}</span>{execution.error_message && <small>{execution.error_message}</small>}</td>
+                    <td>{execution.duration_ms == null ? 'En curso' : execution.duration_ms + ' ms'}</td>
+                    <td><code>{String(execution.correlation_id).slice(0, 8)}</code></td>
+                    <td>{dateTime(execution.started_at)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : <p className="state">Aún no hay comandos auditados.</p>}
       </section>
 
       <section className="panel">
