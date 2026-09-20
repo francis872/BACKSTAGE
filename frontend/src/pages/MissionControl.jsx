@@ -60,19 +60,23 @@ function MissionControl({ onNavigate }) {
   const [operationalEvents, setOperationalEvents] = useState([]);
   const [realtimeStatus, setRealtimeStatus] = useState('connecting');
   const [commandingProject, setCommandingProject] = useState(null);
+  const [technicalHealth, setTechnicalHealth] = useState(null);
+  const [operationalMetrics, setOperationalMetrics] = useState(null);
 
   const load = useCallback(async (manual = false) => {
     manual ? setRefreshing(true) : setLoading(true);
     setMessage('');
 
     try {
-      const [summaryResult, runsResult, operationsResult, auditResult, chainResult, eventsResult] = await Promise.allSettled([
+      const [summaryResult, runsResult, operationsResult, auditResult, chainResult, eventsResult, healthResult, metricsResult] = await Promise.allSettled([
         apiRequest('/insights/summary'),
         apiRequest('/analysis?limit=8'),
         apiRequest('/analysis/operations?limit=8'),
         apiRequest('/audit-logs?limit=6'),
         apiRequest('/audit-logs/chain-status'),
         apiRequest('/operational-events?limit=20'),
+        apiRequest('/operations/health'),
+        apiRequest('/operations/metrics'),
       ]);
 
       if (summaryResult.status !== 'fulfilled' || !summaryResult.value.ok) {
@@ -108,6 +112,12 @@ function MissionControl({ onNavigate }) {
       } else {
         setChainStatus(null);
       }
+
+      if (healthResult.status === 'fulfilled' && healthResult.value.ok) setTechnicalHealth(await healthResult.value.json());
+      else setTechnicalHealth(null);
+
+      if (metricsResult.status === 'fulfilled' && metricsResult.value.ok) setOperationalMetrics(await metricsResult.value.json());
+      else setOperationalMetrics(null);
 
       if (eventsResult.status === 'fulfilled' && eventsResult.value.ok) {
         const eventData = await eventsResult.value.json();
@@ -335,6 +345,24 @@ function MissionControl({ onNavigate }) {
           </article>
         </div>
       </section>
+
+      {technicalHealth && (
+        <section className="operations-overview technical-health">
+          <div className="section-head">
+            <div>
+              <p className="section-kicker">SYSTEM HEALTH</p>
+              <h2>Salud técnica y recuperación</h2>
+            </div>
+            <strong className={'health-text-value ' + technicalHealth.status}>{technicalHealth.status}</strong>
+          </div>
+          <div className="health-grid">
+            <article><FiActivity /><span>PostgreSQL</span><strong>{technicalHealth.components?.postgres?.status || 'unknown'}</strong><small>{technicalHealth.components?.postgres?.latency_ms ?? '—'} ms</small></article>
+            <article><FiRefreshCw /><span>Supervisor</span><strong>{technicalHealth.components?.supervisor?.status || 'unknown'}</strong><small>{technicalHealth.components?.supervisor?.cycles ?? 0} ciclos · {technicalHealth.components?.supervisor?.errors ?? 0} errores</small></article>
+            <article><FiShield /><span>Auto-Recovery</span><strong>{technicalHealth.components?.auto_recovery?.status || 'unknown'}</strong><small>{technicalHealth.components?.auto_recovery?.success_rate_pct ?? '—'}% éxito · {technicalHealth.components?.auto_recovery?.locks ?? 0} locks</small></article>
+            <article><FiBarChart2 /><span>Operación</span><strong>{operationalMetrics?.average_project_health ?? '—'}%</strong><small>{operationalMetrics?.sla_breaches ?? 0} SLA · {operationalMetrics?.stale_projects ?? 0} stale · {operationalMetrics?.critical_projects ?? 0} críticos</small></article>
+          </div>
+        </section>
+      )}
 
       <div className="operations-layout">
         <section className="panel">
