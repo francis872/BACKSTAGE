@@ -4,6 +4,7 @@ const cors = require('cors');
 const errorHandler = require('./middleware/errorHandler');
 const auditLogger = require('./middleware/auditLogger');
 const { attachSecurityWebSocketServer } = require('./realtime/wsServer');
+const { startOperationalSupervisor, stopOperationalSupervisor } = require('./services/operationalSupervisor.service');
 
 const authRoutes = require('./routes/auth.routes');
 const locationsRoutes = require('./routes/locations.routes');
@@ -102,7 +103,15 @@ if (require.main === module) {
   attachSecurityWebSocketServer(server);
   server.listen(port, () => {
     console.log(`BACKSTAGE backend escuchando en http://localhost:${port}`);
+    startOperationalSupervisor();
   });
+
+  const shutdown = () => {
+    stopOperationalSupervisor();
+    server.close(() => process.exit(0));
+  };
+  process.once('SIGTERM', shutdown);
+  process.once('SIGINT', shutdown);
 }
 
 module.exports = app;
