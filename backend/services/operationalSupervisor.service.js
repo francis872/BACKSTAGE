@@ -2,6 +2,7 @@ const analysisService = require('./analysis.service');
 const eventsService = require('./operationalEvents.service');
 const eventsRepository = require('../repositories/operationalEvents.repository');
 const { publishOperationalEvent } = require('../realtime/operationalEvents');
+const autoRecovery = require('./autoRecovery.service');
 
 const DEFAULT_INTERVAL_MS = 5 * 60 * 1000;
 let timer = null;
@@ -70,6 +71,7 @@ function conditionsForProject(project) {
 }
 
 async function reconcileProject(project, organizationId) {
+  await autoRecovery.reconcileRecoverySuccess(project, organizationId);
   const active = conditionsForProject(project);
   const activeKeys = new Set(active.map((condition) => condition.key));
 
@@ -109,6 +111,9 @@ async function reconcileProject(project, organizationId) {
       resolved.forEach((event) => publishOperationalEvent({ ...event, lifecycle: 'resolved' }));
     }
   }
+
+  const recoveryResult = await autoRecovery.attemptRecovery(project, organizationId);
+  return { conditions: active.length, recovery: recoveryResult };
 }
 
 async function runSupervisorCycle() {
