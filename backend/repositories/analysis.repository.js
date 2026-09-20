@@ -580,6 +580,51 @@ async function markReportGenerated({ analysisRunId, organizationId, userId, snap
   return result.rows[0] || null;
 }
 
+
+async function getRecoveryState({ analysisRunId, organizationId, action }) {
+  const result = await query(
+    `SELECT metadata->'auto_recovery'->$3 AS recovery_state
+     FROM analysis_runs
+     WHERE analysis_run_id = $1 AND organization_id = $2`,
+    [analysisRunId, organizationId, action]
+  );
+  return result.rows[0]?.recovery_state || null;
+}
+
+async function recordRecoveryAttempt({ analysisRunId, organizationId, action, state }) {
+  const result = await query(
+    `UPDATE analysis_runs
+     SET metadata = jsonb_set(
+       COALESCE(metadata, '{}'::jsonb),
+       ARRAY['auto_recovery', $1],
+       $2::jsonb,
+       true
+     ),
+     updated_at = now()
+     WHERE analysis_run_id = $3 AND organization_id = $4
+     RETURNING *`,
+    [action, JSON.stringify(state || {}), analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
+async function clearRecoveryState({ analysisRunId, organizationId, action }) {
+  const result = await query(
+    `UPDATE analysis_runs
+     SET metadata = jsonb_set(
+       COALESCE(metadata, '{}'::jsonb),
+       '{auto_recovery}',
+       COALESCE(metadata->'auto_recovery', '{}'::jsonb) - $1,
+       true
+     ),
+     updated_at = now()
+     WHERE analysis_run_id = $2 AND organization_id = $3
+     RETURNING *`,
+    [action, analysisRunId, organizationId]
+  );
+  return result.rows[0] || null;
+}
+
 async function listOperationalBoard({ organizationId, limit = 20 }) {
   const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100);
   const result = await query(
@@ -635,4 +680,7 @@ module.exports = {
   bumpDependencyVersion,
   syncDependencyVersion,
   resetWorkflowFromStage,
+  getRecoveryState,
+  recordRecoveryAttempt,
+  clearRecoveryState,
 };
