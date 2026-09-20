@@ -1,11 +1,14 @@
 const analysisRepository = require('../repositories/analysis.repository');
 const analysisService = require('./analysis.service');
 const eventsService = require('./operationalEvents.service');
+const metrics = require('./operationalMetrics.service');
 
 const DEFAULT_POLICY = {
   maxAttempts: Number(process.env.AUTO_RECOVERY_MAX_ATTEMPTS || 3),
   baseCooldownMs: Number(process.env.AUTO_RECOVERY_BASE_COOLDOWN_MS || 15 * 60 * 1000),
   maxCooldownMs: Number(process.env.AUTO_RECOVERY_MAX_COOLDOWN_MS || 6 * 60 * 60 * 1000),
+  circuitFailureThreshold: Number(process.env.AUTO_RECOVERY_CIRCUIT_FAILURE_THRESHOLD || 2),
+  circuitOpenMs: Number(process.env.AUTO_RECOVERY_CIRCUIT_OPEN_MS || 60 * 60 * 1000),
 };
 
 const SAFE_ACTIONS = {
@@ -19,6 +22,8 @@ function policy(options = {}) {
     maxAttempts: Math.max(1, Number(options.maxAttempts || DEFAULT_POLICY.maxAttempts)),
     baseCooldownMs: Math.max(60000, Number(options.baseCooldownMs || DEFAULT_POLICY.baseCooldownMs)),
     maxCooldownMs: Math.max(60000, Number(options.maxCooldownMs || DEFAULT_POLICY.maxCooldownMs)),
+    circuitFailureThreshold: Math.max(1, Number(options.circuitFailureThreshold || DEFAULT_POLICY.circuitFailureThreshold)),
+    circuitOpenMs: Math.max(60000, Number(options.circuitOpenMs || DEFAULT_POLICY.circuitOpenMs)),
   };
 }
 
@@ -35,6 +40,8 @@ function recoveryCandidate(project) {
 
 function canAttempt(state, now, recoveryPolicy) {
   if (!state) return { allowed: true, attempt: 1 };
+  const circuitUntil = state.circuit_open_until ? new Date(state.circuit_open_until).getTime() : 0;
+  if (circuitUntil > now) return { allowed: false, circuitOpen: true, attempt: Number(state.attempts || 0), circuitOpenUntil: state.circuit_open_until };
   const attempts = Number(state.attempts || 0);
   if (state.locked || attempts >= recoveryPolicy.maxAttempts) {
     return { allowed: false, locked: true, attempt: attempts };
@@ -80,6 +87,7 @@ async function attemptRecovery(project, organizationId, options = {}) {
   }
 
   const attempt = eligibility.attempt;
+  metrics.recordRecovery('attempt');
   const startedAt = new Date().toISOString();
   const nextAttemptAt = new Date(Date.now() + backoffMs(attempt, recoveryPolicy)).toISOString();
 
@@ -103,12 +111,15 @@ async function attemptRecovery(project, organizationId, options = {}) {
       { organization_id: organizationId }
     );
 
+    metrics.recordRecovery('success');
     await analysisRepository.recordRecoveryAttempt({
       analysisRunId: project.analysis_run_id,
       organizationId,
       action,
       state: {
         attempts: attempt,
+        consecutive_failures: 0,
+        circuit_open_until: null,
         last_attempt_at: startedAt,
         next_attempt_at: nextAttemptAt,
         last_status: 'command_dispatched',
@@ -130,16 +141,23 @@ async function attemptRecovery(project, organizationId, options = {}) {
 
     return { attempted: true, success: true, action, attempt, result };
   } catch (error) {
+    metrics.recordRecovery('failure');
     const locked = attempt >= recoveryPolicy.maxAttempts;
+    const consecutiveFailures = Number(current?.consecutive_failures || 0) + 1;
+    const circuitOpen = consecutiveFailures >= recoveryPolicy.circuitFailureThreshold;
+    const circuitOpenUntil = circuitOpen ? new Date(Date.now() + recoveryPolicy.circuitOpenMs).toISOString() : null;
+    if (locked) metrics.recordRecovery('lock');
     await analysisRepository.recordRecoveryAttempt({
       analysisRunId: project.analysis_run_id,
       organizationId,
       action,
       state: {
         attempts: attempt,
+        consecutive_failures: consecutiveFailures,
+        circuit_open_until: circuitOpenUntil,
         last_attempt_at: startedAt,
         next_attempt_at: nextAttemptAt,
-        last_status: 'failed',
+        last_status: circuitOpen ? 'circuit_open' : 'failed',
         last_error: error.message,
         locked,
       },
@@ -154,7 +172,7 @@ async function attemptRecovery(project, organizationId, options = {}) {
       message: error.message,
       target: project.workflow?.target || 'mission-control',
       dedupeKey: locked ? `auto-recovery-locked:${project.analysis_run_id}:${action}` : null,
-      payload: { action, attempt, max_attempts: recoveryPolicy.maxAttempts, next_attempt_at: nextAttemptAt, locked },
+      payload: { action, attempt, max_attempts: recoveryPolicy.maxAttempts, next_attempt_at: nextAttemptAt, locked, circuit_open: circuitOpen, circuit_open_until: circuitOpenUntil },
     });
 
     return { attempted: true, success: false, action, attempt, error: error.message, locked };
