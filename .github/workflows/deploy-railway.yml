@@ -7,41 +7,39 @@ on:
       - "backend/**"
       - "frontend/**"
       - ".github/workflows/deploy-railway.yml"
+  workflow_dispatch:
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgis/postgis:16-3.4
-        env:
-          POSTGRES_USER: backstage
-          POSTGRES_PASSWORD: backstage
-          POSTGRES_DB: backstage_ci
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U backstage -d backstage_ci"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
-
     env:
       DATABASE_URL: postgresql://backstage:backstage@localhost:5432/backstage_ci
       JWT_SECRET: ci-only-secret
       NODE_ENV: test
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: |
-            backend/package-lock.json
-            frontend/package-lock.json
+
+      - name: Start PostgreSQL with PostGIS
+        run: |
+          docker run -d --name backstage-postgis             -e POSTGRES_USER=backstage             -e POSTGRES_PASSWORD=backstage             -e POSTGRES_DB=backstage_ci             -p 5432:5432             postgis/postgis:16-3.4
+
+      - name: Wait for PostgreSQL
+        run: |
+          for i in {1..30}; do
+            if docker exec backstage-postgis pg_isready -U backstage -d backstage_ci; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs backstage-postgis
+          exit 1
 
       - name: Install backend dependencies
         working-directory: backend
@@ -51,14 +49,14 @@ jobs:
         working-directory: backend
         run: npm test
 
-      - name: Enable PostGIS in CI database
-        env:
-          PGPASSWORD: backstage
-        run: psql -h localhost -U backstage -d backstage_ci -c "CREATE EXTENSION IF NOT EXISTS postgis;"
-
       - name: Apply all database migrations
         working-directory: backend
         run: npx node-pg-migrate up
+
+      - name: Verify critical tables
+        run: |
+          docker exec backstage-postgis psql -U backstage -d backstage_ci -c "\dt"
+          docker exec backstage-postgis psql -U backstage -d backstage_ci -c "SELECT to_regclass('public.analysis_run_candidates'), to_regclass('public.operational_events'), to_regclass('public.command_executions');"
 
       - name: Install frontend dependencies
         working-directory: frontend
@@ -72,7 +70,8 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
