@@ -3,10 +3,8 @@ name: Validate and Deploy BACKSTAGE
 on:
   push:
     branches: [main]
-    paths:
-      - "backend/**"
-      - "frontend/**"
-      - ".github/workflows/deploy-railway.yml"
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -26,24 +24,33 @@ jobs:
         with:
           node-version: 20
 
-      - name: Start PostgreSQL with PostGIS
+      - name: Start PostgreSQL
         run: |
-          docker run -d --name backstage-postgis             -e POSTGRES_USER=backstage             -e POSTGRES_PASSWORD=backstage             -e POSTGRES_DB=backstage_ci             -p 5432:5432             postgis/postgis:16-3.4
+          docker run -d --name backstage-postgres \
+            -e POSTGRES_USER=backstage \
+            -e POSTGRES_PASSWORD=backstage \
+            -e POSTGRES_DB=backstage_ci \
+            -p 5432:5432 \
+            postgres:16-alpine
 
       - name: Wait for PostgreSQL
         run: |
           for i in {1..30}; do
-            if docker exec backstage-postgis pg_isready -U backstage -d backstage_ci; then
+            if docker exec backstage-postgres pg_isready -U backstage -d backstage_ci; then
               exit 0
             fi
             sleep 2
           done
-          docker logs backstage-postgis
+          docker logs backstage-postgres
           exit 1
 
       - name: Install backend dependencies
         working-directory: backend
         run: npm ci
+
+      - name: Audit backend production dependencies
+        working-directory: backend
+        run: npm audit --omit=dev --audit-level=high
 
       - name: Run backend tests
         working-directory: backend
@@ -55,12 +62,51 @@ jobs:
 
       - name: Verify critical tables
         run: |
-          docker exec backstage-postgis psql -U backstage -d backstage_ci -c "\dt"
-          docker exec backstage-postgis psql -U backstage -d backstage_ci -c "SELECT to_regclass('public.analysis_run_candidates'), to_regclass('public.operational_events'), to_regclass('public.command_executions');"
+          tables_present=$(docker exec backstage-postgres psql -U backstage -d backstage_ci -v ON_ERROR_STOP=1 -tAc "SELECT COUNT(*) = 3 FROM unnest(ARRAY['public.analysis_run_candidates', 'public.operational_events', 'public.command_executions']) AS required(table_name) WHERE to_regclass(table_name) IS NOT NULL;")
+          test "$tables_present" = "t"
+
+      - name: Create isolated smoke-test organization
+        run: |
+          docker exec backstage-postgres psql -U backstage -d backstage_ci -v ON_ERROR_STOP=1 -c "INSERT INTO organizations (name, slug, status) VALUES ('BACKSTAGE CI', 'backstage-ci', 'active'); INSERT INTO roles (name, description) VALUES ('viewer', 'Read-only CI smoke role') ON CONFLICT (name) DO NOTHING;"
+
+      - name: Smoke test backend health
+        run: |
+          node backend/index.js > "$RUNNER_TEMP/backend.log" 2>&1 &
+          backend_pid=$!
+          trap 'kill "$backend_pid" 2>/dev/null || true' EXIT
+          healthy=false
+          for i in {1..30}; do
+            if curl --fail --silent http://localhost:4000/health; then
+              healthy=true
+              break
+            fi
+            sleep 1
+          done
+          if [[ "$healthy" != true ]]; then
+            cat "$RUNNER_TEMP/backend.log"
+            exit 1
+          fi
+          registration=$(curl --fail --silent --show-error \
+            -H 'Content-Type: application/json' \
+            -d "{\"email\":\"ci-smoke-${GITHUB_RUN_ID}@example.test\",\"password\":\"ci-smoke-password\",\"organization_slug\":\"backstage-ci\"}" \
+            http://localhost:4000/auth/register)
+          token=$(printf '%s' "$registration" | jq -er '.token')
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $token" \
+            http://localhost:4000/auth/me | jq -e '.organization_id != null and .role == "viewer"'
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $token" \
+            -H 'Content-Type: application/json' \
+            -d '{"geometry":{"type":"Point","coordinates":[0,0]}}' \
+            http://localhost:4000/spatial/measure | jq -e 'type == "object"'
 
       - name: Install frontend dependencies
         working-directory: frontend
         run: npm ci
+
+      - name: Audit frontend production dependencies
+        working-directory: frontend
+        run: npm audit --omit=dev --audit-level=high
 
       - name: Build frontend
         working-directory: frontend
@@ -68,7 +114,9 @@ jobs:
 
   deploy:
     needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v4
