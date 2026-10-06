@@ -34,6 +34,31 @@ function contourSegments(grid, level, { originX = 0, originY = 0, cellSizeX = 1,
   return segments;
 }
 
+function connectSegments(segments, tolerance = 1e-9) {
+  const remaining = segments.map((segment) => segment.map((point) => [...point]));
+  const lines = [];
+  const close = (a, b) => Math.abs(a[0] - b[0]) <= tolerance && Math.abs(a[1] - b[1]) <= tolerance;
+  while (remaining.length) {
+    const line = remaining.pop();
+    let changed = true;
+    while (changed) {
+      changed = false;
+      for (let index = remaining.length - 1; index >= 0; index -= 1) {
+        const [a, b] = remaining[index];
+        if (close(line.at(-1), a)) line.push(b);
+        else if (close(line.at(-1), b)) line.push(a);
+        else if (close(line[0], b)) line.unshift(a);
+        else if (close(line[0], a)) line.unshift(b);
+        else continue;
+        remaining.splice(index, 1);
+        changed = true;
+      }
+    }
+    lines.push(line);
+  }
+  return lines;
+}
+
 function generateContours(grid, { min, max, interval, ...coordinates }) {
   if (!Number.isFinite(interval) || interval <= 0) throw new TypeError('interval debe ser mayor que cero.');
   const values = grid.flat().map(Number).filter(Number.isFinite);
@@ -41,9 +66,15 @@ function generateContours(grid, { min, max, interval, ...coordinates }) {
   const upper = Number.isFinite(max) ? max : Math.floor(Math.max(...values) / interval) * interval;
   const contours = [];
   for (let elevation = lower; elevation <= upper; elevation += interval) {
-    contours.push({ elevation, major: Math.round(elevation / interval) % 5 === 0, segments: contourSegments(grid, elevation, coordinates) });
+    const segments = contourSegments(grid, elevation, coordinates);
+    contours.push({
+      elevation,
+      major: Math.round(elevation / interval) % 5 === 0,
+      segments,
+      lines: connectSegments(segments),
+    });
   }
   return contours;
 }
 
-module.exports = { contourSegments, generateContours };
+module.exports = { contourSegments, connectSegments, generateContours };
