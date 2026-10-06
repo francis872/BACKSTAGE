@@ -5,6 +5,12 @@ const { createRateLimiter } = require('../middleware/platformSecurity');
 
 const router = express.Router();
 
+// Debug logging
+router.use((req, res, next) => {
+  console.log(`[Auth Routes] ${req.method} ${req.path} (full URL: ${req.url})`);
+  next();
+});
+
 const authLimiter = createRateLimiter({
   windowMs: Number(process.env.AUTH_RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000),
   max: Number(process.env.AUTH_RATE_LIMIT_MAX || 10),
