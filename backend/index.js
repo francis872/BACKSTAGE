@@ -54,6 +54,12 @@ app.use(cors({
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '5mb' }));
 app.use(auditLogger);
 
+// Serve static files from frontend/dist
+const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+}
+
 // Debug logging
 app.use((req, res, next) => {
   console.log(`[Express] ${req.method} ${req.path}`);
