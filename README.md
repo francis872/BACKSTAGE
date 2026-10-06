@@ -94,6 +94,12 @@ El explorador permite navegar a un resultado, seleccionar origen y destino y dib
 
 `POST /spatial/risk/evaluate` calcula índices de priorización para incendio forestal, inundación y deslizamiento. La respuesta conserva entradas, pesos, contribuciones, modo del dato, confianza y versión del modelo. Estos índices no son pronósticos ni reemplazan estudios técnicos de campo.
 
+`POST /spatial/risk/scenario` evalúa hasta 2.500 celdas y devuelve una colección GeoJSON con riesgo base, riesgo del escenario y diferencia por celda. El visor construye la malla sobre el terreno visible, deriva únicamente pendiente o elevación y exige que el usuario declare las demás variables; el mapa de calor sigue siendo un índice comparativo, no una observación ni un pronóstico.
+
+### Dibujo y medición
+
+`POST /spatial/measure` calcula coordenadas, distancia geodésica, perímetro y área esférica para puntos, líneas y polígonos GeoJSON. El explorador permite dibujar directamente sobre el mapa y exportar el resultado como GeoJSON sin incorporar una biblioteca de dibujo externa.
+
 ### Hidrología y topografía
 
 - `POST /terrain/hydrology`: dirección D8, acumulación de flujo, cauces, valles, crestas y cuenca de aporte.
