@@ -52,6 +52,17 @@ class MemorySpatialStore {
       Object.entries(filter).every(([key, value]) => document[key] === value));
   }
 
+  async updateMany(collection, filter, patch) {
+    let modifiedCount = 0;
+    for (const [key, document] of this.collections.get(collection).entries()) {
+      if (Object.entries(filter).every(([field, value]) => document[field] === value)) {
+        this.collections.get(collection).set(key, { ...document, ...patch });
+        modifiedCount += 1;
+      }
+    }
+    return { modifiedCount };
+  }
+
   async close() {}
 }
 
@@ -100,6 +111,10 @@ class AtlasSpatialStore {
 
   async list(collection, filter = {}, options = {}) {
     return this.collection(collection).find(filter).limit(Math.min(Number(options.limit) || 500, 5000)).toArray();
+  }
+
+  async updateMany(collection, filter, patch) {
+    return this.collection(collection).updateMany(filter, { $set: patch });
   }
 
   async close() {
