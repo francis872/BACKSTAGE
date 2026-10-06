@@ -38,13 +38,13 @@ npm install
 
 ### Docker
 
-- `docker compose up --build` — inicia Postgres con PostGIS, backend y frontend.
+- `docker compose up --build` — inicia PostgreSQL estándar, backend y frontend.
 - `http://localhost:4000` — API backend.
 - `http://localhost:3000` — frontend Vite preview.
 
 ### Geoespacial
 
-- La base de datos ahora incluye PostGIS.
+- La geometría se almacena como GeoJSON y el análisis espacial se ejecuta en el núcleo nativo.
 - Se expone un endpoint `/locations/nearby` para consultas de proximidad.
 - El frontend tiene un panel `Geo Insights` para buscar ubicaciones cercanas y ver un resumen rápido.
 
