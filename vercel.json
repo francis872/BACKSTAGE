@@ -1,19 +1,20 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "installCommand": "npm ci --prefix frontend && npm ci --prefix backend",
-  "buildCommand": "npm --prefix frontend run build",
   "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    },
     {
       "src": "backend/api/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/backend/api/index.js"
-    }
+    { "src": "/api/(.*)", "dest": "/backend/api/index.js" },
+    { "src": "/(.+\\.[a-zA-Z0-9]+)$", "dest": "/frontend/$1" },
+    { "src": "/(.*)", "dest": "/frontend/index.html" }
   ]
 }
-
