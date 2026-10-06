@@ -74,6 +74,13 @@ El esquema incluye:
 
 Las superficies procedimentales se marcan explícitamente con `dataMode: "procedural"`; no sustituyen una fuente de elevación medida en análisis reales.
 
+## Seguridad HTTP
+
+- Todas las respuestas incluyen `X-Request-Id`, cabeceras anti-sniffing/anti-frame, política restrictiva de permisos y `Cache-Control: no-store`.
+- Los errores incluyen `request_id` para correlacionarlos con los registros, y producción oculta detalles internos de errores 5xx.
+- Login y registro tienen límite configurable mediante `AUTH_RATE_LIMIT_WINDOW_MS` y `AUTH_RATE_LIMIT_MAX`.
+- El proxy del frontend devuelve `503` cuando `BACKEND_URL` falta; nunca sustituye el backend con ubicaciones ficticias.
+
 ## Ingestión y teselas territoriales
 
 - `POST /spatial/sources`: registra una fuente; `provider`, `dataset`, `version` y `license` son obligatorios.
