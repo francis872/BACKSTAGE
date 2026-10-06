@@ -4,8 +4,6 @@ exports.shorthands = undefined;
 const DIMENSIONS = ['education', 'health', 'infrastructure', 'economy', 'environment', 'security', 'connectivity', 'housing', 'services'];
 
 exports.up = (pgm) => {
-  pgm.sql('CREATE EXTENSION IF NOT EXISTS postgis;');
-
   pgm.createTable('territorial_units', {
     unit_id: { type: 'serial', primaryKey: true },
     external_id: { type: 'text', unique: true },
@@ -20,7 +18,7 @@ exports.up = (pgm) => {
     area_km2: { type: 'numeric(10,2)' },
     latitude: { type: 'numeric(9,6)' },
     longitude: { type: 'numeric(9,6)' },
-    geom: { type: 'geometry(Geometry,4326)' },
+    geometry: { type: 'jsonb' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') },
     updated_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
@@ -31,7 +29,6 @@ exports.up = (pgm) => {
       onDelete: 'set null'
     }
   });
-  pgm.createIndex('territorial_units', 'geom', { method: 'gist', name: 'idx_territorial_units_geom' });
 
   pgm.createTable('territorial_facilities', {
     facility_id: { type: 'serial', primaryKey: true },
@@ -42,7 +39,7 @@ exports.up = (pgm) => {
     capacity: { type: 'integer' },
     latitude: { type: 'numeric(9,6)' },
     longitude: { type: 'numeric(9,6)' },
-    geom: { type: 'geometry(Point,4326)' },
+    geometry: { type: 'jsonb' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
   pgm.addConstraint('territorial_facilities', 'territorial_facilities_unit_fk', {
@@ -60,7 +57,6 @@ exports.up = (pgm) => {
     }
   });
   pgm.createIndex('territorial_facilities', 'unit_id', { name: 'idx_territorial_facilities_unit_id' });
-  pgm.createIndex('territorial_facilities', 'geom', { method: 'gist', name: 'idx_territorial_facilities_geom' });
 
   pgm.createTable('territorial_dimension_scores', {
     score_id: { type: 'serial', primaryKey: true },
