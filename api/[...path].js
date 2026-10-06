@@ -5,10 +5,15 @@ module.exports = (req, res) => {
     const HANDLER_ID = `[API-HANDLER-${Date.now()}]`;
     console.log(`${HANDLER_ID} START: ${req.method} ${req.url}`);
     
-    // Extract the path and ensure it starts with /api
+    // Strip /api prefix and pass the remaining path to Express
     let url = req.url;
-    if (!url.startsWith('/api')) {
-      url = '/api' + url;
+    if (url.startsWith('/api')) {
+      url = url.substring(4); // Remove '/api'
+    }
+    
+    // Ensure path starts with /
+    if (!url.startsWith('/')) {
+      url = '/' + url;
     }
     
     req.url = url;
@@ -27,3 +32,4 @@ module.exports = (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+

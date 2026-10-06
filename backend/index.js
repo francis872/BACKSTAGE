@@ -97,12 +97,6 @@ app.use('/auth', (req, res, next) => {
   authRoutes(req, res, next);
 });
 
-// Also handle /api/auth paths (from Vercel handler)
-app.use('/api/auth', (req, res, next) => {
-  console.log(`[API Auth Route Middleware] Matched /api/auth: ${req.method} ${req.path} (url: ${req.url})`);
-  authRoutes(req, res, next);
-});
-
 app.use('/locations', locationsRoutes);
 app.use('/insights', insightsRoutes);
 app.use('/real-estate', realEstateRoutes);
