@@ -4,6 +4,9 @@
   "private": true,
   "description": "API de BACKSTAGE Intelligence para recomendaciones de ubicación",
   "main": "index.js",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "node --test",

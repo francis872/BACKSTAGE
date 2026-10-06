@@ -21,7 +21,12 @@ test('registra procedencia obligatoria', async () => {
   assert.equal(source.provider, 'IGAC');
 });
 
-test('Atlas exige URI y memory funciona sin credenciales', () => {
-  assert.ok(createSpatialStore({ SPATIAL_STORE: 'memory' }) instanceof MemorySpatialStore);
-  assert.throws(() => createSpatialStore({ SPATIAL_STORE: 'atlas' }), /MONGODB_URI/);
+test('Atlas crea singleton reutilizable con URI y memory funciona sin credenciales', () => {
+  const memoryStore = createSpatialStore({ SPATIAL_STORE: 'memory' });
+  assert.ok(memoryStore instanceof MemorySpatialStore);
+
+  const atlasStore1 = createSpatialStore({ SPATIAL_STORE: 'atlas', MONGODB_URI: 'mongodb://localhost:27017/backstage_spatial' });
+  const atlasStore2 = createSpatialStore({ SPATIAL_STORE: 'atlas', MONGODB_URI: 'mongodb://localhost:27017/backstage_spatial' });
+  assert.equal(atlasStore1, atlasStore2);
+  assert.equal(atlasStore1.constructor.name, 'AtlasSpatialStore');
 });

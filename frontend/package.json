@@ -3,6 +3,9 @@
   "version": "3.1.0",
   "private": true,
   "description": "Interfaz de BACKSTAGE Intelligence",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

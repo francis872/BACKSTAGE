@@ -1,6 +1,8 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
+const { pool } = require('./db');
+const { getMongoHealthState } = require('./spatial/store');
 const errorHandler = require('./middleware/errorHandler');
 const auditLogger = require('./middleware/auditLogger');
 const { platformSecurity } = require('./middleware/platformSecurity');
@@ -50,8 +52,34 @@ app.use(cors({
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '5mb' }));
 app.use(auditLogger);
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', service: 'BACKSTAGE Intelligence Backend' });
+app.get('/health', async (req, res) => {
+  const provider = String(process.env.SPATIAL_STORE || 'memory').toLowerCase();
+  let postgres = 'unavailable';
+  if (process.env.DATABASE_URL) {
+    try {
+      await pool.query('SELECT 1');
+      postgres = 'healthy';
+    } catch (error) {
+      postgres = 'unavailable';
+    }
+  }
+
+  let mongodb = 'disconnected';
+  if (provider === 'atlas') {
+    const mongoState = await getMongoHealthState(process.env);
+    mongodb = mongoState.status === 'healthy' ? 'healthy' : 'unavailable';
+  }
+
+  const status = postgres === 'healthy' && mongodb === 'healthy' ? 'ok'
+    : postgres === 'healthy' || mongodb === 'healthy' ? 'degraded' : 'unavailable';
+
+  res.json({
+    status,
+    postgres,
+    mongodb,
+    spatialStore: provider,
+    service: 'BACKSTAGE Intelligence Backend',
+  });
 });
 
 // API info endpoint

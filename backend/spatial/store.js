@@ -13,6 +13,46 @@ const COLLECTIONS = Object.freeze({
   jobs: 'spatial_ingestion_jobs',
 });
 
+let atlasStoreSingleton = null;
+
+function getMongoClient(uri, env = process.env) {
+  if (!uri) return null;
+  if (globalThis.__backstageAtlasClient && globalThis.__backstageAtlasClient.s.url === uri) {
+    return globalThis.__backstageAtlasClient;
+  }
+
+  const client = new MongoClient(uri, {
+    maxPoolSize: Number(env.MONGODB_MAX_POOL_SIZE || 20),
+    minPoolSize: Number(env.MONGODB_MIN_POOL_SIZE || 0),
+    connectTimeoutMS: Number(env.MONGODB_CONNECT_TIMEOUT_MS || 10000),
+    serverSelectionTimeoutMS: Number(env.MONGODB_SERVER_SELECTION_TIMEOUT_MS || 15000),
+  });
+
+  globalThis.__backstageAtlasClient = client;
+  return client;
+}
+
+async function getMongoHealthState(env = process.env) {
+  const provider = String(env.SPATIAL_STORE || 'memory').toLowerCase();
+  if (provider !== 'atlas') {
+    return { status: 'disconnected', provider };
+  }
+
+  const uri = env.MONGODB_URI;
+  if (!uri) {
+    return { status: 'unavailable', provider };
+  }
+
+  try {
+    const client = getMongoClient(uri, env);
+    await client.connect();
+    await client.db(env.MONGODB_SPATIAL_DB || 'backstage_spatial').command({ ping: 1 });
+    return { status: 'healthy', provider };
+  } catch (error) {
+    return { status: 'unavailable', provider, error: error.message };
+  }
+}
+
 function validateSpatialObject(input) {
   if (!input?.id || !input?.worldId || !input?.geometry?.type) {
     throw new TypeError('El objeto espacial requiere id, worldId y geometry.type.');
@@ -67,14 +107,16 @@ class MemorySpatialStore {
 }
 
 class AtlasSpatialStore {
-  constructor({ uri, dbName = 'backstage_spatial' }) {
+  constructor({ uri, dbName = 'backstage_spatial', client = null }) {
     if (!uri) throw new Error('MONGODB_URI es obligatorio cuando SPATIAL_STORE=atlas.');
-    this.client = new MongoClient(uri, { maxPoolSize: 20, minPoolSize: 0 });
+    this.uri = uri;
     this.dbName = dbName;
+    this.client = client || getMongoClient(uri, process.env);
     this.db = null;
   }
 
   async initialize() {
+    if (!this.client) throw new Error('MongoDB client no disponible.');
     await this.client.connect();
     this.db = this.client.db(this.dbName);
     await this.db.collection(COLLECTIONS.sources).dropIndex('provider_1_dataset_1_version_1')
@@ -118,14 +160,21 @@ class AtlasSpatialStore {
   }
 
   async close() {
-    await this.client.close();
+    if (this.client) await this.client.close();
+    this.db = null;
   }
 }
 
 function createSpatialStore(env = process.env) {
   const provider = String(env.SPATIAL_STORE || 'memory').toLowerCase();
   if (provider === 'atlas') {
-    return new AtlasSpatialStore({ uri: env.MONGODB_URI, dbName: env.MONGODB_SPATIAL_DB || 'backstage_spatial' });
+    const uri = env.MONGODB_URI;
+    if (!uri) throw new Error('MONGODB_URI es obligatorio cuando SPATIAL_STORE=atlas.');
+    const dbName = env.MONGODB_SPATIAL_DB || 'backstage_spatial';
+    if (!atlasStoreSingleton || atlasStoreSingleton.uri !== uri || atlasStoreSingleton.dbName !== dbName) {
+      atlasStoreSingleton = new AtlasSpatialStore({ uri, dbName, client: getMongoClient(uri, env) });
+    }
+    return atlasStoreSingleton;
   }
   if (provider !== 'memory') throw new Error(`SPATIAL_STORE no soportado: ${provider}`);
   return new MemorySpatialStore();
@@ -137,4 +186,6 @@ module.exports = {
   MemorySpatialStore,
   AtlasSpatialStore,
   createSpatialStore,
+  getMongoClient,
+  getMongoHealthState,
 };
