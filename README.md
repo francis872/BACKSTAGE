@@ -90,6 +90,10 @@ Las geometrías lineales y poligonales se simplifican al servir cada zoom median
 
 El explorador permite navegar a un resultado, seleccionar origen y destino y dibujar la ruta calculada. No genera rutas si el grafo importado está vacío o desconectado.
 
+### Riesgo territorial explicable
+
+`POST /spatial/risk/evaluate` calcula índices de priorización para incendio forestal, inundación y deslizamiento. La respuesta conserva entradas, pesos, contribuciones, modo del dato, confianza y versión del modelo. Estos índices no son pronósticos ni reemplazan estudios técnicos de campo.
+
 ## Identidad, roles y permisos
 
 Autenticación por token JWT y autorización por rol:
