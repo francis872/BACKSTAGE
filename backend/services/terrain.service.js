@@ -1,6 +1,7 @@
 const ApiError = require('../utils/ApiError');
 const { analyzeTerrain, buildTerrainSurface, resampleGrid } = require('../spatial/terrain');
 const { generateContours } = require('../spatial/contours');
+const { analyzeHydrology, topographicProfile } = require('../spatial/hydrology');
 
 function asNumber(value, fallback) {
   const number = Number(value);
@@ -49,4 +50,23 @@ function analyze(payload = {}) {
   }
 }
 
-module.exports = { parseBbox, getSurface, analyze };
+function hydrology(payload = {}) {
+  try {
+    return analyzeHydrology(payload.grid, {
+      bbox: payload.bbox?.map(Number), cellSizeM: asNumber(payload.cellSizeM, 30),
+      streamThreshold: asNumber(payload.streamThreshold, 10),
+      curvatureThreshold: asNumber(payload.curvatureThreshold, 0.000001), outlet: payload.outlet,
+    });
+  } catch (error) { throw new ApiError(400, error.message); }
+}
+
+function profile(payload = {}) {
+  try {
+    return topographicProfile(payload.grid, {
+      bbox: payload.bbox?.map(Number), start: payload.start?.map(Number), end: payload.end?.map(Number),
+      samples: Number(payload.samples || 100),
+    });
+  } catch (error) { throw new ApiError(400, error.message); }
+}
+
+module.exports = { parseBbox, getSurface, analyze, hydrology, profile };
