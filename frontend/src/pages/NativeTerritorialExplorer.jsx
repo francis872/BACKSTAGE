@@ -4,6 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { apiRequest } from '../lib/api';
 import SpatialDataImporter from '../components/SpatialDataImporter';
 import SpatialDatasetAdmin from '../components/SpatialDatasetAdmin';
+import SpatialSearch from '../components/SpatialSearch';
 
 const EMPTY_COLLECTION = { type: 'FeatureCollection', features: [] };
 const INTERNAL_STYLE = {
@@ -98,6 +99,7 @@ function addBackstageLayers(map) {
   map.addSource('backstage-contours', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addSource('backstage-locations', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addSource('backstage-imported', { type: 'geojson', data: EMPTY_COLLECTION });
+  map.addSource('backstage-route', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addLayer({
     id: 'backstage-terrain-fill', type: 'fill', source: 'backstage-terrain',
     paint: {
@@ -137,6 +139,10 @@ function addBackstageLayers(map) {
     paint: { 'circle-radius': 6, 'circle-color': '#5aa9ff', 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 1.5 },
   });
   map.addLayer({
+    id: 'backstage-route-line', type: 'line', source: 'backstage-route',
+    paint: { 'line-color': '#ff5d8f', 'line-width': 5, 'line-opacity': 0.95 },
+  });
+  map.addLayer({
     id: 'backstage-location-halo', type: 'circle', source: 'backstage-locations',
     paint: { 'circle-radius': 10, 'circle-color': '#39f5ae', 'circle-opacity': 0.16 },
   });
@@ -163,6 +169,7 @@ function NativeTerritorialExplorer({ operationalContext }) {
   const [dataZoom, setDataZoom] = useState(8);
   const [visibleFeatureCount, setVisibleFeatureCount] = useState(0);
   const [catalogRevision, setCatalogRevision] = useState(0);
+  const [mapCenter, setMapCenter] = useState([-74.07, 4.71]);
 
   useEffect(() => {
     apiRequest('/locations')
@@ -238,7 +245,10 @@ function NativeTerritorialExplorer({ operationalContext }) {
       loadTerrain();
       loadSpatialTiles();
     });
-    map.on('moveend', () => { loadTerrain(); loadSpatialTiles(); });
+    map.on('moveend', () => {
+      const nextCenter = map.getCenter(); setMapCenter([nextCenter.lng, nextCenter.lat]);
+      loadTerrain(); loadSpatialTiles();
+    });
     map.on('click', 'backstage-location-points', (event) => {
       const properties = event.features?.[0]?.properties;
       if (properties) setSelected(properties);
@@ -299,6 +309,17 @@ function NativeTerritorialExplorer({ operationalContext }) {
         </div>
       </div>
       <p className="auth-hint">MapLibre acelera la presentación WebGL; los datos, cálculos y estilos proceden exclusivamente del motor BACKSTAGE.</p>
+      <SpatialSearch
+        center={mapCenter}
+        onNavigate={(coordinate) => coordinate && mapRef.current?.flyTo({ center: coordinate, zoom: 14, duration: 900 })}
+        onRoute={(route) => {
+          const map = mapRef.current;
+          if (!map || !route?.geometry?.coordinates?.length) return;
+          map.getSource('backstage-route')?.setData({ type: 'FeatureCollection', features: [{ type: 'Feature', geometry: route.geometry, properties: {} }] });
+          const bounds = route.geometry.coordinates.reduce((box, coordinate) => box.extend(coordinate), new maplibregl.LngLatBounds(route.geometry.coordinates[0], route.geometry.coordinates[0]));
+          map.fitBounds(bounds, { padding: 80, duration: 900 });
+        }}
+      />
       <SpatialDataImporter
         dataZoom={dataZoom}
         onDataZoomChange={setDataZoom}
