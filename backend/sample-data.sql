@@ -12,7 +12,7 @@ ON CONFLICT (name) DO NOTHING;
 -- Ubicaciones base
 INSERT INTO locations (external_id, name, type, address, city, region, country, latitude, longitude, capacity)
 VALUES
-  ('mcd-001', 'McDonald''s Centro', 'restaurant', 'Calle 123 #45-67', 'Bogotá', 'Cundinamarca', 'Colombia', 4.7110, -74.0721, 120),
+  ('retail-anchor-001', 'Activo Comercial Centro', 'retail', 'Calle 123 #45-67', 'Bogotá', 'Cundinamarca', 'Colombia', 4.7110, -74.0721, 120),
   ('sbux-001', 'Starbucks Parque', 'cafe', 'Carrera 15 #95-30', 'Bogotá', 'Cundinamarca', 'Colombia', 4.6693, -74.0536, 80),
   ('retail-001', 'Plaza Comercial Norte', 'retail', 'Avenida 20 #120-10', 'Bogotá', 'Cundinamarca', 'Colombia', 4.7501, -74.0650, 250),
   ('prop-001', 'Lote Vía La Calera', 'property', 'Km 3 Vía La Calera', 'Bogotá', 'Cundinamarca', 'Colombia', 4.7032, -74.0338, NULL),
@@ -342,11 +342,11 @@ UPDATE analysis_runs
 SET organization_id = (SELECT organization_id FROM org)
 WHERE organization_id IS NULL;
 
--- Caso demo: Expansión McDonald's Bogotá
+-- Caso demo multisectorial: evaluación territorial de activos
 INSERT INTO business_locations (location_id, brand_name, business_type, is_active, opened_at)
-SELECT location_id, 'McDonald''s', 'restaurant', true, DATE '2020-01-01'
+SELECT location_id, 'Operador de referencia', 'retail', true, DATE '2020-01-01'
 FROM locations
-WHERE external_id = 'mcd-001'
+WHERE external_id = 'retail-anchor-001'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO competitors (name, brand_name, category, address, city, latitude, longitude, geom, source_name, source_updated_at)
