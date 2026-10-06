@@ -5,6 +5,7 @@ import { apiRequest } from '../lib/api';
 import SpatialDataImporter from '../components/SpatialDataImporter';
 import SpatialDatasetAdmin from '../components/SpatialDatasetAdmin';
 import SpatialSearch from '../components/SpatialSearch';
+import TerritorialRiskAnalyzer from '../components/TerritorialRiskAnalyzer';
 
 const EMPTY_COLLECTION = { type: 'FeatureCollection', features: [] };
 const INTERNAL_STYLE = {
@@ -320,6 +321,7 @@ function NativeTerritorialExplorer({ operationalContext }) {
           map.fitBounds(bounds, { padding: 80, duration: 900 });
         }}
       />
+      <TerritorialRiskAnalyzer center={mapCenter} />
       <SpatialDataImporter
         dataZoom={dataZoom}
         onDataZoomChange={setDataZoom}
