@@ -19,6 +19,8 @@ function SpatialDataImporter({ dataZoom, onDataZoomChange, onImported }) {
   const canWrite = useMemo(() => ['admin', 'analyst'].includes(currentRole()), []);
   const [form, setForm] = useState({ provider: '', dataset: '', version: '', license: '', confidence: '0.8', dataMode: 'declared' });
   const [collection, setCollection] = useState(null);
+  const [inputMode, setInputMode] = useState('file');
+  const [sourceUrl, setSourceUrl] = useState('');
   const [fileName, setFileName] = useState('');
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
@@ -42,7 +44,8 @@ function SpatialDataImporter({ dataZoom, onDataZoomChange, onImported }) {
 
   const submit = async (event) => {
     event.preventDefault();
-    if (!collection) return setStatus('Selecciona primero un archivo GeoJSON válido.');
+    if (inputMode === 'file' && !collection) return setStatus('Selecciona primero un archivo GeoJSON válido.');
+    if (inputMode === 'remote' && !sourceUrl) return setStatus('Ingresa la URL HTTPS de una fuente autorizada.');
     setBusy(true);
     setStatus('Registrando procedencia…');
     try {
@@ -53,10 +56,12 @@ function SpatialDataImporter({ dataZoom, onDataZoomChange, onImported }) {
         }),
       }).then(responseData);
       setStatus('Validando geometrías y generando teselas…');
-      const job = await apiRequest('/spatial/ingest/geojson', {
+      const endpoint = inputMode === 'remote' ? '/spatial/ingest/remote' : '/spatial/ingest/geojson';
+      const job = await apiRequest(endpoint, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sourceId: source._id, worldId: 'earth', minZoom: Math.max(0, dataZoom - 2), maxZoom: dataZoom, collection,
+          sourceId: source._id, worldId: 'earth', minZoom: Math.max(0, dataZoom - 2), maxZoom: dataZoom,
+          ...(inputMode === 'remote' ? { sourceUrl } : { collection }),
         }),
       }).then(responseData);
       setStatus(`Carga completada: ${job.featureCount} objetos en ${job.tileCount} teselas.`);
@@ -94,13 +99,24 @@ function SpatialDataImporter({ dataZoom, onDataZoomChange, onImported }) {
               <option value="procedural">Procedimental</option>
             </select>
           </label>
-          <label>Archivo GeoJSON<input type="file" accept=".geojson,.json,application/geo+json,application/json" onChange={selectFile} required /></label>
+          <label>Origen
+            <select value={inputMode} onChange={(event) => setInputMode(event.target.value)}>
+              <option value="file">Archivo local</option>
+              <option value="remote">Fuente oficial remota</option>
+            </select>
+          </label>
+          {inputMode === 'file' ? (
+            <label>Archivo GeoJSON<input type="file" accept=".geojson,.json,application/geo+json,application/json" onChange={selectFile} required /></label>
+          ) : (
+            <label>URL GeoJSON autorizada<input type="url" value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} required placeholder="https://www.datos.gov.co/..." /></label>
+          )}
           <div className="form-actions">
-            <button type="submit" disabled={busy || !collection}>{busy ? 'Procesando…' : 'Registrar e importar'}</button>
+            <button type="submit" disabled={busy || (inputMode === 'file' ? !collection : !sourceUrl)}>{busy ? 'Procesando…' : 'Registrar e importar'}</button>
           </div>
         </form>
       )}
       {fileName && <p className="auth-hint">Archivo: {fileName}</p>}
+      {inputMode === 'remote' && <p className="auth-hint">Dominios permitidos: datos.gov.co y mapas2.igac.gov.co. Sin redirecciones ni credenciales embebidas.</p>}
       {status && <p className="message">{status}</p>}
     </details>
   );
