@@ -37,7 +37,7 @@ INSERT INTO location_category_assignments (location_id, category_id)
 SELECT l.location_id, c.category_id
 FROM loc l
 JOIN location_categories c ON (
-  (l.external_id = 'mcd-001' AND c.name = 'Restaurant') OR
+  (l.external_id = 'retail-anchor-001' AND c.name = 'Restaurant') OR
   (l.external_id = 'sbux-001' AND c.name = 'Cafe') OR
   (l.external_id = 'retail-001' AND c.name = 'Retail') OR
   (l.external_id = 'prop-001' AND c.name = 'Property') OR
@@ -53,8 +53,8 @@ INSERT INTO location_attributes (location_id, name, value)
 SELECT l.location_id, v.name, v.value
 FROM loc l
 JOIN (VALUES
-  ('mcd-001', 'parking_spaces', '12'),
-  ('mcd-001', 'drive_thru', 'true'),
+  ('retail-anchor-001', 'parking_spaces', '12'),
+  ('retail-anchor-001', 'drive_thru', 'true'),
   ('sbux-001', 'terrace', 'true'),
   ('retail-001', 'anchor_tenants', '5'),
   ('retail-001', 'foot_traffic_estimate', '4200'),
@@ -71,7 +71,7 @@ INSERT INTO location_indicators (location_id, indicator_name, indicator_date, va
 SELECT l.location_id, v.indicator_name, CURRENT_DATE, v.value, v.metadata
 FROM loc l
 JOIN (VALUES
-  ('mcd-001', 'foot_traffic', 320.0, jsonb_build_object('peak_hour', '12:00-13:00')),
+  ('retail-anchor-001', 'foot_traffic', 320.0, jsonb_build_object('peak_hour', '12:00-13:00')),
   ('sbux-001', 'foot_traffic', 180.0, jsonb_build_object('peak_hour', '15:00-16:00')),
   ('retail-001', 'foot_traffic', 5200.0, jsonb_build_object('peak_hour', '11:00-14:00')),
   ('prop-001', 'development_index', 78.0, jsonb_build_object('growth_rate', '12%')),
@@ -84,7 +84,7 @@ INSERT INTO location_histories (location_id, source_id, observed_at, metric)
 SELECT l.location_id, s.source_id, now() - interval '15 minutes', jsonb_build_object('queue_minutes', 4, 'occupancy', 0.78)
 FROM locations l
 JOIN data_sources s ON s.name = 'Google Maps'
-WHERE l.external_id = 'mcd-001'
+WHERE l.external_id = 'retail-anchor-001'
 UNION ALL
 SELECT l.location_id, s.source_id, now() - interval '8 minutes', jsonb_build_object('queue_minutes', 18, 'occupancy', 0.92)
 FROM locations l
@@ -101,7 +101,7 @@ INSERT INTO risk_assessments (location_id, flood_risk, landslide_risk, crime_ris
 SELECT l.location_id, v.flood_risk, v.landslide_risk, v.crime_risk, v.climate_exposure, v.score, v.details
 FROM locations l
 JOIN (VALUES
-  ('mcd-001', 0.12, 0.08, 0.15, 0.22, 0.89, jsonb_build_object('notes', 'Riesgo moderado pero aceptable')),
+  ('retail-anchor-001', 0.12, 0.08, 0.15, 0.22, 0.89, jsonb_build_object('notes', 'Riesgo moderado pero aceptable')),
   ('sbux-001', 0.10, 0.05, 0.12, 0.18, 0.92, jsonb_build_object('notes', 'Riesgo bajo y estable')),
   ('prop-001', 0.30, 0.25, 0.20, 0.55, 0.62, jsonb_build_object('notes', 'Zona de crecimiento con cierto riesgo climático')),
   ('log-001', 0.08, 0.03, 0.14, 0.12, 0.94, jsonb_build_object('notes', 'Ubicación logística con buen acceso y bajo riesgo'))
@@ -193,18 +193,18 @@ INSERT INTO risk_components (risk_id, component_type, component_score, notes)
 SELECT r.risk_id, 'Flood', 0.12, 'Riesgo de inundación calculado con datos de cuencas'
 FROM risk_assessments r
 JOIN locations l ON l.location_id = r.location_id
-WHERE l.external_id = 'mcd-001';
+WHERE l.external_id = 'retail-anchor-001';
 
 INSERT INTO risk_components (risk_id, component_type, component_score, notes)
 SELECT r.risk_id, 'Crime', 0.15, 'Índice de criminalidad local'
 FROM risk_assessments r
 JOIN locations l ON l.location_id = r.location_id
-WHERE l.external_id = 'mcd-001';
+WHERE l.external_id = 'retail-anchor-001';
 
 INSERT INTO location_risk_trends (location_id, trend_date, risk_vector, trend_score)
 SELECT l.location_id, CURRENT_DATE - interval '7 days', jsonb_build_object('flood', 0.12, 'crime', 0.15, 'climate', 0.22), 0.88
 FROM locations l
-WHERE l.external_id = 'mcd-001';
+WHERE l.external_id = 'retail-anchor-001';
 
 INSERT INTO location_risk_trends (location_id, trend_date, risk_vector, trend_score)
 SELECT l.location_id, CURRENT_DATE - interval '7 days', jsonb_build_object('flood', 0.10, 'crime', 0.12, 'climate', 0.18), 0.92
@@ -217,23 +217,23 @@ SELECT l.location_id, 'quiere-ahorrar-tiempo', jsonb_build_object('distance_m', 
   jsonb_build_object('message', 'El restaurante a 1,8 km tiene una fila estimada de 4 minutos. El más cercano tiene una espera de 18 minutos. Si recorres 600 metros adicionales ahorrarás 14 minutos.'),
   91.5
 FROM locations l
-WHERE l.external_id = 'mcd-001';
+WHERE l.external_id = 'retail-anchor-001';
 
 -- EarthArt: unidades territoriales de ejemplo
-INSERT INTO territorial_units (external_id, name, unit_type, city, region, country, population, population_growth_pct, area_km2, latitude, longitude, geom)
+INSERT INTO territorial_units (external_id, name, unit_type, city, region, country, population, population_growth_pct, area_km2, latitude, longitude, geometry)
 VALUES
   ('ter-001', 'Barrio Suba Rincón', 'barrio', 'Bogotá', 'Cundinamarca', 'Colombia', 8400, 18.0, 3.2, 4.7460, -74.0930,
-    ST_SetSRID(ST_MakePoint(-74.0930, 4.7460), 4326)),
+    jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.0930, 4.7460))),
   ('ter-002', 'Vereda La Calera Centro', 'vereda', 'La Calera', 'Cundinamarca', 'Colombia', 2100, 6.5, 12.4, 4.7208, -73.9686,
-    ST_SetSRID(ST_MakePoint(-73.9686, 4.7208), 4326))
+    jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-73.9686, 4.7208)))
 ON CONFLICT (external_id) DO NOTHING;
 
 -- Instalaciones (colegios) usadas por el detector de brechas
-INSERT INTO territorial_facilities (unit_id, facility_type, name, capacity, latitude, longitude, geom)
-SELECT tu.unit_id, 'school', 'Colegio Distrital El Rincón', 900, 4.7180, -74.0870, ST_SetSRID(ST_MakePoint(-74.0870, 4.7180), 4326)
+INSERT INTO territorial_facilities (unit_id, facility_type, name, capacity, latitude, longitude, geometry)
+SELECT tu.unit_id, 'school', 'Colegio Distrital El Rincón', 900, 4.7180, -74.0870, jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.0870, 4.7180))
 FROM territorial_units tu WHERE tu.external_id = 'ter-001'
 UNION ALL
-SELECT tu.unit_id, 'school', 'Escuela Rural La Calera', 250, 4.7150, -73.9700, ST_SetSRID(ST_MakePoint(-73.9700, 4.7150), 4326)
+SELECT tu.unit_id, 'school', 'Escuela Rural La Calera', 250, 4.7150, -73.9700, jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-73.9700, 4.7150))
 FROM territorial_units tu WHERE tu.external_id = 'ter-002';
 
 -- Puntajes por dimensión (Educación, Salud, Infraestructura, Economía, Ambiente, Seguridad, Conectividad, Vivienda, Servicios)
@@ -349,30 +349,30 @@ FROM locations
 WHERE external_id = 'retail-anchor-001'
 ON CONFLICT DO NOTHING;
 
-INSERT INTO competitors (name, brand_name, category, address, city, latitude, longitude, geom, source_name, source_updated_at)
+INSERT INTO competitors (name, brand_name, category, address, city, latitude, longitude, geometry, source_name, source_updated_at)
 VALUES
-  ('Burger King Zona T', 'Burger King', 'restaurant', 'Cra. 13 #83-24', 'Bogotá', 4.667650, -74.054200, ST_SetSRID(ST_MakePoint(-74.054200, 4.667650), 4326), 'Open data demo', CURRENT_DATE),
-  ('KFC Calle 100', 'KFC', 'restaurant', 'Calle 100 #14-50', 'Bogotá', 4.684500, -74.048900, ST_SetSRID(ST_MakePoint(-74.048900, 4.684500), 4326), 'Open data demo', CURRENT_DATE),
-  ('El Corral Andino', 'El Corral', 'restaurant', 'Calle 85 #11-53', 'Bogotá', 4.670220, -74.053810, ST_SetSRID(ST_MakePoint(-74.053810, 4.670220), 4326), 'Open data demo', CURRENT_DATE)
+  ('Competidor Norte', 'Operador B', 'retail', 'Cra. 13 #83-24', 'Bogotá', 4.667650, -74.054200, jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.054200, 4.667650)), 'Open data demo', CURRENT_DATE),
+  ('Competidor Central', 'Operador C', 'retail', 'Calle 100 #14-50', 'Bogotá', 4.684500, -74.048900, jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.048900, 4.684500)), 'Open data demo', CURRENT_DATE),
+  ('Competidor Urbano', 'Operador D', 'retail', 'Calle 85 #11-53', 'Bogotá', 4.670220, -74.053810, jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.053810, 4.670220)), 'Open data demo', CURRENT_DATE)
 ON CONFLICT DO NOTHING;
 
-INSERT INTO points_of_interest (name, category, address, city, latitude, longitude, geom, source_name, source_updated_at)
+INSERT INTO points_of_interest (name, category, address, city, latitude, longitude, geometry, source_name, source_updated_at)
 VALUES
-  ('Centro Comercial Andino', 'shopping_mall', 'Cra. 11 #82-71', 'Bogotá', 4.667950, -74.053520, ST_SetSRID(ST_MakePoint(-74.053520, 4.667950), 4326), 'Open data demo', CURRENT_DATE),
-  ('Universidad Javeriana', 'university', 'Carrera 7 #40-62', 'Bogotá', 4.628010, -74.064900, ST_SetSRID(ST_MakePoint(-74.064900, 4.628010), 4326), 'Open data demo', CURRENT_DATE),
-  ('Portal Norte TransMilenio', 'transport', 'Autopista Norte #174', 'Bogotá', 4.754500, -74.046300, ST_SetSRID(ST_MakePoint(-74.046300, 4.754500), 4326), 'Open data demo', CURRENT_DATE),
-  ('Centro Internacional', 'office', 'Calle 26 #13A-19', 'Bogotá', 4.612800, -74.070300, ST_SetSRID(ST_MakePoint(-74.070300, 4.612800), 4326), 'Open data demo', CURRENT_DATE),
-  ('Parque 93', 'poi', 'Cra. 11A #93A-10', 'Bogotá', 4.676300, -74.048900, ST_SetSRID(ST_MakePoint(-74.048900, 4.676300), 4326), 'Open data demo', CURRENT_DATE)
+  ('Centro Comercial Andino', 'shopping_mall', 'Cra. 11 #82-71', 'Bogotá', 4.667950, -74.053520, jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.053520, 4.667950)), 'Open data demo', CURRENT_DATE),
+  ('Universidad Javeriana', 'university', 'Carrera 7 #40-62', 'Bogotá', 4.628010, -74.064900, jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.064900, 4.628010)), 'Open data demo', CURRENT_DATE),
+  ('Portal Norte TransMilenio', 'transport', 'Autopista Norte #174', 'Bogotá', 4.754500, -74.046300, jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.046300, 4.754500)), 'Open data demo', CURRENT_DATE),
+  ('Centro Internacional', 'office', 'Calle 26 #13A-19', 'Bogotá', 4.612800, -74.070300, jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.070300, 4.612800)), 'Open data demo', CURRENT_DATE),
+  ('Parque 93', 'poi', 'Cra. 11A #93A-10', 'Bogotá', 4.676300, -74.048900, jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.048900, 4.676300)), 'Open data demo', CURRENT_DATE)
 ON CONFLICT DO NOTHING;
 
-INSERT INTO territorial_zones (name, zone_type, city, population_total, geom, source_name, source_updated_at)
+INSERT INTO territorial_zones (name, zone_type, city, population_total, geometry, source_name, source_updated_at)
 VALUES
   (
     'Zona Norte Expandida',
     'district',
     'Bogotá',
     52000,
-    ST_GeomFromText('POLYGON((-74.085 4.640,-74.020 4.640,-74.020 4.760,-74.085 4.760,-74.085 4.640))', 4326),
+    '{"type":"Polygon","coordinates":[[[-74.085,4.640],[-74.020,4.640],[-74.020,4.760],[-74.085,4.760],[-74.085,4.640]]]}'::jsonb,
     'DANE demo',
     CURRENT_DATE
   ),
@@ -381,7 +381,7 @@ VALUES
     'district',
     'Bogotá',
     41000,
-    ST_GeomFromText('POLYGON((-74.100 4.560,-74.030 4.560,-74.030 4.640,-74.100 4.640,-74.100 4.560))', 4326),
+    '{"type":"Polygon","coordinates":[[[-74.100,4.560],[-74.030,4.560],[-74.030,4.640],[-74.100,4.640],[-74.100,4.560]]]}'::jsonb,
     'DANE demo',
     CURRENT_DATE
   )
@@ -405,10 +405,10 @@ VALUES
     'Sucursales y puntos de operación del negocio',
     'Point',
     'BACKSTAGE demo',
-    'business_locations',
-    'business_location_id',
-    'brand_name',
-    'geom',
+    'locations',
+    'location_id',
+    'name',
+    'geometry',
     4326,
     'Bogotá',
     '{"color":"#3b82f6","radius":7}'::jsonb,
@@ -430,7 +430,7 @@ VALUES
     'competitors',
     'competitor_id',
     'name',
-    'geom',
+    'geometry',
     4326,
     'Bogotá',
     '{"color":"#ef4444","radius":6}'::jsonb,
@@ -452,7 +452,7 @@ VALUES
     'points_of_interest',
     'poi_id',
     'name',
-    'geom',
+    'geometry',
     4326,
     'Bogotá',
     '{"color":"#22c55e","radius":5}'::jsonb,
@@ -474,7 +474,7 @@ VALUES
     'territorial_zones',
     'zone_id',
     'name',
-    'geom',
+    'geometry',
     4326,
     'Bogotá',
     '{"fillColor":"#1d4ed8","fillOpacity":0.25,"strokeColor":"#93c5fd"}'::jsonb,
