@@ -24,7 +24,11 @@ module.exports = (req, res) => {
     url.pathname = pathname;
     req.url = `${url.pathname}${url.search}`;
     
-    console.log(`[Auth Handler] ROUTING TO: ${req.method} ${req.url}`);
+    // Important: Also update req.path so Express middleware sees the correct path
+    // This is needed for the SPA fallback check that uses req.path
+    delete req._parsedUrl; // Clear Express's cached URL parsing
+    
+    console.log(`[Auth Handler] ROUTING TO: ${req.method} ${req.url} (path: ${pathname})`);
     const result = app(req, res);
     console.log(`[Auth Handler] RETURNED: ${req.method} ${req.url}`);
     return result;
