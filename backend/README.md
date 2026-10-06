@@ -99,8 +99,14 @@ Las propiedades `speedKph`, `maxspeed`, `cost` y `oneway` permiten controlar el 
 ## Riesgo territorial explicable
 
 - `POST /spatial/risk/evaluate`: evalúa incendio, inundación o deslizamiento con variables normalizadas entre 0 y 1.
+- `POST /spatial/risk/scenario`: compara la línea base y cambios normalizados para una colección de hasta 2.500 celdas GeoJSON.
 - Cada resultado devuelve el peso y la contribución de cada variable, clasificación, confianza, procedencia del dato y versión del modelo.
 - El resultado es un índice de priorización; no es un pronóstico ni sustituye validación técnica en campo.
+
+## Medición geométrica
+
+- `POST /spatial/measure`: recibe `{ "geometry": GeoJSON }` para medir `Point`, `LineString` o `Polygon` mediante Haversine y área esférica.
+- Las distancias se expresan en metros y las áreas en metros cuadrados; no requiere PostGIS.
 
 ## Hidrología y perfiles
 
