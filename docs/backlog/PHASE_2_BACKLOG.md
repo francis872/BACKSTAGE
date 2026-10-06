@@ -148,6 +148,10 @@ organización. `GeoInsights.jsx` (menú "Oportunidades") incorpora ranking expli
 factores de mercado reales, KPIs, búsqueda y filtros, comparación de hasta tres ubicaciones,
 detalle de contribuciones, navegación al mapa y conversión en proyecto operativo con candidato inicial.
 
+EarthArt completa la lectura integrada: presenta índice, brechas, riesgos y oportunidades
+sin fusionarlos en un puntaje artificial, conserva escenarios históricos, navega al mapa y
+convierte brechas en proyectos. Las unidades y todos sus recursos hijos están aislados por organización.
+
 ## Resumen de verificación de esta fase
 
 | Criterio del documento | Cumplido |
