@@ -111,6 +111,7 @@ Las propiedades `speedKph`, `maxspeed`, `cost` y `oneway` permiten controlar el 
 - El resultado es un índice de priorización; no es un pronóstico ni sustituye validación técnica en campo.
 - `GET /risk-assessments/locations/:locationId/history`: recupera la serie histórica aislada por organización.
 - Las altas y actualizaciones exigen los cuatro indicadores en `[0,1]`; el backend deriva `score` y guarda en `details` el modo del dato, confianza, notas y versión del cálculo.
+- `/risk-components` requiere autenticación y contexto organizacional para todas las operaciones. Los componentes admitidos son `threat`, `exposure` y `vulnerability`, con puntajes normalizados en `[0,1]` y evaluación padre validada dentro de la organización activa.
 
 ## Medición geométrica
 
