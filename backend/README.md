@@ -87,6 +87,14 @@ Las superficies procedimentales se marcan explícitamente con `dataMode: "proced
 Las rutas de escritura requieren rol `admin` o `analyst`; la lectura de fuentes y teselas también admite `viewer`. Cada mundo y dataset queda aislado por organización.
 
 Al responder teselas, BACKSTAGE aplica simplificación dependiente del zoom y conserva intacta la geometría canónica. `SPATIAL_TILE_CACHE_MAX` y `SPATIAL_TILE_CACHE_TTL_MS` controlan la caché LRU en proceso.
+
+## Búsqueda y rutas
+
+- `GET /spatial/search`: consulta atributos textuales de objetos activos.
+- `GET /spatial/nearby`: calcula proximidad nativa mediante Haversine.
+- `POST /spatial/routes/compute`: crea un grafo bidireccional desde `LineString`/`MultiLineString`, ajusta origen y destino a los nodos más cercanos y ejecuta A* o Dijkstra.
+
+Las propiedades `speedKph`, `maxspeed`, `cost` y `oneway` permiten controlar el costo vial. Sin datos suficientes, la API devuelve un error explícito en lugar de fabricar una ruta.
 - `risk_components`
 - `location_risk_trends`
 - `territorial_units` (municipio, barrio, vereda)
