@@ -139,10 +139,12 @@ adapters en `backend/infrastructure/external-apis/` (patrón ya usado por
 
 ## Épica 7 — Dashboards, no formularios (Riesgos, Oportunidades)
 
-**Estado: `pending`**
+**Estado: `partial` (Riesgos terminado; Oportunidades pendiente)**
 
-`RiskComponents.jsx` (menú "Riesgos") y `GeoInsights.jsx` (menú "Oportunidades") conservan
-el patrón tarjeta + formulario CRUD sin KPIs, mapa ni filtros. No se tocaron en esta fase.
+`RiskComponents.jsx` (menú "Riesgos") ya incluye KPIs por amenaza, exposición y
+vulnerabilidad, cobertura territorial, búsqueda, filtros, bandas, trazabilidad y navegación
+al mapa/evaluación. El backend valida valores y aísla toda lectura y escritura por
+organización. `GeoInsights.jsx` (menú "Oportunidades") continúa pendiente de conversión.
 
 ## Resumen de verificación de esta fase
 
