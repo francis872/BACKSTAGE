@@ -220,12 +220,12 @@ FROM locations l
 WHERE l.external_id = 'retail-anchor-001';
 
 -- EarthArt: unidades territoriales de ejemplo
-INSERT INTO territorial_units (external_id, name, unit_type, city, region, country, population, population_growth_pct, area_km2, latitude, longitude, geometry)
+INSERT INTO territorial_units (external_id, name, unit_type, city, region, country, population, population_growth_pct, area_km2, latitude, longitude, geometry, organization_id)
 VALUES
   ('ter-001', 'Barrio Suba Rincón', 'barrio', 'Bogotá', 'Cundinamarca', 'Colombia', 8400, 18.0, 3.2, 4.7460, -74.0930,
-    jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.0930, 4.7460))),
+    jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-74.0930, 4.7460)), (SELECT organization_id FROM organizations ORDER BY organization_id LIMIT 1)),
   ('ter-002', 'Vereda La Calera Centro', 'vereda', 'La Calera', 'Cundinamarca', 'Colombia', 2100, 6.5, 12.4, 4.7208, -73.9686,
-    jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-73.9686, 4.7208)))
+    jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array(-73.9686, 4.7208)), (SELECT organization_id FROM organizations ORDER BY organization_id LIMIT 1))
 ON CONFLICT (external_id) DO NOTHING;
 
 -- Instalaciones (colegios) usadas por el detector de brechas
