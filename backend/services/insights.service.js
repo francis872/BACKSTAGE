@@ -1,4 +1,6 @@
 const { query } = require('../db');
+const ApiError = require('../utils/ApiError');
+const { buildOpportunityRanking } = require('../domain/opportunities');
 
 async function getSummary(organizationId) {
   const result = await query(
@@ -39,4 +41,31 @@ async function getSummary(organizationId) {
   };
 }
 
-module.exports = { getSummary };
+async function listOpportunities(organizationId) {
+  const result = await query(
+    `SELECT l.location_id, l.name AS location_name, l.type AS location_type, l.city, l.region, l.latitude, l.longitude,
+            lms.score_id, lms.category, lms.score AS factor_score, lms.details, ma.name AS market_area,
+            latest_risk.score AS latest_risk_score
+     FROM location_market_scores lms
+     JOIN locations l ON l.location_id = lms.location_id
+     JOIN market_areas ma ON ma.market_area_id = lms.market_area_id
+     LEFT JOIN LATERAL (
+       SELECT score FROM risk_assessments ra
+       WHERE ra.location_id = l.location_id AND ra.organization_id = $1
+       ORDER BY ra.assessed_at DESC, ra.risk_id DESC LIMIT 1
+     ) latest_risk ON true
+     WHERE l.organization_id = $1
+     ORDER BY l.location_id, lms.score_id`,
+    [organizationId]
+  );
+  return buildOpportunityRanking(result.rows);
+}
+
+async function getOpportunity(locationId, organizationId) {
+  const rows = await listOpportunities(organizationId);
+  const opportunity = rows.find((item) => item.location_id === Number(locationId));
+  if (!opportunity) throw new ApiError(404, 'Oportunidad no encontrada en la organización activa.');
+  return opportunity;
+}
+
+module.exports = { getSummary, listOpportunities, getOpportunity };
