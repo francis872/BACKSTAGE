@@ -16,6 +16,9 @@ PGDATABASE=backstage
 DATABASE_URL=postgres://backstage:backstage@localhost:5432/backstage
 NODE_ENV=development
 JWT_SECRET=YOUR_STRONG_SECRET
+SPATIAL_STORE=memory
+MONGODB_URI=
+MONGODB_SPATIAL_DB=backstage_spatial
 ```
 
 3. Instala dependencias:
