@@ -54,7 +54,14 @@ app.use(cors({
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '5mb' }));
 app.use(auditLogger);
 
+// Debug logging
+app.use((req, res, next) => {
+  console.log(`[Express] ${req.method} ${req.path}`);
+  next();
+});
+
 app.get('/health', async (req, res) => {
+  console.log('[Express] Handling /health GET request');
   const provider = String(process.env.SPATIAL_STORE || 'memory').toLowerCase();
   let postgres = 'unavailable';
   if (process.env.DATABASE_URL) {

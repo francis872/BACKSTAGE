@@ -153,7 +153,9 @@ const listOrganizations = asyncHandler(async (req, res) => {
 });
 
 const listPublicOrganizations = asyncHandler(async (req, res) => {
+  console.log('[AuthController] Handling listPublicOrganizations request');
   const organizations = await organizationService.listActiveOrganizations();
+  console.log('[AuthController] Got organizations:', organizations);
   res.json(organizations);
 });
 
