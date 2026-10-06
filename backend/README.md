@@ -101,6 +101,13 @@ Las propiedades `speedKph`, `maxspeed`, `cost` y `oneway` permiten controlar el 
 - `POST /spatial/risk/evaluate`: evalúa incendio, inundación o deslizamiento con variables normalizadas entre 0 y 1.
 - Cada resultado devuelve el peso y la contribución de cada variable, clasificación, confianza, procedencia del dato y versión del modelo.
 - El resultado es un índice de priorización; no es un pronóstico ni sustituye validación técnica en campo.
+
+## Hidrología y perfiles
+
+- `POST /terrain/hydrology`: calcula dirección D8, acumulación, drenajes, formas de curvatura y cuenca aguas arriba de una salida.
+- `POST /terrain/profile`: interpola elevación a lo largo de un transecto de hasta 1.000 muestras.
+
+La salida hidrológica incluye GeoJSON para representar cauces, valles y crestas. Una malla procedimental produce resultados procedimentales; para decisiones reales debe suministrarse un DEM medido y documentado.
 - `risk_components`
 - `location_risk_trends`
 - `territorial_units` (municipio, barrio, vereda)
