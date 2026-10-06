@@ -14,26 +14,9 @@
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="BACKSTAGE Intelligence" />
     <meta name="twitter:description" content="Plataforma de inteligencia territorial y geoanálisis para la toma de decisiones." />
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font-family: system-ui, -apple-system, sans-serif; background: #0f172e; color: #f0f4f9; }
-      #root { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-    </style>
   </head>
   <body>
-    <div id="root">
-      <div style="text-align: center; max-width: 600px; padding: 20px;">
-        <h1 style="font-size: 48px; margin-bottom: 20px;">✅ BACKSTAGE</h1>
-        <p style="font-size: 18px; color: #a8b5c8; margin-bottom: 30px;">Loading application...</p>
-      </div>
-    </div>
-    <script>
-      console.log('HTML loaded, waiting for React to initialize');
-      window.addEventListener('error', (e) => {
-        console.error('Global error:', e.error);
-        document.getElementById('root').innerHTML = '<div style="text-align: center; padding: 20px; color: #ff3b30;"><h1>ERROR</h1><p>' + e.error.toString() + '</p></div>';
-      });
-    </script>
+    <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
