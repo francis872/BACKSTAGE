@@ -102,15 +102,16 @@ const LegacyApp = () => {
   }, []);
 
   const navigateOperational = (page, context = null) => {
-    if (context?.analysis_run_id) {
+    if (context) {
       const nextContext = {
-        analysis_run_id: Number(context.analysis_run_id),
+        analysis_run_id: context.analysis_run_id ? Number(context.analysis_run_id) : null,
         project_name: context.project_name || null,
         city: context.city || null,
+        location_id: context.location_id ? Number(context.location_id) : null,
         organization_id: sessionUser?.organization_id || null,
       };
       setOperationalContext(nextContext);
-      setStoredOperationalContext(nextContext);
+      if (nextContext.analysis_run_id) setStoredOperationalContext(nextContext);
     }
     setActivePage(page);
   };
@@ -139,6 +140,7 @@ const LegacyApp = () => {
           analysis_run_id: Number(run.analysis_run_id),
           project_name: run.project_name || null,
           city: run.city || null,
+          location_id: operationalContext.location_id || null,
           organization_id: Number(sessionUser.organization_id),
         };
         setOperationalContext(validatedContext);
