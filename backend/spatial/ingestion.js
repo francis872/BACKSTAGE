@@ -39,17 +39,21 @@ class SpatialIngestionPipeline {
   async registerSource(input) {
     const source = validateSource(input);
     const id = source.id || `${source.organizationId}:${source.provider}:${source.dataset}:${source.version}`;
-    const document = { ...source, _id: id, ingestedAt: new Date() };
+    const document = { ...source, _id: id, status: source.status || 'active', ingestedAt: new Date() };
     return this.store.upsert(COLLECTIONS.sources, document);
   }
 
-  async ingestGeoJSON({ organizationId, worldId, sourceId, collection, zoom = 12 }) {
+  async ingestGeoJSON({ organizationId, worldId, sourceId, collection, minZoom = 8, maxZoom = 12 }) {
     const source = await this.store.get(COLLECTIONS.sources, sourceId);
     if (!source || String(source.organizationId) !== String(organizationId)) throw new Error('Fuente no encontrada para la organización activa.');
     const geojson = validateFeatureCollection(collection);
+    if (![minZoom, maxZoom].every(Number.isInteger) || minZoom < 0 || maxZoom > 22 || minZoom > maxZoom) {
+      throw new TypeError('minZoom y maxZoom deben definir un rango entero entre 0 y 22.');
+    }
+    if (maxZoom - minZoom > 6) throw new RangeError('Una ingestión admite máximo siete niveles de zoom.');
     const jobId = crypto.randomUUID();
     const job = {
-      _id: jobId, organizationId, worldId, sourceId, format: 'GeoJSON', zoom,
+      _id: jobId, organizationId, worldId, sourceId, format: 'GeoJSON', minZoom, maxZoom,
       status: 'processing', featureCount: geojson.features.length, createdAt: new Date(),
     };
     await this.store.upsert(COLLECTIONS.jobs, job);
@@ -59,13 +63,17 @@ class SpatialIngestionPipeline {
         const feature = geojson.features[index];
         const digest = crypto.createHash('sha256').update(JSON.stringify(feature.geometry)).digest('hex').slice(0, 20);
         const id = String(feature.id || `${sourceId}:${digest}:${index}`);
-        const objectTiles = tilesForGeometry(feature.geometry, zoom);
+        const objectTiles = [];
+        for (let zoom = minZoom; zoom <= maxZoom; zoom += 1) {
+          objectTiles.push(...tilesForGeometry(feature.geometry, zoom));
+          if (objectTiles.length > 4096) throw new RangeError('Una geometría supera 4096 asignaciones multizoom.');
+        }
         objectTiles.forEach((tileId) => tileIds.add(tileId));
         await this.store.upsert(COLLECTIONS.objects, validateSpatialObject({
           id, worldId, organizationId, sourceId, cellId: objectTiles[0], tileIds: objectTiles,
           objectType: feature.properties?.objectType || feature.geometry.type,
           geometry: feature.geometry, properties: feature.properties || {}, bounds: geometryBounds(feature.geometry),
-          version: 1, confidence: source.confidence,
+          version: 1, confidence: source.confidence, status: 'active',
         }));
       }
       for (const tileId of tileIds) {
@@ -86,7 +94,8 @@ class SpatialIngestionPipeline {
     const id = `${z}/${x}/${y}`;
     const bounds = tileBounds(z, x, y);
     const objects = await this.store.list(COLLECTIONS.objects, { worldId, organizationId }, { limit: 5000 });
-    const features = objects.filter((object) => object.tileIds?.includes(id) && boundsIntersect(object.bounds, bounds))
+    const features = objects.filter((object) => object.status !== 'archived'
+      && object.tileIds?.includes(id) && boundsIntersect(object.bounds, bounds))
       .map((object) => ({
         type: 'Feature', id: object.id, geometry: object.geometry,
         properties: { ...object.properties, sourceId: object.sourceId, confidence: object.confidence },
@@ -100,6 +109,15 @@ class SpatialIngestionPipeline {
 
   listJobs(organizationId) {
     return this.store.list(COLLECTIONS.jobs, { organizationId });
+  }
+
+  async setSourceStatus({ organizationId, sourceId, status }) {
+    if (!['active', 'archived'].includes(status)) throw new TypeError('status debe ser active o archived.');
+    const source = await this.store.get(COLLECTIONS.sources, sourceId);
+    if (!source || String(source.organizationId) !== String(organizationId)) throw new Error('Fuente no encontrada para la organización activa.');
+    const updated = await this.store.upsert(COLLECTIONS.sources, { ...source, status, updatedAt: new Date() });
+    const result = await this.store.updateMany(COLLECTIONS.objects, { organizationId, sourceId }, { status, updatedAt: new Date() });
+    return { ...updated, affectedObjects: result.modifiedCount };
   }
 }
 
