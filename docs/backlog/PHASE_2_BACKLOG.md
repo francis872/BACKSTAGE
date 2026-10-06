@@ -111,7 +111,7 @@ adapters en `backend/infrastructure/external-apis/` (patrón ya usado por
 
 ## Épica 6 — Rediseño de Evaluaciones y Recomendaciones como dashboards
 
-**Estado: `done` (Recomendaciones), `partial` (Evaluaciones)**
+**Estado: `done` (Recomendaciones y Evaluaciones)**
 
 **Recomendaciones** se convirtió en un dashboard decisional real:
 - KPIs (total, pendientes de revisión, aprobadas, en progreso, completadas, rechazadas).
@@ -129,13 +129,13 @@ adapters en `backend/infrastructure/external-apis/` (patrón ya usado por
 - Verificado end-to-end en navegador: generación desde análisis, aprobación con
   justificación, transición de estado y actualización de KPIs.
 
-**Evaluaciones de Riesgo** recibió una mejora acotada, no la reconstrucción completa:
-- KPIs (total, riesgo promedio, conteo por banda alto/medio/bajo) y filtro por severidad,
-  calculados de los 4 indicadores ya almacenados.
-- Conserva el patrón tarjeta + formulario CRUD; **no** se construyó el flujo guiado de
-  creación desde activo/proyecto/mapa, ni el detalle navegable con historial completo, ni
-  el mapa de evaluaciones que pide el documento. Esto queda pendiente como trabajo futuro
-  de UI, no como una limitación oculta.
+**Evaluaciones de Riesgo** opera como dashboard trazable:
+- KPIs por cuatro bandas, búsqueda y filtro por severidad.
+- Creación guiada desde ubicación y contexto de proyecto, con entradas normalizadas,
+  origen del dato, confianza y evidencia textual.
+- Puntaje derivado y versionado en backend, sin aceptar un total manual inconsistente.
+- Detalle navegable, historial por ubicación y salto al punto evaluado en el Explorador Territorial.
+- Revisión y cobertura de riesgos dentro del flujo del proyecto operativo.
 
 ## Épica 7 — Dashboards, no formularios (Riesgos, Oportunidades)
 
@@ -156,5 +156,5 @@ el patrón tarjeta + formulario CRUD sin KPIs, mapa ni filtros. No se tocaron en
 | Ningún modelo de ML presentado como entrenado sin dataset/evaluación | Correcto — no se entrenó ninguno (Épica 3 bloqueada explícitamente) |
 | Motor territorial y mapas BI | Parcial: núcleo nativo operativo; fuentes externas pendientes (Épicas 4 y 5) |
 | Recomendaciones como dashboard decisional completo | Sí (Épica 6) |
-| Evaluaciones como dashboard completo (mapa, flujo guiado, historial) | Parcial — solo KPIs y filtro (Épica 6) |
+| Evaluaciones como dashboard completo (mapa, flujo guiado, historial) | Sí (Épica 6) |
 | Riesgos y Oportunidades como dashboards | Pendiente (Épica 7) |
