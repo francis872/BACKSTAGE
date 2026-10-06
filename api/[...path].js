@@ -4,5 +4,10 @@
  */
 const app = require('../backend/index');
 
-// Export Express app directly as Vercel function
-module.exports = app;
+/**
+ * Vercel Function Handler
+ * Wraps the Express app for Vercel's serverless environment
+ */
+module.exports = (req, res) => {
+  return app(req, res);
+};
