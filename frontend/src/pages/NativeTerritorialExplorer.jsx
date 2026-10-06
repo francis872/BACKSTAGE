@@ -3,6 +3,7 @@ import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { apiRequest } from '../lib/api';
 import SpatialDataImporter from '../components/SpatialDataImporter';
+import SpatialDatasetAdmin from '../components/SpatialDatasetAdmin';
 
 const EMPTY_COLLECTION = { type: 'FeatureCollection', features: [] };
 const INTERNAL_STYLE = {
@@ -161,6 +162,7 @@ function NativeTerritorialExplorer({ operationalContext }) {
   const [terrainMode, setTerrainMode] = useState('relief');
   const [dataZoom, setDataZoom] = useState(8);
   const [visibleFeatureCount, setVisibleFeatureCount] = useState(0);
+  const [catalogRevision, setCatalogRevision] = useState(0);
 
   useEffect(() => {
     apiRequest('/locations')
@@ -300,7 +302,11 @@ function NativeTerritorialExplorer({ operationalContext }) {
       <SpatialDataImporter
         dataZoom={dataZoom}
         onDataZoomChange={setDataZoom}
-        onImported={() => reloadTilesRef.current?.()}
+        onImported={() => { setCatalogRevision((value) => value + 1); reloadTilesRef.current?.(); }}
+      />
+      <SpatialDatasetAdmin
+        revision={catalogRevision}
+        onChanged={() => { setCatalogRevision((value) => value + 1); reloadTilesRef.current?.(); }}
       />
       {terrain && (
         <p className="auth-hint">Modelo procedimental · {terrain.statistics.minElevation.toFixed(0)}–{terrain.statistics.maxElevation.toFixed(0)} m · relieve {terrain.statistics.relief.toFixed(0)} m · malla {terrain.resolution}×{terrain.resolution}</p>
