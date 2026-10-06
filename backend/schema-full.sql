@@ -285,6 +285,7 @@ CREATE INDEX IF NOT EXISTS idx_property_valuations_location_date ON property_val
 -- 7) EarthArt territorial schema -------------------------------------------
 CREATE TABLE IF NOT EXISTS territorial_units (
   unit_id SERIAL PRIMARY KEY,
+  organization_id INTEGER NOT NULL,
   external_id TEXT UNIQUE,
   name TEXT NOT NULL,
   unit_type TEXT NOT NULL,
@@ -508,6 +509,12 @@ CREATE TABLE IF NOT EXISTS analysis_results (
 CREATE INDEX IF NOT EXISTS idx_analysis_results_run_rank ON analysis_results(analysis_run_id, rank_position);
 
 -- 9) Multi-organization hardening + audit logs ------------------------------
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'territorial_units_org_fk') THEN
+    ALTER TABLE territorial_units ADD CONSTRAINT territorial_units_org_fk FOREIGN KEY (organization_id) REFERENCES organizations(organization_id) ON DELETE CASCADE;
+  END IF;
+END $$;
+CREATE INDEX IF NOT EXISTS idx_territorial_units_org_id ON territorial_units(organization_id);
 ALTER TABLE locations ADD COLUMN IF NOT EXISTS organization_id INTEGER REFERENCES organizations(organization_id) ON DELETE SET NULL;
 CREATE INDEX IF NOT EXISTS idx_locations_org_id ON locations(organization_id);
 
