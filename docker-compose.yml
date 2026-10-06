@@ -29,6 +29,8 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgres://backstage:backstage@postgres:5432/backstage
+      JWT_SECRET: local-development-secret-change-before-production
+      CORS_ORIGIN: http://localhost:3000
       NODE_ENV: development
     ports:
       - '4000:4000'
