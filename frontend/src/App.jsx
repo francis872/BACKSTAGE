@@ -176,7 +176,7 @@ const LegacyApp = () => {
       case 'intelligence-evaluations':
         return <RiskAssessments operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'intelligence-risks':
-        return <RiskComponents />;
+        return <RiskComponents operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'intelligence-opportunities':
         return <GeoInsights />;
       case 'intelligence-recommendations':
