@@ -1,12 +1,8 @@
+/**
+ * Vercel Serverless Catch-All Handler
+ * Routes all /api/* requests to the Express backend
+ */
 const app = require('../backend/index');
 
-module.exports = (req, res) => {
-  // Handle preflight
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-  
-  // Delegate to Express app
-  app(req, res);
-};
+// Export Express app directly as Vercel function
+module.exports = app;
