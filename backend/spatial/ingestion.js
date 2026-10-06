@@ -2,6 +2,7 @@ const crypto = require('node:crypto');
 const { COLLECTIONS, validateSpatialObject } = require('./store');
 const { geometryBounds, tilesForGeometry, tileBounds, boundsIntersect } = require('./tiles');
 const { simplifyGeometry, toleranceForZoom } = require('./simplify');
+const { haversineDistance } = require('./core');
 
 const SUPPORTED_GEOMETRIES = new Set(['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon']);
 
@@ -119,6 +120,35 @@ class SpatialIngestionPipeline {
     const updated = await this.store.upsert(COLLECTIONS.sources, { ...source, status, updatedAt: new Date() });
     const result = await this.store.updateMany(COLLECTIONS.objects, { organizationId, sourceId }, { status, updatedAt: new Date() });
     return { ...updated, affectedObjects: result.modifiedCount };
+  }
+
+  async search({ organizationId, worldId, query, limit = 20 }) {
+    const term = String(query || '').trim().toLowerCase();
+    if (term.length < 2) throw new TypeError('La búsqueda requiere al menos dos caracteres.');
+    const objects = await this.store.list(COLLECTIONS.objects, { organizationId, worldId }, { limit: 5000 });
+    return objects.filter((object) => object.status !== 'archived'
+      && Object.values(object.properties || {}).some((value) => String(value).toLowerCase().includes(term)))
+      .slice(0, Math.min(Number(limit) || 20, 100))
+      .map((object) => ({ id: object.id, objectType: object.objectType, properties: object.properties, geometry: object.geometry, bounds: object.bounds, sourceId: object.sourceId }));
+  }
+
+  async nearby({ organizationId, worldId, lng, lat, radiusM = 1000, limit = 20 }) {
+    const point = { lng: Number(lng), lat: Number(lat) };
+    if (!Number.isFinite(point.lng) || !Number.isFinite(point.lat)) throw new TypeError('lng y lat son obligatorios.');
+    const objects = await this.store.list(COLLECTIONS.objects, { organizationId, worldId }, { limit: 5000 });
+    return objects.filter((object) => object.status !== 'archived').map((object) => {
+      const center = object.geometry.type === 'Point' ? object.geometry.coordinates : [(object.bounds[0] + object.bounds[2]) / 2, (object.bounds[1] + object.bounds[3]) / 2];
+      return { object, distanceM: haversineDistance(point, { lng: center[0], lat: center[1] }) };
+    }).filter((item) => item.distanceM <= radiusM).sort((a, b) => a.distanceM - b.distanceM)
+      .slice(0, Math.min(Number(limit) || 20, 100)).map(({ object, distanceM }) => ({
+        id: object.id, objectType: object.objectType, properties: object.properties, geometry: object.geometry, bounds: object.bounds, distanceM, sourceId: object.sourceId,
+      }));
+  }
+
+  async roadFeatures({ organizationId, worldId }) {
+    const objects = await this.store.list(COLLECTIONS.objects, { organizationId, worldId }, { limit: 5000 });
+    return { type: 'FeatureCollection', features: objects.filter((object) => object.status !== 'archived' && ['LineString', 'MultiLineString'].includes(object.geometry.type))
+      .map((object) => ({ type: 'Feature', id: object.id, geometry: object.geometry, properties: object.properties || {} })) };
   }
 }
 
