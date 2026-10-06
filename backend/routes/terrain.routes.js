@@ -8,5 +8,7 @@ const router = express.Router();
 router.use(authenticate, requireOrganizationContext, authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER));
 router.get('/surface', controller.getSurface);
 router.post('/analyze', controller.analyze);
+router.post('/hydrology', controller.hydrology);
+router.post('/profile', controller.profile);
 
 module.exports = router;
