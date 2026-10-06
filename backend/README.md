@@ -66,6 +66,13 @@ El esquema incluye:
 - `competition_analysis`
 - `site_suitability_scores`
 - `spatial_profiles`
+
+## Motor de terreno nativo
+
+- `GET /terrain/surface?bbox=minLng,minLat,maxLng,maxLat&resolution=33&contourInterval=25&lod=0`: superficie procedimental reproducible para visualización y pruebas.
+- `POST /terrain/analyze`: analiza una malla numérica y devuelve elevación, pendiente, orientación, curvatura y curvas conectadas.
+
+Las superficies procedimentales se marcan explícitamente con `dataMode: "procedural"`; no sustituyen una fuente de elevación medida en análisis reales.
 - `risk_components`
 - `location_risk_trends`
 - `territorial_units` (municipio, barrio, vereda)
