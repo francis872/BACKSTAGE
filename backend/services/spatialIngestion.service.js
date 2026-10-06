@@ -42,7 +42,8 @@ async function ingestGeoJSON(organizationId, payload) {
       worldId: scopedWorldId(organizationId, payload.worldId),
       sourceId: payload.sourceId,
       collection: payload.collection,
-      zoom: Number(payload.zoom ?? 12),
+      minZoom: Number(payload.minZoom ?? payload.zoom ?? 8),
+      maxZoom: Number(payload.maxZoom ?? payload.zoom ?? 12),
     });
   } catch (error) { return translate(error); }
 }
@@ -68,4 +69,19 @@ async function listJobs(organizationId) {
   return pipeline.listJobs(organizationId);
 }
 
-module.exports = { getPipeline, scopedWorldId, registerSource, ingestGeoJSON, getTile, listSources, listJobs };
+async function setSourceStatus(organizationId, sourceId, status) {
+  try {
+    const pipeline = await getPipeline();
+    return pipeline.setSourceStatus({ organizationId, sourceId, status });
+  } catch (error) { return translate(error); }
+}
+
+function getStatus() {
+  return {
+    provider: String(process.env.SPATIAL_STORE || 'memory').toLowerCase(),
+    persistent: String(process.env.SPATIAL_STORE || 'memory').toLowerCase() === 'atlas',
+    atlasConfigured: Boolean(process.env.MONGODB_URI),
+  };
+}
+
+module.exports = { getPipeline, scopedWorldId, registerSource, ingestGeoJSON, getTile, listSources, listJobs, setSourceStatus, getStatus };
