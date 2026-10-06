@@ -73,6 +73,15 @@ El esquema incluye:
 - `POST /terrain/analyze`: analiza una malla numérica y devuelve elevación, pendiente, orientación, curvatura y curvas conectadas.
 
 Las superficies procedimentales se marcan explícitamente con `dataMode: "procedural"`; no sustituyen una fuente de elevación medida en análisis reales.
+
+## Ingestión y teselas territoriales
+
+- `POST /spatial/sources`: registra una fuente; `provider`, `dataset`, `version` y `license` son obligatorios.
+- `POST /spatial/ingest/geojson`: valida WGS84, geometrías admitidas y límites de carga; genera objetos y celdas XYZ.
+- `GET /spatial/tiles/:z/:x/:y?worldId=earth`: devuelve un `FeatureCollection` con metadatos de la tesela.
+- `GET /spatial/jobs`: permite auditar cargas completadas o fallidas.
+
+Las rutas de escritura requieren rol `admin` o `analyst`; la lectura de fuentes y teselas también admite `viewer`. Cada mundo y dataset queda aislado por organización.
 - `risk_components`
 - `location_risk_trends`
 - `territorial_units` (municipio, barrio, vereda)
