@@ -6,6 +6,7 @@ import SpatialDataImporter from '../components/SpatialDataImporter';
 import SpatialDatasetAdmin from '../components/SpatialDatasetAdmin';
 import SpatialSearch from '../components/SpatialSearch';
 import TerritorialRiskAnalyzer from '../components/TerritorialRiskAnalyzer';
+import TerrainHydrologyAnalyzer from '../components/TerrainHydrologyAnalyzer';
 
 const EMPTY_COLLECTION = { type: 'FeatureCollection', features: [] };
 const INTERNAL_STYLE = {
@@ -101,6 +102,8 @@ function addBackstageLayers(map) {
   map.addSource('backstage-locations', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addSource('backstage-imported', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addSource('backstage-route', { type: 'geojson', data: EMPTY_COLLECTION });
+  map.addSource('backstage-landforms', { type: 'geojson', data: EMPTY_COLLECTION });
+  map.addSource('backstage-drainage', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addLayer({
     id: 'backstage-terrain-fill', type: 'fill', source: 'backstage-terrain',
     paint: {
@@ -142,6 +145,19 @@ function addBackstageLayers(map) {
   map.addLayer({
     id: 'backstage-route-line', type: 'line', source: 'backstage-route',
     paint: { 'line-color': '#ff5d8f', 'line-width': 5, 'line-opacity': 0.95 },
+  });
+  map.addLayer({
+    id: 'backstage-drainage-lines', type: 'line', source: 'backstage-drainage',
+    paint: { 'line-color': '#35b9ff', 'line-width': ['interpolate', ['linear'], ['get', 'accumulation'], 1, 1, 100, 5], 'line-opacity': 0.85 },
+  });
+  map.addLayer({
+    id: 'backstage-landform-points', type: 'circle', source: 'backstage-landforms',
+    filter: ['!=', ['get', 'landform'], 'slope'],
+    paint: {
+      'circle-radius': 3,
+      'circle-color': ['case', ['==', ['get', 'landform'], 'valley'], '#35b9ff', '#ffb347'],
+      'circle-opacity': 0.75,
+    },
   });
   map.addLayer({
     id: 'backstage-location-halo', type: 'circle', source: 'backstage-locations',
@@ -322,6 +338,13 @@ function NativeTerritorialExplorer({ operationalContext }) {
         }}
       />
       <TerritorialRiskAnalyzer center={mapCenter} />
+      <TerrainHydrologyAnalyzer
+        terrain={terrain}
+        onHydrology={(result) => {
+          mapRef.current?.getSource('backstage-landforms')?.setData(result.features);
+          mapRef.current?.getSource('backstage-drainage')?.setData(result.drainage);
+        }}
+      />
       <SpatialDataImporter
         dataZoom={dataZoom}
         onDataZoomChange={setDataZoom}
