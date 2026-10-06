@@ -43,14 +43,21 @@ test('ingiere GeoJSON con procedencia y lo sirve por tesela', async () => {
     license: 'Datos abiertos', dataMode: 'measured', confidence: 0.9,
   });
   const job = await pipeline.ingestGeoJSON({
-    organizationId: 7, worldId: '7:earth', sourceId: source._id, collection: pointCollection, zoom: 12,
+    organizationId: 7, worldId: '7:earth', sourceId: source._id, collection: pointCollection, minZoom: 10, maxZoom: 12,
   });
   assert.equal(job.status, 'completed');
   assert.equal(job.featureCount, 1);
-  assert.equal(job.tileCount, 1);
+  assert.equal(job.tileCount, 3);
   const tile = await pipeline.getTile({ organizationId: 7, worldId: '7:earth', z: 12, x: 1175, y: 1983 });
   assert.equal(tile.features.length, 1);
   assert.equal(tile.features[0].properties.sourceId, source._id);
+  const lowerTile = lonLatToTile(-76.658, 5.694, 10);
+  const lower = await pipeline.getTile({ organizationId: 7, worldId: '7:earth', ...lowerTile });
+  assert.equal(lower.features.length, 1);
+  const archived = await pipeline.setSourceStatus({ organizationId: 7, sourceId: source._id, status: 'archived' });
+  assert.equal(archived.affectedObjects, 1);
+  const hidden = await pipeline.getTile({ organizationId: 7, worldId: '7:earth', z: 12, x: 1175, y: 1983 });
+  assert.equal(hidden.features.length, 0);
 });
 
 test('aísla las fuentes por organización', async () => {
@@ -59,6 +66,6 @@ test('aísla las fuentes por organización', async () => {
     organizationId: 1, provider: 'Entidad', dataset: 'vías', version: '1', license: 'ODC',
   });
   await assert.rejects(() => pipeline.ingestGeoJSON({
-    organizationId: 2, worldId: '2:earth', sourceId: source._id, collection: pointCollection, zoom: 12,
+    organizationId: 2, worldId: '2:earth', sourceId: source._id, collection: pointCollection, minZoom: 12, maxZoom: 12,
   }), /organización activa/);
 });
