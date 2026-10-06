@@ -119,6 +119,13 @@ Las propiedades `speedKph`, `maxspeed`, `cost` y `oneway` permiten controlar el 
 - El ranking `arithmetic-mean-market-factors-v1` promedia únicamente factores válidos en escala 0–100; no rellena información faltante.
 - `POST /insights/opportunities/:locationId/projects`: convierte una oportunidad autorizada en proyecto operativo y agrega la ubicación como primer candidato.
 
+## EarthArt organizacional
+
+- Todas las rutas `/territorial` exigen autenticación, rol y organización activa.
+- `territorial_units.organization_id` delimita unidades y, mediante sus relaciones, instalaciones, dimensiones, índices, brechas y simulaciones.
+- `GET /territorial/units/:id/simulations` expone el historial de escenarios de la unidad autorizada.
+- `POST /territorial/units/:id/gaps/:gapId/projects` convierte una brecha de la organización en proyecto operativo.
+
 ## Medición geométrica
 
 - `POST /spatial/measure`: recibe `{ "geometry": GeoJSON }` para medir `Point`, `LineString` o `Polygon` mediante Haversine y área esférica.
