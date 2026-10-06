@@ -1,14 +1,119 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import * as maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import { apiRequest } from '../lib/api';
 
-const WORLD = { minLng: -180, maxLng: 180, minLat: -85, maxLat: 85 };
+const EMPTY_COLLECTION = { type: 'FeatureCollection', features: [] };
+const INTERNAL_STYLE = {
+  version: 8,
+  name: 'BACKSTAGE Internal Spatial Style',
+  sources: {},
+  layers: [{ id: 'backstage-background', type: 'background', paint: { 'background-color': '#06100e' } }],
+};
+
+function locationsToGeoJSON(locations) {
+  return {
+    type: 'FeatureCollection',
+    features: locations.map((location) => ({
+      type: 'Feature',
+      id: location.location_id,
+      geometry: { type: 'Point', coordinates: [Number(location.longitude), Number(location.latitude)] },
+      properties: {
+        location_id: location.location_id,
+        name: location.name,
+        city: location.city || '',
+        locationType: location.type || '',
+      },
+    })),
+  };
+}
+
+function terrainToGeoJSON(terrain, metric = 'relief') {
+  if (!terrain?.elevation?.length) return EMPTY_COLLECTION;
+  const [minLng, minLat, maxLng, maxLat] = terrain.bbox;
+  const rows = terrain.elevation.length;
+  const columns = terrain.elevation[0].length;
+  const min = terrain.statistics.minElevation;
+  const elevationRange = Math.max(1, terrain.statistics.maxElevation - min);
+  const features = [];
+  for (let row = 0; row < rows - 1; row += 1) {
+    for (let col = 0; col < columns - 1; col += 1) {
+      const x0 = minLng + col * (maxLng - minLng) / (columns - 1);
+      const x1 = minLng + (col + 1) * (maxLng - minLng) / (columns - 1);
+      const y0 = minLat + row * (maxLat - minLat) / (rows - 1);
+      const y1 = minLat + (row + 1) * (maxLat - minLat) / (rows - 1);
+      const elevation = terrain.elevation[row][col];
+      const normalized = metric === 'slope'
+        ? Math.min(1, terrain.slope[row][col] / 45)
+        : (elevation - min) / elevationRange;
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Polygon', coordinates: [[[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0]]] },
+        properties: { value: normalized, elevation, extrusion: Math.max(0, elevation - min) },
+      });
+    }
+  }
+  return { type: 'FeatureCollection', features };
+}
+
+function contoursToGeoJSON(terrain) {
+  return {
+    type: 'FeatureCollection',
+    features: (terrain?.contours || []).flatMap((contour) => contour.lines
+      .filter((line) => line.length > 1)
+      .map((line) => ({
+        type: 'Feature',
+        geometry: { type: 'LineString', coordinates: line },
+        properties: { elevation: contour.elevation, major: contour.major ? 1 : 0 },
+      }))),
+  };
+}
+
+function addBackstageLayers(map) {
+  map.addSource('backstage-terrain', { type: 'geojson', data: EMPTY_COLLECTION });
+  map.addSource('backstage-contours', { type: 'geojson', data: EMPTY_COLLECTION });
+  map.addSource('backstage-locations', { type: 'geojson', data: EMPTY_COLLECTION });
+  map.addLayer({
+    id: 'backstage-terrain-fill', type: 'fill', source: 'backstage-terrain',
+    paint: {
+      'fill-color': ['interpolate', ['linear'], ['get', 'value'], 0, '#08251f', 0.35, '#17634f', 0.7, '#b48c42', 1, '#eef5ed'],
+      'fill-opacity': 0.82,
+    },
+  });
+  map.addLayer({
+    id: 'backstage-terrain-3d', type: 'fill-extrusion', source: 'backstage-terrain', layout: { visibility: 'none' },
+    paint: {
+      'fill-extrusion-color': ['interpolate', ['linear'], ['get', 'value'], 0, '#08251f', 0.5, '#43866c', 1, '#e7dac0'],
+      'fill-extrusion-height': ['*', ['get', 'extrusion'], 2],
+      'fill-extrusion-opacity': 0.86,
+    },
+  });
+  map.addLayer({
+    id: 'backstage-contour-lines', type: 'line', source: 'backstage-contours',
+    paint: {
+      'line-color': ['case', ['==', ['get', 'major'], 1], '#ecfff8', '#77cfae'],
+      'line-width': ['case', ['==', ['get', 'major'], 1], 1.8, 0.8],
+      'line-opacity': 0.78,
+    },
+  });
+  map.addLayer({
+    id: 'backstage-location-halo', type: 'circle', source: 'backstage-locations',
+    paint: { 'circle-radius': 10, 'circle-color': '#39f5ae', 'circle-opacity': 0.16 },
+  });
+  map.addLayer({
+    id: 'backstage-location-points', type: 'circle', source: 'backstage-locations',
+    paint: { 'circle-radius': 5.5, 'circle-color': '#39f5ae', 'circle-stroke-color': '#eafff7', 'circle-stroke-width': 1.5 },
+  });
+}
 
 function NativeTerritorialExplorer({ operationalContext }) {
-  const canvasRef = useRef(null);
-  const dragRef = useRef(null);
+  const containerRef = useRef(null);
+  const mapRef = useRef(null);
+  const terrainRef = useRef(null);
+  const locationsRef = useRef([]);
+  const terrainModeRef = useRef('relief');
+  const requestRef = useRef(0);
   const [locations, setLocations] = useState([]);
-  const [center, setCenter] = useState({ lng: -74.07, lat: 4.71 });
-  const [zoom, setZoom] = useState(4);
   const [selected, setSelected] = useState(null);
   const [message, setMessage] = useState('');
   const [terrain, setTerrain] = useState(null);
@@ -19,201 +124,110 @@ function NativeTerritorialExplorer({ operationalContext }) {
       .then((response) => response.json().then((data) => ({ ok: response.ok, data })))
       .then(({ ok, data }) => {
         if (!ok) throw new Error(data.error || 'No fue posible cargar ubicaciones.');
-        setLocations((Array.isArray(data) ? data : []).filter((row) => row.latitude != null && row.longitude != null));
+        const nextLocations = (Array.isArray(data) ? data : []).filter((row) => row.latitude != null && row.longitude != null);
+        locationsRef.current = nextLocations;
+        setLocations(nextLocations);
       })
       .catch((error) => setMessage(error.message));
   }, []);
 
   useEffect(() => {
+    if (!containerRef.current || mapRef.current) return undefined;
+    const map = new maplibregl.Map({
+      container: containerRef.current,
+      style: INTERNAL_STYLE,
+      center: [-74.07, 4.71],
+      zoom: 8,
+      pitch: 35,
+      bearing: 0,
+      attributionControl: false,
+      canvasContextAttributes: { antialias: true },
+    });
+    mapRef.current = map;
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-left');
+    map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-left');
+
+    const loadTerrain = async () => {
+      const bounds = map.getBounds();
+      const bbox = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
+      const requestId = requestRef.current + 1;
+      requestRef.current = requestId;
+      try {
+        const response = await apiRequest(`/terrain/surface?bbox=${bbox.join(',')}&resolution=33&contourInterval=25&lod=${map.getZoom() < 5 ? 1 : 0}`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'No fue posible generar el terreno.');
+        if (requestId !== requestRef.current) return;
+        terrainRef.current = data;
+        setTerrain(data);
+        map.getSource('backstage-terrain')?.setData(terrainToGeoJSON(data, terrainModeRef.current));
+        map.getSource('backstage-contours')?.setData(contoursToGeoJSON(data));
+      } catch (error) {
+        setMessage(error.message);
+      }
+    };
+
+    map.on('load', () => {
+      addBackstageLayers(map);
+      map.getSource('backstage-locations').setData(locationsToGeoJSON(locationsRef.current));
+      loadTerrain();
+    });
+    map.on('moveend', loadTerrain);
+    map.on('click', 'backstage-location-points', (event) => {
+      const properties = event.features?.[0]?.properties;
+      if (properties) setSelected(properties);
+    });
+    map.on('mouseenter', 'backstage-location-points', () => { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseleave', 'backstage-location-points', () => { map.getCanvas().style.cursor = ''; });
+    return () => { map.remove(); mapRef.current = null; };
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    terrainModeRef.current = terrainMode;
+    if (!map?.isStyleLoaded()) return;
+    map.getSource('backstage-locations')?.setData(locationsToGeoJSON(locations));
     if (operationalContext?.city && locations.length) {
       const match = locations.find((row) => row.city === operationalContext.city);
-      if (match) setCenter({ lng: Number(match.longitude), lat: Number(match.latitude) });
+      if (match) map.flyTo({ center: [Number(match.longitude), Number(match.latitude)], zoom: 12, duration: 900 });
     }
-  }, [operationalContext?.city, locations]);
-
-  const view = useMemo(() => {
-    const degreesPerPixel = 360 / (256 * (2 ** zoom));
-    return { degreesPerPixel };
-  }, [zoom]);
+  }, [locations, operationalContext?.city]);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const halfWidth = view.degreesPerPixel * 520;
-      const halfHeight = view.degreesPerPixel * 330;
-      const bbox = [center.lng - halfWidth, center.lat - halfHeight, center.lng + halfWidth, center.lat + halfHeight];
-      const lod = zoom < 5 ? 1 : 0;
-      apiRequest(`/terrain/surface?bbox=${bbox.join(',')}&resolution=33&contourInterval=25&lod=${lod}`)
-        .then((response) => response.json().then((data) => ({ ok: response.ok, data })))
-        .then(({ ok, data }) => {
-          if (!ok) throw new Error(data.error || 'No fue posible generar el terreno.');
-          setTerrain(data);
-        })
-        .catch((error) => setMessage(error.message));
-    }, 250);
-    return () => window.clearTimeout(timer);
-  }, [center, view.degreesPerPixel, zoom]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return undefined;
-    const context = canvas.getContext('2d');
-    const ratio = window.devicePixelRatio || 1;
-
-    const draw = () => {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = Math.max(1, Math.round(rect.width * ratio));
-      canvas.height = Math.max(1, Math.round(rect.height * ratio));
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      const width = rect.width;
-      const height = rect.height;
-      context.fillStyle = '#07110f';
-      context.fillRect(0, 0, width, height);
-
-      const project = (lng, lat) => ({
-        x: width / 2 + (lng - center.lng) / view.degreesPerPixel,
-        y: height / 2 - (lat - center.lat) / view.degreesPerPixel,
-      });
-
-      if (terrain?.elevation?.length && terrainMode !== 'contours') {
-        const [minLng, minLat, maxLng, maxLat] = terrain.bbox;
-        const rows = terrain.elevation.length;
-        const columns = terrain.elevation[0].length;
-        const min = terrain.statistics.minElevation;
-        const range = Math.max(1, terrain.statistics.maxElevation - min);
-        for (let row = 0; row < rows - 1; row += 1) {
-          for (let col = 0; col < columns - 1; col += 1) {
-            const value = terrainMode === 'slope'
-              ? Math.min(1, terrain.slope[row][col] / 45)
-              : (terrain.elevation[row][col] - min) / range;
-            const hue = terrainMode === 'slope' ? 140 - value * 140 : 175 - value * 120;
-            const p0 = project(minLng + col * (maxLng - minLng) / (columns - 1), minLat + row * (maxLat - minLat) / (rows - 1));
-            const p1 = project(minLng + (col + 1) * (maxLng - minLng) / (columns - 1), minLat + (row + 1) * (maxLat - minLat) / (rows - 1));
-            context.fillStyle = `hsla(${hue}, 58%, ${18 + value * 30}%, 0.72)`;
-            context.fillRect(p0.x, p1.y, Math.max(1, p1.x - p0.x + 1), Math.max(1, p0.y - p1.y + 1));
-          }
-        }
-      }
-
-      terrain?.contours?.forEach((contour) => {
-        context.strokeStyle = contour.major ? 'rgba(230,255,245,0.72)' : 'rgba(125,220,188,0.35)';
-        context.lineWidth = contour.major ? 1.5 : 0.75;
-        contour.lines.forEach((line) => {
-          context.beginPath();
-          line.forEach(([lng, lat], index) => {
-            const point = project(lng, lat);
-            if (index === 0) context.moveTo(point.x, point.y);
-            else context.lineTo(point.x, point.y);
-          });
-          context.stroke();
-        });
-      });
-
-      context.strokeStyle = 'rgba(92, 255, 194, 0.12)';
-      context.lineWidth = 1;
-      const grid = Math.max(0.01, 10 ** Math.floor(Math.log10(view.degreesPerPixel * 120)));
-      for (let lng = Math.ceil((center.lng - width * view.degreesPerPixel / 2) / grid) * grid;
-        lng <= center.lng + width * view.degreesPerPixel / 2; lng += grid) {
-        const x = project(lng, center.lat).x;
-        context.beginPath(); context.moveTo(x, 0); context.lineTo(x, height); context.stroke();
-      }
-      for (let lat = Math.ceil((center.lat - height * view.degreesPerPixel / 2) / grid) * grid;
-        lat <= center.lat + height * view.degreesPerPixel / 2; lat += grid) {
-        const y = project(center.lng, lat).y;
-        context.beginPath(); context.moveTo(0, y); context.lineTo(width, y); context.stroke();
-      }
-
-      locations.forEach((location) => {
-        const p = project(Number(location.longitude), Number(location.latitude));
-        if (p.x < -10 || p.x > width + 10 || p.y < -10 || p.y > height + 10) return;
-        const active = selected?.location_id === location.location_id;
-        context.beginPath();
-        context.arc(p.x, p.y, active ? 8 : 5, 0, Math.PI * 2);
-        context.fillStyle = active ? '#ffffff' : '#39f5ae';
-        context.fill();
-        context.strokeStyle = '#062d22';
-        context.stroke();
-      });
-
-      context.fillStyle = 'rgba(4, 18, 15, 0.88)';
-      context.fillRect(16, height - 42, 270, 26);
-      context.fillStyle = '#b8d8ce';
-      context.font = '12px system-ui';
-      context.fillText(`${center.lat.toFixed(5)}, ${center.lng.toFixed(5)} · nivel ${zoom}`, 26, height - 24);
-    };
-    draw();
-    const observer = new ResizeObserver(draw);
-    observer.observe(canvas);
-    return () => observer.disconnect();
-  }, [center, locations, selected, terrain, terrainMode, view, zoom]);
-
-  const pick = (event) => {
-    const rect = canvasRef.current.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const hits = locations.map((location) => ({
-      location,
-      x: rect.width / 2 + (Number(location.longitude) - center.lng) / view.degreesPerPixel,
-      y: rect.height / 2 - (Number(location.latitude) - center.lat) / view.degreesPerPixel,
-    })).filter((item) => Math.hypot(item.x - x, item.y - y) <= 12);
-    setSelected(hits[0]?.location || null);
-  };
-
-  const onPointerDown = (event) => {
-    dragRef.current = { x: event.clientX, y: event.clientY, center };
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const onPointerMove = (event) => {
-    if (!dragRef.current) return;
-    const dx = event.clientX - dragRef.current.x;
-    const dy = event.clientY - dragRef.current.y;
-    setCenter({
-      lng: Math.max(WORLD.minLng, Math.min(WORLD.maxLng, dragRef.current.center.lng - dx * view.degreesPerPixel)),
-      lat: Math.max(WORLD.minLat, Math.min(WORLD.maxLat, dragRef.current.center.lat + dy * view.degreesPerPixel)),
-    });
-  };
+    const map = mapRef.current;
+    if (!map?.isStyleLoaded() || !terrainRef.current) return;
+    map.getSource('backstage-terrain')?.setData(terrainToGeoJSON(terrainRef.current, terrainMode));
+    map.setLayoutProperty('backstage-terrain-fill', 'visibility', terrainMode === '3d' ? 'none' : 'visible');
+    map.setLayoutProperty('backstage-terrain-3d', 'visibility', terrainMode === '3d' ? 'visible' : 'none');
+    map.easeTo({ pitch: terrainMode === '3d' ? 62 : 35, duration: 500 });
+  }, [terrainMode]);
 
   return (
     <section>
       <div className="score-row">
         <div>
-          <p className="eyebrow">BACKSTAGE Native Spatial Engine</p>
-          <h2>Explorador territorial nativo</h2>
+          <p className="eyebrow">BACKSTAGE Engine + MapLibre WebGL</p>
+          <h2>Explorador territorial híbrido</h2>
         </div>
         <div className="form-actions">
-          <button type="button" className={terrainMode === 'relief' ? '' : 'secondary'} onClick={() => setTerrainMode('relief')}>Relieve</button>
-          <button type="button" className={terrainMode === 'slope' ? '' : 'secondary'} onClick={() => setTerrainMode('slope')}>Pendiente</button>
-          <button type="button" className={terrainMode === 'contours' ? '' : 'secondary'} onClick={() => setTerrainMode('contours')}>Curvas</button>
-          <button type="button" onClick={() => setZoom((value) => Math.min(20, value + 1))}>+</button>
-          <button type="button" className="secondary" onClick={() => setZoom((value) => Math.max(1, value - 1))}>−</button>
+          {['relief', 'slope', 'contours', '3d'].map((mode) => (
+            <button key={mode} type="button" className={terrainMode === mode ? '' : 'secondary'} onClick={() => setTerrainMode(mode)}>
+              {mode === 'relief' ? 'Relieve' : mode === 'slope' ? 'Pendiente' : mode === 'contours' ? 'Curvas' : 'Vista 3D'}
+            </button>
+          ))}
         </div>
       </div>
-      <p className="auth-hint">Renderizado Canvas propio, sin Leaflet, MapLibre ni proveedor cartográfico externo.</p>
+      <p className="auth-hint">MapLibre acelera la presentación WebGL; los datos, cálculos y estilos proceden exclusivamente del motor BACKSTAGE.</p>
       {terrain && (
-        <p className="auth-hint">
-          Modelo procedimental · {terrain.statistics.minElevation.toFixed(0)}–{terrain.statistics.maxElevation.toFixed(0)} m · relieve {terrain.statistics.relief.toFixed(0)} m · malla {terrain.resolution}×{terrain.resolution}
-        </p>
+        <p className="auth-hint">Modelo procedimental · {terrain.statistics.minElevation.toFixed(0)}–{terrain.statistics.maxElevation.toFixed(0)} m · relieve {terrain.statistics.relief.toFixed(0)} m · malla {terrain.resolution}×{terrain.resolution}</p>
       )}
       {message && <p className="message">{message}</p>}
       <div className="map-shell" style={{ position: 'relative' }}>
-        <canvas
-          ref={canvasRef}
-          aria-label="Mapa territorial nativo"
-          style={{ width: '100%', height: '620px', display: 'block', cursor: dragRef.current ? 'grabbing' : 'grab' }}
-          onClick={pick}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={() => { dragRef.current = null; }}
-          onWheel={(event) => {
-            event.preventDefault();
-            setZoom((value) => Math.max(1, Math.min(20, value + (event.deltaY < 0 ? 1 : -1))));
-          }}
-        />
+        <div ref={containerRef} aria-label="Mapa territorial WebGL" style={{ width: '100%', height: '620px' }} />
         {selected && (
-          <article className="card" style={{ position: 'absolute', top: 16, right: 16, width: 280 }}>
+          <article className="card" style={{ position: 'absolute', top: 16, right: 16, width: 280, zIndex: 2 }}>
+            <button type="button" className="secondary" style={{ float: 'right' }} onClick={() => setSelected(null)}>×</button>
             <h3>{selected.name}</h3>
-            <p>{selected.city || 'Sin municipio'} · {selected.type || 'Sin tipo'}</p>
-            <p>{Number(selected.latitude).toFixed(6)}, {Number(selected.longitude).toFixed(6)}</p>
+            <p>{selected.city || 'Sin municipio'} · {selected.locationType || 'Sin tipo'}</p>
           </article>
         )}
       </div>
