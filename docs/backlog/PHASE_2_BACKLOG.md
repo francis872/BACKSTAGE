@@ -86,20 +86,17 @@ necesita:
   caso (ficha por candidato, según el documento).
 - Autorización del propietario para conectar o adquirir esa fuente.
 
-## Épica 4 — Mapas BI y ecosistema QGIS/PostGIS
+## Épica 4 — Motor territorial y mapas BI
 
-**Estado: `pending`**
+**Estado: `partial` (motor nativo y operación implementados; integraciones externas aplazadas)**
 
-El Explorador Territorial ya tiene un mapa MapLibre real, capas desde
-PostGIS y filtros de capas (trabajo de la sesión anterior). No implementa
-todavía: coropletas/símbolos proporcionales/heatmaps interactivos ligados
-a KPIs, isolíneas/isócronas (requiere proveedor de rutas, ver Épica 5),
-publicación de estilos QGIS reproducibles hacia PostGIS/tiles, ni
-evaluación de GeoServer/pg_tileserv/Martin. No se inició por ser un
-proyecto de varias semanas en sí mismo; el mapa actual usa PostGIS
-directamente vía API propia, sin dependencia de QGIS en producción, lo
-cual ya cumple parcialmente el principio de "no depender de QGIS
-manualmente en producción".
+El Explorador Territorial usa MapLibre solo para presentación WebGL. BACKSTAGE
+calcula y sirve GeoJSON, teselas XYZ, simplificación, rutas, terreno, curvas de
+nivel, hidrología, mediciones y riesgo por celdas mediante su núcleo matemático,
+sin PostGIS, QGIS, GeoServer ni un proveedor satelital. El almacenamiento actual
+funciona en memoria; MongoDB Atlas permanece deliberadamente sin configurar
+hasta concluir la plataforma. Siguen pendientes las fuentes externas que
+requieran proveedor, presupuesto o licenciamiento (ver Épica 5).
 
 ## Épica 5 — Integraciones con APIs externas
 
@@ -157,8 +154,7 @@ el patrón tarjeta + formulario CRUD sin KPIs, mapa ni filtros. No se tocaron en
 | Trabajos largos asíncronos y recuperables | Parcial: mismo contrato de estados, ejecución síncrona (justificado) |
 | RBAC granular por permiso | No — sigue con 3 roles (bloqueado como Épica 2A) |
 | Ningún modelo de ML presentado como entrenado sin dataset/evaluación | Correcto — no se entrenó ninguno (Épica 3 bloqueada explícitamente) |
-| Mapas BI, QGIS/PostGIS pipeline, APIs externas | Pendiente (Épicas 4 y 5) |
+| Motor territorial y mapas BI | Parcial: núcleo nativo operativo; fuentes externas pendientes (Épicas 4 y 5) |
 | Recomendaciones como dashboard decisional completo | Sí (Épica 6) |
 | Evaluaciones como dashboard completo (mapa, flujo guiado, historial) | Parcial — solo KPIs y filtro (Épica 6) |
 | Riesgos y Oportunidades como dashboards | Pendiente (Épica 7) |
-
