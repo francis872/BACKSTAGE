@@ -113,6 +113,12 @@ Las propiedades `speedKph`, `maxspeed`, `cost` y `oneway` permiten controlar el 
 - Las altas y actualizaciones exigen los cuatro indicadores en `[0,1]`; el backend deriva `score` y guarda en `details` el modo del dato, confianza, notas y versión del cálculo.
 - `/risk-components` requiere autenticación y contexto organizacional para todas las operaciones. Los componentes admitidos son `threat`, `exposure` y `vulnerability`, con puntajes normalizados en `[0,1]` y evaluación padre validada dentro de la organización activa.
 
+## Oportunidades territoriales
+
+- `GET /insights/opportunities`: agrupa `location_market_scores` por ubicación dentro de la organización activa y devuelve ranking, factores, método y riesgo reciente separado.
+- El ranking `arithmetic-mean-market-factors-v1` promedia únicamente factores válidos en escala 0–100; no rellena información faltante.
+- `POST /insights/opportunities/:locationId/projects`: convierte una oportunidad autorizada en proyecto operativo y agrega la ubicación como primer candidato.
+
 ## Medición geométrica
 
 - `POST /spatial/measure`: recibe `{ "geometry": GeoJSON }` para medir `Point`, `LineString` o `Polygon` mediante Haversine y área esférica.
