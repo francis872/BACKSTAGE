@@ -190,13 +190,13 @@ FROM locations l
 WHERE l.external_id = 'retail-001';
 
 INSERT INTO risk_components (risk_id, component_type, component_score, notes)
-SELECT r.risk_id, 'Flood', 0.12, 'Riesgo de inundación calculado con datos de cuencas'
+SELECT r.risk_id, 'threat', 0.12, 'Amenaza de inundación calculada con datos de cuencas'
 FROM risk_assessments r
 JOIN locations l ON l.location_id = r.location_id
 WHERE l.external_id = 'retail-anchor-001';
 
 INSERT INTO risk_components (risk_id, component_type, component_score, notes)
-SELECT r.risk_id, 'Crime', 0.15, 'Índice de criminalidad local'
+SELECT r.risk_id, 'threat', 0.15, 'Amenaza asociada al índice de criminalidad local'
 FROM risk_assessments r
 JOIN locations l ON l.location_id = r.location_id
 WHERE l.external_id = 'retail-anchor-001';
