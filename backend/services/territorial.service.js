@@ -20,9 +20,9 @@ async function createUnit(data) {
   }
   const result = await query(
     `INSERT INTO territorial_units
-       (external_id, name, unit_type, parent_unit_id, city, region, country, population, population_growth_pct, area_km2, latitude, longitude, geom)
+       (external_id, name, unit_type, parent_unit_id, city, region, country, population, population_growth_pct, area_km2, latitude, longitude, geometry)
      VALUES ($1, $2, $3, $4, $5, $6, COALESCE($7, 'Colombia'), $8, $9, $10, $11, $12,
-       CASE WHEN $11 IS NOT NULL AND $12 IS NOT NULL THEN ST_SetSRID(ST_MakePoint($12, $11), 4326) ELSE NULL END)
+       CASE WHEN $11 IS NOT NULL AND $12 IS NOT NULL THEN jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array($12, $11)) ELSE NULL END)
      RETURNING *`,
     [external_id || null, name, unit_type, parent_unit_id || null, city || null, region || null, country || null, population || null, population_growth_pct || null, area_km2 || null, latitude || null, longitude || null]
   );
@@ -36,7 +36,7 @@ async function updateUnit(id, data) {
        external_id = $1, name = $2, unit_type = $3, parent_unit_id = $4, city = $5, region = $6,
        country = COALESCE($7, 'Colombia'), population = $8, population_growth_pct = $9, area_km2 = $10,
        latitude = $11, longitude = $12,
-       geom = CASE WHEN $11 IS NOT NULL AND $12 IS NOT NULL THEN ST_SetSRID(ST_MakePoint($12, $11), 4326) ELSE NULL END,
+       geometry = CASE WHEN $11 IS NOT NULL AND $12 IS NOT NULL THEN jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array($12, $11)) ELSE NULL END,
        updated_at = now()
      WHERE unit_id = $13 RETURNING *`,
     [external_id || null, name, unit_type, parent_unit_id || null, city || null, region || null, country || null, population || null, population_growth_pct || null, area_km2 || null, latitude || null, longitude || null, id]
@@ -64,9 +64,9 @@ async function createFacility(data) {
     throw new ApiError(400, 'unit_id, facility_type y name son requeridos.');
   }
   const result = await query(
-    `INSERT INTO territorial_facilities (unit_id, location_id, facility_type, name, capacity, latitude, longitude, geom)
+    `INSERT INTO territorial_facilities (unit_id, location_id, facility_type, name, capacity, latitude, longitude, geometry)
      VALUES ($1, $2, $3, $4, $5, $6, $7,
-       CASE WHEN $6 IS NOT NULL AND $7 IS NOT NULL THEN ST_SetSRID(ST_MakePoint($7, $6), 4326) ELSE NULL END)
+       CASE WHEN $6 IS NOT NULL AND $7 IS NOT NULL THEN jsonb_build_object('type', 'Point', 'coordinates', jsonb_build_array($7, $6)) ELSE NULL END)
      RETURNING *`,
     [unit_id, location_id || null, facility_type, name, capacity || null, latitude || null, longitude || null]
   );
