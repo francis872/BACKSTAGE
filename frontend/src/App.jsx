@@ -184,7 +184,7 @@ const LegacyApp = () => {
       case 'probability-engine':
         return <ProbabilityEngine onNavigate={navigateOperational} operationalContext={operationalContext} />;
       case 'earthart':
-        return <EarthArt />;
+        return <EarthArt operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'reports':
         return <Reports operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'admin-users':
