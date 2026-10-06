@@ -3,11 +3,6 @@
   "installCommand": "npm ci --prefix frontend && npm ci --prefix backend",
   "buildCommand": "npm --prefix frontend run build",
   "outputDirectory": "frontend/dist",
-  "functions": {
-    "api/*.js": {
-      "runtime": "nodejs20.x"
-    }
-  },
   "routes": [
     {
       "src": "^/api(/.*)$",
