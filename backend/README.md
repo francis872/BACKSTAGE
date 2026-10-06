@@ -82,8 +82,11 @@ Las superficies procedimentales se marcan explícitamente con `dataMode: "proced
 - `GET /spatial/jobs`: permite auditar cargas completadas o fallidas.
 - `PATCH /spatial/sources/:id/status`: activa o archiva una fuente y sus objetos de forma reversible.
 - `GET /spatial/status`: informa si el almacenamiento es temporal o Atlas persistente.
+- `POST /spatial/ingest/remote`: importa GeoJSON HTTPS con límite de tamaño, timeout, redirecciones bloqueadas y lista cerrada de dominios oficiales.
 
 Las rutas de escritura requieren rol `admin` o `analyst`; la lectura de fuentes y teselas también admite `viewer`. Cada mundo y dataset queda aislado por organización.
+
+Al responder teselas, BACKSTAGE aplica simplificación dependiente del zoom y conserva intacta la geometría canónica. `SPATIAL_TILE_CACHE_MAX` y `SPATIAL_TILE_CACHE_TTL_MS` controlan la caché LRU en proceso.
 - `risk_components`
 - `location_risk_trends`
 - `territorial_units` (municipio, barrio, vereda)
