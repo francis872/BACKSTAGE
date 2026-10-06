@@ -333,7 +333,7 @@ function TerritorialExplorer({ operationalContext, onNavigate }) {
             <input
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
-              placeholder="Ejemplo: Parque 93 Bogotá o 4.6763,-74.0489"
+              placeholder="Busca un lugar o escribe latitud,longitud"
             />
           </div>
           <div className="form-actions">
