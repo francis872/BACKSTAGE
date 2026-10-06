@@ -46,6 +46,8 @@ Dominios activos:
 - `/risk-components`, `/risk-assessments`
 - `/recommendations`, `/integrations`, `/scoring`, `/territorial`
 - `/layers` (catálogo y features geoespaciales con `bbox`)
+- `/terrain` (superficies matemáticas, pendiente, orientación, curvatura y curvas de nivel)
+- `/spatial` (fuentes verificables, ingestión GeoJSON, trabajos y teselas XYZ)
 - `/analysis` (ejecución geoestratégica, comparador avanzado e informes imprimibles)
 - `/audit-logs` (auditoría de acciones mutables por organización)
 
@@ -56,11 +58,29 @@ Nuevos endpoints de identidad:
 
 ## Flujo geoespacial y caso demo
 
-- Explorador territorial con renderizador Canvas propio y núcleo matemático BACKSTAGE, sin librerías cartográficas externas.
+- Explorador territorial híbrido: MapLibre GL JS acelera la presentación WebGL mientras el núcleo matemático, las fuentes GeoJSON y los estilos pertenecen a BACKSTAGE.
+- Motor de terreno con mallas multirresolución, interpolación bilineal y Marching Squares.
 - Catálogo de capas administrable en backend (`layer_catalog`).
-- Escenario demo: **Expansión McDonald’s Bogotá** con ranking multicriterio.
+- Escenario demo: **Expansión comercial Bogotá** con ranking multicriterio.
 - Persistencia de corridas de análisis en `analysis_runs` y `analysis_results`.
-- Recursos QGIS/PostGIS en [geospatial/](./geospatial/README.md).
+- Recursos de intercambio GeoJSON y validación nativa en [geospatial/](./geospatial/README.md).
+
+El endpoint `GET /terrain/surface` genera una superficie procedimental para probar el motor sin depender de imágenes. Su respuesta se identifica con `dataMode: "procedural"`: no representa elevación medida y no debe utilizarse para decisiones territoriales reales. `POST /terrain/analyze` procesa mallas de elevación verificadas que aporte un pipeline de datos.
+
+## Pipeline territorial
+
+1. `POST /spatial/sources`: registra proveedor, dataset, versión, licencia, modo del dato y confianza.
+2. `POST /spatial/ingest/geojson`: valida e ingiere un `FeatureCollection`, lo divide en celdas XYZ multizoom y registra el trabajo.
+3. `GET /spatial/tiles/:z/:x/:y?worldId=earth`: entrega la tesela GeoJSON correspondiente a la organización activa.
+4. `GET /spatial/sources` y `GET /spatial/jobs`: exponen procedencia y trazabilidad.
+5. `PATCH /spatial/sources/:id/status`: archiva o reactiva el dataset y todos sus objetos sin borrado destructivo.
+6. `POST /spatial/ingest/remote`: descarga GeoJSON mediante HTTPS únicamente desde dominios autorizados de Datos Abiertos Colombia e IGAC.
+
+El modo `SPATIAL_STORE=memory` sirve para desarrollo y pierde su contenido al reiniciar. Para persistencia y consultas compartidas se utiliza `SPATIAL_STORE=atlas` con `MONGODB_URI`.
+
+El explorador incluye carga GeoJSON para `admin`/`analyst`, selección de niveles XYZ, catálogo de fuentes, estado del almacenamiento e historial resumido de trabajos.
+
+Las geometrías lineales y poligonales se simplifican al servir cada zoom mediante Douglas–Peucker, conservando el original almacenado. Las teselas resultantes usan una caché LRU temporal que se invalida al importar, archivar o reactivar datasets.
 
 ## Identidad, roles y permisos
 
@@ -97,7 +117,7 @@ Usuarios de demo (seed):
    - `docker compose up --build`
 2. Backend disponible en `http://localhost:4000`.
 3. Frontend disponible en `http://localhost:3000`.
-4. La base de datos Postgres se ejecuta con PostGIS.
+4. La base de datos se ejecuta sobre PostgreSQL estándar; la geometría se conserva como GeoJSON y se procesa con el núcleo matemático de BACKSTAGE.
 
 ## Ejecución local rápida
 
