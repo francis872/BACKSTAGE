@@ -3,12 +3,14 @@ const { createSpatialStore } = require('../spatial/store');
 const { SpatialIngestionPipeline } = require('../spatial/ingestion');
 const TileCache = require('../spatial/tileCache');
 const { fetchGeoJSON } = require('../spatial/remoteSources');
+const { buildRoadGraph, shortestPath } = require('../spatial/routing');
 
 let pipelinePromise;
 const tileCache = new TileCache({
   maxEntries: Number(process.env.SPATIAL_TILE_CACHE_MAX || 500),
   ttlMs: Number(process.env.SPATIAL_TILE_CACHE_TTL_MS || 300000),
 });
+const graphCache = new Map();
 
 function getPipeline() {
   if (!pipelinePromise) {
@@ -52,6 +54,7 @@ async function ingestGeoJSON(organizationId, payload) {
       maxZoom: Number(payload.maxZoom ?? payload.zoom ?? 12),
     });
     tileCache.clear();
+    graphCache.clear();
     return result;
   } catch (error) { return translate(error); }
 }
@@ -91,11 +94,49 @@ async function listJobs(organizationId) {
   return pipeline.listJobs(organizationId);
 }
 
+async function search(organizationId, query) {
+  try {
+    const pipeline = await getPipeline();
+    return pipeline.search({ organizationId, worldId: scopedWorldId(organizationId, query.worldId), query: query.q, limit: query.limit });
+  } catch (error) { return translate(error); }
+}
+
+async function nearby(organizationId, query) {
+  try {
+    const pipeline = await getPipeline();
+    return pipeline.nearby({
+      organizationId, worldId: scopedWorldId(organizationId, query.worldId),
+      lng: query.lng, lat: query.lat, radiusM: Number(query.radiusM || 1000), limit: query.limit,
+    });
+  } catch (error) { return translate(error); }
+}
+
+async function computeRoute(organizationId, payload) {
+  try {
+    const worldId = scopedWorldId(organizationId, payload.worldId);
+    const key = `${organizationId}:${worldId}`;
+    let graph = graphCache.get(key);
+    if (!graph) {
+      const pipeline = await getPipeline();
+      graph = buildRoadGraph(await pipeline.roadFeatures({ organizationId, worldId }));
+      graphCache.set(key, graph);
+    }
+    const validateCoordinate = (coordinate, name) => {
+      if (!Array.isArray(coordinate) || coordinate.length !== 2 || !coordinate.every((value) => Number.isFinite(Number(value)))) {
+        throw new TypeError(`${name} debe ser [lng,lat].`);
+      }
+      return coordinate.map(Number);
+    };
+    return shortestPath(graph, validateCoordinate(payload.start, 'start'), validateCoordinate(payload.end, 'end'), payload.algorithm || 'astar');
+  } catch (error) { return translate(error); }
+}
+
 async function setSourceStatus(organizationId, sourceId, status) {
   try {
     const pipeline = await getPipeline();
     const result = await pipeline.setSourceStatus({ organizationId, sourceId, status });
     tileCache.clear();
+    graphCache.clear();
     return result;
   } catch (error) { return translate(error); }
 }
@@ -110,4 +151,4 @@ function getStatus() {
   };
 }
 
-module.exports = { getPipeline, scopedWorldId, registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, setSourceStatus, getStatus };
+module.exports = { getPipeline, scopedWorldId, registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, search, nearby, computeRoute, setSourceStatus, getStatus };
