@@ -56,6 +56,10 @@ jobs:
         working-directory: backend
         run: npm test
 
+      - name: Ensure CI database exists
+        working-directory: backend
+        run: npm run db:ensure
+
       - name: Apply all database migrations
         working-directory: backend
         run: npx node-pg-migrate up
@@ -137,7 +141,7 @@ jobs:
         working-directory: backend
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npx node-pg-migrate up
+        run: npm run db:ensure && npx node-pg-migrate up
 
       - name: Deploy to Vercel production
         env:

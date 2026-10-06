@@ -146,7 +146,7 @@ npm ci
 npm run dev
 ```
 
-El ejemplo de base de datos apunta al PostgreSQL de Compose publicado en `localhost:5544`. El backend espera que el esquema ya esté migrado antes de atender operaciones.
+El ejemplo de base de datos apunta al PostgreSQL de Compose publicado en `localhost:5546`. El servicio de migración asegura la base y aplica el esquema antes de iniciar el backend.
 
 ## Ejecución con Docker Compose
 
@@ -154,7 +154,7 @@ El ejemplo de base de datos apunta al PostgreSQL de Compose publicado en `localh
    - `docker compose up --build`
 2. Backend disponible en `http://localhost:4000`.
 3. Frontend disponible en `http://localhost:3000`.
-4. PostgreSQL 17 estándar queda publicado en `localhost:5544`; el servicio de migración termina antes del backend.
+4. PostgreSQL 17 estándar queda publicado en `localhost:5546` (configurable con `POSTGRES_HOST_PORT`); el servicio de migración asegura la base y termina antes del backend.
 5. La geometría se conserva como GeoJSON/JSONB y se procesa con el núcleo matemático de BACKSTAGE.
 
 ## Validacion y CI/CD
@@ -179,6 +179,7 @@ Variable opcional local:
 
 Desde `backend/`:
 
+- `npm run db:ensure` — verifica la base indicada por `DATABASE_URL` y la crea desde `postgres` cuando el usuario tiene permiso; si no, valida la base asignada por el proveedor.
 - `npm run migrate:up` — ejecutar migraciones.
 - `npm run db:init` — cargar esquema; en entornos no productivos también carga datos demo.
 

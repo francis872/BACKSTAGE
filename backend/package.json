@@ -11,8 +11,9 @@
     "start": "node index.js",
     "test": "node --test",
     "db:init": "node init-db.js",
-    "migrate": "dotenv -e .env -- node-pg-migrate",
-    "migrate:up": "dotenv -e .env -- node-pg-migrate up",
+    "db:ensure": "node ensure-database.js",
+    "migrate": "node ensure-database.js && dotenv -e .env -- node-pg-migrate",
+    "migrate:up": "node ensure-database.js && dotenv -e .env -- node-pg-migrate up",
     "migrate:down": "dotenv -e .env -- node-pg-migrate down"
   },
   "dependencies": {

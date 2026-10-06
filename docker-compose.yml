@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: backstage
       POSTGRES_DB: backstage
     ports:
-      - '5544:5432'
+      - '${POSTGRES_HOST_PORT:-5546}:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:

@@ -5,7 +5,7 @@ FROM base AS migration
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
-CMD ["npx", "node-pg-migrate", "up"]
+CMD ["sh", "-c", "node ensure-database.js && npx node-pg-migrate up"]
 
 FROM base AS dependencies
 COPY package.json package-lock.json ./
