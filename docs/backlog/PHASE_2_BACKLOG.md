@@ -139,12 +139,14 @@ adapters en `backend/infrastructure/external-apis/` (patrón ya usado por
 
 ## Épica 7 — Dashboards, no formularios (Riesgos, Oportunidades)
 
-**Estado: `partial` (Riesgos terminado; Oportunidades pendiente)**
+**Estado: `done` (Riesgos y Oportunidades)**
 
 `RiskComponents.jsx` (menú "Riesgos") ya incluye KPIs por amenaza, exposición y
 vulnerabilidad, cobertura territorial, búsqueda, filtros, bandas, trazabilidad y navegación
 al mapa/evaluación. El backend valida valores y aísla toda lectura y escritura por
-organización. `GeoInsights.jsx` (menú "Oportunidades") continúa pendiente de conversión.
+organización. `GeoInsights.jsx` (menú "Oportunidades") incorpora ranking explicable desde
+factores de mercado reales, KPIs, búsqueda y filtros, comparación de hasta tres ubicaciones,
+detalle de contribuciones, navegación al mapa y conversión en proyecto operativo con candidato inicial.
 
 ## Resumen de verificación de esta fase
 
