@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { lazy, Suspense, useState, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 
@@ -19,7 +19,6 @@ import UsersAdmin from './pages/UsersAdmin';
 import PlatformArchitecture from './pages/PlatformArchitecture';
 import MissionControl from './pages/MissionControl';
 import LayerCatalogAdmin from './pages/LayerCatalogAdmin';
-import TerritorialExplorer from './pages/NativeTerritorialExplorer';
 import Reports from './pages/Reports';
 import AdvancedComparator from './pages/AdvancedComparator';
 import AuditLogsAdmin from './pages/AuditLogsAdmin';
@@ -28,6 +27,8 @@ import ProbabilityEngine from './pages/ProbabilityEngine';
 import { apiRequest } from './lib/api';
 import { clearSession, getSessionUser, setSession } from './lib/auth';
 import { clearStoredOperationalContext, getStoredOperationalContext, setStoredOperationalContext } from './lib/operationalContext';
+
+const TerritorialExplorer = lazy(() => import('./pages/NativeTerritorialExplorer'));
 
 const menu = [
   { key: 'mission-control', label: 'Centro de operaciones', group: 'Operación' },
@@ -159,7 +160,11 @@ const LegacyApp = () => {
       case 'mission-control':
         return <MissionControl onNavigate={navigateOperational} />;
       case 'territorial-explorer':
-        return <TerritorialExplorer operationalContext={operationalContext} onNavigate={navigateOperational} />;
+        return (
+          <Suspense fallback={<p className="auth-hint">Cargando motor territorial WebGL…</p>}>
+            <TerritorialExplorer operationalContext={operationalContext} onNavigate={navigateOperational} />
+          </Suspense>
+        );
       case 'portfolio-assets':
         return <RealEstatePortfolio />;
       case 'portfolio-projects':
