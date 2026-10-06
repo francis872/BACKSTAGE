@@ -12,6 +12,7 @@ router.patch('/sources/:id/status', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), 
 router.get('/jobs', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.listJobs);
 router.get('/status', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getStatus);
 router.post('/ingest/geojson', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.ingestGeoJSON);
+router.post('/ingest/remote', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.ingestRemote);
 router.get('/tiles/:z/:x/:y', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getTile);
 
 module.exports = router;
