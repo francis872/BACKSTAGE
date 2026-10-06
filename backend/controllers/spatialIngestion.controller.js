@@ -18,5 +18,9 @@ const listSources = asyncHandler(async (req, res) => {
 const listJobs = asyncHandler(async (req, res) => {
   res.json(await service.listJobs(req.organization.organization_id));
 });
+const setSourceStatus = asyncHandler(async (req, res) => {
+  res.json(await service.setSourceStatus(req.organization.organization_id, req.params.id, req.body.status));
+});
+const getStatus = asyncHandler(async (req, res) => res.json(service.getStatus()));
 
-module.exports = { registerSource, ingestGeoJSON, getTile, listSources, listJobs };
+module.exports = { registerSource, ingestGeoJSON, getTile, listSources, listJobs, setSourceStatus, getStatus };
