@@ -96,6 +96,8 @@ El explorador permite navegar a un resultado, seleccionar origen y destino y dib
 
 `POST /spatial/risk/scenario` evalúa hasta 2.500 celdas y devuelve una colección GeoJSON con riesgo base, riesgo del escenario y diferencia por celda. El visor construye la malla sobre el terreno visible, deriva únicamente pendiente o elevación y exige que el usuario declare las demás variables; el mapa de calor sigue siendo un índice comparativo, no una observación ni un pronóstico.
 
+El dashboard de evaluaciones valida cuatro indicadores entre 0 y 1, calcula el puntaje mediante `arithmetic-mean-v1`, registra origen, confianza y notas, conserva el historial por ubicación y permite abrir directamente la ubicación evaluada en el mapa.
+
 ### Dibujo y medición
 
 `POST /spatial/measure` calcula coordenadas, distancia geodésica, perímetro y área esférica para puntos, líneas y polígonos GeoJSON. El explorador permite dibujar directamente sobre el mapa y exportar el resultado como GeoJSON sin incorporar una biblioteca de dibujo externa.
