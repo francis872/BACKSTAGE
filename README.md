@@ -82,6 +82,14 @@ El explorador incluye carga GeoJSON para `admin`/`analyst`, selección de nivele
 
 Las geometrías lineales y poligonales se simplifican al servir cada zoom mediante Douglas–Peucker, conservando el original almacenado. Las teselas resultantes usan una caché LRU temporal que se invalida al importar, archivar o reactivar datasets.
 
+### Búsqueda y navegación
+
+- `GET /spatial/search?q=...`: busca atributos de objetos territoriales activos.
+- `GET /spatial/nearby?lng=...&lat=...&radiusM=...`: ordena objetos por proximidad.
+- `POST /spatial/routes/compute`: calcula rutas A* o Dijkstra sobre las líneas viales importadas.
+
+El explorador permite navegar a un resultado, seleccionar origen y destino y dibujar la ruta calculada. No genera rutas si el grafo importado está vacío o desconectado.
+
 ## Identidad, roles y permisos
 
 Autenticación por token JWT y autorización por rol:
