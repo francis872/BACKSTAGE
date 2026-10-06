@@ -109,6 +109,8 @@ Las propiedades `speedKph`, `maxspeed`, `cost` y `oneway` permiten controlar el 
 - `POST /spatial/risk/scenario`: compara la línea base y cambios normalizados para una colección de hasta 2.500 celdas GeoJSON.
 - Cada resultado devuelve el peso y la contribución de cada variable, clasificación, confianza, procedencia del dato y versión del modelo.
 - El resultado es un índice de priorización; no es un pronóstico ni sustituye validación técnica en campo.
+- `GET /risk-assessments/locations/:locationId/history`: recupera la serie histórica aislada por organización.
+- Las altas y actualizaciones exigen los cuatro indicadores en `[0,1]`; el backend deriva `score` y guarda en `details` el modo del dato, confianza, notas y versión del cálculo.
 
 ## Medición geométrica
 
