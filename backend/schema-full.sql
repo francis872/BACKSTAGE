@@ -1,8 +1,7 @@
--- Consolidated schema for BACKSTAGE Intelligence (Neon/PostgreSQL + PostGIS)
+-- Consolidated schema for BACKSTAGE Intelligence (standard PostgreSQL)
 -- Generated from migrations 1680000000000 through 1680000007000 to bypass a
 -- node-pg-migrate addConstraint argument-order bug in the original files.
 
-CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- 1) Initial schema -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS data_sources (
@@ -190,17 +189,17 @@ CREATE INDEX IF NOT EXISTS idx_spatial_profiles_location_id ON spatial_profiles(
 CREATE INDEX IF NOT EXISTS idx_risk_components_risk_id ON risk_components(risk_id);
 CREATE INDEX IF NOT EXISTS idx_location_risk_trends_location_id ON location_risk_trends(location_id);
 
--- 4) Geometry columns ------------------------------------------------------
-ALTER TABLE locations ADD COLUMN IF NOT EXISTS geom geometry(Point,4326);
-UPDATE locations SET geom = ST_SetSRID(ST_MakePoint(longitude::double precision, latitude::double precision), 4326)
-  WHERE longitude IS NOT NULL AND latitude IS NOT NULL AND geom IS NULL;
-CREATE INDEX IF NOT EXISTS idx_locations_geom ON locations USING gist(geom);
+-- 4) Native GeoJSON columns ------------------------------------------------
+ALTER TABLE locations ADD COLUMN IF NOT EXISTS geometry JSONB;
+UPDATE locations
+SET geometry = jsonb_build_object(
+  'type', 'Point',
+  'coordinates', jsonb_build_array(longitude::double precision, latitude::double precision)
+)
+WHERE longitude IS NOT NULL AND latitude IS NOT NULL AND geometry IS NULL;
 
-ALTER TABLE market_areas ADD COLUMN IF NOT EXISTS geom geometry(Polygon,4326);
-CREATE INDEX IF NOT EXISTS idx_market_areas_geom ON market_areas USING gist(geom);
-
-ALTER TABLE spatial_profiles ADD COLUMN IF NOT EXISTS geom geometry(Point,4326);
-CREATE INDEX IF NOT EXISTS idx_spatial_profiles_geom ON spatial_profiles USING gist(geom);
+ALTER TABLE market_areas ADD COLUMN IF NOT EXISTS geometry JSONB;
+ALTER TABLE spatial_profiles ADD COLUMN IF NOT EXISTS geometry_native JSONB;
 
 -- 5) Security & integration schema ----------------------------------------
 CREATE TABLE IF NOT EXISTS users (
@@ -298,11 +297,10 @@ CREATE TABLE IF NOT EXISTS territorial_units (
   area_km2 NUMERIC(10,2),
   latitude NUMERIC(9,6),
   longitude NUMERIC(9,6),
-  geom geometry(Geometry,4326),
+  geometry JSONB,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-CREATE INDEX IF NOT EXISTS idx_territorial_units_geom ON territorial_units USING gist(geom);
 
 CREATE TABLE IF NOT EXISTS territorial_facilities (
   facility_id SERIAL PRIMARY KEY,
@@ -313,11 +311,10 @@ CREATE TABLE IF NOT EXISTS territorial_facilities (
   capacity INTEGER,
   latitude NUMERIC(9,6),
   longitude NUMERIC(9,6),
-  geom geometry(Point,4326),
+  geometry JSONB,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_territorial_facilities_unit_id ON territorial_facilities(unit_id);
-CREATE INDEX IF NOT EXISTS idx_territorial_facilities_geom ON territorial_facilities USING gist(geom);
 
 CREATE TABLE IF NOT EXISTS territorial_dimension_scores (
   score_id SERIAL PRIMARY KEY,
@@ -400,7 +397,7 @@ CREATE TABLE IF NOT EXISTS layer_catalog (
   source_table TEXT NOT NULL,
   id_column TEXT NOT NULL DEFAULT 'id',
   name_column TEXT,
-  geom_column TEXT NOT NULL DEFAULT 'geom',
+  geom_column TEXT NOT NULL DEFAULT 'geometry',
   srid INTEGER NOT NULL DEFAULT 4326,
   coverage TEXT,
   style_json JSONB NOT NULL DEFAULT '{}',
@@ -434,12 +431,11 @@ CREATE TABLE IF NOT EXISTS competitors (
   city TEXT,
   latitude NUMERIC(9,6),
   longitude NUMERIC(9,6),
-  geom geometry(Point,4326),
+  geometry JSONB,
   source_name TEXT,
   source_updated_at DATE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-CREATE INDEX IF NOT EXISTS idx_competitors_geom ON competitors USING gist(geom);
 
 CREATE TABLE IF NOT EXISTS points_of_interest (
   poi_id SERIAL PRIMARY KEY,
@@ -449,12 +445,11 @@ CREATE TABLE IF NOT EXISTS points_of_interest (
   city TEXT,
   latitude NUMERIC(9,6),
   longitude NUMERIC(9,6),
-  geom geometry(Point,4326),
+  geometry JSONB,
   source_name TEXT,
   source_updated_at DATE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-CREATE INDEX IF NOT EXISTS idx_points_of_interest_geom ON points_of_interest USING gist(geom);
 
 CREATE TABLE IF NOT EXISTS territorial_zones (
   zone_id SERIAL PRIMARY KEY,
@@ -462,12 +457,11 @@ CREATE TABLE IF NOT EXISTS territorial_zones (
   zone_type TEXT NOT NULL DEFAULT 'district',
   city TEXT,
   population_total INTEGER,
-  geom geometry(Polygon,4326) NOT NULL,
+  geometry JSONB NOT NULL,
   source_name TEXT,
   source_updated_at DATE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-CREATE INDEX IF NOT EXISTS idx_territorial_zones_geom ON territorial_zones USING gist(geom);
 
 CREATE TABLE IF NOT EXISTS demographic_indicators (
   demographic_indicator_id SERIAL PRIMARY KEY,
