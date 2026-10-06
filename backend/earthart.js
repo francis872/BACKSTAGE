@@ -54,12 +54,14 @@ async function getLatestIndexSnapshot(unitId) {
   return result.rows[0] || null;
 }
 
-async function loadUnit(unitId) {
-  const result = await query('SELECT * FROM territorial_units WHERE unit_id = $1', [unitId]);
+async function loadUnit(unitId, organizationId) {
+  const result = organizationId
+    ? await query('SELECT * FROM territorial_units WHERE unit_id = $1 AND organization_id = $2', [unitId, organizationId])
+    : await query('SELECT * FROM territorial_units WHERE unit_id = $1', [unitId]);
   return result.rows[0] || null;
 }
 
-async function loadNearestFacilityDistance(unitId, facilityType) {
+async function loadNearestFacilityDistance(unitId, facilityType, organizationId) {
   const unitResult = await query(
     'SELECT latitude, longitude FROM territorial_units WHERE unit_id = $1',
     [unitId]
@@ -68,9 +70,11 @@ async function loadNearestFacilityDistance(unitId, facilityType) {
   if (!unit || unit.latitude == null || unit.longitude == null) return null;
   const result = await query(
     `SELECT name, capacity, latitude, longitude
-     FROM territorial_facilities
-     WHERE facility_type = $1 AND latitude IS NOT NULL AND longitude IS NOT NULL`,
-    [facilityType]
+     FROM territorial_facilities f
+     JOIN territorial_units u ON u.unit_id = f.unit_id
+     WHERE f.facility_type = $1 AND f.latitude IS NOT NULL AND f.longitude IS NOT NULL
+       AND ($2::integer IS NULL OR u.organization_id = $2)`,
+    [facilityType, organizationId || null]
   );
   const origin = { lat: Number(unit.latitude), lng: Number(unit.longitude) };
   return result.rows.map((row) => ({
@@ -80,8 +84,8 @@ async function loadNearestFacilityDistance(unitId, facilityType) {
 }
 
 // Reglas heurísticas de detección de brechas territoriales (población vs. infraestructura disponible).
-async function detectGaps(unitId) {
-  const unit = await loadUnit(unitId);
+async function detectGaps(unitId, organizationId) {
+  const unit = await loadUnit(unitId, organizationId);
   if (!unit) return [];
 
   const detected = [];
@@ -94,7 +98,7 @@ async function detectGaps(unitId) {
   });
 
   // Regla 1: población alta pero colegio más cercano lejos (> 3 km).
-  const nearestSchool = await loadNearestFacilityDistance(unitId, 'school');
+  const nearestSchool = await loadNearestFacilityDistance(unitId, 'school', organizationId);
   if (population > 1000 && nearestSchool && nearestSchool.distance_m != null) {
     const distanceKm = Number(nearestSchool.distance_m) / 1000;
     if (distanceKm > 3) {
@@ -166,8 +170,8 @@ function estimateScenario(unit, params) {
   };
 }
 
-async function simulateInfrastructure(unitId, params) {
-  const unit = await loadUnit(unitId);
+async function simulateInfrastructure(unitId, params, organizationId) {
+  const unit = await loadUnit(unitId, organizationId);
   if (!unit) return null;
 
   const alternatives = Array.isArray(params.alternatives) && params.alternatives.length > 0 ? params.alternatives : [params];
