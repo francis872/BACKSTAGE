@@ -56,7 +56,7 @@ Nuevos endpoints de identidad:
 
 ## Flujo geoespacial y caso demo
 
-- Explorador territorial con MapLibre en frontend.
+- Explorador territorial con renderizador Canvas propio y núcleo matemático BACKSTAGE, sin librerías cartográficas externas.
 - Catálogo de capas administrable en backend (`layer_catalog`).
 - Escenario demo: **Expansión McDonald’s Bogotá** con ranking multicriterio.
 - Persistencia de corridas de análisis en `analysis_runs` y `analysis_results`.
