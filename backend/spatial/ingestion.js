@@ -1,6 +1,7 @@
 const crypto = require('node:crypto');
 const { COLLECTIONS, validateSpatialObject } = require('./store');
 const { geometryBounds, tilesForGeometry, tileBounds, boundsIntersect } = require('./tiles');
+const { simplifyGeometry, toleranceForZoom } = require('./simplify');
 
 const SUPPORTED_GEOMETRIES = new Set(['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon']);
 
@@ -97,7 +98,7 @@ class SpatialIngestionPipeline {
     const features = objects.filter((object) => object.status !== 'archived'
       && object.tileIds?.includes(id) && boundsIntersect(object.bounds, bounds))
       .map((object) => ({
-        type: 'Feature', id: object.id, geometry: object.geometry,
+        type: 'Feature', id: object.id, geometry: simplifyGeometry(object.geometry, toleranceForZoom(z)),
         properties: { ...object.properties, sourceId: object.sourceId, confidence: object.confidence },
       }));
     return { type: 'FeatureCollection', features, metadata: { worldId, tile: id, bounds, featureCount: features.length } };
