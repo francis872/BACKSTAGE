@@ -94,6 +94,13 @@ El explorador permite navegar a un resultado, seleccionar origen y destino y dib
 
 `POST /spatial/risk/evaluate` calcula índices de priorización para incendio forestal, inundación y deslizamiento. La respuesta conserva entradas, pesos, contribuciones, modo del dato, confianza y versión del modelo. Estos índices no son pronósticos ni reemplazan estudios técnicos de campo.
 
+### Hidrología y topografía
+
+- `POST /terrain/hydrology`: dirección D8, acumulación de flujo, cauces, valles, crestas y cuenca de aporte.
+- `POST /terrain/profile`: perfil interpolado entre dos coordenadas, distancia y rango de elevación.
+
+El explorador representa drenajes, valles y crestas sobre MapLibre y muestra un perfil topográfico. Los resultados heredan el modo y la calidad de la malla de elevación analizada.
+
 ## Identidad, roles y permisos
 
 Autenticación por token JWT y autorización por rol:
