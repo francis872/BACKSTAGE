@@ -565,31 +565,38 @@ const LegacyApp = () => {
 
 // Main App Router
 function App() {
+  useEffect(() => {
+    console.log('🚀 App component mounted');
+    return () => console.log('🛑 App component unmounted');
+  }, []);
+
   return (
     <ErrorBoundary>
-      <Router>
-        <Routes>
-          {/* New Auth Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          
-          {/* New Dashboard Route (Protected) */}
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
-          
-          {/* Legacy Routes - Redirect to dashboard if new auth is used */}
-          <Route path="/" element={<LegacyApp />} />
-          
-          {/* Catch-all */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Router>
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Router>
+          <Routes>
+            {/* New Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            
+            {/* New Dashboard Route (Protected) */}
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Legacy Routes - Redirect to dashboard if new auth is used */}
+            <Route path="/" element={<LegacyApp />} />
+            
+            {/* Catch-all */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Router>
+      </div>
     </ErrorBoundary>
   );
 }
