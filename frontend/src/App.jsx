@@ -19,7 +19,7 @@ import UsersAdmin from './pages/UsersAdmin';
 import PlatformArchitecture from './pages/PlatformArchitecture';
 import MissionControl from './pages/MissionControl';
 import LayerCatalogAdmin from './pages/LayerCatalogAdmin';
-import TerritorialExplorer from './pages/TerritorialExplorer';
+import TerritorialExplorer from './pages/NativeTerritorialExplorer';
 import Reports from './pages/Reports';
 import AdvancedComparator from './pages/AdvancedComparator';
 import AuditLogsAdmin from './pages/AuditLogsAdmin';
