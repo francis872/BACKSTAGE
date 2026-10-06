@@ -33,7 +33,7 @@ async function buildCandidateFromCoordinates({ name, city, lat, lng }) {
   };
 }
 
-async function computeCandidateMetrics({ city, latitude, longitude, ownBrandName = 'McDonald%' }) {
+async function computeCandidateMetrics({ city, latitude, longitude, ownBrandName = null }) {
   const result = await query(
     `WITH candidate AS (
       SELECT ST_SetSRID(ST_MakePoint($1, $2), 4326) AS geom
@@ -52,7 +52,7 @@ async function computeCandidateMetrics({ city, latitude, longitude, ownBrandName
       CROSS JOIN candidate
       WHERE l.geom IS NOT NULL
         AND bl.is_active = true
-        AND bl.brand_name ILIKE $4
+        AND ($4::text IS NULL OR bl.brand_name ILIKE $4)
         AND ($3::text IS NULL OR l.city = $3)
     ),
     nearby_poi AS (
