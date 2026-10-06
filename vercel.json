@@ -2,11 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm ci --prefix frontend && npm ci --prefix backend",
   "buildCommand": "npm --prefix frontend run build",
-  "outputDirectory": "frontend/dist",
-  "rewrites": [
-    {
-      "source": "/((?!api/)(?!_next/)(?!\\.well-known/).*)",
-      "destination": "/index.html"
-    }
-  ]
+  "env": {
+    "JWT_SECRET": "@JWT_SECRET"
+  }
 }

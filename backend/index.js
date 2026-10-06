@@ -1,6 +1,8 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 const { pool } = require('./db');
 const { getMongoHealthState } = require('./spatial/store');
 const errorHandler = require('./middleware/errorHandler');
@@ -52,6 +54,15 @@ app.use(cors({
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '5mb' }));
 app.use(auditLogger);
 
+// Serve frontend static files if available
+const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath, { 
+    maxAge: '1d',
+    etag: false 
+  }));
+}
+
 app.get('/health', async (req, res) => {
   const provider = String(process.env.SPATIAL_STORE || 'memory').toLowerCase();
   let postgres = 'unavailable';
@@ -82,7 +93,47 @@ app.get('/health', async (req, res) => {
   });
 });
 
-// API info endpoint
+// SPA fallback: serve index.html for non-API routes
+app.get('*', (req, res, next) => {
+  // Skip if route starts with /api or already matched
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  
+  const indexPath = path.join(__dirname, '..', 'frontend', 'dist', 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  
+  // Fallback API info if no frontend
+  res.json({
+    service: 'BACKSTAGE Intelligence Backend',
+    version: '3.1.0',
+    endpoints: {
+      auth: '/auth',
+      locations: '/locations',
+      insights: '/insights',
+      realEstate: '/real-estate',
+      retailZones: '/retail-zones',
+      riskComponents: '/risk-components',
+      riskAssessments: '/risk-assessments',
+      recommendations: '/recommendations',
+      integrations: '/integrations',
+      scoring: '/scoring',
+      territorial: '/territorial',
+      users: '/users',
+      layers: '/layers',
+      analysis: '/analysis',
+      analytics: '/analytics',
+      terrain: '/terrain',
+      spatial: '/spatial',
+      auditLogs: '/audit-logs',
+      securityEventsSocket: '/ws/security?token=<JWT>'
+    }
+  });
+});
+
+// API info endpoint (legacy)
 app.get('/', (req, res) => {
   res.json({
     service: 'BACKSTAGE Intelligence Backend',
