@@ -55,7 +55,9 @@ function SpatialDataImporter({ dataZoom, onDataZoomChange, onImported }) {
       setStatus('Validando geometrías y generando teselas…');
       const job = await apiRequest('/spatial/ingest/geojson', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sourceId: source._id, worldId: 'earth', zoom: dataZoom, collection }),
+        body: JSON.stringify({
+          sourceId: source._id, worldId: 'earth', minZoom: Math.max(0, dataZoom - 2), maxZoom: dataZoom, collection,
+        }),
       }).then(responseData);
       setStatus(`Carga completada: ${job.featureCount} objetos en ${job.tileCount} teselas.`);
       onImported?.(job);
@@ -76,6 +78,7 @@ function SpatialDataImporter({ dataZoom, onDataZoomChange, onImported }) {
           </select>
         </label>
       </div>
+      <p className="auth-hint">Las nuevas cargas se indexarán en los niveles {Math.max(0, dataZoom - 2)}–{dataZoom}.</p>
       {canWrite && (
         <form onSubmit={submit} className="form-grid" style={{ marginTop: 12 }}>
           <label>Proveedor<input name="provider" value={form.provider} onChange={update} required /></label>
