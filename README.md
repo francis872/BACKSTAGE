@@ -98,6 +98,8 @@ El explorador permite navegar a un resultado, seleccionar origen y destino y dib
 
 El dashboard de evaluaciones valida cuatro indicadores entre 0 y 1, calcula el puntaje mediante `arithmetic-mean-v1`, registra origen, confianza y notas, conserva el historial por ubicación y permite abrir directamente la ubicación evaluada en el mapa.
 
+EarthArt presenta índice territorial, brechas, riesgos y oportunidades como métricas independientes; conserva el historial de simulaciones, navega al mapa y permite convertir una brecha verificada en proyecto operativo. Todos sus recursos quedan aislados por organización.
+
 ### Dibujo y medición
 
 `POST /spatial/measure` calcula coordenadas, distancia geodésica, perímetro y área esférica para puntos, líneas y polígonos GeoJSON. El explorador permite dibujar directamente sobre el mapa y exportar el resultado como GeoJSON sin incorporar una biblioteca de dibujo externa.
