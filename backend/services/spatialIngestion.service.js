@@ -1,8 +1,14 @@
 const ApiError = require('../utils/ApiError');
 const { createSpatialStore } = require('../spatial/store');
 const { SpatialIngestionPipeline } = require('../spatial/ingestion');
+const TileCache = require('../spatial/tileCache');
+const { fetchGeoJSON } = require('../spatial/remoteSources');
 
 let pipelinePromise;
+const tileCache = new TileCache({
+  maxEntries: Number(process.env.SPATIAL_TILE_CACHE_MAX || 500),
+  ttlMs: Number(process.env.SPATIAL_TILE_CACHE_TTL_MS || 300000),
+});
 
 function getPipeline() {
   if (!pipelinePromise) {
@@ -37,7 +43,7 @@ async function registerSource(organizationId, payload) {
 async function ingestGeoJSON(organizationId, payload) {
   try {
     const pipeline = await getPipeline();
-    return pipeline.ingestGeoJSON({
+    const result = await pipeline.ingestGeoJSON({
       organizationId,
       worldId: scopedWorldId(organizationId, payload.worldId),
       sourceId: payload.sourceId,
@@ -45,17 +51,33 @@ async function ingestGeoJSON(organizationId, payload) {
       minZoom: Number(payload.minZoom ?? payload.zoom ?? 8),
       maxZoom: Number(payload.maxZoom ?? payload.zoom ?? 12),
     });
+    tileCache.clear();
+    return result;
+  } catch (error) { return translate(error); }
+}
+
+async function ingestRemote(organizationId, payload) {
+  try {
+    const collection = await fetchGeoJSON(payload.sourceUrl);
+    return ingestGeoJSON(organizationId, { ...payload, collection });
   } catch (error) { return translate(error); }
 }
 
 async function getTile(organizationId, params, query) {
   try {
     const pipeline = await getPipeline();
-    return pipeline.getTile({
+    const worldId = scopedWorldId(organizationId, query.worldId);
+    const cacheKey = `${organizationId}:${worldId}:${params.z}/${params.x}/${params.y}`;
+    const cached = tileCache.get(cacheKey);
+    if (cached) return { ...cached, metadata: { ...cached.metadata, cache: 'hit' } };
+    const result = await pipeline.getTile({
       organizationId,
-      worldId: scopedWorldId(organizationId, query.worldId),
+      worldId,
       z: Number(params.z), x: Number(params.x), y: Number(params.y),
     });
+    result.metadata.cache = 'miss';
+    tileCache.set(cacheKey, result);
+    return result;
   } catch (error) { return translate(error); }
 }
 
@@ -72,7 +94,9 @@ async function listJobs(organizationId) {
 async function setSourceStatus(organizationId, sourceId, status) {
   try {
     const pipeline = await getPipeline();
-    return pipeline.setSourceStatus({ organizationId, sourceId, status });
+    const result = await pipeline.setSourceStatus({ organizationId, sourceId, status });
+    tileCache.clear();
+    return result;
   } catch (error) { return translate(error); }
 }
 
@@ -81,7 +105,9 @@ function getStatus() {
     provider: String(process.env.SPATIAL_STORE || 'memory').toLowerCase(),
     persistent: String(process.env.SPATIAL_STORE || 'memory').toLowerCase() === 'atlas',
     atlasConfigured: Boolean(process.env.MONGODB_URI),
+    tileCacheEntries: tileCache.size,
+    remoteHosts: ['www.datos.gov.co', 'datos.gov.co', 'mapas2.igac.gov.co'],
   };
 }
 
-module.exports = { getPipeline, scopedWorldId, registerSource, ingestGeoJSON, getTile, listSources, listJobs, setSourceStatus, getStatus };
+module.exports = { getPipeline, scopedWorldId, registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, setSourceStatus, getStatus };
