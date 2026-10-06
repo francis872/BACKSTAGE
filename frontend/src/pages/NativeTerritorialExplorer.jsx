@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { apiRequest } from '../lib/api';
+import SpatialDataImporter from '../components/SpatialDataImporter';
 
 const EMPTY_COLLECTION = { type: 'FeatureCollection', features: [] };
 const INTERNAL_STYLE = {
@@ -69,10 +70,33 @@ function contoursToGeoJSON(terrain) {
   };
 }
 
+function lonLatToTile(lng, lat, zoom) {
+  const size = 2 ** zoom;
+  const boundedLat = Math.max(-85.05112878, Math.min(85.05112878, lat));
+  const x = Math.floor((lng + 180) / 360 * size);
+  const latRad = boundedLat * Math.PI / 180;
+  const y = Math.floor((1 - Math.asinh(Math.tan(latRad)) / Math.PI) / 2 * size);
+  return { x: Math.max(0, Math.min(size - 1, x)), y: Math.max(0, Math.min(size - 1, y)) };
+}
+
+function visibleTiles(bounds, zoom, maximum = 36) {
+  const northWest = lonLatToTile(bounds.getWest(), bounds.getNorth(), zoom);
+  const southEast = lonLatToTile(bounds.getEast(), bounds.getSouth(), zoom);
+  const tiles = [];
+  for (let x = northWest.x; x <= southEast.x; x += 1) {
+    for (let y = northWest.y; y <= southEast.y; y += 1) {
+      tiles.push({ z: zoom, x, y });
+      if (tiles.length >= maximum) return tiles;
+    }
+  }
+  return tiles;
+}
+
 function addBackstageLayers(map) {
   map.addSource('backstage-terrain', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addSource('backstage-contours', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addSource('backstage-locations', { type: 'geojson', data: EMPTY_COLLECTION });
+  map.addSource('backstage-imported', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addLayer({
     id: 'backstage-terrain-fill', type: 'fill', source: 'backstage-terrain',
     paint: {
@@ -97,6 +121,21 @@ function addBackstageLayers(map) {
     },
   });
   map.addLayer({
+    id: 'backstage-imported-polygons', type: 'fill', source: 'backstage-imported',
+    filter: ['==', ['geometry-type'], 'Polygon'],
+    paint: { 'fill-color': '#4f8cff', 'fill-opacity': 0.28, 'fill-outline-color': '#a9c6ff' },
+  });
+  map.addLayer({
+    id: 'backstage-imported-lines', type: 'line', source: 'backstage-imported',
+    filter: ['==', ['geometry-type'], 'LineString'],
+    paint: { 'line-color': '#ffc857', 'line-width': 2.4, 'line-opacity': 0.9 },
+  });
+  map.addLayer({
+    id: 'backstage-imported-points', type: 'circle', source: 'backstage-imported',
+    filter: ['==', ['geometry-type'], 'Point'],
+    paint: { 'circle-radius': 6, 'circle-color': '#5aa9ff', 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 1.5 },
+  });
+  map.addLayer({
     id: 'backstage-location-halo', type: 'circle', source: 'backstage-locations',
     paint: { 'circle-radius': 10, 'circle-color': '#39f5ae', 'circle-opacity': 0.16 },
   });
@@ -113,11 +152,15 @@ function NativeTerritorialExplorer({ operationalContext }) {
   const locationsRef = useRef([]);
   const terrainModeRef = useRef('relief');
   const requestRef = useRef(0);
+  const dataZoomRef = useRef(8);
+  const reloadTilesRef = useRef(null);
   const [locations, setLocations] = useState([]);
   const [selected, setSelected] = useState(null);
   const [message, setMessage] = useState('');
   const [terrain, setTerrain] = useState(null);
   const [terrainMode, setTerrainMode] = useState('relief');
+  const [dataZoom, setDataZoom] = useState(8);
+  const [visibleFeatureCount, setVisibleFeatureCount] = useState(0);
 
   useEffect(() => {
     apiRequest('/locations')
@@ -166,20 +209,57 @@ function NativeTerritorialExplorer({ operationalContext }) {
       }
     };
 
+    const loadSpatialTiles = async () => {
+      if (!map.getSource('backstage-imported')) return;
+      const tiles = visibleTiles(map.getBounds(), dataZoomRef.current);
+      try {
+        const responses = await Promise.all(tiles.map(({ z, x, y }) => apiRequest(`/spatial/tiles/${z}/${x}/${y}?worldId=earth`)));
+        const payloads = await Promise.all(responses.map(async (response) => {
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || 'No fue posible cargar una tesela territorial.');
+          return data;
+        }));
+        const unique = new Map();
+        payloads.flatMap((payload) => payload.features || []).forEach((feature) => unique.set(String(feature.id), feature));
+        const features = [...unique.values()];
+        map.getSource('backstage-imported')?.setData({ type: 'FeatureCollection', features });
+        setVisibleFeatureCount(features.length);
+      } catch (error) {
+        setMessage(error.message);
+      }
+    };
+    reloadTilesRef.current = loadSpatialTiles;
+
     map.on('load', () => {
       addBackstageLayers(map);
       map.getSource('backstage-locations').setData(locationsToGeoJSON(locationsRef.current));
       loadTerrain();
+      loadSpatialTiles();
     });
-    map.on('moveend', loadTerrain);
+    map.on('moveend', () => { loadTerrain(); loadSpatialTiles(); });
     map.on('click', 'backstage-location-points', (event) => {
       const properties = event.features?.[0]?.properties;
       if (properties) setSelected(properties);
+    });
+    ['backstage-imported-points', 'backstage-imported-lines', 'backstage-imported-polygons'].forEach((layerId) => {
+      map.on('click', layerId, (event) => {
+        const feature = event.features?.[0];
+        if (feature) setSelected({
+          ...feature.properties,
+          name: feature.properties?.name || feature.properties?.objectType || 'Objeto territorial',
+          locationType: feature.geometry?.type || 'Geometría importada',
+        });
+      });
     });
     map.on('mouseenter', 'backstage-location-points', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'backstage-location-points', () => { map.getCanvas().style.cursor = ''; });
     return () => { map.remove(); mapRef.current = null; };
   }, []);
+
+  useEffect(() => {
+    dataZoomRef.current = dataZoom;
+    reloadTilesRef.current?.();
+  }, [dataZoom]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -217,9 +297,15 @@ function NativeTerritorialExplorer({ operationalContext }) {
         </div>
       </div>
       <p className="auth-hint">MapLibre acelera la presentación WebGL; los datos, cálculos y estilos proceden exclusivamente del motor BACKSTAGE.</p>
+      <SpatialDataImporter
+        dataZoom={dataZoom}
+        onDataZoomChange={setDataZoom}
+        onImported={() => reloadTilesRef.current?.()}
+      />
       {terrain && (
         <p className="auth-hint">Modelo procedimental · {terrain.statistics.minElevation.toFixed(0)}–{terrain.statistics.maxElevation.toFixed(0)} m · relieve {terrain.statistics.relief.toFixed(0)} m · malla {terrain.resolution}×{terrain.resolution}</p>
       )}
+      <p className="auth-hint">Teselas XYZ nivel {dataZoom} · {visibleFeatureCount} objetos reales visibles</p>
       {message && <p className="message">{message}</p>}
       <div className="map-shell" style={{ position: 'relative' }}>
         <div ref={containerRef} aria-label="Mapa territorial WebGL" style={{ width: '100%', height: '620px' }} />
