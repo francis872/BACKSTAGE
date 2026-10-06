@@ -3,6 +3,7 @@ const http = require('http');
 const cors = require('cors');
 const errorHandler = require('./middleware/errorHandler');
 const auditLogger = require('./middleware/auditLogger');
+const { platformSecurity } = require('./middleware/platformSecurity');
 const { attachSecurityWebSocketServer } = require('./realtime/wsServer');
 const { startOperationalSupervisor, stopOperationalSupervisor } = require('./services/operationalSupervisor.service');
 
@@ -33,6 +34,8 @@ const port = process.env.PORT || 4000;
 const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:3001'];
 const allowsAllOrigins = allowedOrigins.includes('*');
 
+app.disable('x-powered-by');
+app.use(platformSecurity);
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowsAllOrigins || allowedOrigins.includes(origin)) {
@@ -55,7 +58,7 @@ app.get('/health', (req, res) => {
 app.get('/', (req, res) => {
   res.json({
     service: 'BACKSTAGE Intelligence Backend',
-    version: '0.1.0',
+    version: '3.1.0',
     endpoints: {
       auth: '/auth',
       locations: '/locations',
