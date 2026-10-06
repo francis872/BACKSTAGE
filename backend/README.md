@@ -77,9 +77,11 @@ Las superficies procedimentales se marcan explícitamente con `dataMode: "proced
 ## Ingestión y teselas territoriales
 
 - `POST /spatial/sources`: registra una fuente; `provider`, `dataset`, `version` y `license` son obligatorios.
-- `POST /spatial/ingest/geojson`: valida WGS84, geometrías admitidas y límites de carga; genera objetos y celdas XYZ.
+- `POST /spatial/ingest/geojson`: valida WGS84, geometrías admitidas y límites de carga; genera objetos y celdas XYZ para hasta siete niveles consecutivos.
 - `GET /spatial/tiles/:z/:x/:y?worldId=earth`: devuelve un `FeatureCollection` con metadatos de la tesela.
 - `GET /spatial/jobs`: permite auditar cargas completadas o fallidas.
+- `PATCH /spatial/sources/:id/status`: activa o archiva una fuente y sus objetos de forma reversible.
+- `GET /spatial/status`: informa si el almacenamiento es temporal o Atlas persistente.
 
 Las rutas de escritura requieren rol `admin` o `analyst`; la lectura de fuentes y teselas también admite `viewer`. Cada mundo y dataset queda aislado por organización.
 - `risk_components`
