@@ -1,4 +1,6 @@
-# 🚀 Quick Deploy to Railway - 3 Steps Only
+# Railway Deployment Quick Reference
+
+> Current deployment is controlled by `.github/workflows/deploy-railway.yml`. Pull requests validate only; a push to `main` deploys through the protected GitHub `production` environment.
 
 ## Step 1: Go to Railway Dashboard
 Open: https://railway.app/dashboard
@@ -14,30 +16,25 @@ Open: https://railway.app/dashboard
 
 ## That's it! 🎉
 
-Railway will:
-1. ✅ Deploy Express.js backend
-2. ✅ Create PostgreSQL database
-3. ✅ Set up environment variables
-4. ✅ Run init-railway.js automatically
-5. ✅ Give you a public URL
+Before deployment, configure a Railway PostgreSQL service and the backend variables `DATABASE_URL`, `JWT_SECRET` (random, at least 32 characters), `NODE_ENV=production`, and `CORS_ORIGIN`. Configure the GitHub `RAILWAY_TOKEN` secret and protect the `production` environment. The workflow applies migrations before deploying; it does not seed demo data.
 
 ---
 
 ## After Deploy
 
-Your backend will be at:
+Use the public Railway URL configured for your service:
 ```
 https://backstage-intelligence-prod.railway.app
 ```
 
-Update frontend:
+For Vercel, configure `BACKEND_URL` for its API proxy and build the frontend:
 ```bash
-echo "VITE_API_URL=https://backstage-intelligence-prod.railway.app" > frontend/.env.production
-git add -A
-git push
+cd frontend
+npm ci
+npm run build
 ```
 
-Vercel will auto-redeploy ✅
+Verify the backend at `https://<your-railway-domain>/health` after deployment.
 
 ---
 

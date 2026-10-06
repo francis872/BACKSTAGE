@@ -1,4 +1,6 @@
-﻿# ðŸš€ BACKSTAGE Intelligence - GuÃ­a de Despliegue Completo
+﻿# Guia de despliegue BACKSTAGE (referencia historica)
+
+> Este documento conserva pasos de una arquitectura anterior y no acredita que esos recursos sigan desplegados. Para ejecucion local usa `README.md`; para Railway, el workflow `.github/workflows/deploy-railway.yml` es la fuente vigente.
 
 ## ðŸ“‹ Estado Actual
 
@@ -9,12 +11,12 @@
    - Status: âœ“ Operativo
 
 â³ BACKEND (Por desplegar en Railway)
-   - Stack: Express.js + PostgreSQL + PostGIS
+   - Stack: Express.js + PostgreSQL 16 estandar + GeoJSON y motor espacial nativo
    - Status: âš ï¸  Listo para desplegar, aÃºn NO en producciÃ³n
    - Lugar: backend/
 
 ðŸ“¦ Base de Datos
-   - PostgreSQL 15 + PostGIS
+   - PostgreSQL 16 estandar
    - Status: âš ï¸  Necesita Railway o similar
 ```
 
@@ -64,20 +66,7 @@ railway env
 
 Una vez desplegado, ejecuta las migraciones:
 
-```bash
-# Si usaste CLI
-cd backend
-railway exec npm run db:init
-
-# O manualmente
-railway exec node init-railway.js
-```
-
-Esto:
-- âœ“ Crea extensiÃ³n PostGIS
-- âœ“ Ejecuta schema.sql
-- âœ“ Corre migraciones
-- âœ“ Siembra datos de ejemplo (ubicaciones, riesgos, zonas retail)
+El workflow vigente aplica las migraciones antes del despliegue. No ejecutes los inicializadores legacy contra producción; los datos demo se cargan solo fuera de producción.
 
 ### Fase 3: Actualizar Frontend en Vercel
 
@@ -135,7 +124,7 @@ curl https://backstage-intelligence-prod.railway.app/locations
 â”‚          â†“ Queries                                        â”‚
 â”‚                                                           â”‚
 â”‚  ðŸ—„ï¸  PostgreSQL (Railway)                                 â”‚
-â”‚  - PostGIS enabled                                       â”‚
+â”‚  - GeoJSON en PostgreSQL + motor espacial nativo         â”‚
 â”‚  - Schema completo (retail, risk, real estate, earthart) â”‚
 â”‚  - Datos de ejemplo (BogotÃ¡)                             â”‚
 â”‚                                                           â”‚
@@ -212,11 +201,7 @@ railway variables set CORS_ORIGIN=https://backstage-intelligence.vercel.app
 ```
 
 ### "Empty database"
-â†’ Las migraciones no se ejecutaron. Ejecuta manualmente:
-```bash
-cd backend
-railway exec npm run db:init
-```
+Verifica que el job de migraciones del workflow terminó correctamente. Los datos demo no se cargan en producción.
 
 ### "502 Bad Gateway"
 â†’ El backend se estÃ¡ iniciando. Espera 1-2 minutos.

@@ -1,4 +1,6 @@
-﻿# ðŸš€ Despliegue en Railway
+﻿# Despliegue en Railway
+
+> Fuente vigente: `.github/workflows/deploy-railway.yml`. Esta guía sustituye comandos manuales de inicialización heredados. Pull requests solo validan; la rama `main` despliega mediante el environment GitHub `production`.
 
 ## OpciÃ³n 1: CLI de Railway (Recomendado)
 
@@ -44,7 +46,7 @@ cd backend
 railway variables set NODE_ENV production
 railway variables set CORS_ORIGIN https://backstage-intelligence.vercel.app
 
-# Desflegable
+# Desplegar manualmente solo cuando no se use el workflow
 railway up
 
 # Verifica el despliegue
@@ -76,11 +78,7 @@ Railway puede leer directamente desde tu repo GitHub y desplegar automÃ¡ticame
 
 ### 6. Esperar despliegue automÃ¡tico
 
-Railway automÃ¡ticamente:
-- âœ“ Lee el `Dockerfile` del backend
-- âœ“ Crea PostgreSQL
-- âœ“ Configura variables de entorno
-- âœ“ Despliega en `https://backstage-intelligence-prod.railway.app`
+El workflow debe ser el responsable del despliegue. Railway debe tener PostgreSQL y las variables requeridas ya configuradas.
 
 ## Paso 5: Actualizar Frontend en Vercel
 
@@ -106,8 +104,10 @@ git push
 |----------|-------|-------|
 | `NODE_ENV` | `production` | |
 | `DATABASE_URL` | *Auto* | Railway la crea automÃ¡ticamente |
-| `PORT` | `3000` | Railway lo asigna automÃ¡ticamente |
+| `PORT` | Railway-provided | Railway lo asigna automÃ¡ticamente |
 | `CORS_ORIGIN` | `https://backstage-intelligence.vercel.app` | URL de tu frontend en Vercel |
+| `JWT_SECRET` | Aleatorio, 32+ caracteres | Obligatorio en producción |
+| `SPATIAL_STORE` | `memory` | Atlas futuro requiere `MONGODB_URI` |
 
 ## Verificar que Todo Funciona
 
@@ -145,10 +145,7 @@ railway logs
 ```
 
 ### "Database is empty"
-â†’ Los datos no se sembraron. Ejecuta manualmente:
-```bash
-railway exec node init-railway.js
-```
+Verifica que el job de migraciones del workflow terminó correctamente. Los datos demo no se cargan en producción.
 
 ---
 

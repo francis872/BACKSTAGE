@@ -9,11 +9,11 @@
 
 ```env
 PGHOST=localhost
-PGPORT=5432
+PGPORT=5544
 PGUSER=backstage
 PGPASSWORD=backstage
 PGDATABASE=backstage
-DATABASE_URL=postgres://backstage:backstage@localhost:5432/backstage
+DATABASE_URL=postgres://backstage:backstage@localhost:5544/backstage
 NODE_ENV=development
 JWT_SECRET=YOUR_STRONG_SECRET
 SPATIAL_STORE=memory

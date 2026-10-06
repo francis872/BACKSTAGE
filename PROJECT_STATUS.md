@@ -1,10 +1,12 @@
-﻿# ðŸ“Š BACKSTAGE Intelligence - Estado del Proyecto
+﻿# Estado historico del proyecto
+
+> Este archivo conserva una fotografia de una version anterior y no representa un inventario verificado de BACKSTAGE 3.1.0. Usa `README.md` y `DEPLOYMENT_GUIDE.md` para la arquitectura y ejecucion vigentes.
 
 ## ðŸŽ¯ Objetivo Completado
 Crear una **plataforma integral de inteligencia empresarial** con:
 - âœ… Frontend interactivo (React)
 - âœ… Backend REST API (Express + PostgreSQL)
-- âœ… AnÃ¡lisis geoespacial (PostGIS)
+- âœ… Analisis espacial con GeoJSON y el motor matematico nativo
 - âœ… Modelos de scoring y recomendaciones
 - âœ… MÃ³dulos especializados: EARTHART, Retail Intelligence, Real Estate Valuation
 
@@ -127,14 +129,14 @@ Vercel Serverless Functions (Proxy)
     â†“ HTTP Requests
 Railway Backend (Express.js)
     â†“ SQL Queries
-Railway PostgreSQL + PostGIS
+Railway PostgreSQL estandar
     â†“ Geospatial Analysis
 ```
 
 ### Modelos de Datos
 
 **Tablas Principales:**
-1. `locations` - Ubicaciones con geom (PostGIS)
+1. `locations` - Ubicaciones con geometria GeoJSON/JSONB
 2. `risk_assessments` - EvaluaciÃ³n de riesgos
 3. `retail_zones` - Zonas comerciales
 4. `property_valuations` - Valuaciones inmobiliarias
@@ -151,7 +153,7 @@ Railway PostgreSQL + PostGIS
 Datos abiertos BogotÃ¡ (CSV)
     â†’ Backend Pipeline (ingestion.js)
     â†’ ValidaciÃ³n
-    â†’ PostgreSQL + Geom (PostGIS)
+    â†’ PostgreSQL + GeoJSON/JSONB
 ```
 
 ### 2. Processing (Scoring)
@@ -294,6 +296,6 @@ npm run dev
 
 ---
 
-*Desarrollado con â¤ï¸ usando React, Express, PostgreSQL y PostGIS*
+*Desarrollado usando React, Express, PostgreSQL estandar y GeoJSON*
 *Datos abiertos de BogotÃ¡ (datosabiertos.bogota.gov.co)*
 

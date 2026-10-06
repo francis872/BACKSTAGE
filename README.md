@@ -20,7 +20,7 @@ BACKSTAGE responde preguntas de negocio como:
 - `BACKSTAGE Risk`: evaluación de riesgos climáticos, financieros y territoriales.
 - `BACKSTAGE Urban`: planeación urbana, catastro, avalúos y desarrollo inmobiliario.
 - `BACKSTAGE Insights`: paneles ejecutivos, reportes e indicadores.
-- `EarthArt`: gemelo digital territorial — índice territorial por dimensión, detector de brechas y motor predictivo de "qué pasaría si".
+- `EarthArt`: gemelo digital territorial — índice territorial por dimensión, detector de brechas y simulación de escenarios "qué pasaría si".
 
 ## Estructura del proyecto
 
@@ -125,20 +125,28 @@ Separación multi-organización activa:
 - Los módulos operativos (`locations`, `risk-assessments`, `recommendations`, `analysis`) filtran por organización.
 - Cambio de contexto con `POST /auth/switch-organization`.
 
-Usuarios de demo (seed):
-
-- `admin@backstage.local` / `BackstageAdmin123!`
-- `analyst@backstage.local` / `BackstageAnalyst123!`
-- `viewer@backstage.local` / `BackstageViewer123!`
-
-> Cambiar contraseñas y `JWT_SECRET` antes de uso productivo real.
+Los seeds de usuarios y datos demo solo se cargan con `NODE_ENV` distinto de `production`. No se publican credenciales demo: crea usuarios localmente mediante registro o configura credenciales propias para desarrollo. En producción configura un `JWT_SECRET` aleatorio de al menos 32 caracteres.
 
 ## Primeros pasos
 
-1. Navegar a `backend/` y ejecutar `npm install`.
-2. Navegar a `frontend/` y ejecutar `npm install`.
-3. Iniciar backend con `npm start` desde `backend/`.
-4. Iniciar frontend con `npm run dev` desde `frontend/`.
+Para desarrollo sin Docker, copia `backend/.env.example` a `backend/.env`, configura `DATABASE_URL` y `JWT_SECRET`, e instala las dependencias bloqueadas:
+
+```bash
+cd backend
+npm ci
+npm run migrate:up
+npm test
+npm start
+```
+
+En otra terminal, desde `frontend/`:
+
+```bash
+npm ci
+npm run dev
+```
+
+El ejemplo de base de datos apunta al PostgreSQL de Compose publicado en `localhost:5544`. El backend espera que el esquema ya esté migrado antes de atender operaciones.
 
 ## Ejecución con Docker Compose
 
@@ -146,7 +154,15 @@ Usuarios de demo (seed):
    - `docker compose up --build`
 2. Backend disponible en `http://localhost:4000`.
 3. Frontend disponible en `http://localhost:3000`.
-4. La base de datos se ejecuta sobre PostgreSQL estándar; la geometría se conserva como GeoJSON y se procesa con el núcleo matemático de BACKSTAGE.
+4. PostgreSQL 16 estándar queda publicado en `localhost:5544`; el servicio de migración termina antes del backend.
+5. La geometría se conserva como GeoJSON/JSONB y se procesa con el núcleo matemático de BACKSTAGE.
+
+## Validacion y CI/CD
+
+- Backend: `cd backend && npm ci && npm test`.
+- Frontend: `cd frontend && npm ci && npm run build`.
+- Pull requests a `main` ejecutan validación con PostgreSQL 16; el job Railway solo se habilita para `push` a `main` y usa el environment `production`.
+- La imagen local usa `SPATIAL_STORE=memory` de forma predeterminada. `SPATIAL_STORE=atlas` requiere `MONGODB_URI` y `MONGODB_SPATIAL_DB`; no se necesita Atlas para ejecutar el modo local.
 
 ## Ejecución local rápida
 
@@ -164,7 +180,7 @@ Variable opcional local:
 Desde `backend/`:
 
 - `npm run migrate:up` — ejecutar migraciones.
-- `npm run db:init` — cargar esquema y datos de ejemplo.
+- `npm run db:init` — cargar esquema; en entornos no productivos también carga datos demo.
 
 ## Propuesta de valor
 
