@@ -8,7 +8,9 @@ const router = express.Router();
 router.use(authenticate, requireOrganizationContext);
 router.get('/sources', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.listSources);
 router.post('/sources', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.registerSource);
+router.patch('/sources/:id/status', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.setSourceStatus);
 router.get('/jobs', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.listJobs);
+router.get('/status', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getStatus);
 router.post('/ingest/geojson', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.ingestGeoJSON);
 router.get('/tiles/:z/:x/:y', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getTile);
 
