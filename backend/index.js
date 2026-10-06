@@ -25,6 +25,7 @@ const operationsRoutes = require('./routes/operations.routes');
 const auditLogsRoutes = require('./routes/auditLogs.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const terrainRoutes = require('./routes/terrain.routes');
+const spatialIngestionRoutes = require('./routes/spatialIngestion.routes');
 const { getExampleRecommendation } = require('./controllers/recommendations.controller');
 
 const app = express();
@@ -43,7 +44,7 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '5mb' }));
 app.use(auditLogger);
 
 app.get('/health', (req, res) => {
@@ -72,6 +73,7 @@ app.get('/', (req, res) => {
       analysis: '/analysis',
       analytics: '/analytics',
       terrain: '/terrain',
+      spatial: '/spatial',
       auditLogs: '/audit-logs',
       securityEventsSocket: '/ws/security?token=<JWT>'
     }
@@ -96,6 +98,7 @@ app.use('/operational-events', operationalEventsRoutes);
 app.use('/operations', operationsRoutes);
 app.use('/analytics', analyticsRoutes);
 app.use('/terrain', terrainRoutes);
+app.use('/spatial', spatialIngestionRoutes);
 app.use('/audit-logs', auditLogsRoutes);
 
 // Backward compatibility with existing frontend route.
