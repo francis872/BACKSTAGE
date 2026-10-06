@@ -57,6 +57,7 @@ app.use(auditLogger);
 // Debug logging
 app.use((req, res, next) => {
   console.log(`[Express] ${req.method} ${req.path}`);
+  console.log(`[Express] req.url: ${req.url}, req.baseUrl: ${req.baseUrl}, req.path: ${req.path}`);
   next();
 });
 
@@ -91,7 +92,10 @@ app.get('/health', async (req, res) => {
   });
 });
 
-app.use('/auth', authRoutes);
+app.use('/auth', (req, res, next) => {
+  console.log(`[Auth Route Middleware] Matched /auth: ${req.method} ${req.path} (url: ${req.url})`);
+  authRoutes(req, res, next);
+});
 app.use('/locations', locationsRoutes);
 app.use('/insights', insightsRoutes);
 app.use('/real-estate', realEstateRoutes);
