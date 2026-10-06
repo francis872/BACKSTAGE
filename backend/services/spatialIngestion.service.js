@@ -17,11 +17,15 @@ const graphCache = new Map();
 
 function getPipeline() {
   if (!pipelinePromise) {
-    pipelinePromise = (async () => {
+    const pending = (async () => {
       const store = createSpatialStore();
       await store.initialize();
       return new SpatialIngestionPipeline(store);
     })();
+    pipelinePromise = pending.catch((error) => {
+      pipelinePromise = null;
+      throw error;
+    });
   }
   return pipelinePromise;
 }
@@ -34,6 +38,9 @@ function scopedWorldId(organizationId, requested = 'earth') {
 
 function translate(error) {
   if (error instanceof ApiError) throw error;
+  if (error?.name?.startsWith('Mongo') || String(process.env.SPATIAL_STORE).toLowerCase() === 'atlas' && !process.env.MONGODB_URI) {
+    throw new ApiError(503, 'Almacén espacial temporalmente no disponible.');
+  }
   const status = /no encontrada/i.test(error.message) ? 404 : 400;
   throw new ApiError(status, error.message);
 }
@@ -166,4 +173,4 @@ function getStatus() {
   };
 }
 
-module.exports = { getPipeline, scopedWorldId, registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, search, nearby, computeRoute, evaluateTerritorialRisk, evaluateTerritorialScenario, measureTerritorialGeometry, setSourceStatus, getStatus };
+module.exports = { getPipeline, scopedWorldId, translate, registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, search, nearby, computeRoute, evaluateTerritorialRisk, evaluateTerritorialScenario, measureTerritorialGeometry, setSourceStatus, getStatus };

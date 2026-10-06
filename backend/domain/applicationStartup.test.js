@@ -25,3 +25,14 @@ test('health responde con estados operativos sin filtrar secretos', async (conte
   assert.ok(['memory', 'atlas'].includes(payload.spatialStore));
   assert.equal(payload.mongouri, undefined);
 });
+
+test('el handler serverless Vercel conserva la ruta original al reescribir /api', async (context) => {
+  const handler = require('../api');
+  const server = require('node:http').createServer(handler).listen(0, '127.0.0.1');
+  context.after(() => server.close());
+  await new Promise((resolve) => server.once('listening', resolve));
+  const { port } = server.address();
+  const response = await fetch(`http://127.0.0.1:${port}/api/index?__vercel_path=health&probe=preserved`);
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).service, 'BACKSTAGE Intelligence Backend');
+});

@@ -46,7 +46,7 @@ class SpatialIngestionPipeline {
   }
 
   async ingestGeoJSON({ organizationId, worldId, sourceId, collection, minZoom = 8, maxZoom = 12 }) {
-    const source = await this.store.get(COLLECTIONS.sources, sourceId);
+    const source = await this.store.get(COLLECTIONS.sources, sourceId, organizationId);
     if (!source || String(source.organizationId) !== String(organizationId)) throw new Error('Fuente no encontrada para la organización activa.');
     const geojson = validateFeatureCollection(collection);
     if (![minZoom, maxZoom].every(Number.isInteger) || minZoom < 0 || maxZoom > 22 || minZoom > maxZoom) {
@@ -115,7 +115,7 @@ class SpatialIngestionPipeline {
 
   async setSourceStatus({ organizationId, sourceId, status }) {
     if (!['active', 'archived'].includes(status)) throw new TypeError('status debe ser active o archived.');
-    const source = await this.store.get(COLLECTIONS.sources, sourceId);
+    const source = await this.store.get(COLLECTIONS.sources, sourceId, organizationId);
     if (!source || String(source.organizationId) !== String(organizationId)) throw new Error('Fuente no encontrada para la organización activa.');
     const updated = await this.store.upsert(COLLECTIONS.sources, { ...source, status, updatedAt: new Date() });
     const result = await this.store.updateMany(COLLECTIONS.objects, { organizationId, sourceId }, { status, updatedAt: new Date() });

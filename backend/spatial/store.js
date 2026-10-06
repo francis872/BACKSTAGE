@@ -13,7 +13,16 @@ const COLLECTIONS = Object.freeze({
   jobs: 'spatial_ingestion_jobs',
 });
 
+const TENANT_COLLECTIONS = new Set(Object.values(COLLECTIONS));
 let atlasStoreSingleton = null;
+
+function storageKey(collection, id, organizationId) {
+  if (id == null || id === '') return null;
+  const key = String(id);
+  if (organizationId == null || !TENANT_COLLECTIONS.has(collection)) return key;
+  const prefix = `${organizationId}::`;
+  return key.startsWith(prefix) ? key : `${prefix}${key}`;
+}
 
 function getMongoClient(uri, env = process.env) {
   if (!uri) return null;
@@ -22,6 +31,7 @@ function getMongoClient(uri, env = process.env) {
   }
 
   const client = new MongoClient(uri, {
+    appName: env.MONGODB_APP_NAME || 'backstage',
     maxPoolSize: Number(env.MONGODB_MAX_POOL_SIZE || 20),
     minPoolSize: Number(env.MONGODB_MIN_POOL_SIZE || 0),
     connectTimeoutMS: Number(env.MONGODB_CONNECT_TIMEOUT_MS || 10000),
@@ -76,15 +86,16 @@ class MemorySpatialStore {
   async initialize() {}
 
   async upsert(collection, document) {
-    const key = document._id || document.id;
-    if (!key) throw new TypeError('El documento requiere _id o id.');
+    const rawKey = document._id || document.id;
+    if (!rawKey) throw new TypeError('El documento requiere _id o id.');
+    const key = storageKey(collection, rawKey, document.organizationId);
     const stored = { ...document, _id: key };
     this.collections.get(collection).set(String(key), stored);
     return stored;
   }
 
-  async get(collection, id) {
-    return this.collections.get(collection).get(String(id)) || null;
+  async get(collection, id, organizationId) {
+    return this.collections.get(collection).get(storageKey(collection, id, organizationId)) || null;
   }
 
   async list(collection, filter = {}) {
@@ -119,18 +130,16 @@ class AtlasSpatialStore {
     if (!this.client) throw new Error('MongoDB client no disponible.');
     await this.client.connect();
     this.db = this.client.db(this.dbName);
-    await this.db.collection(COLLECTIONS.sources).dropIndex('provider_1_dataset_1_version_1')
-      .catch((error) => { if (error.codeName !== 'IndexNotFound') throw error; });
     await Promise.all([
-      this.db.collection(COLLECTIONS.cells).createIndex({ worldId: 1, level: 1, cellId: 1 }, { unique: true }),
-      this.db.collection(COLLECTIONS.cells).createIndex({ boundsGeometry: '2dsphere' }),
-      this.db.collection(COLLECTIONS.objects).createIndex({ worldId: 1, cellId: 1, objectType: 1 }),
-      this.db.collection(COLLECTIONS.objects).createIndex({ geometry: '2dsphere' }),
-      this.db.collection(COLLECTIONS.contours).createIndex({ worldId: 1, cellId: 1, elevationM: 1 }),
+      this.db.collection(COLLECTIONS.worlds).createIndex({ organizationId: 1, worldId: 1 }),
+      this.db.collection(COLLECTIONS.cells).createIndex({ organizationId: 1, worldId: 1, level: 1, cellId: 1 }, { unique: true }),
+      this.db.collection(COLLECTIONS.objects).createIndex({ organizationId: 1, worldId: 1, cellId: 1, objectType: 1 }),
+      this.db.collection(COLLECTIONS.objects).createIndex({ organizationId: 1, sourceId: 1, status: 1 }),
+      this.db.collection(COLLECTIONS.objects).createIndex({ organizationId: 1, worldId: 1, 'properties.name': 1 }),
+      this.db.collection(COLLECTIONS.objects).createIndex({ organizationId: 1, worldId: 1, 'properties.category': 1 }),
       this.db.collection(COLLECTIONS.sources).createIndex({ organizationId: 1, provider: 1, dataset: 1, version: 1 }, { unique: true }),
-      this.db.collection(COLLECTIONS.jobs).createIndex({ organizationId: 1, createdAt: -1 }),
-      this.db.collection(COLLECTIONS.versions).createIndex({ objectId: 1, version: -1 }, { unique: true }),
-      this.db.collection(COLLECTIONS.embeddings).createIndex({ worldId: 1, cellId: 1, model: 1 }),
+      this.db.collection(COLLECTIONS.jobs).createIndex({ organizationId: 1, status: 1, createdAt: -1 }),
+      this.db.collection(COLLECTIONS.versions).createIndex({ organizationId: 1, objectId: 1, version: -1 }, { unique: true }),
     ]);
   }
 
@@ -140,15 +149,18 @@ class AtlasSpatialStore {
   }
 
   async upsert(collection, document) {
-    const key = document._id || document.id;
-    if (!key) throw new TypeError('El documento requiere _id o id.');
-    const stored = { ...document, _id: String(key) };
+    const rawKey = document._id || document.id;
+    if (!rawKey) throw new TypeError('El documento requiere _id o id.');
+    const key = storageKey(collection, rawKey, document.organizationId);
+    const stored = { ...document, _id: key };
     await this.collection(collection).replaceOne({ _id: stored._id }, stored, { upsert: true });
     return stored;
   }
 
-  async get(collection, id) {
-    return this.collection(collection).findOne({ _id: String(id) });
+  async get(collection, id, organizationId) {
+    const filter = { _id: storageKey(collection, id, organizationId) };
+    if (organizationId != null) filter.organizationId = organizationId;
+    return this.collection(collection).findOne(filter);
   }
 
   async list(collection, filter = {}, options = {}) {

@@ -1,7 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const WorldModel = require('../spatial/worldModel');
-const { COLLECTIONS, MemorySpatialStore, createSpatialStore } = require('../spatial/store');
+const { COLLECTIONS, AtlasSpatialStore, MemorySpatialStore, createSpatialStore } = require('../spatial/store');
+const { translate } = require('../services/spatialIngestion.service');
 
 test('crea mundo, celda y objeto espacial versionado', async () => {
   const store = new MemorySpatialStore();
@@ -29,4 +30,30 @@ test('Atlas crea singleton reutilizable con URI y memory funciona sin credencial
   const atlasStore2 = createSpatialStore({ SPATIAL_STORE: 'atlas', MONGODB_URI: 'mongodb://localhost:27017/backstage_spatial' });
   assert.equal(atlasStore1, atlasStore2);
   assert.equal(atlasStore1.constructor.name, 'AtlasSpatialStore');
+});
+
+test('Atlas namespacea IDs por organización y exige tenant en lecturas', async () => {
+  const documents = new Map();
+  const collection = {
+    replaceOne: async (filter, document) => documents.set(filter._id, document),
+    findOne: async (filter) => {
+      const document = documents.get(filter._id);
+      return document && Object.entries(filter).every(([key, value]) => document[key] === value) ? document : null;
+    },
+  };
+  const store = new AtlasSpatialStore({ uri: 'mongodb://localhost:27017/test', client: {} });
+  store.db = { collection: () => collection };
+
+  await store.upsert(COLLECTIONS.objects, { id: 'same-feature', organizationId: 'ORG_A', properties: { name: 'A' } });
+  await store.upsert(COLLECTIONS.objects, { id: 'same-feature', organizationId: 'ORG_B', properties: { name: 'B' } });
+
+  assert.equal((await store.get(COLLECTIONS.objects, 'same-feature', 'ORG_A')).properties.name, 'A');
+  assert.equal((await store.get(COLLECTIONS.objects, 'same-feature', 'ORG_B')).properties.name, 'B');
+  assert.equal(await store.get(COLLECTIONS.objects, 'ORG_B::same-feature', 'ORG_A'), null);
+});
+
+test('errores del driver Atlas se convierten a 503 sin filtrar detalles', () => {
+  const error = Object.assign(new Error('MongoDB connection details must remain private'), { name: 'MongoServerSelectionError' });
+  assert.throws(() => translate(error), (translated) => translated.statusCode === 503
+    && !translated.message.includes('connection details'));
 });
