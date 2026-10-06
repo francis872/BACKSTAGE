@@ -96,6 +96,13 @@ app.use('/auth', (req, res, next) => {
   console.log(`[Auth Route Middleware] Matched /auth: ${req.method} ${req.path} (url: ${req.url})`);
   authRoutes(req, res, next);
 });
+
+// Also handle /api/auth paths (from Vercel handler)
+app.use('/api/auth', (req, res, next) => {
+  console.log(`[API Auth Route Middleware] Matched /api/auth: ${req.method} ${req.path} (url: ${req.url})`);
+  authRoutes(req, res, next);
+});
+
 app.use('/locations', locationsRoutes);
 app.use('/insights', insightsRoutes);
 app.use('/real-estate', realEstateRoutes);
@@ -119,10 +126,13 @@ app.use('/audit-logs', auditLogsRoutes);
 // SPA fallback: serve index.html for non-API routes
 app.get('*', (req, res, next) => {
   // Skip if route starts with /api or already matched
+  console.log(`[SPA Fallback Check] req.path="${req.path}", req.url="${req.url}", starts with /api? ${req.path.startsWith('/api')}`);
   if (req.path.startsWith('/api')) {
+    console.log(`[SPA Fallback Check] Skipping SPA fallback for API path`);
     return next();
   }
   
+  console.log(`[SPA Fallback Check] Serving SPA for path: ${req.path}`);
   const indexPath = path.join(__dirname, '..', 'frontend', 'dist', 'index.html');
   if (fs.existsSync(indexPath)) {
     return res.sendFile(indexPath);

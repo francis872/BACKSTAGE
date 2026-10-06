@@ -2,39 +2,29 @@ const app = require('../../backend/index');
 
 module.exports = (req, res) => {
   try {
-    console.log(`[Auth Handler] START: ${req.method} ${req.url}`);
+    const HANDLER_ID = `[AUTH-HANDLER-${Date.now()}]`;
+    console.log(`${HANDLER_ID} START: ${req.method} ${req.url}`);
+    console.log(`${HANDLER_ID} req.url=${req.url}, req.path=${req.path}, req.pathname=${req.pathname}`);
     
-    // The path should be /auth/<rest> since we're at api/auth/
-    // But Vercel might pass it differently, so let's handle both cases
-    
-    // Build the full path: /auth + remaining path
-    const url = new URL(req.url, 'http://localhost');
-    let pathname = url.pathname;
-    
-    // If it doesn't start with /auth, prepend it
-    if (!pathname.startsWith('/auth')) {
-      pathname = '/auth' + pathname;
+    // Keep the /api/auth prefix to ensure SPA fallback check works correctly
+    // The backend will handle auth routing from /api/auth paths
+    if (!req.url.startsWith('/api')) {
+      req.url = '/api' + req.url;
     }
     
-    // Also check if /api/auth is at the beginning and strip it
-    if (pathname.startsWith('/api/auth')) {
-      pathname = pathname.replace(/^\/api/, '');
-    }
+    console.log(`${HANDLER_ID} Modified req.url to: ${req.url}`);
     
-    url.pathname = pathname;
-    req.url = `${url.pathname}${url.search}`;
+    // Clear any cached URL parsing so Express recalculates req.path
+    delete req._parsedUrl;
+    if (req._parsedPath) delete req._parsedPath;
     
-    // Important: Also update req.path so Express middleware sees the correct path
-    // This is needed for the SPA fallback check that uses req.path
-    delete req._parsedUrl; // Clear Express's cached URL parsing
-    
-    console.log(`[Auth Handler] ROUTING TO: ${req.method} ${req.url} (path: ${pathname})`);
+    console.log(`${HANDLER_ID} Calling Express app with ${req.method} ${req.url}`);
     const result = app(req, res);
-    console.log(`[Auth Handler] RETURNED: ${req.method} ${req.url}`);
+    console.log(`${HANDLER_ID} Express returned: ${req.method} ${req.url}`);
     return result;
   } catch (error) {
-    console.error(`[Auth Handler] ERROR: ${error.message}`);
-    console.error(`[Auth Handler] STACK: ${error.stack}`);
-    res.status(500).json({ error: error.message });
+    console.error(`[AUTH-HANDLER-ERROR] ${error.message}`);
+    console.error(`[AUTH-HANDLER-ERROR] Stack: ${error.stack}`);
+    res.status(500).json({ error: error.message, stack: error.stack });
   }
 };
