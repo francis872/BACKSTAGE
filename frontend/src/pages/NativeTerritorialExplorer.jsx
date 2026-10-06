@@ -320,11 +320,16 @@ function NativeTerritorialExplorer({ operationalContext }) {
     terrainModeRef.current = terrainMode;
     if (!map?.isStyleLoaded()) return;
     map.getSource('backstage-locations')?.setData(locationsToGeoJSON(locations));
-    if (operationalContext?.city && locations.length) {
-      const match = locations.find((row) => row.city === operationalContext.city);
-      if (match) map.flyTo({ center: [Number(match.longitude), Number(match.latitude)], zoom: 12, duration: 900 });
+    if (locations.length) {
+      const match = operationalContext?.location_id
+        ? locations.find((row) => Number(row.location_id) === Number(operationalContext.location_id))
+        : locations.find((row) => row.city === operationalContext?.city);
+      if (match) {
+        map.flyTo({ center: [Number(match.longitude), Number(match.latitude)], zoom: operationalContext?.location_id ? 15 : 12, duration: 900 });
+        if (operationalContext?.location_id) setSelected({ name: match.name, city: match.city, locationType: match.type || 'Ubicación evaluada' });
+      }
     }
-  }, [locations, operationalContext?.city]);
+  }, [locations, operationalContext?.city, operationalContext?.location_id]);
 
   useEffect(() => {
     const map = mapRef.current;
