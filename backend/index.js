@@ -54,15 +54,6 @@ app.use(cors({
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '5mb' }));
 app.use(auditLogger);
 
-// Serve frontend static files if available
-const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
-if (fs.existsSync(frontendDistPath)) {
-  app.use(express.static(frontendDistPath, { 
-    maxAge: '1d',
-    etag: false 
-  }));
-}
-
 app.get('/health', async (req, res) => {
   const provider = String(process.env.SPATIAL_STORE || 'memory').toLowerCase();
   let postgres = 'unavailable';
@@ -92,6 +83,27 @@ app.get('/health', async (req, res) => {
     service: 'BACKSTAGE Intelligence Backend',
   });
 });
+
+app.use('/auth', authRoutes);
+app.use('/locations', locationsRoutes);
+app.use('/insights', insightsRoutes);
+app.use('/real-estate', realEstateRoutes);
+app.use('/retail-zones', retailZonesRoutes);
+app.use('/risk-components', riskComponentsRoutes);
+app.use('/risk-assessments', riskAssessmentsRoutes);
+app.use('/recommendations', recommendationsRoutes);
+app.use('/integrations', integrationsRoutes);
+app.use('/scoring', scoringRoutes);
+app.use('/territorial', territorialRoutes);
+app.use('/users', usersRoutes);
+app.use('/layers', layersRoutes);
+app.use('/analysis', analysisRoutes);
+app.use('/operational-events', operationalEventsRoutes);
+app.use('/operations', operationsRoutes);
+app.use('/analytics', analyticsRoutes);
+app.use('/terrain', terrainRoutes);
+app.use('/spatial', spatialIngestionRoutes);
+app.use('/audit-logs', auditLogsRoutes);
 
 // SPA fallback: serve index.html for non-API routes
 app.get('*', (req, res, next) => {
@@ -161,27 +173,6 @@ app.get('/', (req, res) => {
     }
   });
 });
-
-app.use('/auth', authRoutes);
-app.use('/locations', locationsRoutes);
-app.use('/insights', insightsRoutes);
-app.use('/real-estate', realEstateRoutes);
-app.use('/retail-zones', retailZonesRoutes);
-app.use('/risk-components', riskComponentsRoutes);
-app.use('/risk-assessments', riskAssessmentsRoutes);
-app.use('/recommendations', recommendationsRoutes);
-app.use('/integrations', integrationsRoutes);
-app.use('/scoring', scoringRoutes);
-app.use('/territorial', territorialRoutes);
-app.use('/users', usersRoutes);
-app.use('/layers', layersRoutes);
-app.use('/analysis', analysisRoutes);
-app.use('/operational-events', operationalEventsRoutes);
-app.use('/operations', operationsRoutes);
-app.use('/analytics', analyticsRoutes);
-app.use('/terrain', terrainRoutes);
-app.use('/spatial', spatialIngestionRoutes);
-app.use('/audit-logs', auditLogsRoutes);
 
 // Backward compatibility with existing frontend route.
 app.get('/recommendation/example', getExampleRecommendation);
