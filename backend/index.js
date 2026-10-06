@@ -40,15 +40,12 @@ const allowsAllOrigins = allowedOrigins.includes('*');
 
 app.disable('x-powered-by');
 app.use(platformSecurity);
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowsAllOrigins || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
+app.use(cors((req, callback) => {
+  const origin = req.get('origin');
+  const host = req.get('x-forwarded-host') || req.get('host');
+  const sameOrigin = Boolean(origin && host && origin.replace(/^https?:\/\//, '') === host);
+  const allowed = !origin || sameOrigin || allowsAllOrigins || allowedOrigins.includes(origin);
+  callback(allowed ? null : new Error('Not allowed by CORS'), { origin: allowed, credentials: true });
 }));
 
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '5mb' }));
