@@ -10,6 +10,7 @@ const COLLECTIONS = Object.freeze({
   sources: 'source_registry',
   versions: 'spatial_versions',
   embeddings: 'territorial_embeddings',
+  jobs: 'spatial_ingestion_jobs',
 });
 
 function validateSpatialObject(input) {
@@ -65,13 +66,16 @@ class AtlasSpatialStore {
   async initialize() {
     await this.client.connect();
     this.db = this.client.db(this.dbName);
+    await this.db.collection(COLLECTIONS.sources).dropIndex('provider_1_dataset_1_version_1')
+      .catch((error) => { if (error.codeName !== 'IndexNotFound') throw error; });
     await Promise.all([
       this.db.collection(COLLECTIONS.cells).createIndex({ worldId: 1, level: 1, cellId: 1 }, { unique: true }),
       this.db.collection(COLLECTIONS.cells).createIndex({ boundsGeometry: '2dsphere' }),
       this.db.collection(COLLECTIONS.objects).createIndex({ worldId: 1, cellId: 1, objectType: 1 }),
       this.db.collection(COLLECTIONS.objects).createIndex({ geometry: '2dsphere' }),
       this.db.collection(COLLECTIONS.contours).createIndex({ worldId: 1, cellId: 1, elevationM: 1 }),
-      this.db.collection(COLLECTIONS.sources).createIndex({ provider: 1, dataset: 1, version: 1 }, { unique: true }),
+      this.db.collection(COLLECTIONS.sources).createIndex({ organizationId: 1, provider: 1, dataset: 1, version: 1 }, { unique: true }),
+      this.db.collection(COLLECTIONS.jobs).createIndex({ organizationId: 1, createdAt: -1 }),
       this.db.collection(COLLECTIONS.versions).createIndex({ objectId: 1, version: -1 }, { unique: true }),
       this.db.collection(COLLECTIONS.embeddings).createIndex({ worldId: 1, cellId: 1, model: 1 }),
     ]);
