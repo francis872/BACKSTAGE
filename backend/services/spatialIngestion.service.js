@@ -4,6 +4,7 @@ const { SpatialIngestionPipeline } = require('../spatial/ingestion');
 const TileCache = require('../spatial/tileCache');
 const { fetchGeoJSON } = require('../spatial/remoteSources');
 const { buildRoadGraph, shortestPath } = require('../spatial/routing');
+const { evaluateRisk } = require('../spatial/riskModels');
 
 let pipelinePromise;
 const tileCache = new TileCache({
@@ -131,6 +132,10 @@ async function computeRoute(organizationId, payload) {
   } catch (error) { return translate(error); }
 }
 
+function evaluateTerritorialRisk(payload) {
+  try { return evaluateRisk(payload); } catch (error) { return translate(error); }
+}
+
 async function setSourceStatus(organizationId, sourceId, status) {
   try {
     const pipeline = await getPipeline();
@@ -151,4 +156,4 @@ function getStatus() {
   };
 }
 
-module.exports = { getPipeline, scopedWorldId, registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, search, nearby, computeRoute, setSourceStatus, getStatus };
+module.exports = { getPipeline, scopedWorldId, registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, search, nearby, computeRoute, evaluateTerritorialRisk, setSourceStatus, getStatus };
