@@ -54,10 +54,6 @@ async function initialize() {
     // Esperar a PostgreSQL
     await waitForDb();
 
-    // Crear extensiones
-    await pool.query('CREATE EXTENSION IF NOT EXISTS postgis;');
-    console.log('✓ Extensión PostGIS habilitada');
-
     // Ejecutar schema.sql
     const schemaPath = path.join(__dirname, 'schema.sql');
     if (fs.existsSync(schemaPath)) {
@@ -79,11 +75,13 @@ async function initialize() {
       }
     }
 
-    // Sembrar datos de ejemplo
-    const sampleDataPath = path.join(__dirname, 'sample-data.sql');
-    if (fs.existsSync(sampleDataPath)) {
-      await runSql(sampleDataPath);
-      console.log('✓ Datos de ejemplo sembrados');
+    // Demo records and default users are only for non-production environments.
+    if (process.env.NODE_ENV !== 'production') {
+      const sampleDataPath = path.join(__dirname, 'sample-data.sql');
+      if (fs.existsSync(sampleDataPath)) {
+        await runSql(sampleDataPath);
+        console.log('✓ Datos de ejemplo sembrados');
+      }
     }
 
     console.log('✅ Inicialización completada');

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Quick Railway deployment script
-This script deploys the backend to Railway using the Railway API
+Legacy Railway deployment helper. It does not deploy resources.
 """
 
 import os
@@ -19,14 +18,8 @@ def get_railway_token():
         return token
     
     print("\n❌ RAILWAY_TOKEN no configurado")
-    print("\n📋 Para desplegar a Railway, necesitas:")
-    print("\n1. Ve a: https://railway.app/dashboard/tokens")
-    print("2. Crea un nuevo token")
-    print("3. Copia el token")
-    print("\n4. Ejecuta este script con el token:")
-    print("   RAILWAY_TOKEN=<tu_token> python3 railway-deploy.py")
-    print("\nO agrega a tu .env:")
-    print("   echo 'RAILWAY_TOKEN=<tu_token>' >> .env")
+    print("\nConfigura RAILWAY_TOKEN en el entorno del proceso o usa Railway CLI.")
+    print("No guardes tokens en archivos .env versionados.")
     
     sys.exit(1)
 
@@ -66,20 +59,20 @@ def main():
     print("=" * 50)
     
     token = get_railway_token()
-    print(f"✅ Token encontrado: {token[:20]}...")
+    print("✅ RAILWAY_TOKEN está configurado (valor oculto).")
     
     print("\n📝 Para continuar con el deploy automático:")
-    print("   railway up")
+    print("   Railway deployment is managed by .github/workflows/deploy-railway.yml on main.")
     print("\n⚠️  O usa el dashboard de Railway:")
     print("   1. Ve a https://railway.app/dashboard")
     print("   2. Crea un nuevo proyecto")
     print("   3. Conecta tu repositorio GitHub")
-    print("   4. Railway auto-deploya en cada push")
+    print("   4. Configure PostgreSQL and production environment variables before deployment.")
     
     print("\n✨ El backend está listo para desplegar")
     print("   Carpeta: backend/")
     print("   Archivo principal: backend/index.js")
-    print("   Database init: backend/init-railway.js")
+    print("   Database migrations: node-pg-migrate (run by the deployment workflow)")
 
 if __name__ == "__main__":
     main()

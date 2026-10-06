@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Inicializa la base de datos Neon con el schema completo (PostGIS + EarthArt)
- * y siembra datos de ejemplo. Reemplaza a init-railway.js para Neon/Vercel.
+ * Inicializa el schema PostgreSQL para Neon y siembra datos solo fuera de producción.
+ * Reemplaza a init-railway.js para Neon/Vercel.
  */
 const fs = require('fs');
 const path = require('path');
@@ -13,15 +13,16 @@ async function run() {
 
     const schemaSql = fs.readFileSync(path.join(__dirname, 'schema-full.sql'), 'utf8');
     await pool.query(schemaSql);
-    console.log('✓ Schema completo creado (PostGIS + EarthArt)');
+    console.log('✓ Schema completo creado');
 
-    const sampleSql = fs.readFileSync(path.join(__dirname, 'sample-data.sql'), 'utf8');
-    await pool.query(sampleSql);
-    console.log('✓ Datos de ejemplo sembrados');
+    if (process.env.NODE_ENV !== 'production') {
+      const sampleSql = fs.readFileSync(path.join(__dirname, 'sample-data.sql'), 'utf8');
+      await pool.query(sampleSql);
 
-    const authSql = fs.readFileSync(path.join(__dirname, 'backend-seed-auth.sql'), 'utf8');
-    await pool.query(authSql);
-    console.log('✓ Usuario admin y fuentes de integración sembrados');
+      const authSql = fs.readFileSync(path.join(__dirname, 'backend-seed-auth.sql'), 'utf8');
+      await pool.query(authSql);
+      console.log('✓ Datos y usuarios demo sembrados');
+    }
 
     console.log('✅ Inicialización completada correctamente');
   } catch (error) {

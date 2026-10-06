@@ -110,6 +110,13 @@ app.get('/recommendation/example', getExampleRecommendation);
 app.use(errorHandler);
 
 if (require.main === module) {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET es obligatorio para iniciar el backend.');
+  }
+  if (process.env.NODE_ENV === 'production' && process.env.JWT_SECRET.length < 32) {
+    throw new Error('JWT_SECRET debe tener al menos 32 caracteres en producción.');
+  }
+
   const server = http.createServer(app);
   attachSecurityWebSocketServer(server);
   server.listen(port, () => {

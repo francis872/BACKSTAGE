@@ -9,10 +9,11 @@ async function run() {
 
     console.log('Esquema de base de datos creado o actualizado correctamente.');
 
-    const sampleSql = fs.readFileSync(path.join(__dirname, 'sample-data.sql'), 'utf8');
-    await pool.query(sampleSql);
-
-    console.log('Datos de ejemplo insertados correctamente.');
+    if (process.env.NODE_ENV !== 'production') {
+      const sampleSql = fs.readFileSync(path.join(__dirname, 'sample-data.sql'), 'utf8');
+      await pool.query(sampleSql);
+      console.log('Datos de ejemplo insertados correctamente.');
+    }
   } catch (error) {
     console.error('Error al inicializar la base de datos:', error);
     process.exit(1);

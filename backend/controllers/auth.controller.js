@@ -1,4 +1,4 @@
-const { query } = require('../db');
+const { query, withTransaction } = require('../db');
 const { verifyPassword, createToken, createPasswordHash, isLegacyHash } = require('../auth');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/ApiError');
@@ -92,26 +92,21 @@ const register = asyncHandler(async (req, res) => {
   const roleId = roleResult.rows[0].role_id;
   const passwordHash = createPasswordHash(password);
 
-  let createdUserId;
-  try {
-    await query('BEGIN');
-    const createdUser = await query(
+  const createdUserId = await withTransaction(async (client) => {
+    const createdUser = await client.query(
       `INSERT INTO users (email, name, password_hash, role)
        VALUES ($1, $2, $3, $4)
        RETURNING user_id`,
       [email, name || null, passwordHash, 'viewer']
     );
-    createdUserId = createdUser.rows[0].user_id;
-    await query(
+    const userId = createdUser.rows[0].user_id;
+    await client.query(
       `INSERT INTO user_roles (user_id, role_id, organization_id)
        VALUES ($1, $2, $3)`,
-      [createdUserId, roleId, selectedOrganization.organization_id]
+      [userId, roleId, selectedOrganization.organization_id]
     );
-    await query('COMMIT');
-  } catch (error) {
-    await query('ROLLBACK');
-    throw error;
-  }
+    return userId;
+  });
 
   const memberships = await organizationService.getUserMemberships(createdUserId);
   const activeMembership = organizationService.resolveMembership(memberships, selectedOrganization.organization_id);
