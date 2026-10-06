@@ -7,6 +7,8 @@ import SpatialDatasetAdmin from '../components/SpatialDatasetAdmin';
 import SpatialSearch from '../components/SpatialSearch';
 import TerritorialRiskAnalyzer from '../components/TerritorialRiskAnalyzer';
 import TerrainHydrologyAnalyzer from '../components/TerrainHydrologyAnalyzer';
+import MapDrawingTools from '../components/MapDrawingTools';
+import RiskScenarioMap from '../components/RiskScenarioMap';
 
 const EMPTY_COLLECTION = { type: 'FeatureCollection', features: [] };
 const INTERNAL_STYLE = {
@@ -104,6 +106,8 @@ function addBackstageLayers(map) {
   map.addSource('backstage-route', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addSource('backstage-landforms', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addSource('backstage-drainage', { type: 'geojson', data: EMPTY_COLLECTION });
+  map.addSource('backstage-drawing', { type: 'geojson', data: EMPTY_COLLECTION });
+  map.addSource('backstage-risk-scenario', { type: 'geojson', data: EMPTY_COLLECTION });
   map.addLayer({
     id: 'backstage-terrain-fill', type: 'fill', source: 'backstage-terrain',
     paint: {
@@ -167,6 +171,25 @@ function addBackstageLayers(map) {
     id: 'backstage-location-points', type: 'circle', source: 'backstage-locations',
     paint: { 'circle-radius': 5.5, 'circle-color': '#39f5ae', 'circle-stroke-color': '#eafff7', 'circle-stroke-width': 1.5 },
   });
+  map.addLayer({
+    id: 'backstage-risk-scenario-fill', type: 'fill', source: 'backstage-risk-scenario',
+    paint: {
+      'fill-color': ['interpolate', ['linear'], ['get', 'scenarioScore'], 0, '#2cb67d', 0.4, '#f4d35e', 0.7, '#ee964b', 1, '#d62828'],
+      'fill-opacity': 0.64, 'fill-outline-color': 'rgba(255,255,255,0.25)',
+    },
+  });
+  map.addLayer({
+    id: 'backstage-drawing-fill', type: 'fill', source: 'backstage-drawing', filter: ['==', ['geometry-type'], 'Polygon'],
+    paint: { 'fill-color': '#c77dff', 'fill-opacity': 0.22, 'fill-outline-color': '#e0aaff' },
+  });
+  map.addLayer({
+    id: 'backstage-drawing-line', type: 'line', source: 'backstage-drawing', filter: ['==', ['geometry-type'], 'LineString'],
+    paint: { 'line-color': '#e0aaff', 'line-width': 3 },
+  });
+  map.addLayer({
+    id: 'backstage-drawing-points', type: 'circle', source: 'backstage-drawing', filter: ['==', ['geometry-type'], 'Point'],
+    paint: { 'circle-color': '#e0aaff', 'circle-radius': 5, 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 1 },
+  });
 }
 
 function NativeTerritorialExplorer({ operationalContext }) {
@@ -187,6 +210,7 @@ function NativeTerritorialExplorer({ operationalContext }) {
   const [visibleFeatureCount, setVisibleFeatureCount] = useState(0);
   const [catalogRevision, setCatalogRevision] = useState(0);
   const [mapCenter, setMapCenter] = useState([-74.07, 4.71]);
+  const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
     apiRequest('/locations')
@@ -258,6 +282,7 @@ function NativeTerritorialExplorer({ operationalContext }) {
 
     map.on('load', () => {
       addBackstageLayers(map);
+      setMapReady(true);
       map.getSource('backstage-locations').setData(locationsToGeoJSON(locationsRef.current));
       loadTerrain();
       loadSpatialTiles();
@@ -282,7 +307,7 @@ function NativeTerritorialExplorer({ operationalContext }) {
     });
     map.on('mouseenter', 'backstage-location-points', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'backstage-location-points', () => { map.getCanvas().style.cursor = ''; });
-    return () => { map.remove(); mapRef.current = null; };
+    return () => { map.remove(); mapRef.current = null; setMapReady(false); };
   }, []);
 
   useEffect(() => {
@@ -338,6 +363,10 @@ function NativeTerritorialExplorer({ operationalContext }) {
         }}
       />
       <TerritorialRiskAnalyzer center={mapCenter} />
+      <RiskScenarioMap
+        terrain={terrain}
+        onResult={(result) => mapRef.current?.getSource('backstage-risk-scenario')?.setData(result)}
+      />
       <TerrainHydrologyAnalyzer
         terrain={terrain}
         onHydrology={(result) => {
@@ -345,6 +374,7 @@ function NativeTerritorialExplorer({ operationalContext }) {
           mapRef.current?.getSource('backstage-drainage')?.setData(result.drainage);
         }}
       />
+      <MapDrawingTools map={mapReady ? mapRef.current : null} />
       <SpatialDataImporter
         dataZoom={dataZoom}
         onDataZoomChange={setDataZoom}
