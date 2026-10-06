@@ -26,5 +26,8 @@ const setSourceStatus = asyncHandler(async (req, res) => {
   res.json(await service.setSourceStatus(req.organization.organization_id, req.params.id, req.body.status));
 });
 const getStatus = asyncHandler(async (req, res) => res.json(service.getStatus()));
+const search = asyncHandler(async (req, res) => res.json(await service.search(req.organization.organization_id, req.query)));
+const nearby = asyncHandler(async (req, res) => res.json(await service.nearby(req.organization.organization_id, req.query)));
+const computeRoute = asyncHandler(async (req, res) => res.json(await service.computeRoute(req.organization.organization_id, req.body)));
 
-module.exports = { registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, setSourceStatus, getStatus };
+module.exports = { registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, setSourceStatus, getStatus, search, nearby, computeRoute };
