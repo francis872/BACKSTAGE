@@ -1,8 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm ci --prefix frontend && npm ci --prefix backend",
-  "buildCommand": "npm --prefix frontend run build",
-  "env": {
-    "JWT_SECRET": "@JWT_SECRET"
-  }
+  "buildCommand": "npm --prefix frontend run build"
 }
