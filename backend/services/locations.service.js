@@ -1,5 +1,6 @@
 const { query } = require('../db');
 const ApiError = require('../utils/ApiError');
+const { haversineDistance } = require('../spatial/core');
 
 async function listLocations({ organizationId, limit = 100 } = {}) {
   const safeLimit = Math.min(Math.max(Number(limit) || 100, 1), 500);
@@ -15,22 +16,29 @@ async function findNearby({ lat, lng, radius = 2000, organizationId }) {
     throw new ApiError(400, 'Latitud y longitud válidas son requeridas.');
   }
 
-  const point = `SRID=4326;POINT(${lng} ${lat})`;
   const result = await query(
     `SELECT
        l.*,
-       COALESCE(ra.score, NULL) AS risk_score,
-       ST_Distance(l.geom::geography, ST_GeomFromText($1)::geography) AS distance_m
+       COALESCE(ra.score, NULL) AS risk_score
      FROM locations l
      LEFT JOIN risk_assessments ra ON ra.location_id = l.location_id
-     WHERE l.geom IS NOT NULL
-       AND l.organization_id = $3
-       AND ST_DWithin(l.geom::geography, ST_GeomFromText($1)::geography, $2)
-     ORDER BY distance_m
-     LIMIT 100`,
-    [point, radius, organizationId]
+     WHERE l.latitude IS NOT NULL
+       AND l.longitude IS NOT NULL
+       AND l.organization_id = $1
+     LIMIT 5000`,
+    [organizationId]
   );
-  return result.rows;
+  return result.rows
+    .map((row) => ({
+      ...row,
+      distance_m: haversineDistance(
+        { lat, lng },
+        { lat: Number(row.latitude), lng: Number(row.longitude) }
+      ),
+    }))
+    .filter((row) => row.distance_m <= radius)
+    .sort((a, b) => a.distance_m - b.distance_m)
+    .slice(0, 100);
 }
 
 async function getLocationById(id, organizationId) {
@@ -47,9 +55,8 @@ async function createLocation(data, organizationId) {
     throw new ApiError(400, 'name y type son requeridos.');
   }
   const result = await query(
-    `INSERT INTO locations (external_id, name, type, address, city, region, country, latitude, longitude, capacity, organization_id, geom)
-     VALUES ($1, $2, $3, $4, $5, $6, COALESCE($7, 'Colombia'), $8, $9, $10, $11,
-       CASE WHEN $8 IS NOT NULL AND $9 IS NOT NULL THEN ST_SetSRID(ST_MakePoint($9, $8), 4326) ELSE NULL END)
+    `INSERT INTO locations (external_id, name, type, address, city, region, country, latitude, longitude, capacity, organization_id)
+     VALUES ($1, $2, $3, $4, $5, $6, COALESCE($7, 'Colombia'), $8, $9, $10, $11)
      RETURNING *`,
     [
      external_id || null,
@@ -74,7 +81,6 @@ async function updateLocation(id, data, organizationId) {
     `UPDATE locations SET
        external_id = $1, name = $2, type = $3, address = $4, city = $5, region = $6,
        country = COALESCE($7, 'Colombia'), latitude = $8, longitude = $9, capacity = $10,
-       geom = CASE WHEN $8 IS NOT NULL AND $9 IS NOT NULL THEN ST_SetSRID(ST_MakePoint($9, $8), 4326) ELSE NULL END,
        updated_at = now()
      WHERE location_id = $11
        AND organization_id = $12
