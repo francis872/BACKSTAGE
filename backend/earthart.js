@@ -1,5 +1,6 @@
 // EarthArt: motor de inteligencia territorial (índice territorial, detector de brechas y simulaciones).
 const { query } = require('./db');
+const { haversineDistance } = require('./spatial/core');
 
 const DIMENSIONS = ['education', 'health', 'infrastructure', 'economy', 'environment', 'security', 'connectivity', 'housing', 'services'];
 const DIMENSION_WEIGHT = 100 / DIMENSIONS.length;
@@ -59,17 +60,23 @@ async function loadUnit(unitId) {
 }
 
 async function loadNearestFacilityDistance(unitId, facilityType) {
-  const result = await query(
-    `SELECT tf.name, tf.capacity,
-       ST_Distance(tu.geom::geography, tf.geom::geography) AS distance_m
-     FROM territorial_units tu
-     LEFT JOIN territorial_facilities tf ON tf.facility_type = $2 AND tf.geom IS NOT NULL
-     WHERE tu.unit_id = $1 AND tu.geom IS NOT NULL
-     ORDER BY distance_m ASC NULLS LAST
-     LIMIT 1`,
-    [unitId, facilityType]
+  const unitResult = await query(
+    'SELECT latitude, longitude FROM territorial_units WHERE unit_id = $1',
+    [unitId]
   );
-  return result.rows[0] || null;
+  const unit = unitResult.rows[0];
+  if (!unit || unit.latitude == null || unit.longitude == null) return null;
+  const result = await query(
+    `SELECT name, capacity, latitude, longitude
+     FROM territorial_facilities
+     WHERE facility_type = $1 AND latitude IS NOT NULL AND longitude IS NOT NULL`,
+    [facilityType]
+  );
+  const origin = { lat: Number(unit.latitude), lng: Number(unit.longitude) };
+  return result.rows.map((row) => ({
+    ...row,
+    distance_m: haversineDistance(origin, { lat: Number(row.latitude), lng: Number(row.longitude) }),
+  })).sort((a, b) => a.distance_m - b.distance_m)[0] || null;
 }
 
 // Reglas heurísticas de detección de brechas territoriales (población vs. infraestructura disponible).
