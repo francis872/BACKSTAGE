@@ -95,6 +95,12 @@ Al responder teselas, BACKSTAGE aplica simplificación dependiente del zoom y co
 - `POST /spatial/routes/compute`: crea un grafo bidireccional desde `LineString`/`MultiLineString`, ajusta origen y destino a los nodos más cercanos y ejecuta A* o Dijkstra.
 
 Las propiedades `speedKph`, `maxspeed`, `cost` y `oneway` permiten controlar el costo vial. Sin datos suficientes, la API devuelve un error explícito en lugar de fabricar una ruta.
+
+## Riesgo territorial explicable
+
+- `POST /spatial/risk/evaluate`: evalúa incendio, inundación o deslizamiento con variables normalizadas entre 0 y 1.
+- Cada resultado devuelve el peso y la contribución de cada variable, clasificación, confianza, procedencia del dato y versión del modelo.
+- El resultado es un índice de priorización; no es un pronóstico ni sustituye validación técnica en campo.
 - `risk_components`
 - `location_risk_trends`
 - `territorial_units` (municipio, barrio, vereda)
