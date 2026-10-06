@@ -1,6 +1,6 @@
 ﻿# Guia de despliegue BACKSTAGE (referencia historica)
 
-> Este documento conserva pasos de una arquitectura anterior y no acredita que esos recursos sigan desplegados. Para ejecucion local usa `README.md`; para Railway, el workflow `.github/workflows/deploy-railway.yml` es la fuente vigente.
+> Este documento conserva pasos de una arquitectura anterior y no acredita que esos recursos sigan desplegados. Para ejecución local y la arquitectura vigente PostgreSQL 17 + Vercel, usa `README.md` y el workflow `.github/workflows/deploy-railway.yml`.
 
 ## ðŸ“‹ Estado Actual
 
@@ -11,12 +11,12 @@
    - Status: âœ“ Operativo
 
 â³ BACKEND (Por desplegar en Railway)
-   - Stack: Express.js + PostgreSQL 16 estandar + GeoJSON y motor espacial nativo
+   - Stack: Express.js + PostgreSQL 17 estándar + GeoJSON y motor espacial nativo
    - Status: âš ï¸  Listo para desplegar, aÃºn NO en producciÃ³n
    - Lugar: backend/
 
 ðŸ“¦ Base de Datos
-   - PostgreSQL 16 estandar
+   - PostgreSQL 17 estándar
    - Status: âš ï¸  Necesita Railway o similar
 ```
 

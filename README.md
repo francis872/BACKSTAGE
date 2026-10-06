@@ -154,14 +154,14 @@ El ejemplo de base de datos apunta al PostgreSQL de Compose publicado en `localh
    - `docker compose up --build`
 2. Backend disponible en `http://localhost:4000`.
 3. Frontend disponible en `http://localhost:3000`.
-4. PostgreSQL 16 estándar queda publicado en `localhost:5544`; el servicio de migración termina antes del backend.
+4. PostgreSQL 17 estándar queda publicado en `localhost:5544`; el servicio de migración termina antes del backend.
 5. La geometría se conserva como GeoJSON/JSONB y se procesa con el núcleo matemático de BACKSTAGE.
 
 ## Validacion y CI/CD
 
 - Backend: `cd backend && npm ci && npm test`.
 - Frontend: `cd frontend && npm ci && npm run build`.
-- Pull requests a `main` ejecutan validación con PostgreSQL 16; el job Railway solo se habilita para `push` a `main` y usa el environment `production`.
+- Pull requests a `main` validan con PostgreSQL 17; la publicación en Vercel se habilita en `main` tras las migraciones protegidas de producción.
 - La imagen local usa `SPATIAL_STORE=memory` de forma predeterminada. `SPATIAL_STORE=atlas` requiere `MONGODB_URI` y `MONGODB_SPATIAL_DB`; no se necesita Atlas para ejecutar el modo local.
 
 ## Ejecución local rápida
@@ -169,7 +169,7 @@ El ejemplo de base de datos apunta al PostgreSQL de Compose publicado en `localh
 El frontend consume `/api/*` y usa proxy:
 
 - local (`vite`): `/api` -> `http://localhost:4000`
-- producción (`frontend/api/index.js`): `/api` -> `BACKEND_URL` (backend desplegado)
+- producción (Vercel raíz): `/api/*` -> Express serverless y el resto -> frontend estático.
 
 Variable opcional local:
 
