@@ -11,7 +11,7 @@ const MEMORY_DB = {
       user_id: 1,
       email: 'admin@backstage.local',
       name: 'Administrador Backstage',
-      password_hash: 'pbkdf2_sha512$100000$f4996c9e04e39623c291e6041f6bdca9$2d5be71704f84be96fba53d6af456b340ed75f44b96edd780b71a424fa5b3b7119ef95c0c10d30da95e69aa35332fd9087be7a156b140e846b2ad81360257d03',
+      password_hash: '$2a$12$e4p9zjmUEiGK1WTWiISyn.pzsi/Miv5uJGQ7nBTKj7IYoLsZQxlhW', // Password: test123
       role: 'admin',
       created_at: new Date('2024-01-01'),
       updated_at: new Date('2024-01-01'),
@@ -20,7 +20,7 @@ const MEMORY_DB = {
       user_id: 2,
       email: 'analyst@backstage.local',
       name: 'Analista Backstage',
-      password_hash: 'pbkdf2_sha512$100000$e1a026181cfbade7a52c3e4fe0a08348$60c2f72eb38fdd32f101cc8c7a0b9ae3a75621eb66162c86a1a8e25816c610c4c4cb43674356027728a08fa1d68584fbe689263daa124470ea993bffc8fbd81b',
+      password_hash: '$2a$12$e4p9zjmUEiGK1WTWiISyn.pzsi/Miv5uJGQ7nBTKj7IYoLsZQxlhW', // Password: test123
       role: 'analyst',
       created_at: new Date('2024-01-01'),
       updated_at: new Date('2024-01-01'),
@@ -29,7 +29,7 @@ const MEMORY_DB = {
       user_id: 3,
       email: 'viewer@backstage.local',
       name: 'Viewer Backstage',
-      password_hash: 'pbkdf2_sha512$100000$daaedb8037943d341002fb4f03975b17$9a410725e17e31667a29f2f42a2c1c70df331a6bea04ae0e48b399715418d591fb9def5430a81ed802ca0e1d31375214147f42daaf3644d835b03ad30100c2f1',
+      password_hash: '$2a$12$e4p9zjmUEiGK1WTWiISyn.pzsi/Miv5uJGQ7nBTKj7IYoLsZQxlhW', // Password: test123
       role: 'viewer',
       created_at: new Date('2024-01-01'),
       updated_at: new Date('2024-01-01'),
@@ -169,7 +169,7 @@ async function withTransaction(operation) {
 
 
 module.exports = {
-  query: (text, params) => pool.query(text, params),
+  query,
   pool,
   withTransaction,
 };
