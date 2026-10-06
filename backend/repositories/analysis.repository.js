@@ -1,4 +1,5 @@
 const { query } = require('../db');
+const { haversineDistance, pointInPolygon } = require('../spatial/core');
 
 async function findLocationById(locationId, organizationId) {
   const result = await query(
@@ -7,8 +8,7 @@ async function findLocationById(locationId, organizationId) {
       name,
       city,
       latitude::double precision AS latitude,
-      longitude::double precision AS longitude,
-      geom
+      longitude::double precision AS longitude
      FROM locations
      WHERE location_id = $1
        AND organization_id = $2`,
@@ -16,7 +16,7 @@ async function findLocationById(locationId, organizationId) {
   );
   if (
     !result.rows[0] ||
-    (result.rows[0].latitude == null || result.rows[0].longitude == null) && !result.rows[0].geom
+    result.rows[0].latitude == null || result.rows[0].longitude == null
   ) {
     return null;
   }
@@ -34,76 +34,39 @@ async function buildCandidateFromCoordinates({ name, city, lat, lng }) {
 }
 
 async function computeCandidateMetrics({ city, latitude, longitude, ownBrandName = null }) {
-  const result = await query(
-    `WITH candidate AS (
-      SELECT ST_SetSRID(ST_MakePoint($1, $2), 4326) AS geom
-    ),
-    nearest_competitor AS (
-      SELECT MIN(ST_Distance(c.geom::geography, candidate.geom::geography)) AS value
-      FROM competitors c
-      CROSS JOIN candidate
-      WHERE c.geom IS NOT NULL
-        AND ($3::text IS NULL OR c.city = $3)
-    ),
-    nearest_own_store AS (
-      SELECT MIN(ST_Distance(l.geom::geography, candidate.geom::geography)) AS value
-      FROM business_locations bl
-      JOIN locations l ON l.location_id = bl.location_id
-      CROSS JOIN candidate
-      WHERE l.geom IS NOT NULL
-        AND bl.is_active = true
-        AND ($4::text IS NULL OR bl.brand_name ILIKE $4)
-        AND ($3::text IS NULL OR l.city = $3)
-    ),
-    nearby_poi AS (
-      SELECT COUNT(*)::int AS value
-      FROM points_of_interest poi
-      CROSS JOIN candidate
-      WHERE poi.geom IS NOT NULL
-        AND ST_DWithin(poi.geom::geography, candidate.geom::geography, 1200)
-        AND ($3::text IS NULL OR poi.city = $3)
-    ),
-    nearest_risk AS (
-      SELECT
-        ra.flood_risk,
-        ra.landslide_risk,
-        ra.crime_risk,
-        ra.climate_exposure
-      FROM risk_assessments ra
-      JOIN locations l ON l.location_id = ra.location_id
-      CROSS JOIN candidate
-      WHERE l.geom IS NOT NULL
-        AND ($3::text IS NULL OR l.city = $3)
-      ORDER BY ST_Distance(l.geom::geography, candidate.geom::geography)
-      LIMIT 1
-    ),
-    population_zone AS (
-      SELECT
-        COALESCE(di.value, tz.population_total::numeric, 0) AS value
-      FROM territorial_zones tz
-      CROSS JOIN candidate
-      LEFT JOIN demographic_indicators di
-        ON di.zone_id = tz.zone_id
-       AND di.indicator_name = 'population_total'
-      WHERE tz.geom IS NOT NULL
-        AND ST_Intersects(tz.geom, candidate.geom)
-        AND ($3::text IS NULL OR tz.city = $3)
-      ORDER BY di.as_of_date DESC NULLS LAST
-      LIMIT 1
-    )
-    SELECT
-      (SELECT value FROM nearest_competitor) AS competitor_distance_m,
-      (SELECT value FROM nearest_own_store) AS own_store_distance_m,
-      (SELECT value FROM nearby_poi) AS poi_count_1200m,
-      (SELECT value FROM population_zone) AS population_total_zone,
-      (SELECT flood_risk FROM nearest_risk) AS flood_risk,
-      (SELECT landslide_risk FROM nearest_risk) AS landslide_risk,
-      (SELECT crime_risk FROM nearest_risk) AS crime_risk,
-      (SELECT climate_exposure FROM nearest_risk) AS climate_exposure`,
-    [longitude, latitude, city || null, ownBrandName]
-  );
-
-  return result.rows[0];
+  const cityFilter = city || null;
+  const [competitors, stores, pois, risks, zones] = await Promise.all([
+    query('SELECT latitude, longitude FROM competitors WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND ($1::text IS NULL OR city = $1)', [cityFilter]),
+    query(`SELECT l.latitude, l.longitude FROM business_locations bl JOIN locations l ON l.location_id = bl.location_id
+      WHERE l.latitude IS NOT NULL AND l.longitude IS NOT NULL AND bl.is_active = true
+      AND ($1::text IS NULL OR l.city = $1) AND ($2::text IS NULL OR bl.brand_name ILIKE $2)`, [cityFilter, ownBrandName]),
+    query('SELECT latitude, longitude FROM points_of_interest WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND ($1::text IS NULL OR city = $1)', [cityFilter]),
+    query(`SELECT l.latitude, l.longitude, ra.flood_risk, ra.landslide_risk, ra.crime_risk, ra.climate_exposure
+      FROM risk_assessments ra JOIN locations l ON l.location_id = ra.location_id
+      WHERE l.latitude IS NOT NULL AND l.longitude IS NOT NULL AND ($1::text IS NULL OR l.city = $1)`, [cityFilter]),
+    query(`SELECT tz.geometry, COALESCE(di.value, tz.population_total::numeric, 0) AS population
+      FROM territorial_zones tz LEFT JOIN demographic_indicators di ON di.zone_id = tz.zone_id AND di.indicator_name = 'population_total'
+      WHERE tz.geometry IS NOT NULL AND ($1::text IS NULL OR tz.city = $1) ORDER BY di.as_of_date DESC NULLS LAST`, [cityFilter]),
+  ]);
+  const candidate = { lat: Number(latitude), lng: Number(longitude) };
+  const distance = (row) => haversineDistance(candidate, { lat: Number(row.latitude), lng: Number(row.longitude) });
+  const nearest = (rows) => rows.length ? Math.min(...rows.map(distance)) : null;
+  const nearestRisk = risks.rows.map((row) => ({ ...row, distance: distance(row) })).sort((a, b) => a.distance - b.distance)[0] || {};
+  const zone = zones.rows.find((row) => {
+    const geometry = typeof row.geometry === 'string' ? JSON.parse(row.geometry) : row.geometry;
+    const ring = geometry?.type === 'Polygon' ? geometry.coordinates?.[0] : null;
+    return ring ? pointInPolygon(candidate, ring) : false;
+  });
+  return {
+    competitor_distance_m: nearest(competitors.rows),
+    own_store_distance_m: nearest(stores.rows),
+    poi_count_1200m: pois.rows.filter((row) => distance(row) <= 1200).length,
+    population_total_zone: Number(zone?.population || 0),
+    flood_risk: nearestRisk.flood_risk ?? null,
+    landslide_risk: nearestRisk.landslide_risk ?? null,
+    crime_risk: nearestRisk.crime_risk ?? null,
+    climate_exposure: nearestRisk.climate_exposure ?? null,
+  };
 }
 
 async function createAnalysisRun({
