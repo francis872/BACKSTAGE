@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const analyticsJobsRepository = require('../repositories/analyticsJobs.repository');
+const analysisRepository = require('../repositories/analysis.repository');
 
 process.env.NODE_ENV = 'test';
 process.env.DATABASE_URL = '';
@@ -9,9 +10,23 @@ process.env.JWT_SECRET = 'mathematical-api-test-secret-32-characters';
 process.env.NOMINATIM_BASE_URL = 'https://geocoder.test/search';
 
 const nativeFetch = global.fetch;
+const geocoderRequests = [];
 global.fetch = async (input, options) => {
   const url = new URL(input);
   if (url.hostname === 'geocoder.test') {
+    geocoderRequests.push(url);
+    if (url.pathname.endsWith('/reverse')) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          osm_type: 'way', osm_id: 44, name: 'Calle 46A',
+          display_name: 'Calle 46A, Bello, Antioquia, Colombia', lat: '6.33', lon: '-75.56',
+          boundingbox: ['6.32', '6.34', '-75.57', '-75.55'],
+          address: { road: 'Calle 46A', municipality: 'Bello', state: 'Antioquia', country: 'Colombia', country_code: 'co' },
+        }),
+      };
+    }
     return {
       ok: true,
       status: 200,
@@ -19,7 +34,7 @@ global.fetch = async (input, options) => {
         osm_type: 'relation', osm_id: 1343264, name: 'Medellín',
         display_name: 'Medellín, Antioquia, Colombia', lat: '6.2697324', lon: '-75.6025597',
         boundingbox: ['6.1633051', '6.3764208', '-75.7194283', '-75.4736400'],
-        address: { city: 'Medellín', state: 'Antioquia', country: 'Colombia' },
+        address: { city: 'Medellín', state: 'Antioquia', country: 'Colombia', country_code: 'co' },
       }],
     };
   }
@@ -35,6 +50,28 @@ test('authenticated spatial and terrain APIs execute their mathematical engines'
     createJob: analyticsJobsRepository.createJob,
     completeJob: analyticsJobsRepository.completeJob,
     failJob: analyticsJobsRepository.failJob,
+  };
+  const originalProjectMethods = {
+    createOperationalProject: analysisRepository.createOperationalProject,
+    getAnalysisRunByIdForOrganization: analysisRepository.getAnalysisRunByIdForOrganization,
+  };
+  const projects = new Map();
+  let nextProjectId = 500;
+  analysisRepository.createOperationalProject = async (input) => {
+    const project = {
+      analysis_run_id: nextProjectId++,
+      project_name: input.projectName,
+      city: input.city,
+      objective: input.objective,
+      organization_id: input.organizationId,
+      metadata: { analysis_type: 'operational_project', ...input.metadata },
+    };
+    projects.set(project.analysis_run_id, project);
+    return project;
+  };
+  analysisRepository.getAnalysisRunByIdForOrganization = async (id, organizationId) => {
+    const project = projects.get(Number(id));
+    return project && Number(project.organization_id) === Number(organizationId) ? project : null;
   };
   const analyticsJobs = new Map();
   let nextAnalyticsJobId = 100;
@@ -55,6 +92,7 @@ test('authenticated spatial and terrain APIs execute their mathematical engines'
   };
   context.after(() => {
     Object.assign(analyticsJobsRepository, originalJobMethods);
+    Object.assign(analysisRepository, originalProjectMethods);
     server.close();
   });
   await new Promise((resolve) => server.once('listening', resolve));
@@ -80,6 +118,51 @@ test('authenticated spatial and terrain APIs execute their mathematical engines'
   });
   const token = session.token;
   assert.ok(token);
+
+  const territoryProject = await request('/analysis/projects', {
+    method: 'POST', token, expectedStatus: 201,
+    body: {
+      project_name: 'Explorer territory draft',
+      city: 'Bello',
+      territory: {
+        id: 'nominatim:relation:44', type: 'municipality', name: 'Bello', region: 'Antioquia', country: 'Colombia',
+        coordinates: [-75.56, 6.33], bbox: [-75.7, 6.2, -75.4, 6.5],
+        geometry: { type: 'Point', coordinates: [-75.56, 6.33] }, source: 'OpenStreetMap Nominatim',
+      },
+      analysis_context: { analysis_type: 'territory' },
+    },
+  });
+  const storedTerritoryProject = await request(`/analysis/${territoryProject.analysis_run_id}`, { token });
+  assert.equal(storedTerritoryProject.metadata.territory.name, 'Bello');
+  assert.equal(storedTerritoryProject.metadata.territory.geometry.type, 'Point');
+
+  await request('/analysis/compare', {
+    method: 'POST', token, expectedStatus: 400,
+    body: { candidates: [{ name: 'Solo', lat: 6.2, lng: -75.6 }] },
+  });
+  await request('/analysis/compare', {
+    method: 'POST', token, expectedStatus: 400,
+    body: { candidates: [{ name: 'Fuera de rango', lat: 91, lng: -75.6 }, { name: 'Otra', lat: 6.2, lng: -75.6 }] },
+  });
+  await request('/analysis/compare', {
+    method: 'POST', token, expectedStatus: 400,
+    body: { candidates: [{ name: 'Medellín', lat: 6.2, lng: -75.6 }, { name: 'Duplicado', lat: 6.2, lng: -75.6 }] },
+  });
+
+  await request('/spatial/geocode?q=Medell%C3%ADn', { expectedStatus: 401 });
+  const geocoded = await request('/spatial/geocode?q=Medell%C3%ADn&countryBias=co&regionBias=Antioquia&viewbox=-76,5,-75,7', { token });
+  assert.equal(geocoded.length, 1);
+  assert.equal(geocoded[0].countryCode, 'co');
+  assert.equal(geocoded[0].provider, 'OpenStreetMap Nominatim');
+  const searchRequest = geocoderRequests.at(-1);
+  assert.equal(searchRequest.searchParams.get('q'), 'Medellín, Antioquia');
+  assert.equal(searchRequest.searchParams.get('countrycodes'), 'co');
+  assert.equal(searchRequest.searchParams.get('viewbox'), '-76,7,-75,5');
+  await request('/spatial/geocode?q=Medell%C3%ADn&viewbox=bad', { token, expectedStatus: 400 });
+
+  const reverse = await request('/spatial/reverse-geocode?lng=-75.56&lat=6.33', { token });
+  assert.equal(reverse.properties.municipality, 'Bello');
+  assert.equal(geocoderRequests.at(-1).pathname, '/reverse');
 
   const source = await request('/spatial/sources', {
     method: 'POST',
@@ -115,6 +198,7 @@ test('authenticated spatial and terrain APIs execute their mathematical engines'
   const nearby = await request('/spatial/nearby?lng=-75.599&lat=6.2&radiusM=100&worldId=earth', { token });
   assert.equal(nearby.length, 1);
   assert.ok(nearby[0].distanceM < 100);
+  await request('/spatial/nearby?lng=-75.599&lat=91&radiusM=100&worldId=earth', { token, expectedStatus: 400 });
 
   const route = await request('/spatial/routes/compute', {
     method: 'POST',
@@ -124,6 +208,10 @@ test('authenticated spatial and terrain APIs execute their mathematical engines'
   assert.deepEqual(route.geometry.coordinates, roadCoordinates);
   assert.ok(route.distanceM > 200);
   assert.ok(route.durationSeconds > 0);
+  await request('/spatial/routes/compute', {
+    method: 'POST', token, expectedStatus: 422,
+    body: { start: [-70, 0], end: roadCoordinates[2], algorithm: 'astar', worldId: 'earth' },
+  });
 
   const measured = await request('/spatial/measure', {
     method: 'POST',

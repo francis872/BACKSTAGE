@@ -12,8 +12,9 @@ const emptyForm = {
   purchasing_power_index: ''
 };
 
-function RetailZones() {
+function RetailZones({ operationalContext, onNavigate }) {
   const [zones, setZones] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
@@ -35,6 +36,18 @@ function RetailZones() {
 
   useEffect(() => {
     loadZones();
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    apiRequest('/analysis?limit=50')
+      .then(async (response) => {
+        const rows = await response.json();
+        if (!response.ok) throw new Error(rows.error || 'No se pudieron cargar proyectos.');
+        if (active) setProjects(Array.isArray(rows) ? rows : []);
+      })
+      .catch(() => { if (active) setProjects([]); });
+    return () => { active = false; };
   }, []);
 
   const resetForm = () => {
@@ -107,7 +120,34 @@ function RetailZones() {
 
   return (
     <div>
-      <h2>Zonas Retail</h2>
+      <h2>Proyectos y zonas</h2>
+      <section className="form-section">
+        <div className="score-row"><h3>Proyectos operativos</h3><span className="auth-hint">{projects.length} proyectos</span></div>
+        {projects.length === 0 ? <p>No hay proyectos operativos en esta organización.</p> : (
+          <div className="card-grid">
+            {projects.map((project) => {
+              const territory = project.metadata?.territory
+                || (Number(project.analysis_run_id) === Number(operationalContext?.analysis_run_id) ? operationalContext?.territory : null);
+              const coordinates = territory?.coordinates || (territory?.lng != null && territory?.lat != null ? [territory.lng, territory.lat] : null);
+              const projectContext = { ...operationalContext, analysis_run_id: project.analysis_run_id, project_name: project.project_name, city: project.city || territory?.city, project, territory: territory || operationalContext?.territory };
+              return (
+                <article className="card" key={project.analysis_run_id}>
+                  <p className="eyebrow">Proyecto #{project.analysis_run_id}</p>
+                  <h4>{project.project_name}</h4>
+                  <p>{project.city || territory?.region || 'Territorio no asignado'}{territory?.country ? ` · ${territory.country}` : ''}</p>
+                  <div className="form-actions">
+                    <button type="button" className="secondary" disabled={!coordinates} onClick={() => onNavigate?.('territorial-explorer', { ...projectContext, longitude: coordinates?.[0], latitude: coordinates?.[1] })}>Abrir territorio</button>
+                    <button type="button" className="secondary" disabled={!territory} onClick={() => onNavigate?.('earthart', projectContext)}>AirHeart</button>
+                    <button type="button" className="secondary" onClick={() => onNavigate?.('portfolio-comparator', { ...projectContext, candidates: project.metadata?.comparison_candidates || project.metadata?.candidates || operationalContext?.candidates || [] })}>Comparar</button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      <h3>Zonas Retail</h3>
       <div className="form-section">
         <h3>{editingId ? 'Editar zona retail' : 'Crear nueva zona retail'}</h3>
         <form onSubmit={handleSubmit} className="entity-form">

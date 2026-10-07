@@ -59,7 +59,11 @@ const compareCandidates = asyncHandler(async (req, res) => {
 });
 
 const createAnalysisPlan = asyncHandler(async (req, res) => {
-  const result = await analysisOrchestrator.createPlan(req.organization?.organization_id, req.body?.prompt);
+  const result = await analysisOrchestrator.createPlan(
+    req.organization?.organization_id,
+    req.body?.prompt,
+    req.body?.context || {}
+  );
   res.json(result);
 });
 

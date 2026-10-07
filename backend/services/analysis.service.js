@@ -158,7 +158,7 @@ async function resolveCandidatePoint(candidate, fallbackCity, organizationId) {
 
   const lat = Number(candidate.lat);
   const lng = Number(candidate.lng);
-  if (Number.isNaN(lat) || Number.isNaN(lng)) {
+  if (!Number.isFinite(lat) || lat < -90 || lat > 90 || !Number.isFinite(lng) || lng < -180 || lng > 180) {
     throw new ApiError(400, 'Cada candidato debe incluir location_id o coordenadas lat/lng válidas.');
   }
 
@@ -351,8 +351,35 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
   if (!organizationId) {
     throw new ApiError(403, 'No hay organización activa para ejecutar comparación.');
   }
+  const candidates = Array.isArray(payload.candidates) ? payload.candidates : [];
+  const candidateKeys = candidates.map((candidate, index) => {
+    if (candidate.location_id) return `location:${candidate.location_id}`;
+    if (candidate.id) return `id:${candidate.id}`;
+    const lat = Number(candidate.lat);
+    const lng = Number(candidate.lng);
+    return Number.isFinite(lat) && Number.isFinite(lng) ? `point:${lat.toFixed(6)}:${lng.toFixed(6)}` : `invalid:${index}`;
+  });
+  if (new Set(candidateKeys).size < 2) throw new ApiError(400, 'La comparación requiere al menos 2 candidatos distintos.');
+  if (candidates.length > 6) throw new ApiError(400, 'La comparación admite máximo 6 candidatos.');
 
   const { ranked, weights, rankingMethod, analyticsJobId } = await scoreCandidates(payload, organizationId, sessionUser);
+  const comparisonCandidates = payload.candidates.slice(0, 6).map((candidate) => {
+    const geometry = candidate.geometry && JSON.stringify(candidate.geometry).length <= 100000 ? candidate.geometry : null;
+    return {
+      id: candidate.id || null,
+      type: candidate.type || null,
+      name: candidate.name || null,
+      city: candidate.city || null,
+      region: candidate.region || null,
+      country: candidate.country || null,
+      location_id: candidate.location_id || null,
+      lat: candidate.lat == null ? null : Number(candidate.lat),
+      lng: candidate.lng == null ? null : Number(candidate.lng),
+      bbox: Array.isArray(candidate.bbox) && candidate.bbox.length === 4 ? candidate.bbox.map(Number) : null,
+      geometry,
+      source: candidate.source || null,
+    };
+  });
 
   let run;
   if (payload.analysis_run_id) {
@@ -377,6 +404,7 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
         ranking_method: rankingMethod,
         analytics_job_id: analyticsJobId,
         comparison_started_from: payload.source || 'advanced-comparator',
+        comparison_candidates: comparisonCandidates,
       },
     });
   } else {
@@ -393,6 +421,7 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
         ranking_method: rankingMethod,
         analytics_job_id: analyticsJobId,
         comparison_started_from: payload.source || 'advanced-comparator',
+        comparison_candidates: comparisonCandidates,
       },
     });
     await analysisRepository.replaceAnalysisResults({ analysisRunId: run.analysis_run_id, ranked });
@@ -471,12 +500,32 @@ async function createOperationalProject(payload, sessionUser, organizationContex
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
   const projectName = String(payload.project_name || '').trim();
   if (!projectName) throw new ApiError(400, 'project_name es obligatorio.');
+  const territory = payload.territory && typeof payload.territory === 'object' ? payload.territory : null;
+  const territoryGeometry = territory?.geometry && JSON.stringify(territory.geometry).length <= 100000
+    ? territory.geometry
+    : null;
   const project = await analysisRepository.createOperationalProject({
     projectName,
-    city: payload.city || null,
+    city: payload.city || territory?.city || territory?.municipality || null,
     objective: payload.objective || 'Evaluar y comparar ubicaciones candidatas.',
     requestedByUserId: sessionUser?.user_id || null,
     organizationId,
+    metadata: {
+      territory: territory ? {
+        id: territory.id || null,
+        type: territory.type || territory.objectType || null,
+        name: territory.name || territory.displayName || null,
+        city: territory.city || territory.municipality || null,
+        region: territory.region || null,
+        country: territory.country || null,
+        coordinates: territory.coordinates || (territory.lng != null && territory.lat != null ? [territory.lng, territory.lat] : null),
+        bbox: territory.bbox || territory.bounds || null,
+        geometry: territoryGeometry,
+        source: territory.source || territory.provider || territory.provenance?.source || null,
+      } : null,
+      analysis_context: payload.analysis_context || null,
+      selected_assets: Array.isArray(payload.selected_assets) ? payload.selected_assets.slice(0, 100) : [],
+    },
   });
   await operationalEvents.emit({
     organizationId, analysisRunId: project.analysis_run_id, actorUserId: sessionUser?.user_id,

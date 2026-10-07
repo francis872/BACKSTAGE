@@ -46,11 +46,11 @@ function parseIntent(input) {
 
 function createAnalysisOrchestrator({
   searchTerritories = spatialIngestion.search,
-  resolveTerritory = territoryResolver.resolveTerritory,
+  geocodeTerritories = territoryResolver.geocodeTerritories,
   dataResolver = createDataResolver(),
 } = {}) {
   return {
-    async createPlan(organizationId, input) {
+    async createPlan(organizationId, input, context = {}) {
       if (!organizationId) throw new ApiError(401, 'Se requiere una organización activa.');
       const parsed = parseIntent(input);
       const resolved = await Promise.all(parsed.territoryQueries.map(async (query) => {
@@ -63,8 +63,8 @@ function createAnalysisOrchestrator({
         }
         if (!candidates.length) {
           try {
-            const territory = await resolveTerritory(query);
-            if (territory) candidates = [territory];
+            const territories = await geocodeTerritories(query, context);
+            candidates = Array.isArray(territories) ? territories : territories ? [territories] : [];
           } catch {
             return { query, candidates: [], atlasAvailable, publicResolverAvailable: false };
           }

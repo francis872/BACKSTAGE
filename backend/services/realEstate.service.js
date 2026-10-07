@@ -30,7 +30,7 @@ async function getPortfolio() {
 async function getProperties() {
   const result = await query(
     `SELECT
-       l.location_id, l.external_id, l.name, l.address, l.city, l.region, l.latitude, l.longitude,
+      l.location_id, l.external_id, l.name, l.address, l.city, l.region, l.country, l.latitude, l.longitude,
        pv.valuation_id, pv.valued_at, pv.land_area_m2, pv.price_per_m2, pv.estimated_value,
        pv.annual_appreciation_pct, pv.development_potential, pv.zoning, pv.details AS valuation_details,
        ra.flood_risk, ra.landslide_risk, ra.crime_risk, ra.climate_exposure, ra.score AS risk_score,

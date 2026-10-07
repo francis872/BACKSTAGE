@@ -102,13 +102,12 @@ const TerritorialExplorer = lazy(() => import('./pages/NativeTerritorialExplorer
 const menu = [
   { key: 'mission-control', label: 'Centro de operaciones', group: 'Operación' },
   { key: 'territorial-explorer', label: 'Explorador territorial', group: 'Operación' },
-  { key: 'earthart', label: 'AirHub · Perfil territorial', group: 'Operación' },
+  { key: 'earthart', label: 'AirHeart', group: 'Operación' },
   { key: 'portfolio-assets', label: 'Activos', group: 'Portafolio' },
   { key: 'portfolio-projects', label: 'Proyectos', group: 'Portafolio' },
   { key: 'portfolio-comparator', label: 'Comparador inteligente', group: 'Portafolio' },
-  { key: 'admin-users', label: 'Usuarios y roles', group: 'Administración' },
-  { key: 'admin-datasets', label: 'Fuentes de datos', group: 'Administración' },
-  { key: 'admin-audit-logs', label: 'Auditoría de acciones', group: 'Administración' },
+  { key: 'profile', label: 'Perfil', group: 'Cuenta' },
+  { key: 'organization-settings', label: 'Organización', group: 'Cuenta' },
 ];
 
 const BackstageApp = () => {
@@ -122,6 +121,7 @@ const BackstageApp = () => {
   const [recommendation, setRecommendation] = useState('Cargando recomendación operativa...');
   const [switchingOrg, setSwitchingOrg] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [organizationSettingsView, setOrganizationSettingsView] = useState('members');
 
   useEffect(() => {
     apiRequest('/recommendation/example')
@@ -139,33 +139,59 @@ const BackstageApp = () => {
   }, []);
 
   const navigateOperational = (page, context = null) => {
+    let targetPage = page;
+    if (page === 'admin-users') {
+      setOrganizationSettingsView('members');
+      targetPage = 'organization-settings';
+    } else if (page === 'admin-datasets' || page === 'admin-layer-catalog') {
+      setOrganizationSettingsView('sources');
+      targetPage = 'organization-settings';
+    } else if (page === 'admin-audit-logs') {
+      setOrganizationSettingsView('activity');
+      targetPage = 'organization-settings';
+    }
     if (context) {
       const nextContext = {
-        analysis_run_id: context.analysis_run_id ? Number(context.analysis_run_id) : null,
-        project_name: context.project_name || null,
-        city: context.city || null,
-        location_id: context.location_id ? Number(context.location_id) : null,
-        longitude: context.longitude != null && Number.isFinite(Number(context.longitude)) ? Number(context.longitude) : null,
-        latitude: context.latitude != null && Number.isFinite(Number(context.latitude)) ? Number(context.latitude) : null,
-        organization_id: sessionUser?.organization_id || null,
+        ...operationalContext,
+        ...context,
+        analysis_run_id: context.analysis_run_id ? Number(context.analysis_run_id) : operationalContext?.analysis_run_id || null,
+        project_name: context.project_name || context.project?.project_name || operationalContext?.project_name || null,
+        city: context.city || context.territory?.city || operationalContext?.city || null,
+        location_id: context.location_id ? Number(context.location_id) : operationalContext?.location_id || null,
+        longitude: context.longitude != null && Number.isFinite(Number(context.longitude)) ? Number(context.longitude) : operationalContext?.longitude ?? null,
+        latitude: context.latitude != null && Number.isFinite(Number(context.latitude)) ? Number(context.latitude) : operationalContext?.latitude ?? null,
+        territory: context.territory || context.activeTerritory || operationalContext?.territory || null,
+        candidates: context.candidates || operationalContext?.candidates || [],
+        selectedLocation: context.selectedLocation || operationalContext?.selectedLocation || null,
+        mapContext: context.mapContext || operationalContext?.mapContext || null,
+        project: context.project || operationalContext?.project || null,
+        organization_id: sessionUser?.organization_id || context.organization_id || operationalContext?.organization_id || null,
       };
+      nextContext.organizationId = nextContext.organization_id;
+      nextContext.activeTerritory = nextContext.territory;
+      nextContext.analysisRun = nextContext.analysis_run_id ? {
+        id: nextContext.analysis_run_id,
+        project_name: nextContext.project_name,
+        city: nextContext.city,
+      } : null;
       setOperationalContext(nextContext);
-      if (nextContext.analysis_run_id) setStoredOperationalContext(nextContext);
+      setStoredOperationalContext(nextContext);
     }
-    setActivePage(page);
+    setActivePage(targetPage);
   };
 
   useEffect(() => {
-    if (!sessionUser || !operationalContext?.analysis_run_id) return;
+    if (!sessionUser) return;
 
     if (
-      operationalContext.organization_id &&
+      operationalContext?.organization_id &&
       Number(operationalContext.organization_id) !== Number(sessionUser.organization_id)
     ) {
       clearStoredOperationalContext();
       setOperationalContext(null);
       return;
     }
+    if (!operationalContext?.analysis_run_id) return;
 
     let cancelled = false;
     apiRequest(`/analysis/${operationalContext.analysis_run_id}`)
@@ -176,11 +202,21 @@ const BackstageApp = () => {
       .then((run) => {
         if (cancelled) return;
         const validatedContext = {
+          ...operationalContext,
           analysis_run_id: Number(run.analysis_run_id),
-          project_name: run.project_name || null,
-          city: run.city || null,
+          project_name: run.project_name || operationalContext.project_name || null,
+          city: run.city || operationalContext.city || null,
+          territory: operationalContext.territory || run.metadata?.territory || null,
+          candidates: operationalContext.candidates?.length ? operationalContext.candidates : run.metadata?.comparison_candidates || [],
           location_id: operationalContext.location_id || null,
           organization_id: Number(sessionUser.organization_id),
+        };
+        validatedContext.organizationId = validatedContext.organization_id;
+        validatedContext.activeTerritory = validatedContext.territory;
+        validatedContext.analysisRun = {
+          id: validatedContext.analysis_run_id,
+          project_name: validatedContext.project_name,
+          city: validatedContext.city,
         };
         setOperationalContext(validatedContext);
         setStoredOperationalContext(validatedContext);
@@ -211,11 +247,46 @@ const BackstageApp = () => {
           </Suspense>
         );
       case 'portfolio-assets':
-        return <RealEstatePortfolio />;
+        return <RealEstatePortfolio operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'portfolio-projects':
-        return <RetailZones />;
+        return <RetailZones operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'portfolio-comparator':
         return <AdvancedComparator operationalContext={operationalContext} onNavigate={navigateOperational} />;
+      case 'profile':
+        return (
+          <section>
+            <h2>Perfil</h2>
+            <dl className="property-details">
+              <div><dt>Nombre</dt><dd>{sessionUser?.name || 'Sin nombre'}</dd></div>
+              <div><dt>Correo</dt><dd>{sessionUser?.email}</dd></div>
+              <div><dt>Rol</dt><dd>{sessionUser?.role}</dd></div>
+              <div><dt>Organización activa</dt><dd>{sessionUser?.organization_name || 'Sin organización'}</dd></div>
+            </dl>
+          </section>
+        );
+      case 'organization-settings':
+        if (!isAdmin) return (
+          <section>
+            <h2>Organización</h2>
+            <p>{sessionUser?.organization_name || 'Sin organización activa'}</p>
+            <p className="auth-hint">Rol en esta organización: {sessionUser?.role || 'sin rol'}</p>
+          </section>
+        );
+        return (
+          <section>
+            <h2>Configuración de organización</h2>
+            <div className="form-actions" role="tablist" aria-label="Configuración de organización">
+              {[
+                ['members', 'Miembros y roles'],
+                ['sources', 'Fuentes y capas'],
+                ['activity', 'Actividad'],
+              ].map(([key, label]) => <button key={key} type="button" role="tab" aria-selected={organizationSettingsView === key} className={organizationSettingsView === key ? '' : 'secondary'} onClick={() => setOrganizationSettingsView(key)}>{label}</button>)}
+            </div>
+            {organizationSettingsView === 'members' && <UsersAdmin />}
+            {organizationSettingsView === 'sources' && <LayerCatalogAdmin />}
+            {organizationSettingsView === 'activity' && <AuditLogsAdmin />}
+          </section>
+        );
       case 'intelligence-evaluations':
         return <RiskAssessments operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'intelligence-risks':
@@ -479,7 +550,6 @@ const BackstageApp = () => {
             <div key={group} className="menu-group">
               <h3>{group}</h3>
               {entries
-                .filter((item) => isAdmin || !item.key.startsWith('admin-'))
                 .map((item) => (
                 <button
                   key={item.key}
@@ -499,11 +569,11 @@ const BackstageApp = () => {
       </aside>
 
       <main className="content-panel">
-        {operationalContext?.analysis_run_id && (
+        {(operationalContext?.analysis_run_id || operationalContext?.territory || operationalContext?.project) && (
           <div className="active-operational-context">
-            <span>Proyecto activo</span>
-            <strong>{operationalContext.project_name || `Análisis #${operationalContext.analysis_run_id}`}</strong>
-            <small>#{operationalContext.analysis_run_id}{operationalContext.city ? ` · ${operationalContext.city}` : ''}</small>
+            <span>{operationalContext.analysis_run_id || operationalContext.project ? 'Proyecto activo' : 'Territorio activo'}</span>
+            <strong>{operationalContext.project_name || operationalContext.project?.project_name || operationalContext.territory?.displayName || operationalContext.territory?.name || `Análisis #${operationalContext.analysis_run_id}`}</strong>
+            <small>{operationalContext.analysis_run_id ? `#${operationalContext.analysis_run_id} · ` : ''}{operationalContext.city || operationalContext.territory?.region || ''}</small>
             <button
               type="button"
               onClick={() => {

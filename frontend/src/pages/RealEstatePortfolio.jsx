@@ -135,7 +135,7 @@ function FinancialAnalysisPanel({ property, onClose }) {
   );
 }
 
-function RealEstatePortfolio() {
+function RealEstatePortfolio({ operationalContext, onNavigate }) {
   const [portfolio, setPortfolio] = useState(null);
   const [properties, setProperties] = useState([]);
   const [error, setError] = useState('');
@@ -159,6 +159,19 @@ function RealEstatePortfolio() {
       })
       .catch((loadError) => setError(loadError.message));
   }, []);
+
+  const propertyTerritory = (property) => ({
+    id: property.location_id,
+    location_id: property.location_id,
+    type: 'asset',
+    name: property.name,
+    displayName: property.name,
+    city: property.city,
+    region: property.region,
+    country: property.country || null,
+    coordinates: [Number(property.longitude), Number(property.latitude)],
+    source: 'BACKSTAGE real-estate location',
+  });
 
   if (error) return <p className="message">Error: {error}</p>;
   if (!portfolio) return <p>Cargando portafolio inmobiliario...</p>;
@@ -194,6 +207,29 @@ function RealEstatePortfolio() {
                 <div><dt>Uso del suelo</dt><dd>{property.zoning || 'Sin definir'}</dd></div>
               </dl>
               <div className="card-actions">
+                {property.latitude != null && property.longitude != null && (
+                  <>
+                    <button type="button" className="secondary" onClick={() => onNavigate?.('territorial-explorer', {
+                      ...operationalContext,
+                      territory: propertyTerritory(property),
+                      selectedLocation: propertyTerritory(property),
+                      city: property.city,
+                      longitude: Number(property.longitude),
+                      latitude: Number(property.latitude),
+                    })}>Ver en mapa</button>
+                    <button type="button" className="secondary" onClick={() => onNavigate?.('earthart', {
+                      ...operationalContext,
+                      territory: propertyTerritory(property),
+                      city: property.city,
+                      longitude: Number(property.longitude),
+                      latitude: Number(property.latitude),
+                    })}>AirHeart</button>
+                    <button type="button" className="secondary" onClick={() => onNavigate?.('portfolio-comparator', {
+                      ...operationalContext,
+                      candidates: [...(operationalContext?.candidates || []), propertyTerritory(property)].slice(0, 6),
+                    })}>Comparar</button>
+                  </>
+                )}
                 <button
                   type="button"
                   onClick={() => setAnalyzingPropertyId(

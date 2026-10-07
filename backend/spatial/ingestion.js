@@ -146,8 +146,19 @@ class SpatialIngestionPipeline {
   }
 
   async roadFeatures({ organizationId, worldId }) {
-    const objects = await this.store.list(COLLECTIONS.objects, { organizationId, worldId }, { limit: 5000 });
-    return { type: 'FeatureCollection', features: objects.filter((object) => object.status !== 'archived' && ['LineString', 'MultiLineString'].includes(object.geometry.type))
+    const [objects, sources] = await Promise.all([
+      this.store.list(COLLECTIONS.objects, { organizationId, worldId }, { limit: 5000 }),
+      this.store.list(COLLECTIONS.sources, { organizationId }),
+    ]);
+    const roadSources = new Set(sources.filter((source) => source.status === 'active'
+      && /road|street|highway|vial|carretera|vía/i.test(source.dataset)).map((source) => source._id));
+    return { type: 'FeatureCollection', features: objects.filter((object) => {
+      if (object.status !== 'active' || !['LineString', 'MultiLineString'].includes(object.geometry.type)) return false;
+      const properties = object.properties || {};
+      return roadSources.has(object.sourceId)
+        || Boolean(properties.highway || properties.speedKph || properties.maxspeed)
+        || /^(?:road|street|highway|vial|carretera|vía)$/i.test(String(properties.objectType || object.objectType));
+    })
       .map((object) => ({ type: 'Feature', id: object.id, geometry: object.geometry, properties: object.properties || {} })) };
   }
 }

@@ -3,6 +3,14 @@
 .territorial-inspector button{float:right}
 .territorial-inspector h3{margin:0 0 8px}
 .territorial-inspector p{margin:0;color:var(--text-secondary)}
+.territorial-search{display:grid;gap:12px;margin-bottom:16px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.territorial-search>form input{min-width:0;flex:1 1 260px}
+.territorial-result-group{max-height:220px;overflow-y:auto;border-top:1px solid var(--border)}
+.territorial-result-group h3{position:sticky;top:0;z-index:1;margin:0;padding:9px 0;background:var(--surface);color:var(--accent-cyan);font-size:12px}
+.territorial-search-result{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.territorial-search-result>div:first-child{min-width:0;overflow-wrap:anywhere}
+.territorial-search-result .form-actions{justify-content:flex-end}
 .advanced-territorial-tools{margin:18px 0;border:1px solid var(--border);border-radius:8px;background:var(--surface)}
 .advanced-territorial-tools>summary{padding:14px 16px;color:var(--text-primary);font-weight:700;cursor:pointer}
 .advanced-territorial-tools-content{display:grid;grid-template-columns:minmax(0,1fr);min-width:0;gap:12px;padding:0 14px 14px;overflow-x:auto}
+@media(max-width:760px){.territorial-result-group{max-height:none;overflow:visible}.territorial-search-result{grid-template-columns:minmax(0,1fr)}.territorial-search-result .form-actions{justify-content:flex-start}.territorial-search-result .form-actions button{flex:1 1 calc(50% - 4px)}.territorial-search>form button{flex:1 1 auto}}

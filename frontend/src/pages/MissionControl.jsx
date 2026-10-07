@@ -20,7 +20,7 @@ import './MissionControl.css';
 
 const FLOWS = [
   ['territorial-explorer', 'Explorador territorial', 'Consulta el territorio y las capas disponibles.', FiMap],
-  ['earthart', 'AirHub', 'Abre el perfil territorial y su evidencia disponible.', FiMapPin],
+  ['earthart', 'AirHeart', 'Abre el perfil territorial y su evidencia disponible.', FiMapPin],
   ['portfolio-assets', 'Activos', 'Consulta los activos de tu organización.', FiLayers],
   ['portfolio-comparator', 'Comparador', 'Contrasta candidatos con datos disponibles.', FiColumns],
 ];
@@ -304,11 +304,24 @@ function MissionControl({ onNavigate }) {
         </div>
       </header>
 
-      <AnalysisCommandBar onOpenTerritory={(candidate, center) => onNavigate('territorial-explorer', {
-        city: candidate.properties?.city || candidate.properties?.name || candidate.matchedQuery,
-        longitude: center[0],
-        latitude: center[1],
-      })} />
+      <AnalysisCommandBar onOpenTerritory={(candidate, center) => {
+        const territory = {
+          ...candidate,
+          name: candidate.displayName || candidate.properties?.name || candidate.matchedQuery,
+          city: candidate.city || candidate.properties?.city || candidate.matchedQuery,
+          region: candidate.region || candidate.properties?.region || null,
+          country: candidate.country || candidate.properties?.country || null,
+          coordinates: center,
+          source: candidate.source || candidate.provider || candidate.provenance?.source || null,
+        };
+        onNavigate('territorial-explorer', {
+          territory,
+          selectedLocation: territory,
+          city: territory.city,
+          longitude: center[0],
+          latitude: center[1],
+        });
+      }} />
 
       <div className="kpi-grid">
         {kpis.map(([label, value, meta, Icon]) => (
@@ -445,10 +458,6 @@ function MissionControl({ onNavigate }) {
           ) : (
             <p className="state">No hay actividad reciente disponible.</p>
           )}
-
-          <button className="panel-action" onClick={() => onNavigate('admin-audit-logs')}>
-            Abrir auditoría completa →
-          </button>
 
           {operationalEvents.length > 0 && (
             <div className="operational-event-feed">

@@ -22,7 +22,7 @@ test('resuelve candidatos dentro de la organización y no fabrica resultados vac
       calls.push({ organizationId, query });
       return query.q === 'Medellín' ? [{ id: 'territory-1', properties: { name: 'Medellín' } }] : [];
     },
-    resolveTerritory: async () => null,
+    geocodeTerritories: async () => [],
   });
 
   const plan = await orchestrator.createPlan(17, 'Analizar Medellín');
@@ -37,13 +37,13 @@ test('resuelve candidatos dentro de la organización y no fabrica resultados vac
 test('uses the public territory adapter when Atlas has no match and carries resolved data state', async () => {
   const orchestrator = createAnalysisOrchestrator({
     searchTerritories: async () => [],
-    resolveTerritory: async (query) => ({
+    geocodeTerritories: async (query) => [{
       id: `osm:${query}`,
       properties: { name: query, city: query },
       geometry: { type: 'Point', coordinates: [-75.6026, 6.2697] },
       bounds: [-75.72, 6.16, -75.47, 6.38],
       provenance: { source: 'OpenStreetMap Nominatim', license: 'ODbL-1.0', dataMode: 'derived' },
-    }),
+    }],
     dataResolver: {
       resolve: async ({ organizationId, territory }) => ({
         status: 'insufficient_data',

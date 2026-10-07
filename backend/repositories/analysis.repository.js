@@ -205,6 +205,7 @@ async function listAnalysisRuns({ organizationId, limit = 20 }) {
        city,
        objective,
        recommendation_text,
+      metadata,
        status,
        created_at,
        updated_at
@@ -253,7 +254,7 @@ async function getProbabilityResult({ analysisRunId, organizationId }) {
 
 
 
-async function createOperationalProject({ projectName, city, objective, requestedByUserId, organizationId }) {
+async function createOperationalProject({ projectName, city, objective, requestedByUserId, organizationId, metadata = {} }) {
   const result = await query(
     `INSERT INTO analysis_runs
        (project_name, city, objective, criteria_weights, requested_by_user_id, organization_id, metadata, status)
@@ -262,6 +263,7 @@ async function createOperationalProject({ projectName, city, objective, requeste
     [projectName, city || null, objective || null, requestedByUserId || null, organizationId, {
       analysis_type: 'operational_project',
       workflow_created_at: new Date().toISOString(),
+      ...metadata,
     }]
   );
   return result.rows[0];

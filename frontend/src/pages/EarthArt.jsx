@@ -49,8 +49,14 @@ function EarthArt({ operationalContext, onNavigate }) {
       setUnits(data);
       setOpportunities(opportunitiesRes.ok && Array.isArray(opportunitiesData) ? opportunitiesData : []);
       setRisks(risksRes.ok && Array.isArray(risksData) ? risksData : []);
-      if (data.length > 0 && !selectedUnitId) {
-        setSelectedUnitId(String(data[0].unit_id));
+      if (data.length > 0) {
+        const activeTerritory = operationalContext?.territory;
+        const match = data.find((unit) =>
+          (activeTerritory?.name && unit.name?.toLocaleLowerCase() === activeTerritory.name.toLocaleLowerCase())
+          || (activeTerritory?.city && unit.city?.toLocaleLowerCase() === activeTerritory.city.toLocaleLowerCase())
+          || (operationalContext?.city && unit.city?.toLocaleLowerCase() === operationalContext.city.toLocaleLowerCase())
+        );
+        setSelectedUnitId((current) => current || String(match?.unit_id || data[0].unit_id));
       }
     } catch {
       setUnits([]);
@@ -81,7 +87,7 @@ function EarthArt({ operationalContext, onNavigate }) {
   useEffect(() => {
     loadUnits();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [operationalContext?.territory?.name, operationalContext?.territory?.city, operationalContext?.city]);
 
   useEffect(() => {
     setSimulation(null);
@@ -135,6 +141,28 @@ function EarthArt({ operationalContext, onNavigate }) {
   const selectedUnit = units.find((unit) => unit.unit_id === Number(selectedUnitId));
   const unitOpportunities = opportunities.filter((item) => item.city && item.city === selectedUnit?.city);
   const unitRisks = risks.filter((item) => item.city && item.city === selectedUnit?.city);
+  const openSelectedUnitOnMap = () => {
+    if (selectedUnit?.latitude == null || selectedUnit?.longitude == null) return;
+    const territory = operationalContext?.territory || {
+      id: selectedUnit.unit_id,
+      name: selectedUnit.name,
+      city: selectedUnit.city,
+      region: selectedUnit.region,
+      country: selectedUnit.country,
+      type: selectedUnit.unit_type,
+      coordinates: [Number(selectedUnit.longitude), Number(selectedUnit.latitude)],
+      geometry: selectedUnit.geometry || null,
+      source: selectedUnit.source_name || 'BACKSTAGE territorial units',
+    };
+    onNavigate?.('territorial-explorer', {
+      ...operationalContext,
+      territory,
+      selectedLocation: territory,
+      city: territory.city || selectedUnit.city,
+      longitude: Number(selectedUnit.longitude),
+      latitude: Number(selectedUnit.latitude),
+    });
+  };
   const createGapProject = async (gap) => {
     setCreatingGapId(gap.gap_id);
     try {
@@ -146,7 +174,7 @@ function EarthArt({ operationalContext, onNavigate }) {
 
   return (
     <div>
-      <h2>EarthArt — Inteligencia Territorial</h2>
+      <h2>AirHeart — Inteligencia Territorial</h2>
       <p>Territorio completo: catastro, población, infraestructura, ambiente, economía y movilidad en un solo perfil por unidad territorial.</p>
 
       {loading ? (
@@ -195,7 +223,7 @@ function EarthArt({ operationalContext, onNavigate }) {
           </div>
 
           <div className="form-section">
-            <div className="score-row"><div><p className="eyebrow">Lectura integrada, métricas separadas</p><h3>Territorio · riesgo · oportunidad</h3></div>{selectedUnit?.latitude != null && selectedUnit?.longitude != null && <button type="button" onClick={() => onNavigate?.('territorial-explorer', { ...operationalContext, city: selectedUnit.city })}>Abrir territorio en mapa</button>}</div>
+            <div className="score-row"><div><p className="eyebrow">Lectura integrada, métricas separadas</p><h3>Territorio · riesgo · oportunidad</h3></div>{selectedUnit?.latitude != null && selectedUnit?.longitude != null && <button type="button" onClick={openSelectedUnitOnMap}>Ver en mapa</button>}</div>
             <div className="metric-grid">
               <article className="metric-card"><span>Índice territorial</span><strong>{indexSnapshot?.composite_score == null ? 'Sin datos' : `${indexSnapshot.composite_score}/100`}</strong></article>
               <article className="metric-card"><span>Brechas abiertas</span><strong>{gaps.filter((gap) => !gap.resolved).length}</strong></article>
@@ -204,6 +232,29 @@ function EarthArt({ operationalContext, onNavigate }) {
             </div>
             <p className="auth-hint">El índice, los riesgos y las oportunidades conservan sus propias metodologías. La relación por ciudad sirve para navegación y contexto; no constituye causalidad ni un puntaje combinado.</p>
             <div className="form-actions"><button type="button" onClick={() => onNavigate?.('intelligence-evaluations', operationalContext)}>Abrir evaluaciones</button><button type="button" onClick={() => onNavigate?.('intelligence-opportunities', operationalContext)}>Abrir oportunidades</button></div>
+          </div>
+
+          <div className="form-section">
+            <h3>Señales del territorio</h3>
+            {unitRisks.length === 0 && unitOpportunities.length === 0 ? <p>Sin señales registradas para esta unidad.</p> : (
+              <div className="card-grid">
+                {unitRisks.slice(0, 4).map((risk, index) => (
+                  <article className="card" key={`risk-${risk.risk_assessment_id || index}`}>
+                    <p className="eyebrow">Riesgo</p>
+                    <h4>{risk.name || risk.risk_type || risk.assessment_type || 'Evaluación territorial'}</h4>
+                    {risk.severity && <p>{risk.severity}</p>}
+                    <button type="button" className="secondary" onClick={openSelectedUnitOnMap}>Ver en mapa</button>
+                  </article>
+                ))}
+                {unitOpportunities.slice(0, 4).map((opportunity, index) => (
+                  <article className="card" key={`opportunity-${opportunity.opportunity_id || index}`}>
+                    <p className="eyebrow">Oportunidad</p>
+                    <h4>{opportunity.name || opportunity.title || opportunity.opportunity_type || 'Oportunidad documentada'}</h4>
+                    <button type="button" className="secondary" onClick={() => onNavigate?.('intelligence-opportunities', { ...operationalContext, territory: operationalContext?.territory || { name: selectedUnit?.name, city: selectedUnit?.city }, city: selectedUnit?.city })}>Explorar oportunidades</button>
+                  </article>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="form-section">

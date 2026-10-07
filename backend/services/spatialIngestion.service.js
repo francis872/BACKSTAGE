@@ -7,6 +7,7 @@ const { buildRoadGraph, shortestPath } = require('../spatial/routing');
 const { evaluateRisk } = require('../spatial/riskModels');
 const { evaluateScenario } = require('../spatial/riskScenarios');
 const { measureGeometry } = require('../spatial/geometryTools');
+const territoryResolver = require('./territoryResolver.service');
 
 let pipelinePromise;
 const tileCache = new TileCache({
@@ -112,12 +113,45 @@ async function search(organizationId, query) {
   } catch (error) { return translate(error); }
 }
 
+async function geocode(organizationId, query) {
+  if (!organizationId) throw new ApiError(401, 'Se requiere una organización activa.');
+  let viewboxBias = null;
+  if (query.viewbox) {
+    viewboxBias = String(query.viewbox).split(',').map(Number);
+    if (viewboxBias.length !== 4 || !viewboxBias.every(Number.isFinite)) {
+      throw new ApiError(400, 'viewbox debe ser west,south,east,north.');
+    }
+  }
+  return territoryResolver.geocodeTerritories(query.q, {
+    countryBias: query.countryBias,
+    regionBias: query.regionBias,
+    viewboxBias,
+    bounded: query.bounded === 'true',
+    includeGeometry: query.includeGeometry === 'true',
+    limit: Number(query.limit || 5),
+  });
+}
+
+async function reverseGeocode(organizationId, query) {
+  if (!organizationId) throw new ApiError(401, 'Se requiere una organización activa.');
+  return territoryResolver.reverseGeocode(query.lng, query.lat, { zoom: query.zoom });
+}
+
 async function nearby(organizationId, query) {
   try {
+    const lng = Number(query.lng);
+    const lat = Number(query.lat);
+    const radiusM = Number(query.radiusM || 1000);
+    if (!Number.isFinite(lng) || lng < -180 || lng > 180 || !Number.isFinite(lat) || lat < -90 || lat > 90) {
+      throw new ApiError(400, 'lng y lat deben estar dentro del rango WGS84.');
+    }
+    if (!Number.isFinite(radiusM) || radiusM <= 0 || radiusM > 100000) {
+      throw new ApiError(400, 'radiusM debe estar entre 1 y 100000 metros.');
+    }
     const pipeline = await getPipeline();
     return pipeline.nearby({
       organizationId, worldId: scopedWorldId(organizationId, query.worldId),
-      lng: query.lng, lat: query.lat, radiusM: Number(query.radiusM || 1000), limit: query.limit,
+      lng, lat, radiusM, limit: query.limit,
     });
   } catch (error) { return translate(error); }
 }
@@ -138,7 +172,11 @@ async function computeRoute(organizationId, payload) {
       }
       return coordinate.map(Number);
     };
-    return shortestPath(graph, validateCoordinate(payload.start, 'start'), validateCoordinate(payload.end, 'end'), payload.algorithm || 'astar');
+    const route = shortestPath(graph, validateCoordinate(payload.start, 'start'), validateCoordinate(payload.end, 'end'), payload.algorithm || 'astar');
+    if (route.snappedStart.snapDistanceM > 500 || route.snappedEnd.snapDistanceM > 500) {
+      throw new ApiError(422, 'La red vial no tiene cobertura a menos de 500 m de ambos puntos seleccionados.');
+    }
+    return route;
   } catch (error) { return translate(error); }
 }
 
@@ -174,4 +212,4 @@ function getStatus() {
   };
 }
 
-module.exports = { getPipeline, scopedWorldId, translate, registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, search, nearby, computeRoute, evaluateTerritorialRisk, evaluateTerritorialScenario, measureTerritorialGeometry, setSourceStatus, getStatus };
+module.exports = { getPipeline, scopedWorldId, translate, registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, search, geocode, reverseGeocode, nearby, computeRoute, evaluateTerritorialRisk, evaluateTerritorialScenario, measureTerritorialGeometry, setSourceStatus, getStatus };

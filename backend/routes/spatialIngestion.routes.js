@@ -11,6 +11,8 @@ router.post('/sources', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.r
 router.patch('/sources/:id/status', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.setSourceStatus);
 router.get('/jobs', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.listJobs);
 router.get('/status', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getStatus);
+router.get('/geocode', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.geocode);
+router.get('/reverse-geocode', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.reverseGeocode);
 router.get('/search', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.search);
 router.get('/nearby', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.nearby);
 router.post('/routes/compute', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.computeRoute);
