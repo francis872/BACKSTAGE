@@ -2,8 +2,6 @@
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
-  pgm.sql('CREATE EXTENSION IF NOT EXISTS postgis;');
-
   pgm.createTable('organizations', {
     organization_id: { type: 'serial', primaryKey: true },
     name: { type: 'text', notNull: true },
@@ -49,7 +47,7 @@ exports.up = (pgm) => {
     source_table: { type: 'text', notNull: true },
     id_column: { type: 'text', notNull: true, default: 'id' },
     name_column: { type: 'text' },
-    geom_column: { type: 'text', notNull: true, default: 'geom' },
+    geom_column: { type: 'text', notNull: true, default: 'geometry' },
     srid: { type: 'integer', notNull: true, default: 4326 },
     coverage: { type: 'text' },
     style_json: { type: 'jsonb', notNull: true, default: '{}' },
@@ -86,12 +84,11 @@ exports.up = (pgm) => {
     city: { type: 'text' },
     latitude: { type: 'numeric(9,6)' },
     longitude: { type: 'numeric(9,6)' },
-    geom: { type: 'geometry(Point,4326)' },
+    geometry: { type: 'jsonb' },
     source_name: { type: 'text' },
     source_updated_at: { type: 'date' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') },
   }, { ifNotExists: true });
-  pgm.createIndex('competitors', 'geom', { method: 'gist', name: 'idx_competitors_geom' });
 
   pgm.createTable('points_of_interest', {
     poi_id: { type: 'serial', primaryKey: true },
@@ -101,12 +98,11 @@ exports.up = (pgm) => {
     city: { type: 'text' },
     latitude: { type: 'numeric(9,6)' },
     longitude: { type: 'numeric(9,6)' },
-    geom: { type: 'geometry(Point,4326)' },
+    geometry: { type: 'jsonb' },
     source_name: { type: 'text' },
     source_updated_at: { type: 'date' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') },
   }, { ifNotExists: true });
-  pgm.createIndex('points_of_interest', 'geom', { method: 'gist', name: 'idx_points_of_interest_geom' });
 
   pgm.createTable('territorial_zones', {
     zone_id: { type: 'serial', primaryKey: true },
@@ -114,12 +110,11 @@ exports.up = (pgm) => {
     zone_type: { type: 'text', notNull: true, default: 'district' },
     city: { type: 'text' },
     population_total: { type: 'integer' },
-    geom: { type: 'geometry(Polygon,4326)', notNull: true },
+    geometry: { type: 'jsonb', notNull: true },
     source_name: { type: 'text' },
     source_updated_at: { type: 'date' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') },
   }, { ifNotExists: true });
-  pgm.createIndex('territorial_zones', 'geom', { method: 'gist', name: 'idx_territorial_zones_geom' });
 
   pgm.createTable('demographic_indicators', {
     demographic_indicator_id: { type: 'serial', primaryKey: true },

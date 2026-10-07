@@ -376,7 +376,7 @@ async function getExampleRecommendation() {
     `SELECT l.name, l.address, h.metric->>'queue_minutes' AS queue_minutes, h.metric->>'occupancy' AS occupancy
      FROM locations l
      LEFT JOIN location_histories h ON h.location_id = l.location_id
-     WHERE l.external_id = 'mcd-001'
+     WHERE l.external_id = 'retail-anchor-001'
      ORDER BY h.observed_at DESC LIMIT 1`
   );
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { lazy, Suspense, useState, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 
@@ -19,7 +19,6 @@ import UsersAdmin from './pages/UsersAdmin';
 import PlatformArchitecture from './pages/PlatformArchitecture';
 import MissionControl from './pages/MissionControl';
 import LayerCatalogAdmin from './pages/LayerCatalogAdmin';
-import TerritorialExplorer from './pages/TerritorialExplorer';
 import Reports from './pages/Reports';
 import AdvancedComparator from './pages/AdvancedComparator';
 import AuditLogsAdmin from './pages/AuditLogsAdmin';
@@ -28,6 +27,8 @@ import ProbabilityEngine from './pages/ProbabilityEngine';
 import { apiRequest } from './lib/api';
 import { clearSession, getSessionUser, setSession } from './lib/auth';
 import { clearStoredOperationalContext, getStoredOperationalContext, setStoredOperationalContext } from './lib/operationalContext';
+
+const TerritorialExplorer = lazy(() => import('./pages/NativeTerritorialExplorer'));
 
 const menu = [
   { key: 'mission-control', label: 'Centro de operaciones', group: 'Operación' },
@@ -101,15 +102,16 @@ const LegacyApp = () => {
   }, []);
 
   const navigateOperational = (page, context = null) => {
-    if (context?.analysis_run_id) {
+    if (context) {
       const nextContext = {
-        analysis_run_id: Number(context.analysis_run_id),
+        analysis_run_id: context.analysis_run_id ? Number(context.analysis_run_id) : null,
         project_name: context.project_name || null,
         city: context.city || null,
+        location_id: context.location_id ? Number(context.location_id) : null,
         organization_id: sessionUser?.organization_id || null,
       };
       setOperationalContext(nextContext);
-      setStoredOperationalContext(nextContext);
+      if (nextContext.analysis_run_id) setStoredOperationalContext(nextContext);
     }
     setActivePage(page);
   };
@@ -138,6 +140,7 @@ const LegacyApp = () => {
           analysis_run_id: Number(run.analysis_run_id),
           project_name: run.project_name || null,
           city: run.city || null,
+          location_id: operationalContext.location_id || null,
           organization_id: Number(sessionUser.organization_id),
         };
         setOperationalContext(validatedContext);
@@ -159,7 +162,11 @@ const LegacyApp = () => {
       case 'mission-control':
         return <MissionControl onNavigate={navigateOperational} />;
       case 'territorial-explorer':
-        return <TerritorialExplorer operationalContext={operationalContext} onNavigate={navigateOperational} />;
+        return (
+          <Suspense fallback={<p className="auth-hint">Cargando motor territorial WebGL…</p>}>
+            <TerritorialExplorer operationalContext={operationalContext} onNavigate={navigateOperational} />
+          </Suspense>
+        );
       case 'portfolio-assets':
         return <RealEstatePortfolio />;
       case 'portfolio-projects':
@@ -169,15 +176,15 @@ const LegacyApp = () => {
       case 'intelligence-evaluations':
         return <RiskAssessments operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'intelligence-risks':
-        return <RiskComponents />;
+        return <RiskComponents operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'intelligence-opportunities':
-        return <GeoInsights />;
+        return <GeoInsights operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'intelligence-recommendations':
         return <Recommendations operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'probability-engine':
         return <ProbabilityEngine onNavigate={navigateOperational} operationalContext={operationalContext} />;
       case 'earthart':
-        return <EarthArt />;
+        return <EarthArt operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'reports':
         return <Reports operationalContext={operationalContext} onNavigate={navigateOperational} />;
       case 'admin-users':

@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'BACKSTAGE_DEFAULT_SECRET_CHANGE_ME';
+const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = '8h';
 const JWT_ISSUER = process.env.JWT_ISSUER || 'backstage-intelligence';
 const JWT_AUDIENCE = process.env.JWT_AUDIENCE || 'backstage-platform';
@@ -48,6 +48,9 @@ function verifyPassword(password, storedHash) {
 }
 
 function createToken(user) {
+  if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET es obligatorio para emitir sesiones.');
+  }
   const payload = {
     sub: user.user_id,
     email: user.email,
@@ -67,6 +70,9 @@ function createToken(user) {
 }
 
 function verifyToken(token) {
+  if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET es obligatorio para validar sesiones.');
+  }
   return jwt.verify(token, JWT_SECRET, {
     issuer: JWT_ISSUER,
     audience: JWT_AUDIENCE,

@@ -176,7 +176,7 @@ async function scoreCandidates(payload, organizationId, sessionUser) {
       city: resolved.city,
       latitude: resolved.latitude,
       longitude: resolved.longitude,
-      ownBrandName: payload.own_brand_name || 'McDonald%',
+      ownBrandName: payload.own_brand_name || null,
     });
     const scoreByDimension = buildDimensionScores(metrics);
     const explanation = buildExplanation(metrics, scoreByDimension, weights);
@@ -276,9 +276,9 @@ async function runGeostrategicAnalysis(payload, sessionUser, organizationContext
 
   const { ranked, weights, rankingMethod, analyticsJobId } = await scoreCandidates(payload, organizationId, sessionUser);
   const run = await analysisRepository.createAnalysisRun({
-    projectName: payload.project_name || 'Expansión McDonald’s Bogotá',
+    projectName: payload.project_name || 'Análisis territorial',
     city: payload.city || null,
-    objective: payload.objective || 'Priorizar ubicación de expansión con criterios multicriterio.',
+    objective: payload.objective || 'Comparar alternativas territoriales mediante criterios trazables.',
     criteriaWeights: weights,
     requestedByUserId: sessionUser?.user_id || null,
     organizationId,
@@ -316,7 +316,7 @@ async function runGeostrategicAnalysis(payload, sessionUser, organizationContext
 
   return {
     analysis_run_id: run.analysis_run_id,
-    project_name: payload.project_name || 'Expansión McDonald’s Bogotá',
+    project_name: payload.project_name || 'Análisis territorial',
     city: payload.city || null,
     criteria_weights: weights,
     recommendation: recommendationText,

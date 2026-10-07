@@ -10,6 +10,9 @@ const getAssessmentById = asyncHandler(async (req, res) => {
   const row = await riskAssessmentsService.getAssessmentById(req.params.id, req.organization.organization_id);
   res.json(row);
 });
+const getLocationHistory = asyncHandler(async (req, res) => {
+  res.json(await riskAssessmentsService.getLocationHistory(req.params.locationId, req.organization.organization_id));
+});
 
 const createAssessment = asyncHandler(async (req, res) => {
   const row = await riskAssessmentsService.createAssessment(req.body || {}, req.organization.organization_id);
@@ -26,4 +29,4 @@ const deleteAssessment = asyncHandler(async (req, res) => {
   res.json({ message: 'Evaluación de riesgo eliminada correctamente.', deleted: row });
 });
 
-module.exports = { listAssessments, getAssessmentById, createAssessment, updateAssessment, deleteAssessment };
+module.exports = { listAssessments, getAssessmentById, getLocationHistory, createAssessment, updateAssessment, deleteAssessment };

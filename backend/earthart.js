@@ -1,5 +1,6 @@
 // EarthArt: motor de inteligencia territorial (índice territorial, detector de brechas y simulaciones).
 const { query } = require('./db');
+const { haversineDistance } = require('./spatial/core');
 
 const DIMENSIONS = ['education', 'health', 'infrastructure', 'economy', 'environment', 'security', 'connectivity', 'housing', 'services'];
 const DIMENSION_WEIGHT = 100 / DIMENSIONS.length;
@@ -53,28 +54,38 @@ async function getLatestIndexSnapshot(unitId) {
   return result.rows[0] || null;
 }
 
-async function loadUnit(unitId) {
-  const result = await query('SELECT * FROM territorial_units WHERE unit_id = $1', [unitId]);
+async function loadUnit(unitId, organizationId) {
+  const result = organizationId
+    ? await query('SELECT * FROM territorial_units WHERE unit_id = $1 AND organization_id = $2', [unitId, organizationId])
+    : await query('SELECT * FROM territorial_units WHERE unit_id = $1', [unitId]);
   return result.rows[0] || null;
 }
 
-async function loadNearestFacilityDistance(unitId, facilityType) {
-  const result = await query(
-    `SELECT tf.name, tf.capacity,
-       ST_Distance(tu.geom::geography, tf.geom::geography) AS distance_m
-     FROM territorial_units tu
-     LEFT JOIN territorial_facilities tf ON tf.facility_type = $2 AND tf.geom IS NOT NULL
-     WHERE tu.unit_id = $1 AND tu.geom IS NOT NULL
-     ORDER BY distance_m ASC NULLS LAST
-     LIMIT 1`,
-    [unitId, facilityType]
+async function loadNearestFacilityDistance(unitId, facilityType, organizationId) {
+  const unitResult = await query(
+    'SELECT latitude, longitude FROM territorial_units WHERE unit_id = $1',
+    [unitId]
   );
-  return result.rows[0] || null;
+  const unit = unitResult.rows[0];
+  if (!unit || unit.latitude == null || unit.longitude == null) return null;
+  const result = await query(
+    `SELECT name, capacity, latitude, longitude
+     FROM territorial_facilities f
+     JOIN territorial_units u ON u.unit_id = f.unit_id
+     WHERE f.facility_type = $1 AND f.latitude IS NOT NULL AND f.longitude IS NOT NULL
+       AND ($2::integer IS NULL OR u.organization_id = $2)`,
+    [facilityType, organizationId || null]
+  );
+  const origin = { lat: Number(unit.latitude), lng: Number(unit.longitude) };
+  return result.rows.map((row) => ({
+    ...row,
+    distance_m: haversineDistance(origin, { lat: Number(row.latitude), lng: Number(row.longitude) }),
+  })).sort((a, b) => a.distance_m - b.distance_m)[0] || null;
 }
 
 // Reglas heurísticas de detección de brechas territoriales (población vs. infraestructura disponible).
-async function detectGaps(unitId) {
-  const unit = await loadUnit(unitId);
+async function detectGaps(unitId, organizationId) {
+  const unit = await loadUnit(unitId, organizationId);
   if (!unit) return [];
 
   const detected = [];
@@ -87,7 +98,7 @@ async function detectGaps(unitId) {
   });
 
   // Regla 1: población alta pero colegio más cercano lejos (> 3 km).
-  const nearestSchool = await loadNearestFacilityDistance(unitId, 'school');
+  const nearestSchool = await loadNearestFacilityDistance(unitId, 'school', organizationId);
   if (population > 1000 && nearestSchool && nearestSchool.distance_m != null) {
     const distanceKm = Number(nearestSchool.distance_m) / 1000;
     if (distanceKm > 3) {
@@ -159,8 +170,8 @@ function estimateScenario(unit, params) {
   };
 }
 
-async function simulateInfrastructure(unitId, params) {
-  const unit = await loadUnit(unitId);
+async function simulateInfrastructure(unitId, params, organizationId) {
+  const unit = await loadUnit(unitId, organizationId);
   if (!unit) return null;
 
   const alternatives = Array.isArray(params.alternatives) && params.alternatives.length > 0 ? params.alternatives : [params];

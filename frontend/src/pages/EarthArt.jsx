@@ -22,7 +22,7 @@ const severityLabels = {
 
 const baseAlternative = { name: 'Alternativa A', capacity: '', cost_per_seat: '', coverage_radius_km: '2' };
 
-function EarthArt() {
+function EarthArt({ operationalContext, onNavigate }) {
   const [units, setUnits] = useState([]);
   const [selectedUnitId, setSelectedUnitId] = useState('');
   const [indexSnapshot, setIndexSnapshot] = useState(null);
@@ -35,13 +35,20 @@ function EarthArt() {
     { name: 'Alternativa B', capacity: '', cost_per_seat: '', coverage_radius_km: '2' }
   ]);
   const [simulation, setSimulation] = useState(null);
+  const [simulationHistory, setSimulationHistory] = useState([]);
+  const [opportunities, setOpportunities] = useState([]);
+  const [risks, setRisks] = useState([]);
+  const [creatingGapId, setCreatingGapId] = useState(null);
 
   const loadUnits = async () => {
     setLoading(true);
     try {
-      const res = await apiRequest('/territorial/units');
-      const data = await res.json();
+      const [res, opportunitiesRes, risksRes] = await Promise.all([apiRequest('/territorial/units'), apiRequest('/insights/opportunities'), apiRequest('/risk-assessments')]);
+      const [data, opportunitiesData, risksData] = await Promise.all([res.json(), opportunitiesRes.json(), risksRes.json()]);
+      if (!res.ok) throw new Error(data.error || 'No se pudieron cargar las unidades.');
       setUnits(data);
+      setOpportunities(opportunitiesRes.ok && Array.isArray(opportunitiesData) ? opportunitiesData : []);
+      setRisks(risksRes.ok && Array.isArray(risksData) ? risksData : []);
       if (data.length > 0 && !selectedUnitId) {
         setSelectedUnitId(String(data[0].unit_id));
       }
@@ -56,15 +63,18 @@ function EarthArt() {
   const loadUnitDetail = async (unitId) => {
     if (!unitId) return;
     try {
-      const [indexRes, gapsRes] = await Promise.all([
+      const [indexRes, gapsRes, simulationsRes] = await Promise.all([
         apiRequest(`/territorial/units/${unitId}/index`),
-        apiRequest(`/territorial/units/${unitId}/gaps`)
+        apiRequest(`/territorial/units/${unitId}/gaps`),
+        apiRequest(`/territorial/units/${unitId}/simulations`)
       ]);
       setIndexSnapshot(indexRes.ok ? await indexRes.json() : null);
       setGaps(gapsRes.ok ? await gapsRes.json() : []);
+      setSimulationHistory(simulationsRes.ok ? await simulationsRes.json() : []);
     } catch {
       setIndexSnapshot(null);
       setGaps([]);
+      setSimulationHistory([]);
     }
   };
 
@@ -123,6 +133,16 @@ function EarthArt() {
   };
 
   const selectedUnit = units.find((unit) => unit.unit_id === Number(selectedUnitId));
+  const unitOpportunities = opportunities.filter((item) => item.city && item.city === selectedUnit?.city);
+  const unitRisks = risks.filter((item) => item.city && item.city === selectedUnit?.city);
+  const createGapProject = async (gap) => {
+    setCreatingGapId(gap.gap_id);
+    try {
+      const response = await apiRequest(`/territorial/units/${selectedUnitId}/gaps/${gap.gap_id}/projects`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+      const data = await response.json(); if (!response.ok) throw new Error(data.error || 'No se pudo crear el proyecto.');
+      onNavigate?.('mission-control', { analysis_run_id: data.analysis_run_id, project_name: data.project_name, city: selectedUnit?.city });
+    } catch (error) { setMessage(`Error: ${error.message}`); } finally { setCreatingGapId(null); }
+  };
 
   return (
     <div>
@@ -175,6 +195,18 @@ function EarthArt() {
           </div>
 
           <div className="form-section">
+            <div className="score-row"><div><p className="eyebrow">Lectura integrada, métricas separadas</p><h3>Territorio · riesgo · oportunidad</h3></div>{selectedUnit?.latitude != null && selectedUnit?.longitude != null && <button type="button" onClick={() => onNavigate?.('territorial-explorer', { ...operationalContext, city: selectedUnit.city })}>Abrir territorio en mapa</button>}</div>
+            <div className="metric-grid">
+              <article className="metric-card"><span>Índice territorial</span><strong>{indexSnapshot?.composite_score == null ? 'Sin datos' : `${indexSnapshot.composite_score}/100`}</strong></article>
+              <article className="metric-card"><span>Brechas abiertas</span><strong>{gaps.filter((gap) => !gap.resolved).length}</strong></article>
+              <article className="metric-card"><span>Evaluaciones de riesgo en {selectedUnit?.city || 'la zona'}</span><strong>{unitRisks.length}</strong></article>
+              <article className="metric-card"><span>Oportunidades documentadas</span><strong>{unitOpportunities.length}</strong></article>
+            </div>
+            <p className="auth-hint">El índice, los riesgos y las oportunidades conservan sus propias metodologías. La relación por ciudad sirve para navegación y contexto; no constituye causalidad ni un puntaje combinado.</p>
+            <div className="form-actions"><button type="button" onClick={() => onNavigate?.('intelligence-evaluations', operationalContext)}>Abrir evaluaciones</button><button type="button" onClick={() => onNavigate?.('intelligence-opportunities', operationalContext)}>Abrir oportunidades</button></div>
+          </div>
+
+          <div className="form-section">
             <div className="score-row">
               <h3>Detector de brechas</h3>
               <button type="button" onClick={handleDetectGaps}>Detectar brechas</button>
@@ -187,6 +219,7 @@ function EarthArt() {
                   <div className="card" key={gap.gap_id}>
                     <h3>{severityLabels[gap.severity] || gap.severity}</h3>
                     <p>{gap.message}</p>
+                    <button type="button" onClick={() => createGapProject(gap)} disabled={creatingGapId === gap.gap_id}>{creatingGapId === gap.gap_id ? 'Creando…' : 'Convertir brecha en proyecto'}</button>
                   </div>
                 ))}
               </div>
@@ -258,6 +291,7 @@ function EarthArt() {
                 </div>
               </div>
             )}
+            {simulationHistory.length > 0 && <div className="form-section"><h4>Historial de escenarios</h4><div style={{ overflowX: 'auto' }}><table><thead><tr><th>Fecha</th><th>Escenario</th><th>Recomendación</th></tr></thead><tbody>{simulationHistory.map((item) => <tr key={item.simulation_id}><td>{new Date(item.created_at).toLocaleString('es-CO')}</td><td>{item.scenario_type}</td><td>{item.recommendation || 'Sin recomendación'}</td></tr>)}</tbody></table></div></div>}
           </div>
         </>
       )}

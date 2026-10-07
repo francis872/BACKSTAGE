@@ -33,7 +33,7 @@ function DimensionBreakdown({ scores }) {
 function AdvancedComparator({ operationalContext, onNavigate }) {
   const [locations, setLocations] = useState([]);
   const [selectedCandidates, setSelectedCandidates] = useState([]);
-  const [city, setCity] = useState(operationalContext?.city || 'Bogotá');
+  const [city, setCity] = useState(operationalContext?.city || '');
   const [projectName, setProjectName] = useState(operationalContext?.project_name || 'Comparador de ubicaciones');
   const [result, setResult] = useState(null);
   const [message, setMessage] = useState('');
@@ -234,4 +234,3 @@ function AdvancedComparator({ operationalContext, onNavigate }) {
 }
 
 export default AdvancedComparator;
-

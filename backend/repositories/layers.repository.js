@@ -9,17 +9,30 @@ function assertSafeIdentifier(value, label) {
   }
 }
 
-function buildBboxFilter(bbox, geomColumn) {
-  if (!bbox) return { clause: '', values: [] };
+function parseBbox(bbox) {
+  if (!bbox) return null;
   const parts = String(bbox).split(',').map((part) => Number(part.trim()));
-  if (parts.length !== 4 || parts.some((v) => Number.isNaN(v))) {
+  if (parts.length !== 4 || parts.some((v) => !Number.isFinite(v))) {
     throw new ApiError(400, 'bbox debe tener formato minLng,minLat,maxLng,maxLat.');
   }
 
-  return {
-    clause: ` AND ST_Intersects(${geomColumn}, ST_MakeEnvelope($1, $2, $3, $4, 4326))`,
-    values: parts,
+  return parts;
+}
+
+function geometryIntersectsBbox(geometry, bbox) {
+  if (!bbox) return true;
+  const coordinates = [];
+  const visit = (value) => {
+    if (Array.isArray(value) && value.length >= 2 && value.every(Number.isFinite)) coordinates.push(value);
+    else if (Array.isArray(value)) value.forEach(visit);
   };
+  visit(geometry?.coordinates);
+  if (!coordinates.length) return false;
+  const xs = coordinates.map((point) => point[0]);
+  const ys = coordinates.map((point) => point[1]);
+  const [minLng, minLat, maxLng, maxLat] = bbox;
+  return Math.max(...xs) >= minLng && Math.min(...xs) <= maxLng
+    && Math.max(...ys) >= minLat && Math.min(...ys) <= maxLat;
 }
 
 async function listLayers(organizationId, role) {
@@ -69,38 +82,25 @@ async function getLayerFeatures(layer, { bbox, limit = 500, offset = 0 } = {}) {
 
   const safeLimit = Math.min(Math.max(Number(limit) || 200, 1), 1000);
   const safeOffset = Math.max(Number(offset) || 0, 0);
-  const bboxFilter = buildBboxFilter(bbox, layer.geom_column);
-  const valueStart = bboxFilter.values.length + 1;
-  const sql = `
-    WITH rows AS (
-      SELECT *
-      FROM ${layer.source_table}
-      WHERE ${layer.geom_column} IS NOT NULL${bboxFilter.clause}
-      LIMIT $${valueStart}
-      OFFSET $${valueStart + 1}
-    )
-    SELECT jsonb_build_object(
-      'type', 'FeatureCollection',
-      'features', COALESCE(
-        jsonb_agg(
-          jsonb_build_object(
-            'type', 'Feature',
-            'geometry', ST_AsGeoJSON(${layer.geom_column})::jsonb,
-            'properties', to_jsonb(rows) - '${layer.geom_column}'
-          )
-        ),
-        '[]'::jsonb
-      )
-    ) AS geojson
-    FROM rows;
-  `;
-  const values = [...bboxFilter.values, safeLimit, safeOffset];
-  const result = await query(sql, values);
-  return result.rows[0]?.geojson || { type: 'FeatureCollection', features: [] };
+  const parsedBbox = parseBbox(bbox);
+  const result = await query(
+    `SELECT * FROM ${layer.source_table} WHERE ${layer.geom_column} IS NOT NULL LIMIT $1`,
+    [Math.min(safeLimit + safeOffset + 2000, 5000)]
+  );
+  const features = result.rows
+    .filter((row) => geometryIntersectsBbox(row[layer.geom_column], parsedBbox))
+    .slice(safeOffset, safeOffset + safeLimit)
+    .map((row) => {
+      const { [layer.geom_column]: geometry, ...properties } = row;
+      return { type: 'Feature', geometry, properties };
+    });
+  return { type: 'FeatureCollection', features };
 }
 
 module.exports = {
   listLayers,
   getLayerById,
   getLayerFeatures,
+  parseBbox,
+  geometryIntersectsBbox,
 };

@@ -2,9 +2,9 @@
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
-  pgm.sql('CREATE EXTENSION IF NOT EXISTS postgis;');
+  // Reserved migration number. BACKSTAGE uses its native spatial engine.
 };
 
 exports.down = (pgm) => {
-  pgm.sql('DROP EXTENSION IF EXISTS postgis;');
+  // No extension to remove.
 };

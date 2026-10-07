@@ -86,20 +86,17 @@ necesita:
   caso (ficha por candidato, según el documento).
 - Autorización del propietario para conectar o adquirir esa fuente.
 
-## Épica 4 — Mapas BI y ecosistema QGIS/PostGIS
+## Épica 4 — Motor territorial y mapas BI
 
-**Estado: `pending`**
+**Estado: `partial` (motor nativo y operación implementados; integraciones externas aplazadas)**
 
-El Explorador Territorial ya tiene un mapa MapLibre real, capas desde
-PostGIS y filtros de capas (trabajo de la sesión anterior). No implementa
-todavía: coropletas/símbolos proporcionales/heatmaps interactivos ligados
-a KPIs, isolíneas/isócronas (requiere proveedor de rutas, ver Épica 5),
-publicación de estilos QGIS reproducibles hacia PostGIS/tiles, ni
-evaluación de GeoServer/pg_tileserv/Martin. No se inició por ser un
-proyecto de varias semanas en sí mismo; el mapa actual usa PostGIS
-directamente vía API propia, sin dependencia de QGIS en producción, lo
-cual ya cumple parcialmente el principio de "no depender de QGIS
-manualmente en producción".
+El Explorador Territorial usa MapLibre solo para presentación WebGL. BACKSTAGE
+calcula y sirve GeoJSON, teselas XYZ, simplificación, rutas, terreno, curvas de
+nivel, hidrología, mediciones y riesgo por celdas mediante su núcleo matemático,
+sin PostGIS, QGIS, GeoServer ni un proveedor satelital. El almacenamiento actual
+funciona en memoria; MongoDB Atlas permanece deliberadamente sin configurar
+hasta concluir la plataforma. Siguen pendientes las fuentes externas que
+requieran proveedor, presupuesto o licenciamiento (ver Épica 5).
 
 ## Épica 5 — Integraciones con APIs externas
 
@@ -114,7 +111,7 @@ adapters en `backend/infrastructure/external-apis/` (patrón ya usado por
 
 ## Épica 6 — Rediseño de Evaluaciones y Recomendaciones como dashboards
 
-**Estado: `done` (Recomendaciones), `partial` (Evaluaciones)**
+**Estado: `done` (Recomendaciones y Evaluaciones)**
 
 **Recomendaciones** se convirtió en un dashboard decisional real:
 - KPIs (total, pendientes de revisión, aprobadas, en progreso, completadas, rechazadas).
@@ -132,20 +129,28 @@ adapters en `backend/infrastructure/external-apis/` (patrón ya usado por
 - Verificado end-to-end en navegador: generación desde análisis, aprobación con
   justificación, transición de estado y actualización de KPIs.
 
-**Evaluaciones de Riesgo** recibió una mejora acotada, no la reconstrucción completa:
-- KPIs (total, riesgo promedio, conteo por banda alto/medio/bajo) y filtro por severidad,
-  calculados de los 4 indicadores ya almacenados.
-- Conserva el patrón tarjeta + formulario CRUD; **no** se construyó el flujo guiado de
-  creación desde activo/proyecto/mapa, ni el detalle navegable con historial completo, ni
-  el mapa de evaluaciones que pide el documento. Esto queda pendiente como trabajo futuro
-  de UI, no como una limitación oculta.
+**Evaluaciones de Riesgo** opera como dashboard trazable:
+- KPIs por cuatro bandas, búsqueda y filtro por severidad.
+- Creación guiada desde ubicación y contexto de proyecto, con entradas normalizadas,
+  origen del dato, confianza y evidencia textual.
+- Puntaje derivado y versionado en backend, sin aceptar un total manual inconsistente.
+- Detalle navegable, historial por ubicación y salto al punto evaluado en el Explorador Territorial.
+- Revisión y cobertura de riesgos dentro del flujo del proyecto operativo.
 
 ## Épica 7 — Dashboards, no formularios (Riesgos, Oportunidades)
 
-**Estado: `pending`**
+**Estado: `done` (Riesgos y Oportunidades)**
 
-`RiskComponents.jsx` (menú "Riesgos") y `GeoInsights.jsx` (menú "Oportunidades") conservan
-el patrón tarjeta + formulario CRUD sin KPIs, mapa ni filtros. No se tocaron en esta fase.
+`RiskComponents.jsx` (menú "Riesgos") ya incluye KPIs por amenaza, exposición y
+vulnerabilidad, cobertura territorial, búsqueda, filtros, bandas, trazabilidad y navegación
+al mapa/evaluación. El backend valida valores y aísla toda lectura y escritura por
+organización. `GeoInsights.jsx` (menú "Oportunidades") incorpora ranking explicable desde
+factores de mercado reales, KPIs, búsqueda y filtros, comparación de hasta tres ubicaciones,
+detalle de contribuciones, navegación al mapa y conversión en proyecto operativo con candidato inicial.
+
+EarthArt completa la lectura integrada: presenta índice, brechas, riesgos y oportunidades
+sin fusionarlos en un puntaje artificial, conserva escenarios históricos, navega al mapa y
+convierte brechas en proyectos. Las unidades y todos sus recursos hijos están aislados por organización.
 
 ## Resumen de verificación de esta fase
 
@@ -157,8 +162,7 @@ el patrón tarjeta + formulario CRUD sin KPIs, mapa ni filtros. No se tocaron en
 | Trabajos largos asíncronos y recuperables | Parcial: mismo contrato de estados, ejecución síncrona (justificado) |
 | RBAC granular por permiso | No — sigue con 3 roles (bloqueado como Épica 2A) |
 | Ningún modelo de ML presentado como entrenado sin dataset/evaluación | Correcto — no se entrenó ninguno (Épica 3 bloqueada explícitamente) |
-| Mapas BI, QGIS/PostGIS pipeline, APIs externas | Pendiente (Épicas 4 y 5) |
+| Motor territorial y mapas BI | Parcial: núcleo nativo operativo; fuentes externas pendientes (Épicas 4 y 5) |
 | Recomendaciones como dashboard decisional completo | Sí (Épica 6) |
-| Evaluaciones como dashboard completo (mapa, flujo guiado, historial) | Parcial — solo KPIs y filtro (Épica 6) |
+| Evaluaciones como dashboard completo (mapa, flujo guiado, historial) | Sí (Épica 6) |
 | Riesgos y Oportunidades como dashboards | Pendiente (Épica 7) |
-

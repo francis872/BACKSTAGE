@@ -13,7 +13,9 @@ const initialForm = {
   landslide_risk: '',
   crime_risk: '',
   climate_exposure: '',
-  score: '',
+  data_mode: 'declared',
+  confidence: '',
+  notes: '',
 };
 
 function RiskSimulationPanel({ row, onClose }) {
@@ -109,55 +111,7 @@ function RiskSimulationPanel({ row, onClose }) {
       </form>
       {error && <p className="message">{error}</p>}
       {result && (
-  
-      {operationalContext?.analysis_run_id && (
-        <div className="form-section">
-          <p className="eyebrow">Proyecto operativo activo</p>
-          <h3>{operationalContext.project_name || `Análisis #${operationalContext.analysis_run_id}`}</h3>
-          {projectRisk ? (
-            <>
-              <div className="metric-grid">
-                <article className="metric-card"><span>Cobertura</span><strong>{projectRisk.coverage_pct}%</strong></article>
-                <article className="metric-card"><span>Críticos</span><strong>{projectRisk.counts?.critical || 0}</strong></article>
-                <article className="metric-card"><span>Altos</span><strong>{projectRisk.counts?.high || 0}</strong></article>
-                <article className="metric-card"><span>Sin evaluación</span><strong>{projectRisk.counts?.missing || 0}</strong></article>
-              </div>
-              <p className="auth-hint">
-                Regla operativa BACKSTAGE: bajo &lt;20%, medio 20–40%, alto 40–70%, crítico ≥70%;
-                un componente individual ≥80% también clasifica la ubicación como crítica.
-              </p>
-              <div className="card-grid">
-                {(projectRisk.locations || []).map((location) => (
-                  <article className="card" key={location.location_id}>
-                    <h4>{location.location_name}</h4>
-                    <p>{location.city || 'Sin ciudad'} · Severidad: <strong>{location.classification?.severity}</strong></p>
-                    <p>Promedio: {location.classification?.average == null ? 'Sin evaluación' : `${(location.classification.average * 100).toFixed(1)}%`}</p>
-                  </article>
-                ))}
-              </div>
-              <div className="form-actions">
-                <button
-                  type="button"
-                  onClick={confirmProjectRiskReview}
-                  disabled={reviewingProject || (projectRisk.counts?.missing || 0) > 0}
-                >
-                  {reviewingProject ? 'Registrando revisión…' : projectRisk.reviewed ? 'Riesgos revisados' : 'Confirmar revisión de riesgos'}
-                </button>
-                {projectRisk.reviewed && onNavigate && (
-                  <button type="button" className="secondary" onClick={() => onNavigate('mission-control')}>
-                    Volver al Centro de Operaciones
-                  </button>
-                )}
-              </div>
-              {(projectRisk.counts?.missing || 0) > 0 && (
-                <p className="message">No se puede cerrar esta etapa hasta evaluar todas las ubicaciones vinculadas al proyecto.</p>
-              )}
-            </>
-          ) : <p className="auth-hint">Cargando riesgos vinculados al proyecto…</p>}
-        </div>
-      )}
-
-      <div className="metric-grid">
+        <div className="metric-grid">
           <article className="metric-card"><span>P5 (optimista)</span><strong>{currency.format(result.result.p5)}</strong></article>
           <article className="metric-card"><span>P50 (mediana)</span><strong>{currency.format(result.result.p50)}</strong></article>
           <article className="metric-card"><span>P95 (adverso)</span><strong>{currency.format(result.result.p95)}</strong></article>
@@ -178,6 +132,10 @@ function RiskAssessments({ operationalContext, onNavigate }) {
   const [message, setMessage] = useState('');
   const [simulatingId, setSimulatingId] = useState(null);
   const [severityFilter, setSeverityFilter] = useState('');
+  const [search, setSearch] = useState('');
+  const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
   const [projectRisk, setProjectRisk] = useState(null);
   const [reviewingProject, setReviewingProject] = useState(false);
 
@@ -186,11 +144,12 @@ function RiskAssessments({ operationalContext, onNavigate }) {
       .map((v) => Number(v))
       .filter((v) => !Number.isNaN(v));
     const avgRisk = indicators.length > 0 ? indicators.reduce((acc, v) => acc + v, 0) / indicators.length : null;
-    let severity = 's/d';
+    let severity = 'unknown';
     if (avgRisk != null) {
-      if (avgRisk >= 0.4) severity = 'alto';
-      else if (avgRisk >= 0.2) severity = 'medio';
-      else severity = 'bajo';
+      if (avgRisk >= 0.7) severity = 'critical';
+      else if (avgRisk >= 0.4) severity = 'high';
+      else if (avgRisk >= 0.2) severity = 'moderate';
+      else severity = 'low';
     }
     return { ...row, avgRisk, severity };
   }), [rows]);
@@ -200,16 +159,28 @@ function RiskAssessments({ operationalContext, onNavigate }) {
     const avg = withRisk.length > 0 ? withRisk.reduce((acc, r) => acc + r.avgRisk, 0) / withRisk.length : 0;
     return {
       total: enrichedRows.length,
-      alto: enrichedRows.filter((r) => r.severity === 'alto').length,
-      medio: enrichedRows.filter((r) => r.severity === 'medio').length,
-      bajo: enrichedRows.filter((r) => r.severity === 'bajo').length,
+      critical: enrichedRows.filter((r) => r.severity === 'critical').length,
+      high: enrichedRows.filter((r) => r.severity === 'high').length,
+      moderate: enrichedRows.filter((r) => r.severity === 'moderate').length,
+      low: enrichedRows.filter((r) => r.severity === 'low').length,
       avgRiskPct: Number((avg * 100).toFixed(1)),
     };
   }, [enrichedRows]);
 
-  const visibleRows = severityFilter
-    ? enrichedRows.filter((row) => row.severity === severityFilter)
-    : enrichedRows;
+  const visibleRows = enrichedRows.filter((row) => {
+    const matchesSeverity = !severityFilter || row.severity === severityFilter;
+    const text = `${row.location_name || ''} ${row.city || ''}`.toLowerCase();
+    return matchesSeverity && text.includes(search.trim().toLowerCase());
+  });
+
+  const openDetail = async (row) => {
+    setSelectedAssessment(row); setHistoryLoading(true); setHistory([]);
+    try {
+      const response = await apiRequest(`/risk-assessments/locations/${row.location_id}/history`);
+      const data = await response.json(); if (!response.ok) throw new Error(data.error || 'No se pudo cargar el historial.');
+      setHistory(data);
+    } catch (error) { setMessage(`Error: ${error.message}`); } finally { setHistoryLoading(false); }
+  };
 
   const loadData = async () => {
     setLoading(true);
@@ -284,7 +255,9 @@ function RiskAssessments({ operationalContext, onNavigate }) {
       landslide_risk: form.landslide_risk ? Number(form.landslide_risk) : null,
       crime_risk: form.crime_risk ? Number(form.crime_risk) : null,
       climate_exposure: form.climate_exposure ? Number(form.climate_exposure) : null,
-      score: form.score ? Number(form.score) : null,
+      data_mode: form.data_mode,
+      confidence: form.confidence === '' ? null : Number(form.confidence),
+      notes: form.notes,
     };
     try {
       const path = editingId ? `/risk-assessments/${editingId}` : '/risk-assessments';
@@ -312,7 +285,9 @@ function RiskAssessments({ operationalContext, onNavigate }) {
       landslide_risk: row.landslide_risk ?? '',
       crime_risk: row.crime_risk ?? '',
       climate_exposure: row.climate_exposure ?? '',
-      score: row.score ?? '',
+      data_mode: row.details?.data_mode ?? 'declared',
+      confidence: row.details?.confidence ?? '',
+      notes: row.details?.notes ?? '',
     });
   };
 
@@ -337,13 +312,61 @@ function RiskAssessments({ operationalContext, onNavigate }) {
       <div className="metric-grid">
         <article className="metric-card"><span>Total evaluaciones</span><strong>{summary.total}</strong></article>
         <article className="metric-card"><span>Riesgo promedio</span><strong>{summary.avgRiskPct}%</strong></article>
-        <article className="metric-card"><span>Riesgo alto</span><strong>{summary.alto}</strong></article>
-        <article className="metric-card"><span>Riesgo medio</span><strong>{summary.medio}</strong></article>
-        <article className="metric-card"><span>Riesgo bajo</span><strong>{summary.bajo}</strong></article>
+        <article className="metric-card"><span>Críticos</span><strong>{summary.critical}</strong></article>
+        <article className="metric-card"><span>Altos</span><strong>{summary.high}</strong></article>
+        <article className="metric-card"><span>Moderados</span><strong>{summary.moderate}</strong></article>
+        <article className="metric-card"><span>Bajos</span><strong>{summary.low}</strong></article>
       </div>
       <p className="auth-hint">
-        Riesgo = promedio de los 4 indicadores almacenados (inundación, deslizamiento, crimen, clima). Bandas: bajo &lt; 20%, medio 20-40%, alto ≥ 40% (umbrales configurables, no universales).
+        Riesgo = promedio reproducible de los cuatro indicadores. Bandas operativas: bajo &lt;20%, moderado 20–40%, alto 40–70%, crítico ≥70%; no son umbrales universales.
       </p>
+
+      {operationalContext?.analysis_run_id && (
+        <div className="form-section">
+          <p className="eyebrow">Proyecto operativo activo</p>
+          <h3>{operationalContext.project_name || `Análisis #${operationalContext.analysis_run_id}`}</h3>
+          {projectRisk ? (
+            <>
+              <div className="metric-grid">
+                <article className="metric-card"><span>Cobertura</span><strong>{projectRisk.coverage_pct}%</strong></article>
+                <article className="metric-card"><span>Críticos</span><strong>{projectRisk.counts?.critical || 0}</strong></article>
+                <article className="metric-card"><span>Altos</span><strong>{projectRisk.counts?.high || 0}</strong></article>
+                <article className="metric-card"><span>Sin evaluación</span><strong>{projectRisk.counts?.missing || 0}</strong></article>
+              </div>
+              <p className="auth-hint">
+                Regla operativa BACKSTAGE: bajo &lt;20%, medio 20–40%, alto 40–70%, crítico ≥70%;
+                un componente individual ≥80% también clasifica la ubicación como crítica.
+              </p>
+              <div className="card-grid">
+                {(projectRisk.locations || []).map((location) => (
+                  <article className="card" key={location.location_id}>
+                    <h4>{location.location_name}</h4>
+                    <p>{location.city || 'Sin ciudad'} · Severidad: <strong>{location.classification?.severity}</strong></p>
+                    <p>Promedio: {location.classification?.average == null ? 'Sin evaluación' : `${(location.classification.average * 100).toFixed(1)}%`}</p>
+                  </article>
+                ))}
+              </div>
+              <div className="form-actions">
+                <button
+                  type="button"
+                  onClick={confirmProjectRiskReview}
+                  disabled={reviewingProject || (projectRisk.counts?.missing || 0) > 0}
+                >
+                  {reviewingProject ? 'Registrando revisión…' : projectRisk.reviewed ? 'Riesgos revisados' : 'Confirmar revisión de riesgos'}
+                </button>
+                {projectRisk.reviewed && onNavigate && (
+                  <button type="button" className="secondary" onClick={() => onNavigate('mission-control')}>
+                    Volver al Centro de Operaciones
+                  </button>
+                )}
+              </div>
+              {(projectRisk.counts?.missing || 0) > 0 && (
+                <p className="message">No se puede cerrar esta etapa hasta evaluar todas las ubicaciones vinculadas al proyecto.</p>
+              )}
+            </>
+          ) : <p className="auth-hint">Cargando riesgos vinculados al proyecto…</p>}
+        </div>
+      )}
 
       <div className="form-section">
         <h3>{editingId ? 'Editar evaluación' : 'Crear evaluación'}</h3>
@@ -357,11 +380,13 @@ function RiskAssessments({ operationalContext, onNavigate }) {
               ))}
             </select>
           </div>
-          <div className="field-row"><label>Riesgo inundación</label><input name="flood_risk" type="number" value={form.flood_risk} onChange={handleChange} /></div>
-          <div className="field-row"><label>Riesgo deslizamiento</label><input name="landslide_risk" type="number" value={form.landslide_risk} onChange={handleChange} /></div>
-          <div className="field-row"><label>Riesgo crimen</label><input name="crime_risk" type="number" value={form.crime_risk} onChange={handleChange} /></div>
-          <div className="field-row"><label>Exposición climática</label><input name="climate_exposure" type="number" value={form.climate_exposure} onChange={handleChange} /></div>
-          <div className="field-row"><label>Puntaje total</label><input name="score" type="number" value={form.score} onChange={handleChange} /></div>
+          <div className="field-row"><label>Riesgo inundación (0–1)</label><input name="flood_risk" type="number" min="0" max="1" step="0.01" required value={form.flood_risk} onChange={handleChange} /></div>
+          <div className="field-row"><label>Riesgo deslizamiento (0–1)</label><input name="landslide_risk" type="number" min="0" max="1" step="0.01" required value={form.landslide_risk} onChange={handleChange} /></div>
+          <div className="field-row"><label>Riesgo crimen (0–1)</label><input name="crime_risk" type="number" min="0" max="1" step="0.01" required value={form.crime_risk} onChange={handleChange} /></div>
+          <div className="field-row"><label>Exposición climática (0–1)</label><input name="climate_exposure" type="number" min="0" max="1" step="0.01" required value={form.climate_exposure} onChange={handleChange} /></div>
+          <div className="field-row"><label>Origen del dato</label><select name="data_mode" value={form.data_mode} onChange={handleChange}><option value="declared">Declarado</option><option value="measured">Medido</option><option value="derived">Derivado</option><option value="procedural">Procedimental</option></select></div>
+          <div className="field-row"><label>Confianza (0–1, opcional)</label><input name="confidence" type="number" min="0" max="1" step="0.01" value={form.confidence} onChange={handleChange} /></div>
+          <div className="field-row"><label>Notas y evidencia</label><textarea name="notes" maxLength="2000" value={form.notes} onChange={handleChange} /></div>
           <div className="form-actions">
             <button type="submit">{editingId ? 'Actualizar' : 'Crear'}</button>
             {editingId && <button type="button" className="secondary" onClick={reset}>Cancelar</button>}
@@ -372,11 +397,10 @@ function RiskAssessments({ operationalContext, onNavigate }) {
 
       <div className="score-row">
         <h3>Listado</h3>
+        <input aria-label="Buscar evaluación" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar ubicación o ciudad" />
         <select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value)}>
           <option value="">Todas las severidades</option>
-          <option value="alto">Riesgo alto</option>
-          <option value="medio">Riesgo medio</option>
-          <option value="bajo">Riesgo bajo</option>
+          <option value="critical">Crítico</option><option value="high">Alto</option><option value="moderate">Moderado</option><option value="low">Bajo</option>
         </select>
       </div>
 
@@ -387,13 +411,15 @@ function RiskAssessments({ operationalContext, onNavigate }) {
               <div className="score-row">
                 <h3>{row.location_name || `Location #${row.location_id}`}</h3>
                 <span className={`status-pill severity-${row.severity}`}>
-                  {row.severity === 'alto' ? 'Riesgo alto' : row.severity === 'medio' ? 'Riesgo medio' : row.severity === 'bajo' ? 'Riesgo bajo' : 'Sin datos'}
+                  {row.severity === 'critical' ? 'Crítico' : row.severity === 'high' ? 'Alto' : row.severity === 'moderate' ? 'Moderado' : row.severity === 'low' ? 'Bajo' : 'Sin datos'}
                 </span>
               </div>
               <p>Score: {row.score ?? 's/d'} · Ciudad: {row.city || 's/d'}</p>
               <p>Inundación {row.flood_risk ?? 's/d'} · Deslizamiento {row.landslide_risk ?? 's/d'}</p>
               <p>Crimen {row.crime_risk ?? 's/d'} · Clima {row.climate_exposure ?? 's/d'}</p>
               <div className="card-actions">
+                <button type="button" onClick={() => openDetail(row)}>Detalle e historial</button>
+                {onNavigate && <button type="button" className="secondary" onClick={() => onNavigate('territorial-explorer', { ...operationalContext, location_id: row.location_id, city: row.city })}>Ver en mapa</button>}
                 <button onClick={() => startEdit(row)}>Editar</button>
                 <button className="secondary" onClick={() => remove(row.risk_id)}>Eliminar</button>
                 <button
@@ -408,6 +434,16 @@ function RiskAssessments({ operationalContext, onNavigate }) {
               )}
             </article>
           ))}
+        </div>
+      )}
+      {selectedAssessment && (
+        <div className="form-section" style={{ marginTop: 16 }}>
+          <div className="score-row"><div><p className="eyebrow">Trazabilidad</p><h3>{selectedAssessment.location_name}</h3></div><button type="button" className="secondary" onClick={() => setSelectedAssessment(null)}>Cerrar</button></div>
+          <p>Evaluación #{selectedAssessment.risk_id} · {new Date(selectedAssessment.assessed_at).toLocaleString('es-CO')} · puntaje <strong>{(Number(selectedAssessment.score) * 100).toFixed(1)}%</strong></p>
+          <p className="auth-hint">Origen: {selectedAssessment.details?.data_mode || 'no documentado'} · confianza: {selectedAssessment.details?.confidence == null ? 'no declarada' : `${(selectedAssessment.details.confidence * 100).toFixed(0)}%`} · modelo: {selectedAssessment.details?.model || 'legado'}</p>
+          {selectedAssessment.details?.notes && <p>{selectedAssessment.details.notes}</p>}
+          <h4>Historial de la ubicación</h4>
+          {historyLoading ? <p>Cargando historial…</p> : <div style={{ overflowX: 'auto' }}><table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Severidad</th><th>Origen</th><th>Confianza</th></tr></thead><tbody>{history.map((item) => <tr key={item.risk_id}><td>{new Date(item.assessed_at).toLocaleString('es-CO')}</td><td>{(Number(item.score) * 100).toFixed(1)}%</td><td>{item.severity}</td><td>{item.details?.data_mode || 'legado'}</td><td>{item.details?.confidence == null ? '—' : `${(item.details.confidence * 100).toFixed(0)}%`}</td></tr>)}</tbody></table></div>}
         </div>
       )}
     </section>

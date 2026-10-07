@@ -3,6 +3,7 @@ const http = require('http');
 const cors = require('cors');
 const errorHandler = require('./middleware/errorHandler');
 const auditLogger = require('./middleware/auditLogger');
+const { platformSecurity } = require('./middleware/platformSecurity');
 const { attachSecurityWebSocketServer } = require('./realtime/wsServer');
 const { startOperationalSupervisor, stopOperationalSupervisor } = require('./services/operationalSupervisor.service');
 
@@ -24,6 +25,8 @@ const operationalEventsRoutes = require('./routes/operationalEvents.routes');
 const operationsRoutes = require('./routes/operations.routes');
 const auditLogsRoutes = require('./routes/auditLogs.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
+const terrainRoutes = require('./routes/terrain.routes');
+const spatialIngestionRoutes = require('./routes/spatialIngestion.routes');
 const { getExampleRecommendation } = require('./controllers/recommendations.controller');
 
 const app = express();
@@ -31,6 +34,8 @@ const port = process.env.PORT || 4000;
 const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:3001'];
 const allowsAllOrigins = allowedOrigins.includes('*');
 
+app.disable('x-powered-by');
+app.use(platformSecurity);
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowsAllOrigins || allowedOrigins.includes(origin)) {
@@ -42,7 +47,7 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '5mb' }));
 app.use(auditLogger);
 
 app.get('/health', (req, res) => {
@@ -53,7 +58,7 @@ app.get('/health', (req, res) => {
 app.get('/', (req, res) => {
   res.json({
     service: 'BACKSTAGE Intelligence Backend',
-    version: '0.1.0',
+    version: '3.1.0',
     endpoints: {
       auth: '/auth',
       locations: '/locations',
@@ -70,6 +75,8 @@ app.get('/', (req, res) => {
       layers: '/layers',
       analysis: '/analysis',
       analytics: '/analytics',
+      terrain: '/terrain',
+      spatial: '/spatial',
       auditLogs: '/audit-logs',
       securityEventsSocket: '/ws/security?token=<JWT>'
     }
@@ -93,6 +100,8 @@ app.use('/analysis', analysisRoutes);
 app.use('/operational-events', operationalEventsRoutes);
 app.use('/operations', operationsRoutes);
 app.use('/analytics', analyticsRoutes);
+app.use('/terrain', terrainRoutes);
+app.use('/spatial', spatialIngestionRoutes);
 app.use('/audit-logs', auditLogsRoutes);
 
 // Backward compatibility with existing frontend route.

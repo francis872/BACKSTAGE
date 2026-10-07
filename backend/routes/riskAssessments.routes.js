@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.use(authenticate, requireOrganizationContext);
 router.get('/', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.listAssessments);
+router.get('/locations/:locationId/history', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getLocationHistory);
 router.get('/:id', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.getAssessmentById);
 router.post('/', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.createAssessment);
 router.put('/:id', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.updateAssessment);
