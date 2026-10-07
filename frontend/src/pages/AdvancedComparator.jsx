@@ -69,8 +69,8 @@ function AdvancedComparator({ operationalContext, onNavigate }) {
     event.preventDefault();
     setResult(null);
     setMessage('');
-    if (selectedCandidates.length < 2) {
-      setMessage('Selecciona al menos 2 ubicaciones para comparar.');
+    if (selectedCandidates.length < 3) {
+      setMessage('Selecciona al menos 3 ubicaciones para comparar.');
       return;
     }
 
@@ -119,7 +119,7 @@ function AdvancedComparator({ operationalContext, onNavigate }) {
           <input value={city} onChange={(event) => setCity(event.target.value)} required />
         </div>
         <div className="field-row">
-          <label>Candidatos (2-6)</label>
+          <label>Candidatos (3-6)</label>
           <div className="candidate-list">
             {locations.map((location) => (
               <label key={location.location_id} className="candidate-item">

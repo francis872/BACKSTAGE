@@ -2,17 +2,32 @@ name: Validate and Deploy BACKSTAGE to Vercel
 
 on:
   push:
-    branches: [main]
+    branches: [main, codex/platform-stabilization, backstage-3.1.0-final]
   pull_request:
-    branches: [main]
+    branches: [main, codex/platform-stabilization, backstage-3.1.0-final]
   workflow_dispatch:
 
 jobs:
   validate:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: backstage
+          POSTGRES_PASSWORD: ci-${{ github.run_id }}-postgres-test
+          POSTGRES_DB: backstage_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U backstage -d backstage_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
     env:
-      DATABASE_URL: postgresql://backstage:backstage@localhost:5432/backstage_ci
-      JWT_SECRET: ci-only-secret
+      POSTGRES_PASSWORD: ci-${{ github.run_id }}-postgres-test
+      DATABASE_URL: postgresql://backstage:ci-${{ github.run_id }}-postgres-test@localhost:5432/backstage_ci
+      JWT_SECRET: ci-only-${{ github.run_id }}-test-validation-key
       NODE_ENV: test
 
     steps:
@@ -24,25 +39,20 @@ jobs:
         with:
           node-version: 24
 
-      - name: Start PostgreSQL
-        run: |
-          docker run -d --name backstage-postgres \
-            -e POSTGRES_USER=backstage \
-            -e POSTGRES_PASSWORD=backstage \
-            -e POSTGRES_DB=backstage_ci \
-            -p 5432:5432 \
-            postgres:17-alpine
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
 
-      - name: Wait for PostgreSQL
-        run: |
-          for i in {1..30}; do
-            if docker exec backstage-postgres pg_isready -U backstage -d backstage_ci; then
-              exit 0
-            fi
-            sleep 2
-          done
-          docker logs backstage-postgres
-          exit 1
+      - name: Install probability engine dependencies
+        run: python -m pip install -r probability/requirements.txt
+
+      - name: Run probability math tests
+        working-directory: probability
+        run: python -m unittest -v test_statistical_engine
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install --yes postgresql-client
 
       - name: Install backend dependencies
         working-directory: backend
@@ -66,14 +76,14 @@ jobs:
 
       - name: Verify critical tables
         run: |
-          tables_present=$(docker exec backstage-postgres psql -U backstage -d backstage_ci -v ON_ERROR_STOP=1 -tAc "SELECT COUNT(*) = 3 FROM unnest(ARRAY['public.analysis_run_candidates', 'public.operational_events', 'public.command_executions']) AS required(table_name) WHERE to_regclass(table_name) IS NOT NULL;")
+          tables_present=$(PGPASSWORD="$POSTGRES_PASSWORD" psql -h localhost -p 5432 -U backstage -d backstage_ci -v ON_ERROR_STOP=1 -tAc "SELECT COUNT(*) = 3 FROM unnest(ARRAY['public.analysis_run_candidates', 'public.operational_events', 'public.command_executions']) AS required(table_name) WHERE to_regclass(table_name) IS NOT NULL;")
           test "$tables_present" = "t"
 
       - name: Create isolated smoke-test organization
         run: |
-          docker exec backstage-postgres psql -U backstage -d backstage_ci -v ON_ERROR_STOP=1 -c "INSERT INTO organizations (name, slug, status) VALUES ('BACKSTAGE CI', 'backstage-ci', 'active'); INSERT INTO roles (name, description) VALUES ('viewer', 'Read-only CI smoke role') ON CONFLICT (name) DO NOTHING;"
+          PGPASSWORD="$POSTGRES_PASSWORD" psql -h localhost -p 5432 -U backstage -d backstage_ci -v ON_ERROR_STOP=1 -c "INSERT INTO organizations (name, slug, status) VALUES ('BACKSTAGE CI', 'backstage-ci', 'active'); INSERT INTO roles (name, description) VALUES ('viewer', 'Read-only CI smoke role') ON CONFLICT (name) DO NOTHING;"
 
-      - name: Smoke test backend health
+      - name: Smoke test backend health and authenticated spatial API
         run: |
           node backend/index.js > "$RUNNER_TEMP/backend.log" 2>&1 &
           backend_pid=$!
@@ -141,7 +151,7 @@ jobs:
         working-directory: backend
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npm run db:ensure && npx node-pg-migrate up
+        run: npm run migrate:up
 
       - name: Deploy to Vercel production
         env:

@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const { pool } = require('./db');
 const { getMongoHealthState } = require('./spatial/store');
+const { assertPostgres17 } = require('./utils/postgresVersion');
 const errorHandler = require('./middleware/errorHandler');
 const auditLogger = require('./middleware/auditLogger');
 const { platformSecurity } = require('./middleware/platformSecurity');
@@ -35,7 +36,8 @@ const { getExampleRecommendation } = require('./controllers/recommendations.cont
 
 const app = express();
 const port = process.env.PORT || 4000;
-const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:3001'];
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map((origin) => origin.trim()).filter(Boolean)
+  || ['http://localhost:5173', 'http://127.0.0.1:5173'];
 const allowsAllOrigins = allowedOrigins.includes('*');
 
 app.disable('x-powered-by');
@@ -66,11 +68,16 @@ app.use((req, res, next) => {
 
 app.get('/health', async (req, res) => {
   console.log('[Express] Handling /health GET request');
-  const provider = String(process.env.SPATIAL_STORE || 'memory').toLowerCase();
+  const defaultProvider = process.env.NODE_ENV === 'production' ? 'atlas' : 'memory';
+  const provider = String(process.env.SPATIAL_STORE || defaultProvider).toLowerCase();
   let postgres = 'unavailable';
+  let postgresVersion = null;
   if (process.env.DATABASE_URL) {
     try {
       await pool.query('SELECT 1');
+      const version = await pool.query('SHOW server_version_num');
+      postgresVersion = Math.floor(Number(version.rows[0]?.server_version_num) / 10000);
+      assertPostgres17(version.rows[0]?.server_version_num);
       postgres = 'healthy';
     } catch (error) {
       postgres = 'unavailable';
@@ -89,6 +96,7 @@ app.get('/health', async (req, res) => {
   res.json({
     status,
     postgres,
+    postgresVersion,
     mongodb,
     spatialStore: provider,
     service: 'BACKSTAGE Intelligence Backend',

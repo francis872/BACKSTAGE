@@ -38,6 +38,7 @@ function scopedWorldId(organizationId, requested = 'earth') {
 
 function translate(error) {
   if (error instanceof ApiError) throw error;
+  if (error?.statusCode === 503) throw new ApiError(503, 'Almacén espacial temporalmente no disponible.');
   if (error?.name?.startsWith('Mongo') || String(process.env.SPATIAL_STORE).toLowerCase() === 'atlas' && !process.env.MONGODB_URI) {
     throw new ApiError(503, 'Almacén espacial temporalmente no disponible.');
   }

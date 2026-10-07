@@ -48,9 +48,18 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const register = asyncHandler(async (req, res) => {
-  const { email, password, name, organization_id, organization_slug } = req.body || {};
-  if (!email || !password) {
-    throw new ApiError(400, 'email y password son requeridos.');
+  const { password } = req.body || {};
+  const email = String(req.body?.email || '').trim().toLowerCase();
+  const name = String(req.body?.name || '').trim();
+  const organizationName = String(req.body?.organization_name || '').trim();
+  if (!email || !password || !name || !organizationName) {
+    throw new ApiError(400, 'name, email, password y organization_name son requeridos.');
+  }
+  if (name.length > 120 || organizationName.length < 2 || organizationName.length > 120) {
+    throw new ApiError(400, 'name y organization_name deben tener entre 2 y 120 caracteres.');
+  }
+  if (req.body?.organization_id || req.body?.organization_slug || req.body?.role) {
+    throw new ApiError(400, 'El registro crea un workspace nuevo; para unirse a otro se requiere invitación.');
   }
   if (String(password).length < 8) {
     throw new ApiError(400, 'La contraseña debe tener al menos 8 caracteres.');
@@ -61,59 +70,45 @@ const register = asyncHandler(async (req, res) => {
     throw new ApiError(409, 'El email ya está registrado.');
   }
 
-  const organizations = await organizationService.listActiveOrganizations();
-  if (organizations.length === 0) {
-    throw new ApiError(500, 'No hay organizaciones activas disponibles para registro.');
-  }
-
-  let selectedOrganization = organizations[0];
-  if (organization_id) {
-    const requestedId = Number(organization_id);
-    if (Number.isNaN(requestedId)) {
-      throw new ApiError(400, 'organization_id debe ser numérico.');
-    }
-    const foundById = organizations.find((row) => Number(row.organization_id) === requestedId);
-    if (!foundById) {
-      throw new ApiError(400, 'organization_id no existe o no está activo.');
-    }
-    selectedOrganization = foundById;
-  } else if (organization_slug) {
-    const foundBySlug = organizations.find((row) => row.organization_slug === organization_slug);
-    if (!foundBySlug) {
-      throw new ApiError(400, 'organization_slug no existe o no está activo.');
-    }
-    selectedOrganization = foundBySlug;
-  }
-
-  const roleResult = await query('SELECT role_id FROM roles WHERE name = $1', ['viewer']);
+  const roleResult = await query('SELECT role_id FROM roles WHERE name = $1', ['admin']);
   if (roleResult.rows.length === 0) {
-    throw new ApiError(500, 'No existe el rol viewer en catálogo.');
+    throw new ApiError(503, 'El catálogo de roles no está inicializado. Ejecuta las migraciones.');
   }
   const roleId = roleResult.rows[0].role_id;
   const passwordHash = createPasswordHash(password);
+  const organizationSlug = organizationService.organizationSlugFromName(organizationName);
 
-  const createdUserId = await withTransaction(async (client) => {
+  const created = await withTransaction(async (client) => {
+    const organizationResult = await client.query(
+      `INSERT INTO organizations (name, slug, status)
+       VALUES ($1, $2, 'active')
+       RETURNING organization_id, slug, name`,
+      [organizationName, organizationSlug]
+    );
+    const organization = organizationResult.rows[0];
+    if (!organization) throw new Error('No fue posible crear el workspace.');
+
     const createdUser = await client.query(
       `INSERT INTO users (email, name, password_hash, role)
        VALUES ($1, $2, $3, $4)
        RETURNING user_id`,
-      [email, name || null, passwordHash, 'viewer']
+      [email, name, passwordHash, 'admin']
     );
     const userId = createdUser.rows[0].user_id;
     await client.query(
       `INSERT INTO user_roles (user_id, role_id, organization_id)
        VALUES ($1, $2, $3)`,
-      [userId, roleId, selectedOrganization.organization_id]
+      [userId, roleId, organization.organization_id]
     );
-    return userId;
+    return { userId, organization };
   });
 
-  const memberships = await organizationService.getUserMemberships(createdUserId);
-  const activeMembership = organizationService.resolveMembership(memberships, selectedOrganization.organization_id);
+  const memberships = await organizationService.getUserMemberships(created.userId);
+  const activeMembership = organizationService.resolveMembership(memberships, created.organization.organization_id);
   const sessionUser = {
-    user_id: createdUserId,
+    user_id: created.userId,
     email,
-    name: name || null,
+    name,
     role: activeMembership.role,
     organization_id: Number(activeMembership.organization_id),
     organization_slug: activeMembership.organization_slug,
@@ -124,6 +119,7 @@ const register = asyncHandler(async (req, res) => {
   res.status(201).json({
     token,
     user: sessionUser,
+    organization: created.organization,
   });
 });
 
@@ -152,13 +148,6 @@ const listOrganizations = asyncHandler(async (req, res) => {
   res.json(memberships);
 });
 
-const listPublicOrganizations = asyncHandler(async (req, res) => {
-  console.log('[AuthController] Handling listPublicOrganizations request');
-  const organizations = await organizationService.listActiveOrganizations();
-  console.log('[AuthController] Got organizations:', organizations);
-  res.json(organizations);
-});
-
 const switchOrganization = asyncHandler(async (req, res) => {
   const memberships = await organizationService.getUserMemberships(req.user.user_id);
   const activeMembership = organizationService.resolveMembership(memberships, req.body?.organization_id);
@@ -176,4 +165,4 @@ const switchOrganization = asyncHandler(async (req, res) => {
   res.json({ token, user: sessionUser });
 });
 
-module.exports = { login, register, me, listOrganizations, listPublicOrganizations, switchOrganization };
+module.exports = { login, register, me, listOrganizations, switchOrganization };

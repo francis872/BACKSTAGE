@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { connectOperationalRealtime } from '../lib/operationalRealtime';
 import {
   FiActivity,
   FiAlertTriangle,
@@ -16,13 +15,14 @@ import {
   FiUser,
 } from 'react-icons/fi';
 import { apiRequest } from '../lib/api';
+import AnalysisCommandBar from '../components/AnalysisCommandBar';
 import './MissionControl.css';
 
 const FLOWS = [
-  ['territorial-explorer', 'Explorador territorial', 'Inspecciona territorio, capas y ubicaciones antes de evaluar.', FiMap],
-  ['portfolio-comparator', 'Comparador inteligente', 'Contrasta candidatos con el motor geoestratégico.', FiColumns],
-  ['probability-engine', 'Motor probabilístico', 'Revisa distribuciones, ajuste y resultados probabilísticos.', FiBarChart2],
-  ['reports', 'Informes ejecutivos', 'Consulta resultados y recomendaciones trazables.', FiFileText],
+  ['territorial-explorer', 'Explorador territorial', 'Consulta el territorio y las capas disponibles.', FiMap],
+  ['earthart', 'AirHub', 'Abre el perfil territorial y su evidencia disponible.', FiMapPin],
+  ['portfolio-assets', 'Activos', 'Consulta los activos de tu organización.', FiLayers],
+  ['portfolio-comparator', 'Comparador', 'Contrasta candidatos con datos disponibles.', FiColumns],
 ];
 
 const dateTime = (value) => {
@@ -58,7 +58,7 @@ function MissionControl({ onNavigate }) {
   const [message, setMessage] = useState('');
   const [creatingProject, setCreatingProject] = useState(false);
   const [operationalEvents, setOperationalEvents] = useState([]);
-  const [realtimeStatus, setRealtimeStatus] = useState('connecting');
+  const [realtimeStatus] = useState('polling');
   const [commandingProject, setCommandingProject] = useState(null);
   const [technicalHealth, setTechnicalHealth] = useState(null);
   const [operationalMetrics, setOperationalMetrics] = useState(null);
@@ -144,10 +144,10 @@ function MissionControl({ onNavigate }) {
     load();
   }, [load]);
 
-  useEffect(() => connectOperationalRealtime({
-    onStatus: setRealtimeStatus,
-    onEvent: () => load(false),
-  }), [load]);
+  useEffect(() => {
+    const refreshTimer = window.setInterval(() => load(true), 60000);
+    return () => window.clearInterval(refreshTimer);
+  }, [load]);
 
 
 
@@ -295,7 +295,7 @@ function MissionControl({ onNavigate }) {
             {loading ? 'Consultando' : summary?.operational_status === 'operational' ? 'Operación estable' : 'Requiere atención'}
           </span>
           <span className={'realtime-status ' + realtimeStatus}>
-            {realtimeStatus === 'connected' ? '● Tiempo real' : '○ Reconectando'}
+            {realtimeStatus === 'polling' ? 'Actualización automática · 60 s' : 'Tiempo real'}
           </span>
           <button className="refresh-btn" onClick={() => load(true)} disabled={refreshing}>
             <FiRefreshCw />
@@ -303,6 +303,12 @@ function MissionControl({ onNavigate }) {
           </button>
         </div>
       </header>
+
+      <AnalysisCommandBar onOpenTerritory={(candidate, center) => onNavigate('territorial-explorer', {
+        city: candidate.properties?.city || candidate.properties?.name || candidate.matchedQuery,
+        longitude: center[0],
+        latitude: center[1],
+      })} />
 
       <div className="kpi-grid">
         {kpis.map(([label, value, meta, Icon]) => (

@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.use(authenticate, requireOrganizationContext);
 router.post('/projects', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.createOperationalProject);
+router.post('/plan', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.createAnalysisPlan);
 router.get('/:id/candidates', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER), controller.listProjectCandidates);
 router.post('/:id/candidates', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.addProjectCandidate);
 router.delete('/:id/candidates/:locationId', authorizeRoles(ROLES.ADMIN, ROLES.ANALYST), controller.removeProjectCandidate);

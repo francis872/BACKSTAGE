@@ -1,17 +1,17 @@
 /* ==================== VARIABLES GLOBALES ==================== */
 
 :root {
-  --primary: #0f172e;
-  --surface: #1a2847;
-  --surface-light: #242e4b;
-  --border: #3a4a6b;
-  --text-primary: #f0f4f9;
-  --text-secondary: #a8b5c8;
-  --accent-cyan: #06d6d6;
-  --accent-blue: #2b7fff;
+  --primary: #050505;
+  --surface: #0b0b0d;
+  --surface-light: #151518;
+  --border: #2b2b30;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a5;
+  --accent-cyan: #ff2b2b;
+  --accent-blue: #e11d2e;
   --accent-orange: #ff8c42;
   --accent-green: #10d981;
-  --accent-red: #ff3b30;
+  --accent-red: #b51222;
   --success: #10d981;
   --warning: #fbbf24;
   --danger: #ff3b30;
@@ -34,10 +34,12 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background: 
-    radial-gradient(circle at 15% 5%, rgba(43, 127, 255, 0.15), transparent 45%),
-    radial-gradient(circle at 85% 25%, rgba(6, 214, 214, 0.1), transparent 40%),
-    linear-gradient(135deg, #0f172e 0%, #1a2847 50%, #0d1e35 100%);
+  background-color: #050505;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(180deg, #0b0b0d 0%, #050505 100%);
+  background-size: 40px 40px, 40px 40px, auto;
   color: var(--text-primary);
 }
 

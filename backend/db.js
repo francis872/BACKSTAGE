@@ -45,6 +45,11 @@ const MEMORY_DB = {
     { user_id: 2, organization_id: 1, role_id: 2 }, // analyst in default
     { user_id: 3, organization_id: 1, role_id: 3 }, // viewer in default
   ],
+  roles: [
+    { role_id: 1, name: 'admin' },
+    { role_id: 2, name: 'analyst' },
+    { role_id: 3, name: 'viewer' },
+  ],
 };
 
 let pool = null;
@@ -81,7 +86,7 @@ async function queryMemory(text, params) {
     };
   }
   
-  if (text.includes('SELECT * FROM users WHERE user_id')) {
+  if (text.includes('FROM users WHERE user_id')) {
     const userId = params[0];
     const user = MEMORY_DB.users.find(u => u.user_id === userId);
     return {
@@ -90,8 +95,35 @@ async function queryMemory(text, params) {
     };
   }
   
+  if (text.includes('SELECT role_id FROM roles WHERE name')) {
+    const role = MEMORY_DB.roles.find((entry) => entry.name === params[0]);
+    return { rows: role ? [{ role_id: role.role_id }] : [], rowCount: role ? 1 : 0 };
+  }
+
+  if (text.includes('INSERT INTO organizations')) {
+    const organizationId = Math.max(0, ...MEMORY_DB.organizations.map((organization) => organization.organization_id)) + 1;
+    const organization = {
+      organization_id: organizationId,
+      name: params[0],
+      slug: params[1],
+      status: 'active',
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+    MEMORY_DB.organizations.push(organization);
+    return { rows: [{ organization_id: organizationId, slug: organization.slug, name: organization.name }], rowCount: 1 };
+  }
+
   if (text.includes('INSERT INTO users')) {
-    // Mock insert - just return success
+    const userId = Math.max(0, ...MEMORY_DB.users.map((user) => user.user_id)) + 1;
+    const [email, name, passwordHash, role] = params;
+    MEMORY_DB.users.push({ user_id: userId, email, name, password_hash: passwordHash, role, created_at: new Date(), updated_at: new Date() });
+    return { rows: [{ user_id: userId }], rowCount: 1 };
+  }
+
+  if (text.includes('INSERT INTO user_roles')) {
+    const [userId, roleId, organizationId] = params;
+    MEMORY_DB.user_roles.push({ user_id: userId, role_id: roleId, organization_id: organizationId });
     return { rows: [], rowCount: 1 };
   }
   
@@ -119,7 +151,7 @@ async function queryMemory(text, params) {
           organization_id: ur.organization_id,
           organization_slug: org.slug,
           organization_name: org.name,
-          role: userId === 1 ? 'admin' : userId === 2 ? 'analyst' : 'viewer', // Mock role
+          role: MEMORY_DB.roles.find((role) => role.role_id === ur.role_id)?.name || 'viewer',
         };
       });
     return { rows, rowCount: rows.length };
@@ -131,6 +163,7 @@ async function queryMemory(text, params) {
 
 // Query function wrapper
 const query = async (text, params) => {
+  assertDatabaseAvailable();
   if (usingMemory) {
     return queryMemory(text, params);
   }
@@ -140,16 +173,22 @@ const query = async (text, params) => {
   return pool.query(text, params);
 };
 
-async function withTransaction(operation) {
-  if (usingMemory) {
+async function withTransaction(operation, databasePool = pool) {
+  assertDatabaseAvailable();
+  if (usingMemory && !databasePool) {
     // In-memory mode: just run the operation directly
     return operation({
       query: queryMemory,
       release: () => {},
     });
   }
-  
-  const client = await pool.connect();
+  if (!databasePool) {
+    const error = new Error('Persistent PostgreSQL is unavailable.');
+    error.statusCode = 503;
+    throw error;
+  }
+
+  const client = await databasePool.connect();
   try {
     await client.query('BEGIN');
     const result = await operation(client);
@@ -167,9 +206,17 @@ async function withTransaction(operation) {
   }
 }
 
+function assertDatabaseAvailable(memoryMode = usingMemory, nodeEnv = process.env.NODE_ENV) {
+  if (memoryMode && nodeEnv === 'production') {
+    const error = new Error('Persistent PostgreSQL is required in production.');
+    error.statusCode = 503;
+    throw error;
+  }
+}
 
 module.exports = {
   query,
   pool,
   withTransaction,
+  assertDatabaseAvailable,
 };

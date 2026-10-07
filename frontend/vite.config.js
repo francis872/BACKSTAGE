@@ -5,13 +5,14 @@ const apiProxy = {
   '/api': {
     target: process.env.VITE_LOCAL_API_TARGET || 'http://localhost:4000',
     changeOrigin: true,
+    rewrite: (path) => path.replace(/^\/api/, ''),
   },
 };
 
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
+    port: 5173,
     proxy: apiProxy,
   },
   preview: {

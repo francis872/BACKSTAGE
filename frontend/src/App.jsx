@@ -2,11 +2,6 @@ import { lazy, Suspense, useState, useEffect, useMemo, Component } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 
-// Authentication Pages
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-
 // Error Boundary
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -91,7 +86,6 @@ import RealEstatePortfolio from './pages/RealEstatePortfolio';
 import EarthArt from './pages/EarthArt';
 import RiskAssessments from './pages/RiskAssessments';
 import UsersAdmin from './pages/UsersAdmin';
-import PlatformArchitecture from './pages/PlatformArchitecture';
 import MissionControl from './pages/MissionControl';
 import LayerCatalogAdmin from './pages/LayerCatalogAdmin';
 import Reports from './pages/Reports';
@@ -108,39 +102,21 @@ const TerritorialExplorer = lazy(() => import('./pages/NativeTerritorialExplorer
 const menu = [
   { key: 'mission-control', label: 'Centro de operaciones', group: 'Operación' },
   { key: 'territorial-explorer', label: 'Explorador territorial', group: 'Operación' },
-  { key: 'earthart', label: 'EarthArt 2GIS', group: 'Operación' },
+  { key: 'earthart', label: 'AirHub · Perfil territorial', group: 'Operación' },
   { key: 'portfolio-assets', label: 'Activos', group: 'Portafolio' },
   { key: 'portfolio-projects', label: 'Proyectos', group: 'Portafolio' },
   { key: 'portfolio-comparator', label: 'Comparador inteligente', group: 'Portafolio' },
-  { key: 'intelligence-evaluations', label: 'Evaluaciones', group: 'Inteligencia' },
-  { key: 'intelligence-risks', label: 'Riesgos', group: 'Inteligencia' },
-  { key: 'intelligence-opportunities', label: 'Oportunidades', group: 'Inteligencia' },
-  { key: 'intelligence-recommendations', label: 'Recomendaciones', group: 'Inteligencia' },
-  { key: 'probability-engine', label: 'Backstage Probability Engine', group: 'Inteligencia' },
-  { key: 'reports', label: 'Informes ejecutivos', group: 'Inteligencia' },
   { key: 'admin-users', label: 'Usuarios y roles', group: 'Administración' },
-  { key: 'admin-datasets', label: 'Fuentes y datasets', group: 'Administración' },
-  { key: 'admin-layer-catalog', label: 'Catálogo de capas', group: 'Administración' },
+  { key: 'admin-datasets', label: 'Fuentes de datos', group: 'Administración' },
   { key: 'admin-audit-logs', label: 'Auditoría de acciones', group: 'Administración' },
 ];
 
-// Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem('authToken');
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-};
-
-// Legacy App Component (original behavior)
-const LegacyApp = () => {
+const BackstageApp = () => {
   const [activePage, setActivePage] = useState('mission-control');
   const [operationalContext, setOperationalContext] = useState(() => getStoredOperationalContext());
   const [authForm, setAuthForm] = useState({ email: '', password: '' });
-  const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', organization_id: '' });
-  const [authMode, setAuthMode] = useState('login');
-  const [publicOrganizations, setPublicOrganizations] = useState([]);
+  const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', organization_name: '' });
+  const [authMode, setAuthMode] = useState(() => window.location.pathname === '/signup' ? 'register' : 'login');
   const [sessionUser, setSessionUser] = useState(() => getSessionUser());
   const [authMessage, setAuthMessage] = useState('');
   const [recommendation, setRecommendation] = useState('Cargando recomendación operativa...');
@@ -153,20 +129,6 @@ const LegacyApp = () => {
       .then((data) => setRecommendation(data.message))
       .catch(() => setRecommendation('No se pudo cargar la recomendación.'));
   }, []);
-
-  useEffect(() => {
-    if (sessionUser) return;
-    apiRequest('/auth/public-organizations')
-      .then((res) => res.json())
-      .then((data) => {
-        const organizations = Array.isArray(data) ? data : [];
-        setPublicOrganizations(organizations);
-        if (!registerForm.organization_id && organizations.length > 0) {
-          setRegisterForm((prev) => ({ ...prev, organization_id: String(organizations[0].organization_id) }));
-        }
-      })
-      .catch(() => setPublicOrganizations([]));
-  }, [sessionUser]);
 
   const groupedMenu = useMemo(() => {
     return menu.reduce((acc, item) => {
@@ -183,6 +145,8 @@ const LegacyApp = () => {
         project_name: context.project_name || null,
         city: context.city || null,
         location_id: context.location_id ? Number(context.location_id) : null,
+        longitude: context.longitude != null && Number.isFinite(Number(context.longitude)) ? Number(context.longitude) : null,
+        latitude: context.latitude != null && Number.isFinite(Number(context.latitude)) ? Number(context.latitude) : null,
         organization_id: sessionUser?.organization_id || null,
       };
       setOperationalContext(nextContext);
@@ -239,7 +203,11 @@ const LegacyApp = () => {
       case 'territorial-explorer':
         return (
           <Suspense fallback={<p className="auth-hint">Cargando motor territorial WebGL…</p>}>
-            <TerritorialExplorer operationalContext={operationalContext} onNavigate={navigateOperational} />
+            <TerritorialExplorer
+              operationalContext={operationalContext}
+              onNavigate={navigateOperational}
+              canManageSpatialData={['admin', 'analyst'].includes(sessionUser?.role)}
+            />
           </Suspense>
         );
       case 'portfolio-assets':
@@ -269,8 +237,6 @@ const LegacyApp = () => {
         return <LayerCatalogAdmin />;
       case 'admin-audit-logs':
         return <AuditLogsAdmin />;
-      case 'dev-architecture':
-        return <PlatformArchitecture />;
       default:
         return (
           <section className="hero">
@@ -291,7 +257,12 @@ const LegacyApp = () => {
         body: JSON.stringify(authForm),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'No se pudo iniciar sesión.');
+      if (!res.ok) {
+        const retryAfter = Math.max(1, Number(res.headers.get('Retry-After') || 1));
+        throw new Error(res.status === 429
+          ? `${data.error || 'Demasiados intentos.'} Intenta de nuevo en ${retryAfter} s.`
+          : data.error || 'No se pudo iniciar sesión.');
+      }
       setSession(data.token, data.user);
       setSessionUser(data.user);
       setAuthForm({ email: '', password: '' });
@@ -311,10 +282,16 @@ const LegacyApp = () => {
         body: JSON.stringify(registerForm),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'No se pudo crear la cuenta.');
-      setAuthMessage(`Cuenta creada. Por favor inicia sesión.`);
-      setAuthMode('login');
-      setRegisterForm({ name: '', email: '', password: '', organization_id: '' });
+      if (!res.ok) {
+        const retryAfter = Math.max(1, Number(res.headers.get('Retry-After') || 1));
+        throw new Error(res.status === 429
+          ? `${data.error || 'Demasiados intentos.'} Intenta de nuevo en ${retryAfter} s.`
+          : data.error || 'No se pudo crear la cuenta.');
+      }
+      setSession(data.token, data.user);
+      setSessionUser(data.user);
+      setAuthMessage(`Espacio de trabajo ${data.organization?.name || data.user.organization_name} creado.`);
+      setRegisterForm({ name: '', email: '', password: '', organization_name: '' });
     } catch (error) {
       setAuthMessage(`Error: ${error.message}`);
     }
@@ -354,8 +331,6 @@ const LegacyApp = () => {
   };
 
   const isAdmin = sessionUser?.role === 'admin';
-  const hasOrganizations = publicOrganizations.length > 0;
-
   if (!sessionUser) {
     return (
       <div className="app app-auth">
@@ -412,6 +387,8 @@ const LegacyApp = () => {
                   value={registerForm.name}
                   onChange={(event) => setRegisterForm((prev) => ({ ...prev, name: event.target.value }))}
                   placeholder="Tu nombre"
+                  maxLength={120}
+                  required
                 />
               </div>
               <div className="field-row">
@@ -434,23 +411,19 @@ const LegacyApp = () => {
                 />
               </div>
               <div className="field-row">
-                <label>Organización inicial</label>
-                <select
-                  value={registerForm.organization_id}
-                  onChange={(event) => setRegisterForm((prev) => ({ ...prev, organization_id: event.target.value }))}
+                <label>Nombre del espacio de trabajo</label>
+                <input
+                  value={registerForm.organization_name}
+                  onChange={(event) => setRegisterForm((prev) => ({ ...prev, organization_name: event.target.value }))}
+                  placeholder="Nombre de tu organización"
+                  minLength={2}
+                  maxLength={120}
                   required
-                  disabled={!hasOrganizations}
-                >
-                  {publicOrganizations.map((organization) => (
-                    <option key={organization.organization_id} value={organization.organization_id}>
-                      {organization.organization_name}
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
-              <p className="auth-hint">El registro público crea cuentas con rol inicial de consulta.</p>
+              <p className="auth-hint">Serás administrador de este espacio de trabajo.</p>
               <div className="form-actions">
-                <button type="submit" disabled={!hasOrganizations}>Crear cuenta</button>
+                <button type="submit">Crear espacio de trabajo</button>
               </div>
             </form>
           )}
@@ -522,21 +495,6 @@ const LegacyApp = () => {
                 ))}
             </div>
           ))}
-          {isAdmin && (
-            <div className="menu-group">
-              <h3>Desarrollo</h3>
-              <button
-                type="button"
-                className={activePage === 'dev-architecture' ? 'active' : ''}
-                onClick={() => {
-                  setActivePage('dev-architecture');
-                  setMobileNavOpen(false);
-                }}
-              >
-                Arquitectura (técnico)
-              </button>
-            </div>
-          )}
         </nav>
       </aside>
 
@@ -575,22 +533,10 @@ function App() {
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Router>
           <Routes>
-            {/* New Auth Routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            
-            {/* New Dashboard Route (Protected) */}
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Legacy Routes - Redirect to dashboard if new auth is used */}
-            <Route path="/" element={<LegacyApp />} />
+            <Route path="/login" element={<BackstageApp />} />
+            <Route path="/signup" element={<BackstageApp />} />
+            <Route path="/dashboard" element={<BackstageApp />} />
+            <Route path="/" element={<BackstageApp />} />
             
             {/* Catch-all */}
             <Route path="*" element={<Navigate to="/" replace />} />

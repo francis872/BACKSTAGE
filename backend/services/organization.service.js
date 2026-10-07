@@ -1,16 +1,19 @@
-const { query, pool } = require('../db');
+const crypto = require('node:crypto');
+const { query } = require('../db');
 const ApiError = require('../utils/ApiError');
 
-// In-memory fallback for organizations when database is unavailable
-const DEFAULT_ORGANIZATIONS = [
-  { organization_id: 1, organization_slug: 'default', organization_name: 'Default Organization' },
-  { organization_id: 2, organization_slug: 'demo', organization_name: 'Demo Organization' },
-];
-
-const MEMORY_STORE = {
-  users: new Map(),
-  userRoles: new Map(),
-};
+function organizationSlugFromName(value) {
+  const base = String(value || '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 48)
+    .replace(/-+$/g, '');
+  if (!base) throw new ApiError(400, 'El nombre del workspace debe incluir letras o números.');
+  return `${base}-${crypto.randomBytes(4).toString('hex')}`;
+}
 
 async function getUserMemberships(userId) {
   try {
@@ -30,13 +33,10 @@ async function getUserMemberships(userId) {
     );
     return result.rows;
   } catch (err) {
-    // Fallback: return first default organization with 'viewer' role
-    return [{ 
-      organization_id: 1, 
-      organization_slug: 'default', 
-      organization_name: 'Default Organization',
-      role: 'viewer'
-    }];
+    if (process.env.NODE_ENV === 'production') {
+      throw new ApiError(503, 'No fue posible consultar las organizaciones del usuario.');
+    }
+    return [];
   }
 }
 
@@ -48,10 +48,12 @@ async function listActiveOrganizations() {
        WHERE status = 'active'
        ORDER BY name ASC`
     );
-    return result.rows.length > 0 ? result.rows : DEFAULT_ORGANIZATIONS;
+    return result.rows;
   } catch (err) {
-    // Database unavailable, return default organizations
-    return DEFAULT_ORGANIZATIONS;
+    if (process.env.NODE_ENV === 'production') {
+      throw new ApiError(503, 'No fue posible consultar las organizaciones disponibles.');
+    }
+    return [];
   }
 }
 
@@ -77,6 +79,7 @@ function resolveMembership(memberships, requestedOrganizationId) {
 }
 
 module.exports = {
+  organizationSlugFromName,
   getUserMemberships,
   listActiveOrganizations,
   resolveMembership,

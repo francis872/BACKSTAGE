@@ -127,53 +127,31 @@ Separación multi-organización activa:
 
 Los seeds de usuarios y datos demo solo se cargan con `NODE_ENV` distinto de `production`. No se publican credenciales demo: crea usuarios localmente mediante registro o configura credenciales propias para desarrollo. En producción configura un `JWT_SECRET` aleatorio de al menos 32 caracteres.
 
-## Primeros pasos
+## Desarrollo local nativo
 
-Para desarrollo sin Docker, copia `backend/.env.example` a `backend/.env`, configura `DATABASE_URL` y `JWT_SECRET`, e instala las dependencias bloqueadas:
+Requisitos: Node.js 24, PostgreSQL 17 nativo y una instancia MongoDB Atlas accesible. BACKSTAGE no instala ni arranca bases de datos por contenedor.
 
-```bash
-cd backend
-npm ci
-npm run migrate:up
-npm test
-npm start
-```
+1. Copia `.env.example` a `backend/.env` y configura `DATABASE_URL`, `MONGODB_URI` y `JWT_SECRET` localmente.
+2. Ejecuta `npm run setup`. Instala dependencias, asegura la base objetivo y aplica migraciones; no elimina bases ni carga datos demo.
+3. Ejecuta `npm run dev` para iniciar API (`http://localhost:4000`) y frontend (`http://localhost:5173`).
 
-En otra terminal, desde `frontend/`:
-
-```bash
-npm ci
-npm run dev
-```
-
-El ejemplo de base de datos apunta al PostgreSQL de Compose publicado en `localhost:5546`. El servicio de migración asegura la base y aplica el esquema antes de iniciar el backend.
-
-## Ejecución con Docker Compose
-
-1. Construir y levantar servicios:
-   - `docker compose up --build`
-2. Backend disponible en `http://localhost:4000`.
-3. Frontend disponible en `http://localhost:3000`.
-4. PostgreSQL 17 estándar queda publicado en `localhost:5546` (configurable con `POSTGRES_HOST_PORT`); el servicio de migración asegura la base y termina antes del backend.
-5. La geometría se conserva como GeoJSON/JSONB y se procesa con el núcleo matemático de BACKSTAGE.
+`npm test` ejecuta las suites backend y probabilística; `npm run build` genera el frontend de producción. `npm run db:init` es solo inicialización manual no productiva y no forma parte del setup.
 
 ## Validacion y CI/CD
 
 - Backend: `cd backend && npm ci && npm test`.
 - Frontend: `cd frontend && npm ci && npm run build`.
-- Pull requests a `main` validan con PostgreSQL 17; la publicación en Vercel se habilita en `main` tras las migraciones protegidas de producción.
-- La imagen local usa `SPATIAL_STORE=memory` de forma predeterminada. `SPATIAL_STORE=atlas` requiere `MONGODB_URI` y `MONGODB_SPATIAL_DB`; no se necesita Atlas para ejecutar el modo local.
+- Pull requests a las ramas activas validan con PostgreSQL 17 efímero de CI; solo `main` puede desplegar a Vercel Production.
+- Local y producción usan PostgreSQL mediante `DATABASE_URL`; el modo persistente requiere `SPATIAL_STORE=atlas`, `MONGODB_URI` y `MONGODB_SPATIAL_DB=backstage_spatial`. Producción falla cerrado si falta persistencia.
 
 ## Ejecución local rápida
 
 El frontend consume `/api/*` y usa proxy:
 
-- local (`vite`): `/api` -> `http://localhost:4000`
+- local (`vite`): `/api/*` -> `http://localhost:4000/*` (proxy con prefijo removido)
 - producción (Vercel raíz): `/api/*` -> Express serverless y el resto -> frontend estático.
 
-Variable opcional local:
-
-- `VITE_LOCAL_API_TARGET=http://localhost:4000`
+Variable opcional local: `VITE_LOCAL_API_TARGET` (por defecto `http://localhost:4000`).
 
 ## Carga de datos y migraciones
 
@@ -193,30 +171,14 @@ BACKSTAGE no compite con Google Maps en navegación. Usa datos de mapas junto co
 
 ## Deploy en Vercel (frontend + backend)
 
-### Backend
+Vercel es el único despliegue productivo. Desde la raíz del repositorio, configura `DATABASE_URL`, `MONGODB_URI`, `MONGODB_SPATIAL_DB=backstage_spatial`, `SPATIAL_STORE=atlas`, `JWT_SECRET`, `JWT_ISSUER`, `JWT_AUDIENCE` y `CORS_ORIGIN` en Preview y Production.
 
 ```bash
-cd backend
-vercel --prod
+vercel build
+vercel deploy --target=preview --yes
 ```
 
-Variables backend mínimas:
-
-- `DATABASE_URL`
-- `JWT_SECRET`
-- `CORS_ORIGIN` (frontend URL, o `*` temporalmente)
-
-### Frontend
-
-```bash
-cd frontend
-vercel --prod
-```
-
-Variables frontend mínimas:
-
-- `BACKEND_URL` = URL de backend desplegado en Vercel
-- `VITE_SECURITY_WS_URL` = `wss://<backend>/ws/security` para stream de seguridad en vivo (si no está disponible, la UI usa sondeo periódico)
+Verifica `/api/health`, autenticación y E2E con PostgreSQL y Atlas healthy antes de promover el mismo proyecto a producción. No configures `BACKEND_URL` de un host alternativo ni `CORS_ORIGIN=*`.
 
 ## Git
 

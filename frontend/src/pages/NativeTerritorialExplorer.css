@@ -1,0 +1,8 @@
+.territorial-map{width:100%;max-width:100%;min-width:0;overflow:hidden;border:1px solid var(--border);border-radius:8px;background:#0b0b0d}
+.territorial-inspector{position:absolute;top:16px;right:16px;z-index:2;width:min(320px,calc(100% - 32px));padding:16px;background:rgba(11,11,13,.96);border:1px solid var(--border)}
+.territorial-inspector button{float:right}
+.territorial-inspector h3{margin:0 0 8px}
+.territorial-inspector p{margin:0;color:var(--text-secondary)}
+.advanced-territorial-tools{margin:18px 0;border:1px solid var(--border);border-radius:8px;background:var(--surface)}
+.advanced-territorial-tools>summary{padding:14px 16px;color:var(--text-primary);font-weight:700;cursor:pointer}
+.advanced-territorial-tools-content{display:grid;grid-template-columns:minmax(0,1fr);min-width:0;gap:12px;padding:0 14px 14px;overflow-x:auto}

@@ -18,7 +18,6 @@ function SpatialSearch({ center, onNavigate, onRoute }) {
   const [results, setResults] = useState([]);
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
-  const [algorithm, setAlgorithm] = useState('astar');
   const [message, setMessage] = useState('');
 
   const search = async (event) => {
@@ -37,7 +36,7 @@ function SpatialSearch({ center, onNavigate, onRoute }) {
     try {
       const data = await apiRequest('/spatial/routes/compute', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ start: coordinateOf(start), end: coordinateOf(end), algorithm, worldId: 'earth' }),
+        body: JSON.stringify({ start: coordinateOf(start), end: coordinateOf(end), algorithm: 'astar', worldId: 'earth' }),
       }).then(read);
       onRoute(data);
       setMessage(`${(data.distanceM / 1000).toFixed(2)} km · ${(data.durationSeconds / 60).toFixed(1)} min · ${data.algorithm.toUpperCase()}`);
@@ -66,7 +65,6 @@ function SpatialSearch({ center, onNavigate, onRoute }) {
         </div>
       )}
       <div className="form-actions" style={{ marginTop: 12 }}>
-        <select value={algorithm} onChange={(event) => setAlgorithm(event.target.value)}><option value="astar">A*</option><option value="dijkstra">Dijkstra</option></select>
         <button type="button" onClick={route} disabled={!start || !end}>Calcular ruta</button>
         <span className="auth-hint">{start ? 'Origen ✓' : 'Sin origen'} · {end ? 'Destino ✓' : 'Sin destino'}</span>
       </div>

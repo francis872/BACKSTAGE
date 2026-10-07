@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import * as maplibregl from 'maplibre-gl';
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { apiRequest } from '../lib/api';
 import SpatialDataImporter from '../components/SpatialDataImporter';
@@ -9,13 +10,23 @@ import TerritorialRiskAnalyzer from '../components/TerritorialRiskAnalyzer';
 import TerrainHydrologyAnalyzer from '../components/TerrainHydrologyAnalyzer';
 import MapDrawingTools from '../components/MapDrawingTools';
 import RiskScenarioMap from '../components/RiskScenarioMap';
+import './NativeTerritorialExplorer.css';
+
+maplibregl.setWorkerUrl(maplibreWorkerUrl);
 
 const EMPTY_COLLECTION = { type: 'FeatureCollection', features: [] };
 const INTERNAL_STYLE = {
   version: 8,
   name: 'BACKSTAGE Internal Spatial Style',
-  sources: {},
-  layers: [{ id: 'backstage-background', type: 'background', paint: { 'background-color': '#06100e' } }],
+  sources: {
+    backstageBasemap: {
+      type: 'raster',
+      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution: '© OpenStreetMap contributors',
+    },
+  },
+  layers: [{ id: 'backstage-basemap', type: 'raster', source: 'backstageBasemap' }],
 };
 
 function locationsToGeoJSON(locations) {
@@ -192,7 +203,7 @@ function addBackstageLayers(map) {
   });
 }
 
-function NativeTerritorialExplorer({ operationalContext }) {
+function NativeTerritorialExplorer({ operationalContext, canManageSpatialData }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const terrainRef = useRef(null);
@@ -239,6 +250,7 @@ function NativeTerritorialExplorer({ operationalContext }) {
     mapRef.current = map;
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-left');
     map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-left');
+    map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
 
     const loadTerrain = async () => {
       const bounds = map.getBounds();
@@ -284,6 +296,12 @@ function NativeTerritorialExplorer({ operationalContext }) {
       addBackstageLayers(map);
       setMapReady(true);
       map.getSource('backstage-locations').setData(locationsToGeoJSON(locationsRef.current));
+      if (operationalContext?.longitude != null && operationalContext?.latitude != null
+        && Number.isFinite(Number(operationalContext.longitude)) && Number.isFinite(Number(operationalContext.latitude))) {
+        const center = [Number(operationalContext.longitude), Number(operationalContext.latitude)];
+        map.flyTo({ center, zoom: 12, duration: 0 });
+        setSelected({ name: operationalContext.city || 'Territorio seleccionado', city: operationalContext.city, locationType: 'Entidad espacial' });
+      }
       loadTerrain();
       loadSpatialTiles();
     });
@@ -344,8 +362,7 @@ function NativeTerritorialExplorer({ operationalContext }) {
     <section>
       <div className="score-row">
         <div>
-          <p className="eyebrow">BACKSTAGE Engine + MapLibre WebGL</p>
-          <h2>Explorador territorial híbrido</h2>
+          <h2>Explorador territorial</h2>
         </div>
         <div className="form-actions">
           {['relief', 'slope', 'contours', '3d'].map((mode) => (
@@ -355,7 +372,6 @@ function NativeTerritorialExplorer({ operationalContext }) {
           ))}
         </div>
       </div>
-      <p className="auth-hint">MapLibre acelera la presentación WebGL; los datos, cálculos y estilos proceden exclusivamente del motor BACKSTAGE.</p>
       <SpatialSearch
         center={mapCenter}
         onNavigate={(coordinate) => coordinate && mapRef.current?.flyTo({ center: coordinate, zoom: 14, duration: 900 })}
@@ -367,43 +383,55 @@ function NativeTerritorialExplorer({ operationalContext }) {
           map.fitBounds(bounds, { padding: 80, duration: 900 });
         }}
       />
-      <TerritorialRiskAnalyzer center={mapCenter} />
-      <RiskScenarioMap
-        terrain={terrain}
-        onResult={(result) => mapRef.current?.getSource('backstage-risk-scenario')?.setData(result)}
-      />
-      <TerrainHydrologyAnalyzer
-        terrain={terrain}
-        onHydrology={(result) => {
-          mapRef.current?.getSource('backstage-landforms')?.setData(result.features);
-          mapRef.current?.getSource('backstage-drainage')?.setData(result.drainage);
-        }}
-      />
-      <MapDrawingTools map={mapReady ? mapRef.current : null} />
-      <SpatialDataImporter
-        dataZoom={dataZoom}
-        onDataZoomChange={setDataZoom}
-        onImported={() => { setCatalogRevision((value) => value + 1); reloadTilesRef.current?.(); }}
-      />
-      <SpatialDatasetAdmin
-        revision={catalogRevision}
-        onChanged={() => { setCatalogRevision((value) => value + 1); reloadTilesRef.current?.(); }}
-      />
-      {terrain && (
-        <p className="auth-hint">Modelo procedimental · {terrain.statistics.minElevation.toFixed(0)}–{terrain.statistics.maxElevation.toFixed(0)} m · relieve {terrain.statistics.relief.toFixed(0)} m · malla {terrain.resolution}×{terrain.resolution}</p>
-      )}
-      <p className="auth-hint">Teselas XYZ nivel {dataZoom} · {visibleFeatureCount} objetos reales visibles</p>
-      {message && <p className="message">{message}</p>}
-      <div className="map-shell" style={{ position: 'relative' }}>
+
+      <div className="map-shell territorial-map" style={{ position: 'relative' }}>
         <div ref={containerRef} aria-label="Mapa territorial WebGL" style={{ width: '100%', height: '620px' }} />
         {selected && (
-          <article className="card" style={{ position: 'absolute', top: 16, right: 16, width: 280, zIndex: 2 }}>
-            <button type="button" className="secondary" style={{ float: 'right' }} onClick={() => setSelected(null)}>×</button>
+          <article className="card territorial-inspector">
+            <button type="button" className="secondary" onClick={() => setSelected(null)}>Cerrar</button>
             <h3>{selected.name}</h3>
             <p>{selected.city || 'Sin municipio'} · {selected.locationType || 'Sin tipo'}</p>
           </article>
         )}
       </div>
+
+      <details className="advanced-territorial-tools">
+        <summary>Herramientas avanzadas</summary>
+        <div className="advanced-territorial-tools-content">
+          <TerritorialRiskAnalyzer center={mapCenter} />
+          <RiskScenarioMap
+            terrain={terrain}
+            onResult={(result) => mapRef.current?.getSource('backstage-risk-scenario')?.setData(result)}
+          />
+          <TerrainHydrologyAnalyzer
+            terrain={terrain}
+            onHydrology={(result) => {
+              mapRef.current?.getSource('backstage-landforms')?.setData(result.features);
+              mapRef.current?.getSource('backstage-drainage')?.setData(result.drainage);
+            }}
+          />
+          <MapDrawingTools map={mapReady ? mapRef.current : null} />
+          {canManageSpatialData && (
+            <>
+              <SpatialDataImporter
+                dataZoom={dataZoom}
+                onDataZoomChange={setDataZoom}
+                onImported={() => { setCatalogRevision((value) => value + 1); reloadTilesRef.current?.(); }}
+              />
+              <SpatialDatasetAdmin
+                revision={catalogRevision}
+                onChanged={() => { setCatalogRevision((value) => value + 1); reloadTilesRef.current?.(); }}
+              />
+            </>
+          )}
+        </div>
+      </details>
+
+      {terrain && (
+        <p className="auth-hint">Modelo procedimental · {terrain.statistics.minElevation.toFixed(0)}–{terrain.statistics.maxElevation.toFixed(0)} m · relieve {terrain.statistics.relief.toFixed(0)} m · malla {terrain.resolution}×{terrain.resolution}</p>
+      )}
+      <p className="auth-hint">Teselas XYZ nivel {dataZoom} · {visibleFeatureCount} objetos reales visibles</p>
+      {message && <p className="message">{message}</p>}
     </section>
   );
 }

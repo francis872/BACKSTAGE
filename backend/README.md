@@ -4,27 +4,15 @@
 
 ### Configuración
 
-1. Copia `.env.example` a `.env`.
+1. Copia el `.env.example` de la raíz a `backend/.env`.
 2. Asegúrate de que `DATABASE_URL` esté configurado. Ejemplo:
 
-```env
-PGHOST=localhost
-PGPORT=5544
-PGUSER=backstage
-PGPASSWORD=backstage
-PGDATABASE=backstage
-DATABASE_URL=postgres://backstage:backstage@localhost:5544/backstage
-NODE_ENV=development
-JWT_SECRET=YOUR_STRONG_SECRET
-SPATIAL_STORE=memory
-MONGODB_URI=
-MONGODB_SPATIAL_DB=backstage_spatial
-```
+El ejemplo no incluye usuario, contraseña ni credenciales Atlas. Usa una URL de PostgreSQL 17 nativo en `DATABASE_URL` y configura `MONGODB_URI` de Atlas.
 
 3. Instala dependencias:
 
 ```bash
-npm install
+npm ci
 ```
 
 ### Comandos útiles
@@ -35,12 +23,6 @@ npm install
   - `npm run migrate:down`
 - Ejecutar `node-pg-migrate` sin argumentos:
   - `npm run migrate`
-
-### Docker
-
-- `docker compose up --build` — inicia PostgreSQL estándar, backend y frontend.
-- `http://localhost:4000` — API backend.
-- `http://localhost:3000` — frontend Vite preview.
 
 ### Geoespacial
 

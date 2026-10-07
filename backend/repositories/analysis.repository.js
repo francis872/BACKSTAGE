@@ -33,18 +33,25 @@ async function buildCandidateFromCoordinates({ name, city, lat, lng }) {
   };
 }
 
-async function computeCandidateMetrics({ city, latitude, longitude, ownBrandName = null }) {
+async function computeCandidateMetrics({ organizationId, city, latitude, longitude, ownBrandName = null }) {
+  if (!organizationId) throw new Error('organizationId es obligatorio para resolver métricas de candidato.');
   const cityFilter = city || null;
   const [competitors, stores, pois, risks, zones] = await Promise.all([
-    query('SELECT latitude, longitude FROM competitors WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND ($1::text IS NULL OR city = $1)', [cityFilter]),
+    query('SELECT latitude, longitude, source_name, source_updated_at FROM competitors WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND ($1::text IS NULL OR city = $1)', [cityFilter]),
     query(`SELECT l.latitude, l.longitude FROM business_locations bl JOIN locations l ON l.location_id = bl.location_id
       WHERE l.latitude IS NOT NULL AND l.longitude IS NOT NULL AND bl.is_active = true
-      AND ($1::text IS NULL OR l.city = $1) AND ($2::text IS NULL OR bl.brand_name ILIKE $2)`, [cityFilter, ownBrandName]),
-    query('SELECT latitude, longitude FROM points_of_interest WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND ($1::text IS NULL OR city = $1)', [cityFilter]),
-    query(`SELECT l.latitude, l.longitude, ra.flood_risk, ra.landslide_risk, ra.crime_risk, ra.climate_exposure
+      AND l.organization_id = $3
+      AND ($1::text IS NULL OR l.city = $1) AND ($2::text IS NULL OR bl.brand_name ILIKE $2)`, [cityFilter, ownBrandName, organizationId]),
+    query('SELECT latitude, longitude, source_name, source_updated_at FROM points_of_interest WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND ($1::text IS NULL OR city = $1)', [cityFilter]),
+    query(`SELECT l.latitude, l.longitude, ra.flood_risk, ra.landslide_risk, ra.crime_risk, ra.climate_exposure, ra.assessed_at
       FROM risk_assessments ra JOIN locations l ON l.location_id = ra.location_id
-      WHERE l.latitude IS NOT NULL AND l.longitude IS NOT NULL AND ($1::text IS NULL OR l.city = $1)`, [cityFilter]),
-    query(`SELECT tz.geometry, COALESCE(di.value, tz.population_total::numeric, 0) AS population
+      WHERE l.latitude IS NOT NULL AND l.longitude IS NOT NULL
+      AND ra.organization_id = $2 AND l.organization_id = $2
+      AND ($1::text IS NULL OR l.city = $1)`, [cityFilter, organizationId]),
+    query(`SELECT tz.geometry, COALESCE(di.value, tz.population_total::numeric) AS population,
+      tz.source_name AS zone_source, tz.source_updated_at AS zone_updated_at,
+      di.source_name AS indicator_source, di.as_of_date AS indicator_updated_at,
+      di.confidence_level AS indicator_confidence_level, di.data_mode AS indicator_data_mode
       FROM territorial_zones tz LEFT JOIN demographic_indicators di ON di.zone_id = tz.zone_id AND di.indicator_name = 'population_total'
       WHERE tz.geometry IS NOT NULL AND ($1::text IS NULL OR tz.city = $1) ORDER BY di.as_of_date DESC NULLS LAST`, [cityFilter]),
   ]);
@@ -57,15 +64,35 @@ async function computeCandidateMetrics({ city, latitude, longitude, ownBrandName
     const ring = geometry?.type === 'Polygon' ? geometry.coordinates?.[0] : null;
     return ring ? pointInPolygon(candidate, ring) : false;
   });
+  const sources = [];
+  const addSources = (rows, dataset, updatedAtField = 'source_updated_at') => {
+    for (const row of rows) {
+      if (row.source_name) sources.push({ source: row.source_name, dataset, updated_at: row[updatedAtField] || null });
+    }
+  };
+  addSources(competitors.rows, 'competitors');
+  addSources(pois.rows, 'points_of_interest');
+  if (nearestRisk.assessed_at) sources.push({ source: 'PostgreSQL', dataset: 'risk_assessments', updated_at: nearestRisk.assessed_at });
+  if (zone?.zone_source) sources.push({ source: zone.zone_source, dataset: 'territorial_zones', updated_at: zone.zone_updated_at || null });
+  if (zone?.indicator_source) sources.push({ source: zone.indicator_source, dataset: 'demographic_indicators', updated_at: zone.indicator_updated_at || null });
+  const uniqueSources = [...new Map(sources.map((source) => [`${source.dataset}:${source.source}`, source])).values()];
   return {
     competitor_distance_m: nearest(competitors.rows),
     own_store_distance_m: nearest(stores.rows),
-    poi_count_1200m: pois.rows.filter((row) => distance(row) <= 1200).length,
-    population_total_zone: Number(zone?.population || 0),
+    poi_count_1200m: pois.rows.length ? pois.rows.filter((row) => distance(row) <= 1200).length : null,
+    population_total_zone: zone?.population == null ? null : Number(zone.population),
     flood_risk: nearestRisk.flood_risk ?? null,
     landslide_risk: nearestRisk.landslide_risk ?? null,
     crime_risk: nearestRisk.crime_risk ?? null,
     climate_exposure: nearestRisk.climate_exposure ?? null,
+    provenance: {
+      sources: uniqueSources,
+      source_count: uniqueSources.length,
+      confidence: null,
+      population_data_mode: zone?.indicator_data_mode || null,
+      population_confidence_level: zone?.indicator_confidence_level || null,
+      missing_inputs: [],
+    },
   };
 }
 

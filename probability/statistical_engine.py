@@ -11,6 +11,7 @@ from scipy import stats
 
 
 EPS = 1e-12
+ALGORITHM_VERSION = "backstage-probability-fit-v1"
 
 
 @dataclass
@@ -425,6 +426,7 @@ def run_full_analysis(
     bins: int,
     threshold_q: float,
     tail_thresholds: TailThresholds,
+    provenance: Dict[str, object] | None = None,
 ) -> Dict[str, object]:
     output_dir.mkdir(parents=True, exist_ok=True)
     margin = 0.05 * (np.max(sample) - np.min(sample) + EPS)
@@ -472,7 +474,22 @@ def run_full_analysis(
     academic_summary = results_df[["distribution", "parameters", "ks", "bhattacharyya", "selection"]].copy()
     academic_summary.to_csv(output_dir / "academic_summary.csv", index=False)
 
+    provenance_metadata = provenance or {}
     summary = {
+        "algorithm": "backstage.probability.distribution_fit",
+        "algorithm_version": ALGORITHM_VERSION,
+        "data_mode": provenance_metadata.get("data_mode", "insufficient_data"),
+        "confidence_score": None,
+        "confidence_method": None,
+        "source_count": provenance_metadata.get("source_count"),
+        "missing_inputs": provenance_metadata.get("missing_inputs", ["source_metadata"]),
+        "data_quality": {
+            "sample_size": int(sample.size),
+            "missing_values": provenance_metadata.get("missing_values"),
+            "coverage": provenance_metadata.get("coverage"),
+            "freshness_days": provenance_metadata.get("freshness_days"),
+        },
+        "provenance": provenance_metadata or None,
         "thresholds": thresholds,
         "tail_thresholds": {
             "left_tail": tail_thresholds.left_tail,

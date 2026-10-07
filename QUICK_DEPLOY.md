@@ -1,44 +1,24 @@
-# Railway Deployment Quick Reference
+# Inicio rápido
 
-> Current deployment is controlled by `.github/workflows/deploy-railway.yml`. Pull requests validate only; a push to `main` deploys through the protected GitHub `production` environment.
+BACKSTAGE usa PostgreSQL 17 nativo y MongoDB Atlas. No requiere Docker.
 
-## Step 1: Go to Railway Dashboard
-Open: https://railway.app/dashboard
+## Local
 
-## Step 2: Create New Project
-- Click "+ New Project" or "Deploy from GitHub"
-- Select "Deploy from GitHub repo"
+1. Instala Node.js 24 y PostgreSQL 17; prepara MongoDB Atlas.
+2. Copia `.env.example` a `backend/.env` y completa las credenciales localmente.
+3. Ejecuta `npm run setup`.
+4. Ejecuta `npm run dev`.
 
-## Step 3: Connect Your Repository
-- Select: `francis872/BACKSTAGE`
-- Railway will auto-detect `backend/package.json`
-- Automatically deploy!
+Frontend: `http://localhost:5173`
+API: `http://localhost:4000`
 
-## That's it! 🎉
+## Vercel
 
-Before deployment, configure a Railway PostgreSQL service and the backend variables `DATABASE_URL`, `JWT_SECRET` (random, at least 32 characters), `NODE_ENV=production`, and `CORS_ORIGIN`. Configure the GitHub `RAILWAY_TOKEN` secret and protect the `production` environment. The workflow applies migrations before deploying; it does not seed demo data.
+Configura `DATABASE_URL`, `MONGODB_URI`, `MONGODB_SPATIAL_DB=backstage_spatial`, `SPATIAL_STORE=atlas` y las variables JWT en Preview y Production.
 
----
-
-## After Deploy
-
-Use the public Railway URL configured for your service:
-```
-https://backstage-intelligence-prod.railway.app
+```text
+vercel build
+vercel deploy --target=preview --yes
 ```
 
-For Vercel, configure `BACKEND_URL` for its API proxy and build the frontend:
-```bash
-cd frontend
-npm ci
-npm run build
-```
-
-Verify the backend at `https://<your-railway-domain>/health` after deployment.
-
----
-
-## Need Help?
-
-Railway Docs: https://docs.railway.app
-Support: https://station.railway.com
+Revisa `/api/health` y los E2E de Preview. No promociones si PostgreSQL o Atlas no están healthy.

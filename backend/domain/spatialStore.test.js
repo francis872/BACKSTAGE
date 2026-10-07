@@ -32,6 +32,11 @@ test('Atlas crea singleton reutilizable con URI y memory funciona sin credencial
   assert.equal(atlasStore1.constructor.name, 'AtlasSpatialStore');
 });
 
+test('producción exige Atlas y no cae silenciosamente a memoria', () => {
+  assert.throws(() => createSpatialStore({ NODE_ENV: 'production' }), { statusCode: 503 });
+  assert.throws(() => createSpatialStore({ NODE_ENV: 'production', SPATIAL_STORE: 'memory' }), { statusCode: 503 });
+});
+
 test('Atlas namespacea IDs por organización y exige tenant en lecturas', async () => {
   const documents = new Map();
   const collection = {

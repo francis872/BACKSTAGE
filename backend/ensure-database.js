@@ -1,6 +1,7 @@
 const { Client } = require('pg');
 const dotenv = require('dotenv');
 const path = require('node:path');
+const { assertPostgres17 } = require('./utils/postgresVersion');
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
@@ -44,6 +45,8 @@ async function verifyTarget(connectionString) {
   const client = new Client({ connectionString });
   try {
     await client.connect();
+    const version = await client.query('SHOW server_version_num');
+    assertPostgres17(version.rows[0]?.server_version_num);
     await client.query('SELECT 1');
   } finally {
     await client.end().catch(() => {});
@@ -59,6 +62,8 @@ async function ensureDatabase(databaseUrl = process.env.DATABASE_URL) {
 
   try {
     await admin.connect();
+    const version = await admin.query('SHOW server_version_num');
+    assertPostgres17(version.rows[0]?.server_version_num);
     const result = await admin.query('SELECT 1 FROM pg_database WHERE datname = $1', [databaseName]);
     if (result.rowCount === 0) {
       const identifier = `"${databaseName.replace(/"/g, '""')}"`;

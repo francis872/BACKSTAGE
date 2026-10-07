@@ -43,7 +43,8 @@ function getMongoClient(uri, env = process.env) {
 }
 
 async function getMongoHealthState(env = process.env) {
-  const provider = String(env.SPATIAL_STORE || 'memory').toLowerCase();
+  const defaultProvider = env.NODE_ENV === 'production' ? 'atlas' : 'memory';
+  const provider = String(env.SPATIAL_STORE || defaultProvider).toLowerCase();
   if (provider !== 'atlas') {
     return { status: 'disconnected', provider };
   }
@@ -178,10 +179,20 @@ class AtlasSpatialStore {
 }
 
 function createSpatialStore(env = process.env) {
-  const provider = String(env.SPATIAL_STORE || 'memory').toLowerCase();
+  const defaultProvider = env.NODE_ENV === 'production' ? 'atlas' : 'memory';
+  const provider = String(env.SPATIAL_STORE || defaultProvider).toLowerCase();
+  if (env.NODE_ENV === 'production' && provider !== 'atlas') {
+    const error = new Error('SPATIAL_STORE=atlas es obligatorio en producción.');
+    error.statusCode = 503;
+    throw error;
+  }
   if (provider === 'atlas') {
     const uri = env.MONGODB_URI;
-    if (!uri) throw new Error('MONGODB_URI es obligatorio cuando SPATIAL_STORE=atlas.');
+    if (!uri) {
+      const error = new Error('MONGODB_URI es obligatorio cuando SPATIAL_STORE=atlas.');
+      error.statusCode = 503;
+      throw error;
+    }
     const dbName = env.MONGODB_SPATIAL_DB || 'backstage_spatial';
     if (!atlasStoreSingleton || atlasStoreSingleton.uri !== uri || atlasStoreSingleton.dbName !== dbName) {
       atlasStoreSingleton = new AtlasSpatialStore({ uri, dbName, client: getMongoClient(uri, env) });
