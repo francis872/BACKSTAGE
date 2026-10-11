@@ -1,21 +1,26 @@
-services:
+﻿services:
   - type: web
-    name: backstage-backend
-    env: node
+    name: backstage-api
+    runtime: node
     plan: free
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && node index.js
+    region: ohio
+    rootDir: backend
+    buildCommand: npm ci --omit=dev
+    startCommand: node index.js
+    healthCheckPath: /health
+    autoDeploy: true
     envVars:
       - key: NODE_ENV
         value: production
+      - key: SPATIAL_STORE
+        value: atlas
+      - key: JWT_ISSUER
+        value: backstage
+      - key: JWT_SECRET
+        generateValue: true
       - key: DATABASE_URL
-        scope: service
-      - key: PORT
-        value: 4000
-
-  - type: pserv
-    name: backstage-postgres
-    plan: free
-    ipAllowList: []
-    postgreSQL:
-      version: 14
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
