@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { apiRequest } from '../lib/api';
-import { getToken } from '../lib/auth';
+import { getSessionToken } from '../lib/auth';
 
 function decodeJwtPayload(token) {
   try {
@@ -96,7 +96,7 @@ export default function AuditLogsAdmin({ currentUser }) {
   const [lastEventAt, setLastEventAt] = useState(null);
   const latestSeenIdRef = useRef(0);
 
-  const jwtState = getJwtState(getToken());
+  const jwtState = getJwtState(getSessionToken());
   const wsBaseUrl = useMemo(() => resolveSecurityWsUrl(), []);
 
   const appendSecurityEvent = (event, source) => {
@@ -159,7 +159,7 @@ export default function AuditLogsAdmin({ currentUser }) {
   }, []);
 
   useEffect(() => {
-    const token = getToken();
+    const token = getSessionToken();
     if (!token) {
       setWsState({ status: 'missing-token', detail: 'Debes iniciar sesión para recibir eventos.' });
       return undefined;

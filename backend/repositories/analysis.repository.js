@@ -44,7 +44,7 @@ async function computeCandidateMetrics({ city, latitude, longitude, ownBrandName
     query(`SELECT l.latitude, l.longitude, ra.flood_risk, ra.landslide_risk, ra.crime_risk, ra.climate_exposure
       FROM risk_assessments ra JOIN locations l ON l.location_id = ra.location_id
       WHERE l.latitude IS NOT NULL AND l.longitude IS NOT NULL AND ($1::text IS NULL OR l.city = $1)`, [cityFilter]),
-    query(`SELECT tz.geometry, COALESCE(di.value, tz.population_total::numeric, 0) AS population
+    query(`SELECT tz.geometry, COALESCE(di.value, tz.population_total::numeric) AS population
       FROM territorial_zones tz LEFT JOIN demographic_indicators di ON di.zone_id = tz.zone_id AND di.indicator_name = 'population_total'
       WHERE tz.geometry IS NOT NULL AND ($1::text IS NULL OR tz.city = $1) ORDER BY di.as_of_date DESC NULLS LAST`, [cityFilter]),
   ]);
@@ -60,8 +60,8 @@ async function computeCandidateMetrics({ city, latitude, longitude, ownBrandName
   return {
     competitor_distance_m: nearest(competitors.rows),
     own_store_distance_m: nearest(stores.rows),
-    poi_count_1200m: pois.rows.filter((row) => distance(row) <= 1200).length,
-    population_total_zone: Number(zone?.population || 0),
+    poi_count_1200m: pois.rows.length ? pois.rows.filter((row) => distance(row) <= 1200).length : null,
+    population_total_zone: zone?.population == null ? null : Number(zone.population),
     flood_risk: nearestRisk.flood_risk ?? null,
     landslide_risk: nearestRisk.landslide_risk ?? null,
     crime_risk: nearestRisk.crime_risk ?? null,

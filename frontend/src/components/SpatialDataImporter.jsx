@@ -1,12 +1,9 @@
 import { useMemo, useState } from 'react';
 import { apiRequest } from '../lib/api';
+import { getSessionUser } from '../lib/auth';
 
 function currentRole() {
-  try {
-    return JSON.parse(window.localStorage.getItem('backstage_user') || '{}').role;
-  } catch {
-    return null;
-  }
+  return getSessionUser()?.role || null;
 }
 
 async function responseData(response) {

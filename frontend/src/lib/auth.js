@@ -1,16 +1,18 @@
 const TOKEN_KEY = 'backstage_token';
 const USER_KEY = 'backstage_user';
 
-export function getToken() {
+export function getSessionToken() {
   return window.localStorage.getItem(TOKEN_KEY);
 }
 
 export function setSession(token, user) {
+  window.localStorage.removeItem('authToken');
   window.localStorage.setItem(TOKEN_KEY, token);
   window.localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
 export function clearSession() {
+  window.localStorage.removeItem('authToken');
   window.localStorage.removeItem(TOKEN_KEY);
   window.localStorage.removeItem(USER_KEY);
 }

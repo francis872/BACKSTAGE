@@ -1,4 +1,4 @@
-import { getToken } from './auth';
+import { getSessionToken } from './auth';
 
 function websocketUrl(path) {
   const configured = import.meta.env.VITE_WS_BASE_URL;
@@ -8,7 +8,7 @@ function websocketUrl(path) {
 }
 
 export function connectOperationalRealtime({ onEvent, onStatus }) {
-  const token = getToken();
+  const token = getSessionToken();
   if (!token) return () => {};
 
   let socket;

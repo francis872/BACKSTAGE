@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiRequest } from '../lib/api';
+import { getSessionUser } from '../lib/auth';
 
 function readRole() {
-  try { return JSON.parse(window.localStorage.getItem('backstage_user') || '{}').role; } catch { return null; }
+  return getSessionUser()?.role || null;
 }
 
 function SpatialDatasetAdmin({ revision = 0, onChanged }) {

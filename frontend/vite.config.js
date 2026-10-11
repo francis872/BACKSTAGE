@@ -9,6 +9,10 @@ export default defineConfig({
       '/api': {
         target: process.env.VITE_LOCAL_API_TARGET || 'http://localhost:4000',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api(?=\/|$)/, '') || '/',
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyRequest) => proxyRequest.removeHeader('origin'));
+        },
       },
     },
   },

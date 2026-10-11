@@ -1,11 +1,6 @@
-import { lazy, Suspense, useState, useEffect, useMemo } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { lazy, Suspense, useState, useEffect, useMemo, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
-
-// Authentication Pages
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
 
 // Legacy Pages
 import RetailZones from './pages/RetailZones';
@@ -49,28 +44,47 @@ const menu = [
   { key: 'admin-audit-logs', label: 'Auditoría de acciones', group: 'Administración' },
 ];
 
-// Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem('authToken');
-  if (!token) {
-    return <Navigate to="/login" replace />;
+function retryAfterMinutes(response) {
+  const retryAfter = response.headers.get('Retry-After');
+  const seconds = Number(retryAfter);
+  const delay = Number.isFinite(seconds) && seconds > 0
+    ? seconds
+    : Math.max(60, (Date.parse(retryAfter || '') - Date.now()) / 1000 || 60);
+  return Math.max(1, Math.ceil(delay / 60));
+}
+
+function authResponseMessage(response, data, mode) {
+  if (response.status === 429) return `Has realizado demasiados intentos. Puedes volver a intentarlo en ${retryAfterMinutes(response)} minutos.`;
+  if (mode === 'login' && response.status === 401) return 'Correo o contraseña incorrectos.';
+  if (mode === 'register' && response.status === 409) return 'Este correo ya está registrado.';
+  if (response.status === 400) return data.error || 'Revisa los datos ingresados.';
+  if (response.status === 503) return 'El registro no está disponible. El servicio requiere configuración o migraciones.';
+  if (response.status >= 500) return 'BACKSTAGE no pudo completar la solicitud. Inténtalo más tarde.';
+  return data.error || 'No se pudo completar la solicitud de autenticación.';
+}
+
+async function readAuthResponse(response) {
+  if (!(response.headers.get('Content-Type') || '').toLowerCase().includes('application/json')) {
+    throw new Error('El servicio de autenticación respondió con un formato inesperado.');
   }
-  return children;
-};
+  return response.json();
+}
 
 // Legacy App Component (original behavior)
 const LegacyApp = () => {
+  const navigate = useNavigate();
   const [activePage, setActivePage] = useState('mission-control');
   const [operationalContext, setOperationalContext] = useState(() => getStoredOperationalContext());
   const [authForm, setAuthForm] = useState({ email: '', password: '' });
-  const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', organization_id: '' });
-  const [authMode, setAuthMode] = useState('login');
-  const [publicOrganizations, setPublicOrganizations] = useState([]);
+  const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', confirmPassword: '', organization_name: '' });
+  const [authMode, setAuthMode] = useState(() => window.location.pathname === '/signup' ? 'register' : 'login');
   const [sessionUser, setSessionUser] = useState(() => getSessionUser());
   const [authMessage, setAuthMessage] = useState('');
   const [recommendation, setRecommendation] = useState('Cargando recomendación operativa...');
   const [switchingOrg, setSwitchingOrg] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [authBusy, setAuthBusy] = useState(false);
+  const authRequestActive = useRef(false);
 
   useEffect(() => {
     apiRequest('/recommendation/example')
@@ -78,20 +92,6 @@ const LegacyApp = () => {
       .then((data) => setRecommendation(data.message))
       .catch(() => setRecommendation('No se pudo cargar la recomendación.'));
   }, []);
-
-  useEffect(() => {
-    if (sessionUser) return;
-    apiRequest('/auth/public-organizations')
-      .then((res) => res.json())
-      .then((data) => {
-        const organizations = Array.isArray(data) ? data : [];
-        setPublicOrganizations(organizations);
-        if (!registerForm.organization_id && organizations.length > 0) {
-          setRegisterForm((prev) => ({ ...prev, organization_id: String(organizations[0].organization_id) }));
-        }
-      })
-      .catch(() => setPublicOrganizations([]));
-  }, [sessionUser]);
 
   const groupedMenu = useMemo(() => {
     return menu.reduce((acc, item) => {
@@ -208,63 +208,98 @@ const LegacyApp = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    if (authRequestActive.current) return;
+    authRequestActive.current = true;
+    setAuthBusy(true);
     setAuthMessage('');
+    let response;
     try {
-      const res = await apiRequest('/auth/login', {
+      response = await apiRequest('/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(authForm),
+        body: JSON.stringify({ email: authForm.email.trim(), password: authForm.password }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'No se pudo iniciar sesión.');
+      const data = await readAuthResponse(response);
+      if (!response.ok) {
+        setAuthMessage(authResponseMessage(response, data, 'login'));
+        return;
+      }
+      if (!data.token || !data.user) throw new Error('La respuesta de autenticación está incompleta.');
       setSession(data.token, data.user);
       setSessionUser(data.user);
       setAuthForm({ email: '', password: '' });
-      setAuthMessage(`Sesión iniciada como ${data.user.role}.`);
+      navigate('/dashboard', { replace: true });
     } catch (error) {
-      setAuthMessage(`Error: ${error.message}`);
+      setAuthMessage(error instanceof TypeError ? 'No pudimos conectar con BACKSTAGE.' : error.message || 'No se pudo iniciar sesión.');
+    } finally {
+      authRequestActive.current = false;
+      setAuthBusy(false);
     }
   };
 
   const handleRegister = async (event) => {
     event.preventDefault();
+    if (authRequestActive.current) return;
+    if (registerForm.password !== registerForm.confirmPassword) {
+      setAuthMessage('Las contraseñas no coinciden.');
+      return;
+    }
+    if (registerForm.password.length < 8) {
+      setAuthMessage('La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+    authRequestActive.current = true;
+    setAuthBusy(true);
     setAuthMessage('');
+    let response;
     try {
-      const res = await apiRequest('/auth/register', {
+      response = await apiRequest('/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(registerForm),
+        body: JSON.stringify({
+          name: registerForm.name.trim(),
+          email: registerForm.email.trim(),
+          password: registerForm.password,
+          organization_name: registerForm.organization_name.trim(),
+        }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'No se pudo crear la cuenta.');
-      setAuthMessage(`Cuenta creada. Por favor inicia sesión.`);
-      setAuthMode('login');
-      setRegisterForm({ name: '', email: '', password: '', organization_id: '' });
+      const data = await readAuthResponse(response);
+      if (!response.ok) {
+        setAuthMessage(authResponseMessage(response, data, 'register'));
+        return;
+      }
+      if (!data.token || !data.user || !data.organization) throw new Error('La respuesta de registro está incompleta.');
+      setSession(data.token, data.user);
+      setSessionUser(data.user);
+      setRegisterForm({ name: '', email: '', password: '', confirmPassword: '', organization_name: '' });
+      navigate('/dashboard', { replace: true });
     } catch (error) {
-      setAuthMessage(`Error: ${error.message}`);
+      setAuthMessage(error instanceof TypeError ? 'No pudimos conectar con BACKSTAGE.' : error.message || 'No se pudo crear la cuenta.');
+    } finally {
+      authRequestActive.current = false;
+      setAuthBusy(false);
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await apiRequest('/auth/logout', { method: 'POST' });
-    } finally {
-      clearSession();
-      clearStoredOperationalContext();
-      setOperationalContext(null);
-      setSessionUser(null);
-    }
+  const handleLogout = () => {
+    clearSession();
+    clearStoredOperationalContext();
+    setOperationalContext(null);
+    setSessionUser(null);
+    setAuthMode('login');
+    setAuthForm({ email: '', password: '' });
+    navigate('/login', { replace: true });
   };
 
   const handleOrganizationSwitch = async (newOrgId) => {
     setSwitchingOrg(true);
     try {
-      const res = await apiRequest('/auth/organization-switch', {
+      const res = await apiRequest('/auth/switch-organization', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ organization_id: newOrgId }),
       });
-      const data = await res.json();
+      const data = await readAuthResponse(res);
       if (!res.ok) throw new Error(data.error || 'No se pudo cambiar de organización.');
       setSession(data.token, data.user);
       clearStoredOperationalContext();
@@ -279,34 +314,33 @@ const LegacyApp = () => {
   };
 
   const isAdmin = sessionUser?.role === 'admin';
-  const hasOrganizations = publicOrganizations.length > 0;
-
   if (!sessionUser) {
     return (
       <div className="app app-auth">
         <section className="form-section auth-screen">
-          <p className="eyebrow">BACKSTAGE</p>
-          <h1>Acceso y registro</h1>
-          <p>Ingresa o crea tu cuenta para operar proyectos, capas y análisis geoestratégico.</p>
-          <div className="auth-tabs" role="tablist" aria-label="Modo de autenticación">
+          <div className="auth-form-panel">
+            <p className="eyebrow">BACKSTAGE</p>
+            <h1>Acceso y registro</h1>
+            <p>Ingresa o crea tu cuenta para operar proyectos, capas y análisis geoestratégico.</p>
+            <div className="auth-tabs" role="tablist" aria-label="Modo de autenticación">
             <button
               type="button"
               className={authMode === 'login' ? 'active' : ''}
-              onClick={() => setAuthMode('login')}
+              onClick={() => { setAuthMode('login'); navigate('/login'); }}
             >
               Iniciar sesión
             </button>
             <button
               type="button"
               className={authMode === 'register' ? 'active' : ''}
-              onClick={() => setAuthMode('register')}
+              onClick={() => { setAuthMode('register'); navigate('/signup'); }}
             >
               Crear cuenta
             </button>
-          </div>
+            </div>
 
-          {authMode === 'login' ? (
-            <form onSubmit={handleLogin} className="entity-form auth-grid">
+            {authMode === 'login' ? (
+            <form onSubmit={handleLogin} className="auth-grid">
               <div className="field-row">
                 <label>Correo electrónico</label>
                 <input
@@ -326,17 +360,19 @@ const LegacyApp = () => {
                 />
               </div>
               <div className="form-actions">
-                <button type="submit">Entrar</button>
+                <button type="submit" disabled={authBusy}>{authBusy ? 'Entrando…' : 'Entrar'}</button>
               </div>
             </form>
           ) : (
-            <form onSubmit={handleRegister} className="entity-form auth-grid">
+            <form onSubmit={handleRegister} className="auth-grid">
               <div className="field-row">
                 <label>Nombre</label>
                 <input
                   value={registerForm.name}
                   onChange={(event) => setRegisterForm((prev) => ({ ...prev, name: event.target.value }))}
                   placeholder="Tu nombre"
+                  maxLength={120}
+                  required
                 />
               </div>
               <div className="field-row">
@@ -359,27 +395,39 @@ const LegacyApp = () => {
                 />
               </div>
               <div className="field-row">
-                <label>Organización inicial</label>
-                <select
-                  value={registerForm.organization_id}
-                  onChange={(event) => setRegisterForm((prev) => ({ ...prev, organization_id: event.target.value }))}
+                <label>Confirmar contraseña</label>
+                <input
+                  type="password"
+                  value={registerForm.confirmPassword}
+                  onChange={(event) => setRegisterForm((prev) => ({ ...prev, confirmPassword: event.target.value }))}
                   required
-                  disabled={!hasOrganizations}
-                >
-                  {publicOrganizations.map((organization) => (
-                    <option key={organization.organization_id} value={organization.organization_id}>
-                      {organization.organization_name}
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
-              <p className="auth-hint">El registro público crea cuentas con rol inicial de consulta.</p>
+              <div className="field-row">
+                <label>Nombre del espacio de trabajo</label>
+                <input
+                  value={registerForm.organization_name}
+                  onChange={(event) => setRegisterForm((prev) => ({ ...prev, organization_name: event.target.value }))}
+                  placeholder="Nombre de tu organización"
+                  minLength={2}
+                  maxLength={120}
+                  required
+                />
+              </div>
+              <p className="auth-hint">Serás administrador de este espacio de trabajo.</p>
               <div className="form-actions">
-                <button type="submit" disabled={!hasOrganizations}>Crear cuenta</button>
+                <button type="submit" disabled={authBusy}>{authBusy ? 'Creando cuenta…' : 'Crear cuenta'}</button>
               </div>
             </form>
           )}
-          {authMessage && <p className="message">{authMessage}</p>}
+            {authMessage && <p className="message" role="alert">{authMessage}</p>}
+          </div>
+          <aside className="auth-visual-panel" aria-hidden="true">
+            <div className="auth-visual-grid" />
+            <div className="auth-visual-axis auth-visual-axis-horizontal" />
+            <div className="auth-visual-axis auth-visual-axis-vertical" />
+            <div className="auth-visual-mark"><span /><span /><span /></div>
+          </aside>
         </section>
       </div>
     );
@@ -427,12 +475,10 @@ const LegacyApp = () => {
         </div>
 
         <nav className="side-menu">
-          {Object.entries(groupedMenu).map(([group, entries]) => (
+          {Object.entries(groupedMenu).filter(([group]) => group === 'Operación' || group === 'Portafolio').map(([group, entries]) => (
             <div key={group} className="menu-group">
               <h3>{group}</h3>
-              {entries
-                .filter((item) => isAdmin || !item.key.startsWith('admin-'))
-                .map((item) => (
+              {entries.map((item) => (
                 <button
                   key={item.key}
                   type="button"
@@ -444,24 +490,51 @@ const LegacyApp = () => {
                 >
                   {item.label}
                 </button>
-                ))}
+              ))}
             </div>
           ))}
-          {isAdmin && (
-            <div className="menu-group">
-              <h3>Desarrollo</h3>
-              <button
-                type="button"
-                className={activePage === 'dev-architecture' ? 'active' : ''}
-                onClick={() => {
-                  setActivePage('dev-architecture');
-                  setMobileNavOpen(false);
-                }}
-              >
-                Arquitectura (técnico)
-              </button>
-            </div>
-          )}
+          <details className="menu-internal-tools">
+            <summary>Herramientas internas</summary>
+            {Object.entries(groupedMenu)
+              .filter(([group]) => !['Operación', 'Portafolio'].includes(group))
+              .map(([group, entries]) => {
+                const visibleEntries = entries.filter((item) => isAdmin || !item.key.startsWith('admin-'));
+                if (!visibleEntries.length) return null;
+                return (
+                  <div key={group} className="menu-group">
+                    <h3>{group}</h3>
+                    {visibleEntries.map((item) => (
+                      <button
+                        key={item.key}
+                        type="button"
+                        className={activePage === item.key ? 'active' : ''}
+                        onClick={() => {
+                          setActivePage(item.key);
+                          setMobileNavOpen(false);
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                );
+              })}
+            {isAdmin && (
+              <div className="menu-group">
+                <h3>Desarrollo</h3>
+                <button
+                  type="button"
+                  className={activePage === 'dev-architecture' ? 'active' : ''}
+                  onClick={() => {
+                    setActivePage('dev-architecture');
+                    setMobileNavOpen(false);
+                  }}
+                >
+                  Arquitectura (técnico)
+                </button>
+              </div>
+            )}
+          </details>
         </nav>
       </aside>
 
@@ -488,29 +561,16 @@ const LegacyApp = () => {
   );
 };
 
-// Main App Router
+// All public auth URLs share the same onboarding form and session state.
 function App() {
   return (
     <Router>
       <Routes>
-        {/* New Auth Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        
-        {/* New Dashboard Route (Protected) */}
-        <Route 
-          path="/dashboard" 
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } 
-        />
-        
-        {/* Legacy Routes - Redirect to dashboard if new auth is used */}
         <Route path="/" element={<LegacyApp />} />
+        <Route path="/login" element={<LegacyApp />} />
+        <Route path="/signup" element={<LegacyApp />} />
+        <Route path="/dashboard" element={<LegacyApp />} />
         
-        {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
