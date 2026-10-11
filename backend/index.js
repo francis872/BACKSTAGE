@@ -6,6 +6,9 @@ const auditLogger = require('./middleware/auditLogger');
 const { platformSecurity } = require('./middleware/platformSecurity');
 const { attachSecurityWebSocketServer } = require('./realtime/wsServer');
 const { startOperationalSupervisor, stopOperationalSupervisor } = require('./services/operationalSupervisor.service');
+const { pool } = require('./db');
+const { getMongoHealthState } = require('./spatial/store');
+const { assertPostgres17 } = require('./utils/postgresVersion');
 
 const authRoutes = require('./routes/auth.routes');
 const locationsRoutes = require('./routes/locations.routes');
@@ -50,8 +53,41 @@ app.use(cors({
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '5mb' }));
 app.use(auditLogger);
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', service: 'BACKSTAGE Intelligence Backend' });
+app.get('/health', async (req, res) => {
+  const defaultProvider = process.env.NODE_ENV === 'production' ? 'atlas' : 'memory';
+  const provider = String(process.env.SPATIAL_STORE || defaultProvider).toLowerCase();
+
+  let postgres = 'unavailable';
+  let postgresVersion = null;
+  if (process.env.DATABASE_URL) {
+    try {
+      const version = await pool.query('SHOW server_version_num');
+      const versionNum = version.rows[0]?.server_version_num;
+      postgresVersion = Math.floor(Number(versionNum) / 10000);
+      assertPostgres17(versionNum);
+      postgres = 'healthy';
+    } catch (error) {
+      postgres = 'unavailable';
+    }
+  }
+
+  let mongodb = 'disconnected';
+  if (provider === 'atlas') {
+    const mongoState = await getMongoHealthState(process.env);
+    mongodb = mongoState.status === 'healthy' ? 'healthy' : 'unavailable';
+  }
+
+  const status = postgres === 'healthy' && (mongodb === 'healthy' || mongodb === 'disconnected') ? 'ok'
+    : postgres === 'healthy' || mongodb === 'healthy' ? 'degraded' : 'unavailable';
+
+  res.status(postgres === 'healthy' ? 200 : 503).json({
+    status,
+    postgres,
+    postgresVersion,
+    mongodb,
+    spatialStore: provider,
+    service: 'BACKSTAGE Intelligence Backend',
+  });
 });
 
 // API info endpoint

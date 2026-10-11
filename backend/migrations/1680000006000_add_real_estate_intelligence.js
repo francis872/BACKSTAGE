@@ -15,15 +15,14 @@ exports.up = (pgm) => {
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
 
-  pgm.addConstraint('property_valuations_location_fk', {
-    table: 'property_valuations',
+  pgm.addConstraint('property_valuations', 'property_valuations_location_fk', {
     foreignKeys: {
       columns: 'location_id',
       references: 'locations(location_id)',
       onDelete: 'cascade'
     }
   });
-  pgm.createIndex('idx_property_valuations_location_date', 'property_valuations', ['location_id', 'valued_at']);
+  pgm.createIndex('property_valuations', ['location_id', 'valued_at'], { name: 'idx_property_valuations_location_date' });
 };
 
 exports.down = (pgm) => {

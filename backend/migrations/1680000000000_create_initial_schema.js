@@ -82,7 +82,7 @@ exports.up = (pgm) => {
       onDelete: 'cascade'
     }
   });
-  pgm.addConstraint('location_indicators_unique', 'location_indicators', 'UNIQUE(location_id, indicator_name, indicator_date)');
+  pgm.addConstraint('location_indicators', 'location_indicators_unique', { unique: ['location_id', 'indicator_name', 'indicator_date'] });
 
   pgm.createTable('location_histories', {
     history_id: { type: 'serial', primaryKey: true },
@@ -92,16 +92,14 @@ exports.up = (pgm) => {
     metric: { type: 'jsonb', notNull: true },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
-  pgm.addConstraint('location_histories_location_fk', {
-    table: 'location_histories',
+  pgm.addConstraint('location_histories', 'location_histories_location_fk', {
     foreignKeys: {
       columns: 'location_id',
       references: 'locations(location_id)',
       onDelete: 'cascade'
     }
   });
-  pgm.addConstraint('location_histories_source_fk', {
-    table: 'location_histories',
+  pgm.addConstraint('location_histories', 'location_histories_source_fk', {
     foreignKeys: {
       columns: 'source_id',
       references: 'data_sources(source_id)',
@@ -121,8 +119,7 @@ exports.up = (pgm) => {
     details: { type: 'jsonb' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
-  pgm.addConstraint('risk_assessments_location_fk', {
-    table: 'risk_assessments',
+  pgm.addConstraint('risk_assessments', 'risk_assessments_location_fk', {
     foreignKeys: {
       columns: 'location_id',
       references: 'locations(location_id)',
@@ -149,16 +146,14 @@ exports.up = (pgm) => {
     details: { type: 'jsonb' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
-  pgm.addConstraint('location_market_scores_location_fk', {
-    table: 'location_market_scores',
+  pgm.addConstraint('location_market_scores', 'location_market_scores_location_fk', {
     foreignKeys: {
       columns: 'location_id',
       references: 'locations(location_id)',
       onDelete: 'cascade'
     }
   });
-  pgm.addConstraint('location_market_scores_market_area_fk', {
-    table: 'location_market_scores',
+  pgm.addConstraint('location_market_scores', 'location_market_scores_market_area_fk', {
     foreignKeys: {
       columns: 'market_area_id',
       references: 'market_areas(market_area_id)',
@@ -176,8 +171,7 @@ exports.up = (pgm) => {
     score: { type: 'numeric(5,2)' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
-  pgm.addConstraint('recommendations_location_fk', {
-    table: 'recommendations',
+  pgm.addConstraint('recommendations', 'recommendations_location_fk', {
     foreignKeys: {
       columns: 'location_id',
       references: 'locations(location_id)',
@@ -185,11 +179,11 @@ exports.up = (pgm) => {
     }
   });
 
-  pgm.createIndex('idx_locations_external_id', 'locations', 'external_id');
-  pgm.createIndex('idx_location_histories_location_id', 'location_histories', 'location_id');
-  pgm.createIndex('idx_risk_assessments_location_id', 'risk_assessments', 'location_id');
-  pgm.createIndex('idx_location_market_scores_location_id', 'location_market_scores', 'location_id');
-  pgm.createIndex('idx_recommendations_location_id', 'recommendations', 'location_id');
+  pgm.createIndex('locations', 'external_id', { name: 'idx_locations_external_id' });
+  pgm.createIndex('location_histories', 'location_id', { name: 'idx_location_histories_location_id' });
+  pgm.createIndex('risk_assessments', 'location_id', { name: 'idx_risk_assessments_location_id' });
+  pgm.createIndex('location_market_scores', 'location_id', { name: 'idx_location_market_scores_location_id' });
+  pgm.createIndex('recommendations', 'location_id', { name: 'idx_recommendations_location_id' });
 };
 
 exports.down = (pgm) => {

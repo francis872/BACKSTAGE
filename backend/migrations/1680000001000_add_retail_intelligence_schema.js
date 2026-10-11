@@ -24,8 +24,7 @@ exports.up = (pgm) => {
     relative_strength: { type: 'numeric(5,2)' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
-  pgm.addConstraint('competition_analysis_retail_zone_fk', {
-    table: 'competition_analysis',
+  pgm.addConstraint('competition_analysis', 'competition_analysis_retail_zone_fk', {
     foreignKeys: {
       columns: 'retail_zone_id',
       references: 'retail_zones(retail_zone_id)',
@@ -42,16 +41,14 @@ exports.up = (pgm) => {
     details: { type: 'jsonb' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
-  pgm.addConstraint('site_suitability_scores_location_fk', {
-    table: 'site_suitability_scores',
+  pgm.addConstraint('site_suitability_scores', 'site_suitability_scores_location_fk', {
     foreignKeys: {
       columns: 'location_id',
       references: 'locations(location_id)',
       onDelete: 'cascade'
     }
   });
-  pgm.addConstraint('site_suitability_scores_retail_zone_fk', {
-    table: 'site_suitability_scores',
+  pgm.addConstraint('site_suitability_scores', 'site_suitability_scores_retail_zone_fk', {
     foreignKeys: {
       columns: 'retail_zone_id',
       references: 'retail_zones(retail_zone_id)',
@@ -59,9 +56,9 @@ exports.up = (pgm) => {
     }
   });
 
-  pgm.createIndex('idx_retail_zones_city', 'retail_zones', 'city');
-  pgm.createIndex('idx_site_suitability_scores_location_id', 'site_suitability_scores', 'location_id');
-  pgm.createIndex('idx_site_suitability_scores_retail_zone_id', 'site_suitability_scores', 'retail_zone_id');
+  pgm.createIndex('retail_zones', 'city', { name: 'idx_retail_zones_city' });
+  pgm.createIndex('site_suitability_scores', 'location_id', { name: 'idx_site_suitability_scores_location_id' });
+  pgm.createIndex('site_suitability_scores', 'retail_zone_id', { name: 'idx_site_suitability_scores_retail_zone_id' });
 };
 
 exports.down = (pgm) => {

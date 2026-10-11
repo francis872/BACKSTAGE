@@ -12,8 +12,7 @@ exports.up = (pgm) => {
     metadata: { type: 'jsonb' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
-  pgm.addConstraint('spatial_profiles_location_fk', {
-    table: 'spatial_profiles',
+  pgm.addConstraint('spatial_profiles', 'spatial_profiles_location_fk', {
     foreignKeys: {
       columns: 'location_id',
       references: 'locations(location_id)',
@@ -29,8 +28,7 @@ exports.up = (pgm) => {
     notes: { type: 'text' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
-  pgm.addConstraint('risk_components_risk_fk', {
-    table: 'risk_components',
+  pgm.addConstraint('risk_components', 'risk_components_risk_fk', {
     foreignKeys: {
       columns: 'risk_id',
       references: 'risk_assessments(risk_id)',
@@ -46,8 +44,7 @@ exports.up = (pgm) => {
     trend_score: { type: 'numeric(5,2)' },
     created_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
-  pgm.addConstraint('location_risk_trends_location_fk', {
-    table: 'location_risk_trends',
+  pgm.addConstraint('location_risk_trends', 'location_risk_trends_location_fk', {
     foreignKeys: {
       columns: 'location_id',
       references: 'locations(location_id)',
@@ -55,9 +52,9 @@ exports.up = (pgm) => {
     }
   });
 
-  pgm.createIndex('idx_spatial_profiles_location_id', 'spatial_profiles', 'location_id');
-  pgm.createIndex('idx_risk_components_risk_id', 'risk_components', 'risk_id');
-  pgm.createIndex('idx_location_risk_trends_location_id', 'location_risk_trends', 'location_id');
+  pgm.createIndex('spatial_profiles', 'location_id', { name: 'idx_spatial_profiles_location_id' });
+  pgm.createIndex('risk_components', 'risk_id', { name: 'idx_risk_components_risk_id' });
+  pgm.createIndex('location_risk_trends', 'location_id', { name: 'idx_location_risk_trends_location_id' });
 };
 
 exports.down = (pgm) => {

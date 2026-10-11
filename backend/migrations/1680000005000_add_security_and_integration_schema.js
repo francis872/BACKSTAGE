@@ -58,7 +58,7 @@ exports.up = (pgm) => {
     evaluated_at: { type: 'timestamp with time zone', notNull: true, default: pgm.func('now()') }
   });
 
-  pgm.addConstraint('scoring_results_model_fk', {
+  pgm.addConstraint('scoring_results', 'scoring_results_model_fk', {
     foreignKeys: {
       columns: 'model_id',
       references: 'scoring_models(model_id)',
@@ -66,7 +66,7 @@ exports.up = (pgm) => {
     }
   });
 
-  pgm.addConstraint('scoring_results_location_fk', {
+  pgm.addConstraint('scoring_results', 'scoring_results_location_fk', {
     foreignKeys: {
       columns: 'location_id',
       references: 'locations(location_id)',
@@ -74,8 +74,8 @@ exports.up = (pgm) => {
     }
   });
 
-  pgm.createIndex('idx_scoring_results_location_id', 'scoring_results', 'location_id');
-  pgm.createIndex('idx_integration_events_status', 'integration_events', 'status');
+  pgm.createIndex('scoring_results', 'location_id', { name: 'idx_scoring_results_location_id' });
+  pgm.createIndex('integration_events', 'status', { name: 'idx_integration_events_status' });
 };
 
 exports.down = (pgm) => {
