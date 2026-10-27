@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-10-25T19:31:36.584Z",
+  "scope": "single_local_node_process_with_one_worker_thread_per_run",
+  "data_kind": "SIMULATED_BENCHMARK_ONLY",
+  "algorithm": "risk.monte_carlo",
+  "version": "backstage-monte-carlo-2",
+  "iterations_per_run": 100000,
+  "seed": 42,
+  "runs": 2,
+  "numeric_results_match": true,
+  "elapsed_ms": 625.0115999999999,
+  "rss_before_bytes": 37527552,
+  "rss_sampled_peak_bytes": 77041664,
+  "sample_interval_ms": 10,
+  "configured_worker_heap_mb": 64,
+  "node": "v24.13.0",
+  "platform": "win32",
+  "atlas_writes": false,
+  "production_capacity_certified": false
+}

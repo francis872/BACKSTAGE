@@ -1,0 +1,143 @@
+{
+  "started_at": "2026-10-26T23:38:54.460Z",
+  "run_id": "58c1605b-5a42-4f23-824b-e2dc2789dd87",
+  "scope": "fresh_owned_atlas_test_database_and_local_http",
+  "production_changes": false,
+  "remote_deployment": false,
+  "docker_used": false,
+  "checks": [
+    {
+      "name": "owned_namespace_and_additive_indexes_created_without_touching_source",
+      "passed": true
+    },
+    {
+      "name": "actual_http_creation_idempotency_and_zero_coordinates",
+      "passed": true
+    },
+    {
+      "name": "actual_atlas_tenant_isolation_and_viewer_denial",
+      "passed": true
+    },
+    {
+      "name": "actual_concurrent_transactions_prevent_over_allocation_without_inventing_child_geometry",
+      "passed": true
+    },
+    {
+      "name": "generic_asset_mutation_cannot_bypass_layer_rules",
+      "passed": true
+    },
+    {
+      "name": "real_revision_conflict_and_archive_parent_guard",
+      "passed": true
+    },
+    {
+      "name": "built_browser_journey_persists_real_atlas_entities",
+      "passed": true
+    },
+    {
+      "name": "canonical_audit_chain_valid_after_http_and_browser_mutations",
+      "passed": true
+    }
+  ],
+  "operations_checks": [],
+  "encryption_keys_ephemeral": true,
+  "retained_operations_acceptance": "unified-operations-live.json",
+  "economics": {
+    "checks": [
+      "real_atlas_bookkeeping_expenses_budget_approval_and_tenant_isolation",
+      "real_cash_aging_forecast_optimizer_and_conservative_quota_calculation",
+      "real_idempotency_and_exact_frozen_snapshot_reproduction",
+      "real_versioned_revision_and_internal_planning_approval_preserve_history",
+      "real_infeasibility_certificate_blocks_approval",
+      "real_stale_coefficients_and_incomplete_allocation_rules_are_rejected",
+      "real_reversal_changes_current_balance_without_rewriting_historical_scenarios",
+      "real_financial_evidence_is_encrypted_and_general_alert_routes_cannot_access_it"
+    ],
+    "engine": "backstage-economics-1",
+    "synthetic_only": true,
+    "cash_minor": "4000",
+    "outstanding_minor": "4001",
+    "optimized_allocations": [
+      "5000",
+      "4001"
+    ],
+    "fee_total_minor": "10001",
+    "forecast_history_nature": "SIMULATED",
+    "root_id": 4
+  },
+  "normative": {
+    "checks": [
+      "official_dictionary_versions_modifications_repeal_and_guidance_are_distinguished",
+      "real_native_reviewer_mandate_role_tenant_and_coproperty_isolation",
+      "real_encrypted_document_review_versions_idempotency_and_inert_user_content",
+      "real_three_state_evaluation_consumes_reproduced_economics_and_exact_legal_conditions",
+      "real_human_disagreement_and_new_interpretation_preserve_historical_results",
+      "real_document_discrepancy_and_stale_financial_basis_never_imply_compliance",
+      "real_document_financial_scope_prevents_cross_scenario_approval_reuse",
+      "real_erasure_tamper_rejection_alert_exclusion_and_permission_revocation"
+    ],
+    "synthetic_only": true,
+    "legal_opinion": false,
+    "source_reviews_nature": "SYNTHETIC_ACCEPTANCE_ONLY",
+    "root_id": 7,
+    "economic_scenario_id": 36,
+    "reviewed_document_id": 38,
+    "rule_count": 14,
+    "counts": {
+      "CUMPLE": 6,
+      "NO_CUMPLE": 1,
+      "REQUIERE_REVISION": 7
+    },
+    "engine": "backstage-normative-1",
+    "manifest": {
+      "engine_version": "backstage-normative-1",
+      "engine_source_sha256": "23f0620fc7d598e3e84aa1a89c56492abbeac20c36669fee1630ceec9709f11d",
+      "input_sha256": "f0bf97d24a2cbdd4f1e263ee64bef4b5b541ea4e874c902efa853a5232b4117f",
+      "result_sha256": "6788721b363243802295ccbb7ad4798c98a8a9d130b3929e75c7d25d1d3c7c58",
+      "policy": "bounded_reviewed_conditions_not_legal_opinion",
+      "runtime": "v24.13.0"
+    }
+  },
+  "browser": {
+    "mode": "built_ui_local_ph_api_real_isolated_atlas",
+    "checks": [
+      "real_ui_creates_coproperty_in_atlas",
+      "real_ui_creates_hierarchy_and_exact_declared_coefficient",
+      "real_ui_revision_update_preserves_hierarchy",
+      "reload_recovers_layer_and_unlocated_entity_without_invented_coordinates",
+      "actual_ui_pqrs_create_and_response_transitions",
+      "actual_ui_erases_all_personal_payload_versions",
+      "no_horizontal_overflow_320",
+      "no_horizontal_overflow_390",
+      "no_horizontal_overflow_1440",
+      "real_ui_archives_leaf_preserving_its_record",
+      "actual_ui_records_explicit_coproperty_scoped_reviewer_designation",
+      "actual_ui_uploads_and_reviews_encrypted_document_as_evidence_without_legal_promotion",
+      "actual_ui_records_versioned_interpretation_and_source_currentness_review",
+      "actual_ui_evaluates_reviewed_facts_against_reproduced_economic_result",
+      "actual_ui_reproduces_frozen_normative_evidence_with_exact_manifest",
+      "actual_ui_preserves_automated_result_and_disagreement_in_versioned_history",
+      "normative_panel_has_no_horizontal_overflow_at_320_and_1440",
+      "actual_ui_does_not_cache_private_normative_documents_in_local_storage",
+      "actual_ui_erases_document_payloads_and_requires_review_for_new_evaluation",
+      "current_viewer_role_removes_write_actions",
+      "current_viewer_role_cannot_open_private_normative_evidence_or_reviews",
+      "actual_ui_mfa_enrollment_rotates_session_and_displays_one_time_recovery_codes",
+      "actual_ui_password_login_requires_second_factor_and_consumes_recovery_code"
+    ],
+    "runtime_errors": [],
+    "ambient_api_responses_isolated": true,
+    "login_journey_verified": true,
+    "webgl_rendering_verified": false,
+    "external_map_requests_blocked": true,
+    "new_browser_installation": false
+  },
+  "audit_chain_valid": true,
+  "retained_before_cleanup": {
+    "assets": 13,
+    "audit_events": 155
+  },
+  "status": "passed",
+  "owned_temporary_database_removed": true,
+  "completed_at": "2026-10-26T23:46:37.133Z"
+}

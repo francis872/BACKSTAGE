@@ -1,0 +1,33 @@
+{
+  "mode": "plan_only_not_applied",
+  "phase": 4,
+  "collection": "identity_invitations",
+  "indexes": [
+    {
+      "key": {
+        "invitation_id": 1
+      },
+      "options": {
+        "unique": true
+      }
+    },
+    {
+      "key": {
+        "token_hash": 1
+      },
+      "options": {
+        "unique": true
+      }
+    },
+    {
+      "key": {
+        "organization_id": 1,
+        "created_at": -1
+      },
+      "options": {}
+    }
+  ],
+  "existing_schema_version": 2,
+  "data_migrations": [],
+  "production_deployment": false
+}

@@ -1,0 +1,151 @@
+{
+  "checked_at": "2026-10-27T03:45:26.013Z",
+  "decision": "NO_GO",
+  "application_deployments_changed": false,
+  "real_user_activation": false,
+  "status_definitions": {
+    "verificado": "Only the exact scope and evidence of the row",
+    "pendiente": "Specific verification or decision not executed",
+    "bloqueado": "Specific missing external access or resource"
+  },
+  "summary": {
+    "verificado": 9,
+    "pendiente": 2,
+    "bloqueado": 6
+  },
+  "controls": [
+    {
+      "control": "Conservación de los cuatro proyectos Vercel",
+      "status": "verificado",
+      "evidence_and_limit": "Inventarios de producción/Preview al inicio y al final: mismos despliegues, alias, protección y nombres/tipos/destinos de variables. [Antes](evidence/operations-closure-audit-before.json), [después](evidence/operations-closure-audit-after.json). No se leyeron valores secretos remotos ni se certifica su contenido comparando nombres.",
+      "evidence_paths": [
+        "docs/evidence/operations-closure-audit-before.json",
+        "docs/evidence/operations-closure-audit-after.json"
+      ]
+    },
+    {
+      "control": "Permisos efectivos de la conexión Atlas de pruebas",
+      "status": "verificado",
+      "evidence_and_limit": "`connectionStatus` con privilegios confirmó `atlasAdmin` y acceso amplio. **No cumple mínimos privilegios.** La identificación es de la credencial de datos, no un permiso de administración del servicio Atlas. [Auditoría](evidence/operations-closure-audit-before.json).",
+      "evidence_paths": [
+        "docs/evidence/operations-closure-audit-before.json"
+      ]
+    },
+    {
+      "control": "Separación Atlas pruebas/producción, usuarios y red productiva",
+      "status": "bloqueado",
+      "evidence_and_limit": "La integración administrativa de Atlas sigue sin conectar. No se certifican clúster, usuarios, permisos de producción, lista de acceso IP ni separación usando una configuración local histórica. [Conexión](evidence/operations-atlas-connection.json). Permisos exactos en el apartado siguiente.",
+      "evidence_paths": [
+        "docs/evidence/operations-atlas-connection.json"
+      ]
+    },
+    {
+      "control": "Reglas de configuración segura de Resend",
+      "status": "verificado",
+      "evidence_and_limit": "Validador local rechaza inyección de cabeceras, remitente de ensayo y origen de recuperación ajeno. Una respuesta de dominio verificado no se convierte en entrega ni en recepción. Las pruebas no enviaron mensajes. [Controles](../scripts/operations/controls.cjs), [regresión](evidence/operations-closure-backend-tests.txt).",
+      "evidence_paths": [
+        "scripts/operations/controls.cjs",
+        "docs/evidence/operations-closure-backend-tests.txt"
+      ]
+    },
+    {
+      "control": "Dominio, remitente, ámbito de clave y entrega reales",
+      "status": "bloqueado",
+      "evidence_and_limit": "No hay cuenta/configuración de Resend ni destinatario administrativo autorizado. La operación de lectura de dominios y el envío real se detienen; no se crean valores ficticios. [Preflight](evidence/operations-resend-preflight.json).",
+      "evidence_paths": [
+        "docs/evidence/operations-resend-preflight.json"
+      ]
+    },
+    {
+      "control": "Observabilidad: agregación y ciclo de incidentes",
+      "status": "verificado",
+      "evidence_and_limit": "Métricas de disponibilidad, errores, latencia y operaciones críticas; control de antigüedad; apertura/cierre tras dos muestras; outbox administrativo con idempotencia, reintentos y presupuesto. No se conservan identidades/rutas en los agregados ni se confunde 2xx del webhook con recepción humana. [Implementación](../scripts/operations/controls.cjs), [observador](../scripts/operations/observe-release.js).",
+      "evidence_paths": [
+        "scripts/operations/controls.cjs",
+        "scripts/operations/observe-release.js"
+      ]
+    },
+    {
+      "control": "Lectura de telemetría real de Vercel",
+      "status": "verificado",
+      "evidence_and_limit": "Muestra acotada de quince minutos: cinco eventos estructurados, cero errores de servidor y cero operaciones críticas observadas. Los registros sin procesar no se guardaron ni imprimieron. **La ventana completa y el presupuesto de errores no se certifican.** [Muestra](evidence/operations-telemetry-sample.json).",
+      "evidence_paths": [
+        "docs/evidence/operations-telemetry-sample.json"
+      ]
+    },
+    {
+      "control": "Servicio independiente, flujo continuo y alerta recibida por administrador",
+      "status": "bloqueado",
+      "evidence_and_limit": "Falta host/scheduler con estado duradero y canal/destinatario. El observador se ejecutó localmente, creó cuatro avisos locales sobre evidencias ausentes y no envió alertas. Su outbox no se presenta como panel/monitor externo desplegado. [Estado](evidence/operations-observability.json).",
+      "evidence_paths": [
+        "docs/evidence/operations-observability.json"
+      ]
+    },
+    {
+      "control": "Separación local de claves por entorno y ensayo de rotación/recuperación",
+      "status": "verificado",
+      "evidence_and_limit": "Once comprobaciones: material de claves distinto, contexto autenticado, lectura histórica tras cambio de clave activa en memoria, rechazo al retirar clave antigua, recuperación de copia cifrada y rechazo de corrupción/clave incorrecta. No se alteraron claves de runtime ni documentos históricos. [Ensayo](evidence/operations-key-recovery.json).",
+      "evidence_paths": [
+        "docs/evidence/operations-key-recovery.json"
+      ]
+    },
+    {
+      "control": "Custodia externa, segundo custodio y recuperación desde el almacén productivo",
+      "status": "bloqueado",
+      "evidence_and_limit": "Las copias ensayadas permanecen locales y cifradas, con sus claves de recuperación en otra carpeta del mismo equipo. Esto no acredita independencia de custodia. Faltan almacén externo autorizado, identidad de recuperación y segundo operador.",
+      "evidence_paths": []
+    },
+    {
+      "control": "Respaldo y restauración de fixture sintético con aplicación nativa",
+      "status": "verificado",
+      "evidence_and_limit": "Cinco grupos: instantánea coherente, copia AES-GCM, restauración BSON/índices, lectura/reproducción nativa, aislamiento organizacional y auditoría válida. Diez colecciones, diecinueve documentos y treinta y nueve índices; TTL suspendido en destino. Ambas bases exclusivas se eliminaron y el origen sintético conservó sus hashes. [Restauración](evidence/operations-restore-drill.json).",
+      "evidence_paths": [
+        "docs/evidence/operations-restore-drill.json"
+      ]
+    },
+    {
+      "control": "Calendario/retención y restauración del respaldo productivo real",
+      "status": "bloqueado",
+      "evidence_and_limit": "Sin administración Atlas ni política del servicio productivo. La prueba sintética no acredita snapshot administrado, PITR, custodia externa, RPO ni RTO productivos.",
+      "evidence_paths": []
+    },
+    {
+      "control": "Procedimiento de reversión y controles preventivos",
+      "status": "verificado",
+      "evidence_and_limit": "Se identificaron la pareja productiva actual y la anterior; se verificaron propiedad y estado READY. Los controles bloquean otro proyecto, claves históricas faltantes, descenso de MFA y contratos no acreditados. Cero cambios de alias y cero restauraciones sobre el origen. [Plan](evidence/operations-rollback-plan.json).",
+      "evidence_paths": [
+        "docs/evidence/operations-rollback-plan.json"
+      ]
+    },
+    {
+      "control": "Compatibilidad completa y ejecución real de reversión",
+      "status": "pendiente",
+      "evidence_and_limit": "La compatibilidad de claves/MFA/sesiones/datos de la pareja anterior no se acreditó. El plan permanece bloqueado para ejecutar; no se infiere incompatibilidad definitiva de la ausencia de evidencia. La instrucción actual exige mantener la versión publicada. Una ventana posterior requerirá autorización expresa.",
+      "evidence_paths": []
+    },
+    {
+      "control": "Regresión, seguridad y aislamiento",
+      "status": "verificado",
+      "evidence_and_limit": "**470 backend aprobadas y una omitida; 41 frontend y compilación aprobadas.** Incluye seis pruebas nuevas de controles operativos y la regresión previa. El ensayo Atlas volvió a comprobar acceso cruzado denegado antes/después de restaurar y evidencia cifrada reproducible. [Backend](evidence/operations-closure-backend-tests.txt), [frontend](evidence/operations-closure-frontend-tests.txt), [build](evidence/operations-closure-build.txt).",
+      "evidence_paths": [
+        "docs/evidence/operations-closure-backend-tests.txt",
+        "docs/evidence/operations-closure-frontend-tests.txt",
+        "docs/evidence/operations-closure-build.txt"
+      ]
+    },
+    {
+      "control": "Aceptación representativa, carga sostenida y SLA comerciales",
+      "status": "pendiente",
+      "evidence_and_limit": "Los umbrales del monitor son orientativos y no son SLA aprobados. La aceptación Preview anterior sigue vinculada a sus despliegues conservados; no se hicieron nuevas escrituras en la aplicación publicada ni se certificó capacidad empresarial con cinco solicitudes. [Aceptación previa](evidence/community-preview-live.json).",
+      "evidence_paths": [
+        "docs/evidence/community-preview-live.json"
+      ]
+    },
+    {
+      "control": "Activación productiva de la nueva versión con datos reales",
+      "status": "bloqueado",
+      "evidence_and_limit": "Depende de cerrar las filas productivas, registrar sus evidencias y recibir autorización expresa posterior. La restricción operativa a datos sintéticos permanece; no se inventa una barrera técnica de detección automática de datos personales.",
+      "evidence_paths": []
+    }
+  ]
+}

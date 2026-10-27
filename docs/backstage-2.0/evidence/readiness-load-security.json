@@ -1,0 +1,132 @@
+{
+  "run_id": "readiness-load-20261024160825-8dd85fe13979",
+  "started_at": "2026-10-24T16:08:25.751Z",
+  "scope": "protected_staging_bounded_load_security_and_recovery",
+  "maximum_http_concurrency": 10,
+  "checks": [
+    {
+      "name": "bounded_proxy_and_authenticated_load_without_http_errors",
+      "passed": true,
+      "requests": 102,
+      "observations": [
+        {
+          "route": "web_proxy_health",
+          "concurrency": 1,
+          "requests": 12,
+          "successes": 12,
+          "p50_ms": 209,
+          "p95_ms": 538,
+          "max_ms": 538
+        },
+        {
+          "route": "web_proxy_health",
+          "concurrency": 5,
+          "requests": 25,
+          "successes": 25,
+          "p50_ms": 209,
+          "p95_ms": 914,
+          "max_ms": 992
+        },
+        {
+          "route": "web_proxy_health",
+          "concurrency": 10,
+          "requests": 40,
+          "successes": 40,
+          "p50_ms": 247,
+          "p95_ms": 458,
+          "max_ms": 472
+        },
+        {
+          "route": "authenticated_own_tenant_reads",
+          "concurrency": 5,
+          "requests": 25,
+          "successes": 25,
+          "p50_ms": 184,
+          "p95_ms": 632,
+          "max_ms": 674
+        }
+      ]
+    },
+    {
+      "name": "concurrent_project_writes_have_unique_ids_and_independent_persistence",
+      "passed": true,
+      "writes": 8,
+      "concurrency": 4
+    },
+    {
+      "name": "concurrent_policy_edit_detects_stale_revision_in_real_atlas_transaction",
+      "passed": true
+    },
+    {
+      "name": "cross_client_atomic_limiter_window_reset_and_transaction_rollback",
+      "passed": true
+    },
+    {
+      "name": "hosted_api_and_proxy_share_account_budget_10_denials_then_2_rate_limits_with_retry_after",
+      "passed": true
+    },
+    {
+      "name": "structured_identity_injection_malformed_json_node_cap_and_payload_limits_rejected",
+      "passed": true
+    },
+    {
+      "name": "separate_client_connection_failure_bounded_and_live_service_remains_healthy",
+      "passed": true,
+      "real_service_outage": false
+    },
+    {
+      "name": "revoked_membership_denies_existing_token_after_load",
+      "passed": true
+    }
+  ],
+  "production_capacity_certified": false,
+  "real_atlas_outage_injected": false,
+  "load": [
+    {
+      "route": "web_proxy_health",
+      "concurrency": 1,
+      "requests": 12,
+      "successes": 12,
+      "p50_ms": 209,
+      "p95_ms": 538,
+      "max_ms": 538
+    },
+    {
+      "route": "web_proxy_health",
+      "concurrency": 5,
+      "requests": 25,
+      "successes": 25,
+      "p50_ms": 209,
+      "p95_ms": 914,
+      "max_ms": 992
+    },
+    {
+      "route": "web_proxy_health",
+      "concurrency": 10,
+      "requests": 40,
+      "successes": 40,
+      "p50_ms": 247,
+      "p95_ms": 458,
+      "max_ms": 472
+    },
+    {
+      "route": "authenticated_own_tenant_reads",
+      "concurrency": 5,
+      "requests": 25,
+      "successes": 25,
+      "p50_ms": 184,
+      "p95_ms": 632,
+      "max_ms": 674
+    }
+  ],
+  "status": "passed",
+  "cleanup": {
+    "owned_tenant_rows_remaining": 0,
+    "operational_documents_deleted": false,
+    "shared_counters_preserved": true,
+    "global_security_traces_preserved": true,
+    "private_backup_sha256": "ef8b763ce69c7d92c39787972e62efb75e9c4fb6853cd278388587895c965116"
+  },
+  "owned_technical_buckets_remaining": 0,
+  "finished_at": "2026-10-24T16:09:08.234Z"
+}

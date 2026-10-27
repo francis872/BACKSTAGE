@@ -1,0 +1,306 @@
+{
+  "run_id": "atlas-core-20261025163258-44f443ff18cb",
+  "started_at": "2026-10-25T16:32:59.002Z",
+  "mode": "real_protected_origin_browser_atlas_public_geocoding",
+  "api_interception": false,
+  "checks": [
+    {
+      "name": "protected_staging_target_and_original_production_aliases_unchanged",
+      "passed": true
+    },
+    {
+      "name": "three_new_owned_test_workspaces_registered",
+      "passed": true
+    },
+    {
+      "name": "account_contact_privilege_guard_private_shared_feed_comments_and_viewer_denial",
+      "passed": true
+    },
+    {
+      "name": "quibdo_yuto_istmina_actual_geocoder_results_colombia_not_quito",
+      "passed": true
+    },
+    {
+      "name": "mapbox_permanent_suggestions_while_typing_select_without_stale_results_and_attribution",
+      "passed": true
+    },
+    {
+      "name": "real_browser_project_quibdo_2040_uses_selected_location_without_reentry",
+      "passed": true
+    },
+    {
+      "name": "actual_coordinate_distance_evidence_deterministic_comparison_and_existing_project_link",
+      "passed": true
+    },
+    {
+      "name": "real_browser_comparison_project_capability_switch_and_reload_restore",
+      "passed": true
+    },
+    {
+      "name": "actual_yuto_istmina_exploration_preserves_quibdo_project_and_canonical_site",
+      "passed": true
+    },
+    {
+      "name": "real_road_plan_saved_in_atlas_with_provider_provenance_and_tenant_isolation",
+      "passed": true
+    },
+    {
+      "name": "real_map_style_layers_2d_3d_globe_same_canvas_project_and_mobile",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "docs/evidence/origin-live-ui/atlas-core-20261025163258-44f443ff18cb/mapbox-autocomplete.png",
+    "docs/evidence/origin-live-ui/atlas-core-20261025163258-44f443ff18cb/comparison-real-evidence.png",
+    "docs/evidence/origin-live-ui/atlas-core-20261025163258-44f443ff18cb/map-3d.png",
+    "docs/evidence/origin-live-ui/atlas-core-20261025163258-44f443ff18cb/map-globo.png",
+    "docs/evidence/origin-live-ui/atlas-core-20261025163258-44f443ff18cb/map-2d.png",
+    "docs/evidence/origin-live-ui/atlas-core-20261025163258-44f443ff18cb/map-mobile.png"
+  ],
+  "production_changes": false,
+  "deployments": {
+    "api": {
+      "id": "dpl_EmktPTU3HNWNyQm8Yi6dNsBhmcKu",
+      "url": "backstage-staging-ij0kxyqt6-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_DkiDNfp1oc9zWXArMdnDfvDEBo6B",
+      "url": "backstage-staging-bzga57zdq-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "geography": {
+    "quibdo": {
+      "id": "nominatim:relation:1343138",
+      "name": "Quibdó",
+      "displayName": "Quibdó, Atrato, Chocó, RAP Pacífico, Colombia",
+      "type": "administrative",
+      "country": "Colombia",
+      "countryCode": "co",
+      "region": "Chocó",
+      "municipality": "Quibdó",
+      "coordinates": [
+        -76.6531337,
+        5.6912838
+      ],
+      "bounds": [
+        -77.1427282,
+        5.6192719,
+        -76.1601892,
+        6.345917
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6531337,
+          5.6912838
+        ]
+      },
+      "provider": "OpenStreetMap Nominatim",
+      "objectType": "geocoded_place",
+      "properties": {
+        "name": "Quibdó",
+        "displayName": "Quibdó, Atrato, Chocó, RAP Pacífico, Colombia",
+        "type": "administrative",
+        "city": "Quibdó",
+        "municipality": "Quibdó",
+        "region": "Chocó",
+        "country": "Colombia",
+        "countryCode": "co",
+        "osmType": "relation",
+        "osmId": 1343138
+      },
+      "sourceId": "openstreetmap-nominatim",
+      "provenance": {
+        "source": "OpenStreetMap Nominatim",
+        "dataset": "OpenStreetMap geocoding index",
+        "license": "ODbL-1.0",
+        "dataMode": "derived",
+        "sourceCount": 1,
+        "confidence": null,
+        "updatedAt": null,
+        "query": "Quibdó, Chocó, Colombia"
+      },
+      "source": {
+        "name": "OpenStreetMap Nominatim",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "dataMode": "derived"
+      },
+      "precision": {
+        "level": "administrative",
+        "accuracyM": null
+      },
+      "validation": {
+        "coordinates": "valid_wgs84",
+        "address": "provider_match_unverified"
+      }
+    },
+    "yuto": {
+      "id": "nominatim:node:703168278",
+      "name": "Yutó",
+      "displayName": "Yutó, El Atrato, Atrato, Chocó, RAP Pacífico, Colombia",
+      "type": "village",
+      "country": "Colombia",
+      "countryCode": "co",
+      "region": "Chocó",
+      "municipality": "El Atrato",
+      "coordinates": [
+        -76.6360751,
+        5.5308027
+      ],
+      "bounds": [
+        -76.6560751,
+        5.5108027,
+        -76.6160751,
+        5.5508027
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6360751,
+          5.5308027
+        ]
+      },
+      "provider": "OpenStreetMap Nominatim",
+      "objectType": "geocoded_place",
+      "properties": {
+        "name": "Yutó",
+        "displayName": "Yutó, El Atrato, Atrato, Chocó, RAP Pacífico, Colombia",
+        "type": "village",
+        "city": null,
+        "municipality": "El Atrato",
+        "region": "Chocó",
+        "country": "Colombia",
+        "countryCode": "co",
+        "osmType": "node",
+        "osmId": 703168278
+      },
+      "sourceId": "openstreetmap-nominatim",
+      "provenance": {
+        "source": "OpenStreetMap Nominatim",
+        "dataset": "OpenStreetMap geocoding index",
+        "license": "ODbL-1.0",
+        "dataMode": "derived",
+        "sourceCount": 1,
+        "confidence": null,
+        "updatedAt": null,
+        "query": "Yuto, El Atrato, Chocó, Colombia"
+      },
+      "source": {
+        "name": "OpenStreetMap Nominatim",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "dataMode": "derived"
+      },
+      "precision": {
+        "level": "locality",
+        "accuracyM": null
+      },
+      "validation": {
+        "coordinates": "valid_wgs84",
+        "address": "provider_match_unverified"
+      }
+    },
+    "istmina": {
+      "id": "nominatim:relation:1309472",
+      "name": "Istmina",
+      "displayName": "Istmina, San Juan, Chocó, RAP Pacífico, 274010, Colombia",
+      "type": "administrative",
+      "country": "Colombia",
+      "countryCode": "co",
+      "region": "Chocó",
+      "municipality": "Istmina",
+      "coordinates": [
+        -76.685528,
+        5.1593099
+      ],
+      "bounds": [
+        -77.1610903,
+        4.3729014,
+        -76.5249538,
+        5.2849813
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.685528,
+          5.1593099
+        ]
+      },
+      "provider": "OpenStreetMap Nominatim",
+      "objectType": "geocoded_place",
+      "properties": {
+        "name": "Istmina",
+        "displayName": "Istmina, San Juan, Chocó, RAP Pacífico, 274010, Colombia",
+        "type": "administrative",
+        "city": "Istmina",
+        "municipality": "Istmina",
+        "region": "Chocó",
+        "country": "Colombia",
+        "countryCode": "co",
+        "osmType": "relation",
+        "osmId": 1309472
+      },
+      "sourceId": "openstreetmap-nominatim",
+      "provenance": {
+        "source": "OpenStreetMap Nominatim",
+        "dataset": "OpenStreetMap geocoding index",
+        "license": "ODbL-1.0",
+        "dataMode": "derived",
+        "sourceCount": 1,
+        "confidence": null,
+        "updatedAt": null,
+        "query": "Istmina, Chocó, Colombia"
+      },
+      "source": {
+        "name": "OpenStreetMap Nominatim",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "dataMode": "derived"
+      },
+      "precision": {
+        "level": "administrative",
+        "accuracyM": null
+      },
+      "validation": {
+        "coordinates": "valid_wgs84",
+        "address": "provider_match_unverified"
+      }
+    },
+    "exact_municipal_parcel_verified": false,
+    "interpretation": "Actual named provider matches; type/precision retained. A park is not a municipal center. No cadastral parcel or municipal headquarters verified"
+  },
+  "mapbox": {
+    "provider": "mapbox_geocoding_v6_permanent",
+    "actual_suggestions_without_search_submission": true,
+    "attribution_visible": true,
+    "server_only_token": true
+  },
+  "project_id": 40,
+  "comparison_id": 35,
+  "gis_job_id": 55,
+  "route_plan_id": 3,
+  "route_source": {
+    "name": "OSRM / OpenStreetMap",
+    "attribution": "© OpenStreetMap contributors",
+    "license": "ODbL-1.0",
+    "dataMode": "computed",
+    "profile": "driving",
+    "traffic": "not_live",
+    "observedAt": "2026-10-25T16:33:47.877Z"
+  },
+  "browser_api_responses": 97,
+  "browser_runtime_errors": [],
+  "status": "passed",
+  "cleanup": {
+    "passed": true,
+    "only_owned_test_records": true,
+    "shared_counters_and_global_security_traces_preserved": true,
+    "backup_sha256": "f52328d67c5c3afad80003d2659ec4d9a583f73a1c82f9299241355b681fcd53"
+  },
+  "completed_at": "2026-10-25T16:34:36.649Z"
+}

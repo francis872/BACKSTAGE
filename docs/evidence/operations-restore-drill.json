@@ -1,0 +1,49 @@
+{
+  "started_at": "2026-10-27T03:32:00.014Z",
+  "scope": "fresh_owned_synthetic_atlas_source_and_restore",
+  "source_operational_data_read": false,
+  "production_changes": false,
+  "scheduled_backup_verified": false,
+  "managed_snapshot_verified": false,
+  "external_custody_verified": false,
+  "checks": [
+    {
+      "name": "fresh_owned_native_encrypted_fixture_and_cross_organization_denial",
+      "passed": true
+    },
+    {
+      "name": "consistent_raw_bson_snapshot_encrypted_readback_and_tamper_rejection",
+      "passed": true
+    },
+    {
+      "name": "isolated_restore_preserves_raw_bson_types_document_hashes_and_indexes",
+      "passed": true
+    },
+    {
+      "name": "restored_application_reads_and_reproduces_encrypted_evidence_with_tenant_isolation_and_audit",
+      "passed": true
+    },
+    {
+      "name": "synthetic_source_remains_unchanged_during_restore_and_validation",
+      "passed": true
+    }
+  ],
+  "snapshot_time_recorded": true,
+  "backup_sha256": "a8807dc8734c29da4438f681e5cfc1b43b8954857b05ec1cd4e88ef6e44d1fa8",
+  "restore": {
+    "collections": 10,
+    "documents": 19,
+    "indexes": 39,
+    "ttl_suspended_during_verification": 1,
+    "validation_ms": 13152,
+    "source_overwritten": false
+  },
+  "status": "passed_synthetic_test_scope_only",
+  "rpo_certified": false,
+  "production_rto_certified": false,
+  "cleanup": {
+    "passed": true,
+    "owned_databases_removed": 2
+  },
+  "completed_at": "2026-10-27T03:32:42.879Z"
+}

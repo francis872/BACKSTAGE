@@ -1,0 +1,19 @@
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..'),staging=path.join(root,'.vercel');
+const report={checked_at:new Date().toISOString(),mode:process.argv.includes('--readiness')||process.argv.includes('--staging')||process.argv.includes('--phase5')||process.argv.includes('--engines')||process.argv.includes('--spatial')?'source_manifest_integrity':'prepared_sources_only_no_deployment',checks:[]};
+const reportName=process.argv.includes('--readiness')?'readiness-packaging.json':process.argv.includes('--spatial')?'phase-5-spatial-packaging.json':process.argv.includes('--engines')?'phase-5-engines-packaging.json':process.argv.includes('--phase5')?'phase-5-packaging.json':process.argv.includes('--staging')?'staging-packaging.json':process.argv.includes('--phase4')?'phase-4-packaging.json':process.argv.includes('--phase3')?'phase-3-packaging.json':process.argv.includes('--phase2')?'phase-2-packaging.json':'phase-1-packaging.json';
+for(const type of ['api','web']){
+ const name=fs.readdirSync(staging).filter(name=>new RegExp(`^soi-${type}-[0-9]+$`).test(name)).sort((a,b)=>Number(b.split('-').at(-1))-Number(a.split('-').at(-1)))[0];
+ assert(name,`Missing prepared ${type}`);const directory=path.join(staging,name),manifest=JSON.parse(fs.readFileSync(path.join(directory,'source-manifest.json'),'utf8'));
+ for(const file of manifest.files){const target=path.resolve(directory,file.path);assert(target.startsWith(directory+path.sep),'Unsafe manifest path');assert(!file.path.split(/[\\/]/).some(part=>part.startsWith('.env')),'Private environment included');assert.equal(crypto.createHash('sha256').update(fs.readFileSync(target)).digest('hex'),file.sha256);}
+ const config=JSON.parse(fs.readFileSync(path.join(directory,'vercel.json'),'utf8'));
+ const releasePackage=JSON.parse(fs.readFileSync(path.join(directory,'package.json'),'utf8'));
+ const lock=JSON.parse(fs.readFileSync(path.join(directory,'package-lock.json'),'utf8'));
+ assert.deepEqual(releasePackage.dependencies,lock.packages[''].dependencies,'Release dependencies and lock disagree');
+ assert.equal(new Set(manifest.files.map(file=>file.path)).size,manifest.files.length,'Duplicate manifest entry');
+ const expected=type==='api'?['backend/api/index.js','api/science.py','backend/routes/assets.routes.js','backend/routes/comparisons.routes.js','backend/services/geography.service.js','backend/domain/workspaceContext.js','backend/services/mongoAudit.service.js','backend/services/platformAudit.service.js','shared/comparison.mjs','bsie/engine.py','sanitary/engine.py']:['frontend/src/App.jsx','frontend/src/modules/moduleRegistry.jsx','frontend/src/pages/AssetsWorkspace.jsx','frontend/src/lib/projectContext.mjs','frontend/src/components/InvitationJoin.jsx','frontend/api/index.js','shared/modules.json','shared/comparison.mjs'];
+ for(const file of expected)assert(fs.existsSync(path.join(directory,file)),`Missing ${type} ${file}`);
+ if(type==='api'){assert(config.builds.some(b=>b.use==='@vercel/python'));assert(config.routes.some(r=>r.src==='/internal/science'));const requirements=fs.readFileSync(path.join(directory,'requirements.txt'),'utf8');assert(requirements.includes('ortools'));assert(requirements.includes('spreg'));assert(!/^\s*-r/m.test(requirements),'Nested requirements not flattened');const pkg=JSON.parse(fs.readFileSync(path.join(directory,'package.json'),'utf8'));assert(pkg.dependencies.mongodb);assert(!pkg.dependencies.pg);}
+ report.checks.push({type,source:name,files_verified:manifest.files.length,passed:true});
+}
+fs.mkdirSync(path.join(root,'docs/backstage-2.0/evidence'),{recursive:true});fs.writeFileSync(path.join(root,'docs/backstage-2.0/evidence',reportName),JSON.stringify(report,null,2));console.log(JSON.stringify(report));

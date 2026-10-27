@@ -1,0 +1,71 @@
+// Real HTTP, Atlas transactions and existing Python engine. Synthetic owned data only.
+const assert = require('node:assert/strict'), crypto = require('node:crypto');
+async function verifySpatial({ request, db }) {
+  const checks = [], pass = name => checks.push(name);
+  const createAsset = async body => { const r = await request('', { body: { source_name: 'Synthetic spatial acceptance, not an actual property', ...body } }); assert.equal(r.status, 201); return r.body.data; };
+  const root = await createAsset({ kind: 'coproperty', name: 'Spatial synthetic root' });
+  const units = [], first = [1, 2, 3, 4, 1, 2, 0, 0, 1], start = new Date(Date.now() - 1000).toISOString();
+  const n = value => Number(value.toFixed(6));
+  for (let i = 0; i < 9; i++) {
+    const x = n(-74 + i % 3 * .001), y = n(4 + Math.floor(i / 3) * .001), right = n(x + .001), top = n(y + .001);
+    units.push(await createAsset({ kind: 'private_unit', parent_id: root.location_id, name: `Spatial synthetic unit ${i}`, geometry: { type: 'Polygon', coordinates: [[[x, y], [right, y], [right, top], [x, top], [x, y]]] } }));
+  }
+  const missing = await createAsset({ kind: 'private_unit', parent_id: root.location_id, name: 'Spatial synthetic unlocated unit' });
+  const operation = async (location, type, body) => { const r = await request(`/${location}/operations/${type}`, { body: { source_name: 'Isolated synthetic acceptance', ...body } }); assert.equal(r.status, 201); return r.body.data; };
+  const pqrs = location => operation(location, 'pqrs', { title: 'Synthetic private title', description: 'Spatial acceptance private body never exported', category: 'petition' });
+  for (let i = 0; i < 9; i++) for (let j = 0; j < first[i]; j++) await pqrs(units[i].location_id);
+  await pqrs(missing.location_id);
+  const middle = new Date().toISOString();
+  const api = (suffix = '', options = {}) => request(`/${root.location_id}/analysis${suffix}`, options);
+  const defaults = { metric: 'pqrs_count', unit_kind: 'private_unit', permutations: 99, seed: 42, weights: { method: 'rook' } };
+  const run = async patch => { const r = await api('', { body: { ...defaults, ...patch } }); assert.equal(r.status, 201, `Scientific acceptance: ${r.status} ${r.body.error || ''}`); return r.body.data; };
+  const preview = await api('/preview', { body: defaults }); assert.equal(preview.status, 200); assert.equal(preview.body.provenance.coverage.included, 9); assert.deepEqual(preview.body.provenance.coverage.excluded_unlocated, [missing.location_id]);
+  assert.equal((await api('/preview', { who: 2, body: defaults })).status, 403); assert.equal((await api('/preview', { who: 3, body: defaults })).status, 404);
+  assert.equal((await api('', { body: { ...defaults, data: { type: 'FeatureCollection', features: [] } } })).status, 400);
+  pass('real_dataset_excludes_unlocated_units_and_rejects_foreign_viewer_and_injected_values');
+  const rook = await run({ method: 'weights' }); assert.equal(rook.result.weights.nonzero, 24); assert.deepEqual(rook.result.weights.neighbor_counts, [2, 3, 2, 3, 4, 3, 2, 3, 2]);
+  const queen = await run({ method: 'weights', weights: { method: 'queen' } }); assert.equal(queen.result.weights.nonzero, 40);
+  const knn = await run({ method: 'weights', weights: { method: 'knn', k: 2 } }); assert.equal(knn.result.result.shape[0], 9);
+  const distance = await run({ method: 'weights', weights: { method: 'distance_band', distance_m: 150 } }); assert.equal(distance.result.weights.nonzero, 24);
+  const inverse = await run({ method: 'weights', weights: { method: 'inverse_distance', distance_m: 150, power: 1 } }); assert(inverse.result.result.values.every(v => Number.isFinite(v) && v > 0));
+  pass('actual_python_queen_rook_knn_distance_and_inverse_distance_matrices_match_known_grid');
+  const global = await run({ method: 'moran' }), matrix = rook.result.result;
+  assert(global.result.result.interpretation.includes('autocorrelación')); assert(!JSON.stringify(global.result).includes('\uFFFD'));
+  const mean = first.reduce((a, b) => a + b, 0) / first.length, z = first.map(v => v - mean), s0 = matrix.values.reduce((a, b) => a + b, 0);
+  const numerator = matrix.values.reduce((total, w, i) => total + w * z[matrix.rows[i]] * z[matrix.columns[i]], 0);
+  const reference = first.length / s0 * numerator / z.reduce((total, value) => total + value * value, 0);
+  assert(Math.abs(global.result.result.statistic - reference) < 1e-12); assert(global.result.result.p_value >= .01 && global.result.result.p_value <= 1);
+  const local = await run({ method: 'local_moran' }); assert.equal(local.result.result.observations.length, 9); assert.equal(local.result.result.correction, 'bh');
+  for (const row of local.result.result.observations) if (row.adjusted_p != null) assert(row.adjusted_p + 1e-12 >= row.p_value);
+  const hot = await run({ method: 'gi_star', weights: { method: 'queen' } }); assert.equal(hot.result.result.observations[4].category, 'UNDEFINED_FULL_NEIGHBORHOOD');
+  pass('actual_moran_matches_independent_matrix_formula_lisa_corrects_p_values_and_gistar_detects_undefined_neighborhood');
+  const replayKey = crypto.randomUUID(), replayBody = { ...defaults, method: 'moran', seed: 123 };
+  const created = await api('', { body: replayBody, key: replayKey }), replay = await api('', { body: replayBody, key: replayKey }); assert.equal(created.status, 201); assert.equal(replay.status, 200); assert.equal(replay.body.data.analysis_id, created.body.data.analysis_id);
+  const reproduce = await api(`/${global.analysis_id}/reproduce`, { body: {} }); assert.equal(reproduce.status, 200); assert.equal(reproduce.body.verified, true);
+  pass('actual_encrypted_atlas_snapshot_idempotency_and_python_reproduction_preserve_history');
+  const issued_at = new Date(Date.now() - 20000).toISOString(), due_at = new Date(Date.now() - 10000).toISOString();
+  const charge = await operation(units[0].location_id, 'charge', { title: 'Synthetic fee', amount_minor: 10001, currency: 'COP', scale: 2, issued_at, due_at });
+  await operation(units[0].location_id, 'payment', { charge_id: charge.record_id, amount_minor: 6000, reference: 'Synthetic manual receipt' });
+  await operation(units[0].location_id, 'charge', { title: 'Other currency', amount_minor: 99999, currency: 'USD', scale: 2, issued_at, due_at });
+  const financial = await run({ method: 'moran', metric: 'overdue_minor', currency: 'COP', scale: 2 }); assert.deepEqual(financial.snapshot.data.features.map(f => f.properties.value), [4001, 0, 0, 0, 0, 0, 0, 0, 0]);
+  pass('actual_debt_projection_preserves_exact_payment_balance_without_mixing_currencies');
+  const rejectedKde = await api('', { body: { ...defaults, method: 'kde', density: { bandwidth_m: 100 } } }); assert.equal(rejectedKde.status, 422);
+  for (let i = 0; i < 4; i++) { const area = await createAsset({ kind: 'common_area', parent_id: root.location_id, name: `Spatial synthetic point ${i}`, geometry: { type: 'Point', coordinates: [n(-74 + i * .002), 4.01] } }); for (let j = 0; j <= i; j++) await pqrs(area.location_id); }
+  const kde = await run({ method: 'kde', unit_kind: 'common_area', density: { bandwidth_m: 100, resolution: 8 } }); assert.equal(kde.result.result.total_observation_weight, 10); assert.equal(kde.result.result.grid.length, 8); assert(kde.result.result.approximate_integral > 0);
+  pass('actual_weighted_kde_uses_point_counts_and_refuses_polygon_to_point_imputation');
+  for (let i = 0; i < 3; i++) await pqrs(units[8].location_id); await pqrs(units[1].location_id);
+  const end = new Date().toISOString();
+  const temporal = await run({ method: 'temporal', periods: [{ start, end: middle }, { start: middle, end }] });
+  assert.equal(temporal.result.periods.length, 2); assert.equal(temporal.result.comparison.statistical_change_test, false); assert.equal(temporal.snapshot.provenance.temporal_timestamp_source, 'verified_canonical_creation_audit');
+  pass('actual_temporal_counts_use_verified_creation_events_without_claiming_significant_change');
+  const persisted = await db.collection('operational_events').find({ organization_id: 10, kind: 'territorial.analysis' }).toArray();
+  assert(persisted.length >= 12); assert(!JSON.stringify(persisted).includes('Spatial acceptance private body')); assert(!JSON.stringify(persisted).includes('FeatureCollection'));
+  const target = persisted.find(r => r.operational_event_id === global.analysis_id), commitment = target.territorial.commitment;
+  await db.collection('operational_events').updateOne({ operational_event_id: target.operational_event_id }, { $set: { 'territorial.commitment': '0'.repeat(64) } });
+  assert.equal((await api(`/${target.operational_event_id}`)).status, 409);
+  await db.collection('operational_events').updateOne({ operational_event_id: target.operational_event_id }, { $set: { 'territorial.commitment': commitment } });
+  assert.equal((await request(`/${target.operational_event_id}/acknowledge`, { body: {}, who: 1, method: 'PUT', pathPrefix: '/api/operational-events' })).status, 404);
+  pass('actual_atlas_ciphertext_has_no_plain_datasets_and_tampering_or_generic_alert_access_is_rejected');
+  return { checks, engine: global.result.version, runtime_versions: global.result.runtime_versions, moran_statistic: global.result.result.statistic, independent_reference: reference, encrypted_runs: persisted.length, synthetic_only: true, source_engine_modified: false };
+}
+module.exports = { verifySpatial };

@@ -1,0 +1,19 @@
+.analysis-command{padding:24px 0;border-bottom:1px solid var(--border);color:var(--text-primary)}
+.analysis-command h2{margin:0 0 14px;font-size:20px}
+.analysis-command form{display:flex;gap:8px;max-width:900px}
+.analysis-command input{flex:1;min-width:0;padding:13px 14px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text-primary);font:inherit}
+.analysis-command form button,.analysis-plan li button{padding:11px 14px;border:1px solid var(--accent-red,#e11d2e);border-radius:6px;background:var(--accent-red,#e11d2e);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.analysis-command button:disabled{cursor:not-allowed;opacity:.55}
+.analysis-command-examples{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.analysis-command-examples button{padding:6px 9px;border:1px solid var(--border);border-radius:4px;background:transparent;color:var(--text-secondary);font:inherit;font-size:12px;cursor:pointer}
+.analysis-command-examples button:hover,.analysis-command-examples button:focus-visible{border-color:var(--accent-red,#e11d2e);color:var(--text-primary)}
+.analysis-command-message{margin:14px 0 0;color:var(--text-secondary);font-size:13px}
+.analysis-command-message.error{color:var(--danger)}
+.analysis-plan ul{display:grid;gap:6px;max-width:900px;margin:12px 0 0;padding:0;list-style:none}
+.analysis-plan li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--border)}
+.analysis-plan li span{display:grid;gap:3px;min-width:0}
+.analysis-plan li strong{overflow-wrap:anywhere}
+.analysis-plan li small{color:var(--text-secondary)}
+.analysis-plan li button{flex:none;padding:7px 10px;font-size:12px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:560px){.analysis-command form{flex-direction:column}.analysis-command form button{align-self:flex-start}.analysis-plan li{align-items:flex-start;flex-direction:column}}

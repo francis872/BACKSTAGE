@@ -1,0 +1,48 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+process.env.JWT_SECRET='isolated-bco-http-and-proxy-signing-secret';
+const express=require('express');
+const {setup,definition}=require('./helpers/computationalFixture');
+const {createMongoIdentityService}=require('../services/mongoIdentity.service');
+const {resolveMembership}=require('../services/organization.service');
+const {createComputationalRouter}=require('../routes/computational.routes');
+const {createToken}=require('../auth');
+const {platformSecurity}=require('../middleware/platformSecurity');
+const errorHandler=require('../middleware/errorHandler');
+test('Core HTTP and web proxy enforce idempotency, asynchronous execution, current roles and organization isolation',async t=>{
+ let calls=0;const s=setup({runner:async()=>{calls++;return {result:{value:1}};}}),identity=createMongoIdentityService(s.infra);
+ const app=express();app.use(platformSecurity,express.json());app.use('/computational',createComputationalRouter({service:s.service,organizationService:{getUserMemberships:identity.getUserMemberships,resolveMembership},limiterFactory:()=> (req,res,next)=>next()}));app.use(errorHandler);
+ const server=app.listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));t.after(()=>{server.closeAllConnections();server.close();});
+ process.env.BACKEND_URL=`http://127.0.0.1:${server.address().port}`;process.env.BACKEND_PROTECTION_BYPASS='';
+ const {default:proxy}=await import(require('node:url').pathToFileURL(require('node:path').resolve(__dirname,'../../frontend/api/index.js')));
+ const web=express();web.use(express.json());web.use((req,res,next)=>Promise.resolve(proxy(req,res)).catch(next));const frontend=web.listen(0,'127.0.0.1');await new Promise(r=>frontend.once('listening',r));t.after(()=>{frontend.closeAllConnections();frontend.close();});
+ const base=`http://127.0.0.1:${frontend.address().port}/api/computational`;
+ const token=user_id=>createToken({user_id,organization_id:user_id===5?20:10,role:user_id===4?'viewer':'admin',email:'owned-http-fixture@example.invalid'});
+ const request=(route,{user=1,body,method=body?'POST':'GET',key,org}={})=>fetch(base+route,{method,headers:{'Content-Type':'application/json',...(user?{Authorization:`Bearer ${token(user)}`}:{nobody:'no-auth'}),...(key?{'Idempotency-Key':key}:{}),...(org?{'X-Organization-Id':String(org)}:{})},...(body?{body:JSON.stringify(body)}:{})});
+ assert.equal((await request('/catalog',{user:null})).status,401);assert.equal((await request('/runs',{user:4,body:definition(),key:'http-viewer-key'})).status,403);
+ const unknown=await request('/not-a-capability');assert.equal(unknown.status,404);assert.match(unknown.headers.get('content-type'),/application\/json/);
+ const missing=await request('/runs',{body:definition()});assert.equal(missing.status,400);
+ const created=await request('/runs',{body:definition(),key:'http-idempotency-key'});assert.equal(created.status,201);assert(created.headers.get('x-request-id'));const job=(await created.json()).data;
+ const replay=await request('/runs',{body:definition(),key:'http-idempotency-key'});assert.equal(replay.status,200);assert.equal((await replay.json()).replayed,true);
+ assert.equal((await request('/runs',{body:{...definition(),name:'different'},key:'http-idempotency-key'})).status,409);
+ assert.equal((await request(`/runs/${job.analytics_job_id}`,{user:5})).status,404);assert.equal((await request('/catalog',{user:5,org:10})).status,403);
+ assert.equal((await request(`/runs/${job.analytics_job_id}/queue`,{user:3,body:{revision:0}})).status,403);
+ const q=await request(`/runs/${job.analytics_job_id}/queue`,{body:{revision:0}});assert.equal(q.status,202);assert.equal(calls,0);assert.equal((await q.json()).data.status,'QUEUED');
+ const spec=await(await request('/openapi')).json();assert.equal(spec.openapi,'3.1.1');for(const p of Object.keys(spec.paths))assert(p.startsWith('/'));assert(spec.components.schemas.PerceptionPositions);assert(spec.paths['/runs/{id}/defense-approval'].post.description.includes('No aplica'));
+ await s.service.processNext();assert.equal(calls,1);assert.equal((await(await request(`/runs/${job.analytics_job_id}`)).json()).data.status,'COMPLETED');
+ await s.f.options.database.collection('identity_users').updateOne({user_id:1},{$set:{session_version:1}});assert.equal((await request('/catalog')).status,401);
+});
+test('satellite HTTP uses existing authentication, organization scoping and quotas before provider queries',async t=>{
+ const s=setup(),identity=createMongoIdentityService(s.infra);let queries=0;
+ const satelliteService=require('../services/satelliteCatalog.service').createSatelliteCatalog({infrastructure:s.infra,fetchImpl:async(url,options)=>{
+  queries++;return new Response(JSON.stringify(url.endsWith('/search')?{type:'FeatureCollection',features:[]}:{id:'sentinel-2-l2a',license:'isolated-fixture'}));
+ }});
+ const app=express();app.use(express.json());app.use('/computational',createComputationalRouter({service:s.service,satelliteService,organizationService:{getUserMemberships:identity.getUserMemberships,resolveMembership},limiterFactory:()=> (req,res,next)=>next()}));app.use(errorHandler);
+ const server=app.listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));t.after(()=>{server.closeAllConnections();server.close();});
+ const url=`http://127.0.0.1:${server.address().port}/computational/perception/satellite/search`;
+ const body=JSON.stringify({provider:'sentinel',bbox:[-74.2,4.5,-74,4.7],start:'2026-01-01T00:00:00Z',end:'2026-02-01T00:00:00Z'});
+ const request=(user,org)=>fetch(url,{method:'POST',body,headers:{'Content-Type':'application/json',...(user?{Authorization:`Bearer ${createToken({user_id:user,organization_id:10,role:user===4?'viewer':'admin'})}`}:{ }),...(org?{'X-Organization-Id':String(org)}:{})}});
+ assert.equal((await request()).status,401);assert.equal((await request(4)).status,403);assert.equal((await request(1,20)).status,403);assert.equal(queries,0);
+ assert.equal((await request(1)).status,200);assert.equal(queries,2);
+ await s.f.options.database.collection('identity_users').updateOne({user_id:1},{$set:{session_version:1}});
+ assert.equal((await request(1)).status,401);assert.equal(queries,2);
+});

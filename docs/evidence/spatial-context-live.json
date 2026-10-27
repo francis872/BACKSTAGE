@@ -1,0 +1,107 @@
+{
+  "started_at": "2026-10-26T21:57:26.543Z",
+  "run_id": "7a44a2ff-69e8-4e66-8d92-88fd3666cb48",
+  "scope": "fresh_owned_atlas_test_database_and_local_http",
+  "production_changes": false,
+  "remote_deployment": false,
+  "docker_used": false,
+  "checks": [
+    {
+      "name": "owned_namespace_and_additive_indexes_created_without_touching_source",
+      "passed": true
+    },
+    {
+      "name": "actual_http_creation_idempotency_and_zero_coordinates",
+      "passed": true
+    },
+    {
+      "name": "actual_atlas_tenant_isolation_and_viewer_denial",
+      "passed": true
+    },
+    {
+      "name": "actual_concurrent_transactions_prevent_over_allocation_without_inventing_child_geometry",
+      "passed": true
+    },
+    {
+      "name": "generic_asset_mutation_cannot_bypass_layer_rules",
+      "passed": true
+    },
+    {
+      "name": "real_revision_conflict_and_archive_parent_guard",
+      "passed": true
+    },
+    {
+      "name": "built_browser_journey_persists_real_atlas_entities",
+      "passed": true
+    },
+    {
+      "name": "canonical_audit_chain_valid_after_http_and_browser_mutations",
+      "passed": true
+    }
+  ],
+  "operations_checks": [],
+  "encryption_keys_ephemeral": true,
+  "retained_operations_acceptance": "unified-operations-live.json",
+  "spatial": {
+    "checks": [
+      "real_dataset_excludes_unlocated_units_and_rejects_foreign_viewer_and_injected_values",
+      "actual_python_queen_rook_knn_distance_and_inverse_distance_matrices_match_known_grid",
+      "actual_moran_matches_independent_matrix_formula_lisa_corrects_p_values_and_gistar_detects_undefined_neighborhood",
+      "actual_encrypted_atlas_snapshot_idempotency_and_python_reproduction_preserve_history",
+      "actual_debt_projection_preserves_exact_payment_balance_without_mixing_currencies",
+      "actual_weighted_kde_uses_point_counts_and_refuses_polygon_to_point_imputation",
+      "actual_temporal_counts_use_verified_creation_events_without_claiming_significant_change",
+      "actual_atlas_ciphertext_has_no_plain_datasets_and_tampering_or_generic_alert_access_is_rejected"
+    ],
+    "engine": "bsie-1.1.0",
+    "runtime_versions": {
+      "python": "3.14.2",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "shapely": "2.2.0",
+      "pyproj": "3.8.0"
+    },
+    "moran_statistic": -0.1041666666666667,
+    "independent_reference": -0.10416666666666671,
+    "encrypted_runs": 12,
+    "synthetic_only": true,
+    "source_engine_modified": false
+  },
+  "browser": {
+    "mode": "built_ui_local_ph_api_real_isolated_atlas",
+    "checks": [
+      "real_ui_creates_coproperty_in_atlas",
+      "real_ui_creates_hierarchy_and_exact_declared_coefficient",
+      "real_ui_revision_update_preserves_hierarchy",
+      "reload_recovers_layer_and_unlocated_entity_without_invented_coordinates",
+      "actual_ui_pqrs_create_and_response_transitions",
+      "actual_ui_erases_all_personal_payload_versions",
+      "no_horizontal_overflow_320",
+      "no_horizontal_overflow_390",
+      "no_horizontal_overflow_1440",
+      "real_ui_archives_leaf_preserving_its_record",
+      "actual_ui_builds_context_dataset_and_calculates_python_moran_in_test_atlas",
+      "actual_ui_reproduces_encrypted_historical_snapshot_with_same_seed",
+      "actual_ui_recalculates_with_current_data_as_a_new_evidence_record",
+      "contextual_analysis_has_no_horizontal_overflow_at_320_and_1440",
+      "current_viewer_role_removes_write_actions",
+      "viewer_role_cannot_open_contextual_financial_or_spatial_analysis",
+      "actual_ui_mfa_enrollment_rotates_session_and_displays_one_time_recovery_codes",
+      "actual_ui_password_login_requires_second_factor_and_consumes_recovery_code"
+    ],
+    "runtime_errors": [],
+    "ambient_api_responses_isolated": true,
+    "login_journey_verified": true,
+    "webgl_rendering_verified": false,
+    "external_map_requests_blocked": true,
+    "new_browser_installation": false
+  },
+  "audit_chain_valid": true,
+  "retained_before_cleanup": {
+    "assets": 21,
+    "audit_events": 87
+  },
+  "status": "passed",
+  "owned_temporary_database_removed": true,
+  "completed_at": "2026-10-26T22:03:34.976Z"
+}

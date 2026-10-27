@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+const { configureMongoDns } = require('../infrastructure/mongoDns');
 
 const COLLECTIONS = Object.freeze({
   worlds: 'worlds',
@@ -31,6 +32,7 @@ function getMongoClient(uri, env = process.env) {
   }
 
   const client = new MongoClient(uri, {
+    ...configureMongoDns(env),
     appName: env.MONGODB_APP_NAME || 'backstage',
     maxPoolSize: Number(env.MONGODB_MAX_POOL_SIZE || 20),
     minPoolSize: Number(env.MONGODB_MIN_POOL_SIZE || 0),
@@ -43,7 +45,7 @@ function getMongoClient(uri, env = process.env) {
 }
 
 async function getMongoHealthState(env = process.env) {
-  const defaultProvider = env.NODE_ENV === 'production' ? 'atlas' : 'memory';
+  const defaultProvider = 'atlas';
   const provider = String(env.SPATIAL_STORE || defaultProvider).toLowerCase();
   if (provider !== 'atlas') {
     return { status: 'disconnected', provider };
@@ -60,6 +62,16 @@ async function getMongoHealthState(env = process.env) {
     await client.db(env.MONGODB_SPATIAL_DB || 'backstage_spatial').command({ ping: 1 });
     return { status: 'healthy', provider };
   } catch (error) {
+    console.error('[Atlas health]', JSON.stringify({
+      name: error.name,
+      code: error.code || error.cause?.code || null,
+      servers: error.reason?.servers
+        ? [...error.reason.servers.values()].map((server) => ({
+          name: server.error?.name || null,
+          code: server.error?.code || server.error?.cause?.code || null,
+        }))
+        : [],
+    }));
     return { status: 'unavailable', provider, error: error.message };
   }
 }
@@ -179,7 +191,7 @@ class AtlasSpatialStore {
 }
 
 function createSpatialStore(env = process.env) {
-  const defaultProvider = env.NODE_ENV === 'production' ? 'atlas' : 'memory';
+  const defaultProvider = 'atlas';
   const provider = String(env.SPATIAL_STORE || defaultProvider).toLowerCase();
   if (env.NODE_ENV === 'production' && provider !== 'atlas') {
     const error = new Error('SPATIAL_STORE=atlas es obligatorio en producción.');

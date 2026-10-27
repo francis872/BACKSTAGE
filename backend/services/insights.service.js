@@ -1,71 +1,7 @@
-const { query } = require('../db');
-const ApiError = require('../utils/ApiError');
-const { buildOpportunityRanking } = require('../domain/opportunities');
-
-async function getSummary(organizationId) {
-  const result = await query(
-    `SELECT
-       (SELECT COUNT(*)::int FROM locations WHERE organization_id = $1) AS locations,
-       (SELECT COUNT(*)::int FROM risk_assessments WHERE organization_id = $1) AS risk_assessments,
-       (SELECT COUNT(*)::int FROM retail_zones) AS retail_zones,
-       (SELECT COUNT(*)::int FROM recommendations WHERE organization_id = $1) AS recommendations,
-       (SELECT COUNT(*)::int FROM analysis_runs WHERE organization_id = $1) AS projects_active,
-       (SELECT COUNT(*)::int FROM analysis_runs WHERE organization_id = $1) AS analyses_total,
-       (SELECT COUNT(*)::int FROM analysis_runs WHERE organization_id = $1 AND status = 'completed') AS analyses_completed,
-       (SELECT COUNT(*)::int FROM analysis_runs WHERE organization_id = $1 AND status <> 'completed') AS analyses_attention,
-       (SELECT COUNT(*)::int FROM analysis_runs WHERE organization_id = $1 AND created_at >= now() - interval '24 hours') AS analyses_24h,
-       (SELECT MAX(created_at) FROM analysis_runs WHERE organization_id = $1) AS last_analysis_at,
-       (SELECT COUNT(*)::int FROM layer_catalog WHERE (organization_id = $1 OR organization_id IS NULL)) AS layers_total,
-       (SELECT COUNT(*)::int FROM layer_catalog WHERE (organization_id = $1 OR organization_id IS NULL) AND status = 'active') AS layers_active,
-       (SELECT COUNT(*)::int FROM audit_logs WHERE organization_id = $1 AND created_at >= now() - interval '24 hours') AS activity_24h`,
-    [organizationId]
-  );
-
-  const summary = result.rows[0] || {};
-  const analysesTotal = Number(summary.analyses_total || 0);
-  const analysesCompleted = Number(summary.analyses_completed || 0);
-  const layersTotal = Number(summary.layers_total || 0);
-  const layersActive = Number(summary.layers_active || 0);
-  const analysesAttention = Number(summary.analyses_attention || 0);
-
-  return {
-    ...summary,
-    operational_status: analysesAttention > 0 ? 'attention' : 'operational',
-    completion_rate: analysesTotal > 0
-      ? Number(((analysesCompleted / analysesTotal) * 100).toFixed(1))
-      : null,
-    layer_readiness_rate: layersTotal > 0
-      ? Number(((layersActive / layersTotal) * 100).toFixed(1))
-      : null,
-    generated_at: new Date().toISOString(),
-  };
-}
-
-async function listOpportunities(organizationId) {
-  const result = await query(
-    `SELECT l.location_id, l.name AS location_name, l.type AS location_type, l.city, l.region, l.latitude, l.longitude,
-            lms.score_id, lms.category, lms.score AS factor_score, lms.details, ma.name AS market_area,
-            latest_risk.score AS latest_risk_score
-     FROM location_market_scores lms
-     JOIN locations l ON l.location_id = lms.location_id
-     JOIN market_areas ma ON ma.market_area_id = lms.market_area_id
-     LEFT JOIN LATERAL (
-       SELECT score FROM risk_assessments ra
-       WHERE ra.location_id = l.location_id AND ra.organization_id = $1
-       ORDER BY ra.assessed_at DESC, ra.risk_id DESC LIMIT 1
-     ) latest_risk ON true
-     WHERE l.organization_id = $1
-     ORDER BY l.location_id, lms.score_id`,
-    [organizationId]
-  );
-  return buildOpportunityRanking(result.rows);
-}
-
-async function getOpportunity(locationId, organizationId) {
-  const rows = await listOpportunities(organizationId);
-  const opportunity = rows.find((item) => item.location_id === Number(locationId));
-  if (!opportunity) throw new ApiError(404, 'Oportunidad no encontrada en la organización activa.');
-  return opportunity;
-}
-
-module.exports = { getSummary, listOpportunities, getOpportunity };
+const d=require('../infrastructure/atlasDocuments');
+const ApiError=require('../utils/ApiError');
+const {buildOpportunityRanking}=require('../domain/opportunities');
+async function getSummary(organizationId){const scope=d.org(organizationId),since=new Date(Date.now()-86400000);const count=async(name,extra={})=>(await d.collection(name)).countDocuments({...scope,...extra});const [locations,risk_assessments,retail_zones,recommendations,analyses_total,analyses_completed,analyses_24h,layers_total,layers_active,activity_24h,last]=await Promise.all([count('locations'),count('risk_assessments'),count('retail_zones'),count('recommendations'),count('analysis_runs'),count('analysis_runs',{status:'completed'}),count('analysis_runs',{created_at:{$gte:since}}),count('layer_catalog'),count('layer_catalog',{status:'active'}),count('soi_audit_events',{created_at:{$gte:since}}),d.one('analysis_runs',scope,{created_at:-1})]);const analyses_attention=analyses_total-analyses_completed;return {locations,risk_assessments,retail_zones,recommendations,projects_active:analyses_total,analyses_total,analyses_completed,analyses_attention,analyses_24h,last_analysis_at:last?.created_at||null,layers_total,layers_active,activity_24h,operational_status:analyses_attention?'attention':'operational',completion_rate:analyses_total?Number((analyses_completed/analyses_total*100).toFixed(1)):null,layer_readiness_rate:layers_total?Number((layers_active/layers_total*100).toFixed(1)):null,generated_at:new Date().toISOString()};}
+async function listOpportunities(org){const scope=d.org(org);const scores=await d.find('location_market_scores',scope,{location_id:1,score_id:1});const rows=[];for(const s of scores){const l=await d.one('locations',{...scope,location_id:s.location_id});if(!l)continue;const a=await d.one('market_areas',{...scope,market_area_id:s.market_area_id});const r=await d.one('risk_assessments',{...scope,location_id:s.location_id},{assessed_at:-1,risk_id:-1});rows.push({...s,location_name:l.name,location_type:l.type,city:l.city,region:l.region,latitude:l.latitude,longitude:l.longitude,factor_score:s.score,market_area:a?.name,latest_risk_score:r?.score??null});}return buildOpportunityRanking(rows);}
+async function getOpportunity(id,org){const row=(await listOpportunities(org)).find(r=>r.location_id===Number(id));if(!row)throw new ApiError(404,'Oportunidad no encontrada en la organización activa.');return row;}
+module.exports={getSummary,listOpportunities,getOpportunity};

@@ -1,0 +1,86 @@
+{
+  "measured_at": "2026-10-21T18:50:42.711407+00:00",
+  "environment": "Windows-10-10.0.19045-SP0",
+  "scope": "synthetic isolated fixtures, single process; excludes import/startup, HTTP, MongoDB and concurrent production load",
+  "results": [
+    {
+      "operation": "CVRP",
+      "nodes": 10,
+      "vehicles": 1,
+      "compute_ms": 1017.8733000066131,
+      "search_limit_s": 1,
+      "feasible": true,
+      "independent_validation": {
+        "valid": true,
+        "checks": [
+          "mandatory_visits",
+          "no_duplicates",
+          "capacity",
+          "travel_and_service_time",
+          "time_windows",
+          "shifts"
+        ]
+      },
+      "input_bytes": 1755,
+      "output_bytes": 2730
+    },
+    {
+      "operation": "CVRP",
+      "nodes": 50,
+      "vehicles": 4,
+      "compute_ms": 1006.3515999936499,
+      "search_limit_s": 1,
+      "feasible": true,
+      "independent_validation": {
+        "valid": true,
+        "checks": [
+          "mandatory_visits",
+          "no_duplicates",
+          "capacity",
+          "travel_and_service_time",
+          "time_windows",
+          "shifts"
+        ]
+      },
+      "input_bytes": 30594,
+      "output_bytes": 6865
+    },
+    {
+      "operation": "CVRP",
+      "nodes": 100,
+      "vehicles": 7,
+      "compute_ms": 1015.9253999590874,
+      "search_limit_s": 1,
+      "feasible": true,
+      "independent_validation": {
+        "valid": true,
+        "checks": [
+          "mandatory_visits",
+          "no_duplicates",
+          "capacity",
+          "travel_and_service_time",
+          "time_windows",
+          "shifts"
+        ]
+      },
+      "input_bytes": 120067,
+      "output_bytes": 11799
+    },
+    {
+      "operation": "forecast",
+      "observations": 100,
+      "compute_ms": 92.79660001629964,
+      "status": "BACKTESTED_WITH_SKILL",
+      "heldout": 20,
+      "output_bytes": 3759
+    },
+    {
+      "operation": "forecast",
+      "observations": 1000,
+      "compute_ms": 2010.829399980139,
+      "status": "BACKTESTED_WITH_SKILL",
+      "heldout": 200,
+      "output_bytes": 8782
+    }
+  ]
+}

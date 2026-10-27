@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-10-24T15:31:07.874Z",
+  "mode": "simulated_dependency_responses_real_local_files_fresh_process_per_cycle",
+  "live_service_outage": false,
+  "production_state_changed": false,
+  "atlas_writes": false,
+  "cycles": 4,
+  "open_incidents_by_cycle": [
+    0,
+    2,
+    2,
+    0
+  ],
+  "durable_recovery_verified": true
+}

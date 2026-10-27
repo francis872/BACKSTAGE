@@ -1,0 +1,16 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const perception=require('./perception'),defense=require('./adaptiveDefense');
+const source={name:'Declared test snapshot',license:'Fixture only',observed_at:'2026-10-25T10:00:00Z',quality:'unassessed',data_kind:'ORGANIZATION_PROVIDED',authorization_reference:'fixture consent'};
+test('perception preserves CRS, source, zero coordinates and explicit uncertainty without claiming detection or verification',()=>{
+ const output=perception.geojson({crs:'OGC:CRS84',source,data:{type:'FeatureCollection',features:[{type:'Feature',id:'zero',geometry:{type:'Point',coordinates:[0,0]},properties:{value:1}}]}});assert.deepEqual(output.geojson.features[0].geometry.coordinates,[0,0]);assert.equal(output.source.uncertainty_m,null);assert.deepEqual(output.detections,[]);assert.equal(output.source.verification,'organization_declared_not_independently_verified');
+ assert.throws(()=>perception.geojson({crs:'EPSG:3857',source,data:output.geojson}));assert.throws(()=>perception.geojson({crs:'OGC:CRS84',source,data:{...output.geojson,features:[...output.geojson.features,...output.geojson.features]}}));
+});
+test('position review uses meters/seconds, consent, observation kind and geofence without a GPS provider',()=>{
+ const input={crs:'OGC:CRS84',source,consent:true,consented_at:'2026-10-25T09:00:00Z',max_speed_mps:1,geofence:{type:'Polygon',coordinates:[[[-.5,-.5],[.5,-.5],[.5,.5],[-.5,.5],[-.5,-.5]]]},positions:[{coordinates:[0,0],recorded_at:'2026-10-25T10:00:00Z',kind:'observed',accuracy_m:5},{coordinates:[1,0],recorded_at:'2026-10-25T10:01:00Z',kind:'estimated',accuracy_m:100}]};const result=perception.positions(input);assert(Math.abs(result.metrics.distance_m-111195)<1);assert.equal(result.metrics.estimated,1);assert.equal(result.live_tracking,false);assert(result.detections.some(d=>d.type==='outside_declared_geofence'));assert(result.detections.some(d=>d.type==='speed_above_declared_threshold'));
+ assert.throws(()=>perception.positions({...input,consent:false}));assert.throws(()=>perception.positions({...input,consented_at:'2026-10-26T00:00:00Z'}));assert.throws(()=>perception.positions({...input,positions:[input.positions[0],input.positions[0]]}));
+});
+test('defense chooses thresholds only on training, reports holdout errors and never applies a proposal',()=>{
+ const input={samples:[{id:'a',score:.9,malicious:true,split:'training',latency_ms:3},{id:'b',score:.1,malicious:false,split:'training',latency_ms:4},{id:'c',score:.3,malicious:true,split:'validation',latency_ms:5},{id:'d',score:.7,malicious:false,split:'validation',latency_ms:6}],thresholds:[.2,.5,.8],baseline_threshold:.5,false_positive_cost:2,false_negative_cost:3};
+ const result=defense.evaluate(input);assert.equal(result.selected.threshold,.2);assert.equal(result.selected.training.weighted_error,0);assert.equal(result.selected.validation.fp,1);assert.equal(result.selected.validation.tp,1);assert.equal(result.proposal_only,true);assert.equal(result.autonomous_changes,false);assert.equal(result.resource_consumption,null);assert.deepEqual(defense.evaluate(input),result);
+ assert.throws(()=>defense.evaluate({...input,samples:[...input.samples,input.samples[0]]}));assert.throws(()=>defense.evaluate({...input,samples:input.samples.map(s=>({...s,split:'training'}))}));
+});

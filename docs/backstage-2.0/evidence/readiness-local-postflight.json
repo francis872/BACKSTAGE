@@ -1,0 +1,22 @@
+{
+  "checked_at": "2026-10-24T16:23:56.351Z",
+  "configured_secret_matches": 0,
+  "files_checked": 177,
+  "report_links_verified": 32,
+  "technical_staging_acceptance": true,
+  "load_and_security_passed": true,
+  "rollback_and_restoration_passed": true,
+  "fresh_postflight_passed": true,
+  "atlas_backup_and_isolated_restore_passed": true,
+  "production_changes": false,
+  "previous_credit_review_failure": "historical_initial_action_not_executed_then_authorized_checks_completed",
+  "human_usability_acceptance": false,
+  "remaining": [
+    "human_comprehension_and_functional_acceptance",
+    "continuous_monitoring_independent_of_local_computer",
+    "scheduled_backup_retention_and_off_device_key_custody",
+    "production_least_privilege_edge_limits_and_capacity",
+    "remaining_module_freshness_approval_integration",
+    "production_publication_authorization"
+  ]
+}

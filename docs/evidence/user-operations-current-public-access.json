@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-10-27T03:05:24.565Z",
+  "scope": "existing_production_read_only_no_operational_records",
+  "checks": [
+    {
+      "name": "production_web",
+      "url": "https://backstage-web-seven.vercel.app/",
+      "status": 200
+    },
+    {
+      "name": "production_proxy_health",
+      "url": "https://backstage-web-seven.vercel.app/api/health",
+      "status": 200
+    },
+    {
+      "name": "production_api_health",
+      "url": "https://backstage-api.vercel.app/health",
+      "status": 200
+    },
+    {
+      "name": "production_session_required",
+      "url": "https://backstage-web-seven.vercel.app/api/auth/me",
+      "status": 401
+    }
+  ],
+  "source_writes": 0,
+  "application_deployments_changed": false,
+  "new_version_activated": false
+}

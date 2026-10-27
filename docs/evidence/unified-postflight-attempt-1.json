@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-10-25T16:36:05.307Z",
+  "mode": "read_only_protected_staging_postflight",
+  "checks": [
+    {
+      "name": "account-security-live_acceptance_matches_current_pair",
+      "passed": true
+    },
+    {
+      "name": "origin-live_acceptance_matches_current_pair",
+      "passed": true
+    }
+  ],
+  "production_changes": false,
+  "status": "failed",
+  "failure": {
+    "name": "AssertionError",
+    "message": "Expected values to be strictly equal:"
+  }
+}

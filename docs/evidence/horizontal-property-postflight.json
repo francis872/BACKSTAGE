@@ -1,0 +1,92 @@
+{
+  "checked_at": "2026-10-26T01:26:34.470Z",
+  "scope": "horizontal_property_increment_local_api_and_test_atlas",
+  "regression": {
+    "backend_total": 404,
+    "backend_passed": 403,
+    "backend_skipped": 1,
+    "frontend_passed": 35,
+    "failed": 0
+  },
+  "live_checks": 8,
+  "browser_checks": 9,
+  "owned_test_database_removed": true,
+  "scientific_and_shared_files_unchanged": 25,
+  "primary_navigation_unchanged": true,
+  "new_dependencies": [],
+  "docker_used": false,
+  "local_document_links_checked": 22,
+  "remote_deployment": false,
+  "webgl_rendering_verified": false,
+  "production_changes": false,
+  "other_product_capabilities": "waiting_for_supplementary_specification",
+  "source_files": [
+    {
+      "file": "backend/domain/horizontalProperty.js",
+      "sha256": "830ac8de4c2376f6a8b6f8fc352d76b63256311e6828559901eecd639859be4e"
+    },
+    {
+      "file": "backend/services/horizontalProperty.service.js",
+      "sha256": "e4faae9d19e1219ff9cc3668595a38246b457e40ec928c9bf213c1f0155bae92"
+    },
+    {
+      "file": "backend/routes/assets.routes.js",
+      "sha256": "55541222b2c73cf467fa3cf8c43d698b64e521dfd0b774469251083cc901b376"
+    },
+    {
+      "file": "backend/services/locations.service.js",
+      "sha256": "42216e64a42959ab5ae320014e5d2229ac520762a5f7c4366f809632b7c10c82"
+    },
+    {
+      "file": "backend/infrastructure/mongoIndexRegistry.js",
+      "sha256": "ea79179886c23c363c076b62a43e435e7a8a4d2c8830e8c29d758979a2677f41"
+    },
+    {
+      "file": "backend/infrastructure/coreOpenApi.js",
+      "sha256": "c977c97bdb0518c229afb97b0392af915d24ff96fe12eba9159c05bd56e21442"
+    },
+    {
+      "file": "frontend/src/components/HorizontalPropertyLayer.jsx",
+      "sha256": "791718526aabd8374df7a3772666144094ef77a2f22d1f35139a679bd519c9d2"
+    },
+    {
+      "file": "frontend/src/components/ExplorerWorkspace.jsx",
+      "sha256": "515a872dab885c6bd2907d071ce6e1f33f5fe69d775304653dbce7109dbdc6f8"
+    },
+    {
+      "file": "frontend/src/components/MapLayerControl.jsx",
+      "sha256": "52758a0374dc9f76169b4d709d4e8bfe283d6b10bbc5eee610fa72cd059040bb"
+    },
+    {
+      "file": "frontend/src/pages/NativeTerritorialExplorer.jsx",
+      "sha256": "7f4547cf512ccfb915c062d13b495447aa0655600d9a2a2d73e3f029e3c59df3"
+    },
+    {
+      "file": "frontend/src/lib/horizontalProperty.mjs",
+      "sha256": "bc76dbb82ef07d442d0016c77539f33e3ceedacdcf51e61810962fae509d41fe"
+    },
+    {
+      "file": "frontend/src/lib/operationalContext.js",
+      "sha256": "5fa59b467665f19fd1ad780557f787360e9977246ba57d966f5693a93d90363d"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "docs/evidence/horizontal-property-live.json",
+      "sha256": "3e41195639d5757d3fee29dd2c29957c109cf8df7715207800ef1990e04228ed"
+    },
+    {
+      "file": "docs/evidence/horizontal-property-backend-tests.txt",
+      "sha256": "084eebcacf635c2828dc9789039bb949d88d6335d06038cfe05b3ced172a5ef1"
+    },
+    {
+      "file": "docs/evidence/horizontal-property-frontend-tests.txt",
+      "sha256": "c7a80647b76d44ff9ee480b2f38f90ec44255cd760c1e659d5ba66ae7900b7b2"
+    },
+    {
+      "file": "docs/evidence/horizontal-property-build.txt",
+      "sha256": "4ce47a2303bcaf6ced86a4a95c79836f9ef6e431db290619ee9b660804577b6e"
+    }
+  ],
+  "status": "passed_with_explicit_scope_limits"
+}

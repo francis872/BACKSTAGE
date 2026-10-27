@@ -1,0 +1,91 @@
+{
+  "updated_at": "2026-10-24T02:55:40.018Z",
+  "mode": "dedicated_protected_staging_preview",
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "original_projects": {
+    "api": {
+      "id": "prj_jjeZc5dTOxYm4yD5jgfGfdEAAB4O",
+      "production": {
+        "id": "dpl_93uunWbhwbeQdh3WtqkLxwmrdEjF",
+        "url": "backstage-1hobsk9pw-franciscogloopez-8505s-projects.vercel.app"
+      },
+      "domains": [
+        {
+          "name": "backstage-api.vercel.app",
+          "redirect": null,
+          "gitBranch": null
+        }
+      ]
+    },
+    "web": {
+      "id": "prj_9IJyARVoFEpyYnhoXmnZ6G0uXtDQ",
+      "production": {
+        "id": "dpl_5sviMLHKHcFxekswJNmqtWZecp9E",
+        "url": "backstage-637qxqj0n-franciscogloopez-8505s-projects.vercel.app"
+      },
+      "domains": [
+        {
+          "name": "backstage-web-seven.vercel.app",
+          "redirect": null,
+          "gitBranch": null
+        }
+      ]
+    }
+  },
+  "projects": {
+    "api": {
+      "id": "prj_b8QR9h6618xv5xhAdAWLGheZhJsO",
+      "name": "backstage-staging-api",
+      "protection": "vercel_auth_all_deployments",
+      "environment": "preview",
+      "configured_keys": [
+        "MONGODB_URI",
+        "MONGODB_SPATIAL_DB",
+        "JWT_SECRET",
+        "JWT_ISSUER",
+        "NODE_ENV",
+        "SPATIAL_STORE",
+        "BACKSTAGE_DATA_STORE",
+        "SOI_SCIENCE_RPC_SECRET",
+        "SOI_SCIENCE_RPC_URL",
+        "BSIE_REQUEST_WORKER",
+        "VERCEL_SUPPORT_LARGE_FUNCTIONS",
+        "MONGODB_DNS_SERVERS"
+      ],
+      "source": ".vercel/soi-api-1792810226464",
+      "manifest_sha256": "df67423cf21e4fb0cc12e1940db2f53e721448b957037bf2a1af65e14f89d135",
+      "deployment": {
+        "id": "dpl_DXs7G6SUpsq7HXJJAeXGwwD4L4ki",
+        "url": "backstage-staging-ggldozbvd-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "preview"
+      },
+      "staging_alias": "backstage-staging-api.vercel.app"
+    },
+    "web": {
+      "id": "prj_Adl43dUBZ79gEmihyrCVCyYC80eA",
+      "name": "backstage-staging-web",
+      "protection": "vercel_auth_all_deployments",
+      "environment": "preview",
+      "configured_keys": [
+        "BACKEND_URL",
+        "BACKEND_PROTECTION_BYPASS"
+      ],
+      "source": ".vercel/soi-web-1792810315285",
+      "manifest_sha256": "fbff4bf66b38aa02fda5697a7138016a48c6a7b537d829bef1c96e4799cd7a3d",
+      "deployment": {
+        "id": "dpl_FgZ9NBxRZAsfRiotLkjDCjW6mdzU",
+        "url": "backstage-staging-h2vs0avrh-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "preview"
+      },
+      "staging_alias": "backstage-staging-web.vercel.app",
+      "bootstrap_deployment": {
+        "id": "dpl_84mL7n9tzpACuuaY94U9cLopoHRa",
+        "url": "backstage-staging-nprveif20-franciscogloopez-8505s-projects.vercel.app",
+        "target": "production"
+      }
+    }
+  },
+  "production_unchanged": true
+}

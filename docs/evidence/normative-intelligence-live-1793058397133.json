@@ -1,0 +1,104 @@
+{
+  "started_at": "2026-10-26T23:30:06.121Z",
+  "run_id": "e6dcb03d-42f0-4600-b9e3-c36671bcc8fb",
+  "scope": "fresh_owned_atlas_test_database_and_local_http",
+  "production_changes": false,
+  "remote_deployment": false,
+  "docker_used": false,
+  "checks": [
+    {
+      "name": "owned_namespace_and_additive_indexes_created_without_touching_source",
+      "passed": true
+    },
+    {
+      "name": "actual_http_creation_idempotency_and_zero_coordinates",
+      "passed": true
+    },
+    {
+      "name": "actual_atlas_tenant_isolation_and_viewer_denial",
+      "passed": true
+    },
+    {
+      "name": "actual_concurrent_transactions_prevent_over_allocation_without_inventing_child_geometry",
+      "passed": true
+    },
+    {
+      "name": "generic_asset_mutation_cannot_bypass_layer_rules",
+      "passed": true
+    },
+    {
+      "name": "real_revision_conflict_and_archive_parent_guard",
+      "passed": true
+    },
+    {
+      "name": "canonical_audit_chain_valid_after_http_and_browser_mutations",
+      "passed": true
+    }
+  ],
+  "operations_checks": [],
+  "encryption_keys_ephemeral": true,
+  "retained_operations_acceptance": "unified-operations-live.json",
+  "economics": {
+    "checks": [
+      "real_atlas_bookkeeping_expenses_budget_approval_and_tenant_isolation",
+      "real_cash_aging_forecast_optimizer_and_conservative_quota_calculation",
+      "real_idempotency_and_exact_frozen_snapshot_reproduction",
+      "real_versioned_revision_and_internal_planning_approval_preserve_history",
+      "real_infeasibility_certificate_blocks_approval",
+      "real_stale_coefficients_and_incomplete_allocation_rules_are_rejected",
+      "real_reversal_changes_current_balance_without_rewriting_historical_scenarios",
+      "real_financial_evidence_is_encrypted_and_general_alert_routes_cannot_access_it"
+    ],
+    "engine": "backstage-economics-1",
+    "synthetic_only": true,
+    "cash_minor": "4000",
+    "outstanding_minor": "4001",
+    "optimized_allocations": [
+      "5000",
+      "4001"
+    ],
+    "fee_total_minor": "10001",
+    "forecast_history_nature": "SIMULATED",
+    "root_id": 4
+  },
+  "normative": {
+    "checks": [
+      "official_dictionary_versions_modifications_repeal_and_guidance_are_distinguished",
+      "real_native_reviewer_mandate_role_tenant_and_coproperty_isolation",
+      "real_encrypted_document_review_versions_idempotency_and_inert_user_content",
+      "real_three_state_evaluation_consumes_reproduced_economics_and_exact_legal_conditions",
+      "real_human_disagreement_and_new_interpretation_preserve_historical_results",
+      "real_document_discrepancy_and_stale_financial_basis_never_imply_compliance",
+      "real_erasure_tamper_rejection_alert_exclusion_and_permission_revocation"
+    ],
+    "synthetic_only": true,
+    "legal_opinion": false,
+    "source_reviews_nature": "SYNTHETIC_ACCEPTANCE_ONLY",
+    "root_id": 7,
+    "economic_scenario_id": 36,
+    "reviewed_document_id": 34,
+    "rule_count": 14,
+    "counts": {
+      "CUMPLE": 6,
+      "NO_CUMPLE": 1,
+      "REQUIERE_REVISION": 7
+    },
+    "engine": "backstage-normative-1",
+    "manifest": {
+      "engine_version": "backstage-normative-1",
+      "engine_source_sha256": "972c6f02791c9089aee729b691db0246ad3b5a1d990ef85a34ba1bafad6d8e23",
+      "input_sha256": "8f5efd222f3b9b0dd999ffd30eed598ef2fa9ef4555c71a233f3a73d961bf965",
+      "result_sha256": "ae4e0a4e26a48dfb333de0a6af857a6cc60b8bfb5b0285ba4bf3018e19dd7bc2",
+      "policy": "bounded_reviewed_conditions_not_legal_opinion",
+      "runtime": "v24.13.0"
+    }
+  },
+  "audit_chain_valid": true,
+  "retained_before_cleanup": {
+    "assets": 10,
+    "audit_events": 87
+  },
+  "status": "passed",
+  "owned_temporary_database_removed": true,
+  "completed_at": "2026-10-26T23:34:46.732Z"
+}

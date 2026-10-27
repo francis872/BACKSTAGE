@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-10-25T22:57:29.526Z",
+  "scope": "public_upstream_catalog_contract_only",
+  "app_http_authorization_tested": false,
+  "atlas_writes": 0,
+  "imagery_downloaded": false,
+  "queries": [],
+  "status": "failed",
+  "failure": {
+    "code": 503,
+    "name": "Error"
+  }
+}

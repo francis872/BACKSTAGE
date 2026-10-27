@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-10-22T00:06:35.115Z",
+  "site": "https://backstage-web-seven.vercel.app",
+  "api": "https://backstage-api.vercel.app",
+  "checks": [
+    "public_api_healthy_atlas_only",
+    "public_frontend_html_and_asset_entry",
+    "public_frontend_proxy_reaches_mongodb_api",
+    "public_sanitary_data_requires_authentication",
+    "public_scientific_function_requires_private_signature"
+  ],
+  "operational_records_written": false,
+  "passed": true
+}

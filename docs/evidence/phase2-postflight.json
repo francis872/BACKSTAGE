@@ -1,0 +1,54 @@
+{
+  "checked_at": "2026-10-25T20:39:30.393Z",
+  "mode": "read_only_protected_staging_postflight",
+  "checks": [
+    {
+      "name": "phase2-staging-live_acceptance_matches_current_pair",
+      "passed": true
+    },
+    {
+      "name": "origin-live_acceptance_matches_current_pair",
+      "passed": true
+    },
+    {
+      "name": "api_protected_alias_health_authorization_and_runtime_match",
+      "passed": true,
+      "deployment_id": "dpl_9Zsc6VGBXduCGphFJK1b8yVEhBDH",
+      "runtime_files": 238,
+      "unauthenticated_status": 302,
+      "health_status": 200,
+      "missing_app_session_status": 401
+    },
+    {
+      "name": "web_protected_alias_health_authorization_and_runtime_match",
+      "passed": true,
+      "deployment_id": "dpl_8kGSBjtZ9BoxMwL9UjyTXeVicUaL",
+      "runtime_files": 120,
+      "unauthenticated_status": 302,
+      "health_status": 200,
+      "missing_app_session_status": 401
+    },
+    {
+      "name": "phase2-staging-live_owned_data_absent_from_new_connection",
+      "passed": true,
+      "run_id": "atlas-core-20261025203601-dd11a00a47c7"
+    },
+    {
+      "name": "origin-live_owned_data_absent_from_new_connection",
+      "passed": true,
+      "run_id": "atlas-core-20261025203354-f248fb978260"
+    },
+    {
+      "name": "separate_worker_package_matches_current_source",
+      "passed": true,
+      "source_files": 263,
+      "continuous_worker_deployed": false
+    },
+    {
+      "name": "original_production_aliases_still_unchanged",
+      "passed": true
+    }
+  ],
+  "production_changes": false,
+  "status": "passed"
+}

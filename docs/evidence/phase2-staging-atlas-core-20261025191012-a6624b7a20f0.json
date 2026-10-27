@@ -1,0 +1,85 @@
+{
+  "run_id": "atlas-core-20261025191012-a6624b7a20f0",
+  "started_at": "2026-10-25T19:10:12.955Z",
+  "mode": "real_protected_staging_atlas_separate_worker",
+  "api_interception": false,
+  "data_kind": "SIMULATED_OWNED_TEST_FIXTURES",
+  "production_changes": false,
+  "checks": [
+    {
+      "name": "authorized_test_target_http_authentication_and_original_production_unchanged",
+      "passed": true
+    },
+    {
+      "name": "closed_catalog_preserves_available_engines_and_reports_missing_algorithms",
+      "passed": true
+    },
+    {
+      "name": "concurrent_http_idempotency_and_cross_tenant_denial",
+      "passed": true
+    },
+    {
+      "name": "real_optimistic_revision_conflict",
+      "passed": true
+    },
+    {
+      "name": "separate_process_workers_claim_once_execute_real_js_python_and_honor_dependencies",
+      "passed": true,
+      "workers": [
+        {
+          "exit_code": 0,
+          "finished_attempts": 0,
+          "duration_ms": 10948.3733
+        },
+        {
+          "exit_code": 0,
+          "finished_attempts": 1,
+          "duration_ms": 38184.427
+        }
+      ],
+      "known_risk": 0.125,
+      "known_complete_graph_moran": -0.3333333333333333
+    },
+    {
+      "name": "project_link_geojson_and_historical_hashes_without_legacy_access_bypass",
+      "passed": true
+    },
+    {
+      "name": "explicit_repeat_preserves_original_and_cancellation_is_state_checked",
+      "passed": true
+    }
+  ],
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "deployments": {
+    "api": {
+      "id": "dpl_4cXQfpBvDsCyDHSh61NwL1zHvvUk",
+      "url": "backstage-staging-pl9s7g1ve-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_DLRusqMJnEnBJPeKeo9b3drmdjTS",
+      "url": "backstage-staging-b1pj7y1g3-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "status": "failed",
+  "failure": {
+    "stage": "recovery",
+    "name": "AssertionError",
+    "message": "Expected values to be strictly equal:",
+    "cause": null
+  },
+  "cleanup": {
+    "passed": true,
+    "only_proved_owned_records": true,
+    "shared_counters_global_leases_and_security_traces_preserved": true,
+    "backup_sha256": "d2f6ee1e54da320ed42f4242e2ce356fc67cdadee927422eb724ce085215deda",
+    "initial_verification_omitted_analytics_jobs": true,
+    "recovery_report": "phase2-cleanup-recovery.json",
+    "recovery_verified_at": "2026-10-25T19:18:40.588Z",
+    "recovered_records_removed": 3
+  },
+  "completed_at": "2026-10-25T19:13:22.602Z"
+}

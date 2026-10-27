@@ -76,6 +76,15 @@ def main() -> None:
         raise ValueError("Se requieren al menos 30 observaciones numéricas para un ajuste estable.")
 
     x_selected = float(np.median(series)) if args.x_value is None else float(args.x_value)
+    source_values = (
+        sorted(str(value).strip() for value in dataset["data_source"].dropna().unique())
+        if "data_source" in dataset.columns
+        else []
+    )
+    synthetic_markers = ("sintet", "synthetic", "simulat", "mock")
+    data_mode = "procedural" if source_values and all(
+        any(marker in value.casefold() for marker in synthetic_markers) for value in source_values
+    ) else "declared" if source_values else "insufficient_data"
     if args.output_dir:
         output_dir = Path(args.output_dir)
     else:
@@ -88,6 +97,15 @@ def main() -> None:
         bins=args.bins,
         threshold_q=args.threshold_quantile,
         tail_thresholds=TailThresholds(left_tail=args.left_tail, right_tail=args.right_tail),
+        provenance={
+            "dataset": Path(args.input).name,
+            "variable": args.variable,
+            "data_sources": source_values,
+            "source_count": len(source_values),
+            "data_mode": data_mode,
+            "missing_values": int(dataset[args.variable].isna().sum()),
+            "missing_inputs": [],
+        },
     )
 
     print("==============================================")

@@ -1,0 +1,11 @@
+{
+  "schema": "clean-com/catalog-v1",
+  "cases": [
+    {
+      "id": "empresas-varias-2025",
+      "artifactDirectory": "empresas-varias-2025",
+      "accessScope": "shared_authenticated",
+      "dataType": "DEMO"
+    }
+  ]
+}

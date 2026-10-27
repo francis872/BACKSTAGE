@@ -1,0 +1,117 @@
+/* Entry and access share one spatial identity; all artwork is drawn locally. */
+.orbital-entry {
+ --orbit-ink:#f0f4f9;--orbit-muted:#a8b5c8;--orbit-accent:#d6424b;
+ position:relative;isolation:isolate;display:grid;grid-template-rows:auto 1fr auto;
+ width:100%;min-height:100vh;min-height:100svh;overflow:hidden;
+ padding:clamp(22px,3.6vw,54px);background:radial-gradient(ellipse at 16% 66%,rgba(143,44,53,.14),transparent 48%),radial-gradient(ellipse at 82% 24%,rgba(30,54,91,.26),transparent 50%),#05070b;color:var(--orbit-ink);
+}
+.orbital-entry::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 47%,transparent 12%,rgba(3,5,12,.58) 75%)}
+.orbital-entry__stars{position:absolute;inset:0;z-index:-2;opacity:.55;background-image:radial-gradient(circle,#c2cede 0.65px,transparent 1px),radial-gradient(circle,#637795 .7px,transparent 1.1px);background-size:173px 163px,247px 211px;background-position:24px 18px,117px 83px}
+.orbital-entry__header,.orbital-entry__footer{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.orbital-wordmark{display:inline-flex;align-items:center;gap:10px;color:#f0f4f9;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:.16em;white-space:nowrap}
+.orbital-brandmark{display:block;width:19px;height:19px;border:1px solid #d96a73;border-radius:50%;position:relative;transform:rotate(-35deg)}
+.orbital-brandmark::after{content:'';position:absolute;inset:6px -6px;border:1px solid #d96a73;border-radius:50%}
+.orbital-entry__edition,.orbital-entry__footer{font-size:11px;color:#96a6bd;letter-spacing:.03em}
+.orbital-entry__world{position:absolute;left:50%;top:46%;width:min(76vw,840px);aspect-ratio:1;transform:translate(-50%,-50%);z-index:-1;opacity:.93;will-change:transform}
+.orbital-globe{position:relative;width:100%;height:100%;aspect-ratio:1;pointer-events:none}
+.orbital-globe canvas{display:block;width:100%;height:100%}
+.orbital-entry__center{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:min(1040px,100%);margin-inline:auto;padding:64px 0 72px;text-align:center}
+.orbital-entry__eyebrow{display:flex;align-items:center;gap:9px;margin:0 0 25px;color:#b6c3d8;font-size:10px;letter-spacing:.24em;text-transform:uppercase}
+.orbital-entry__eyebrow>span{width:5px;height:5px;background:#ef7884;border-radius:50%;box-shadow:0 0 12px #d6424b}
+.orbital-entry__center h1{margin:0;font-size:clamp(3.25rem,9.4vw,8.75rem);line-height:1;letter-spacing:-.055em;font-weight:650;color:#ffffff;text-shadow:0 2px 32px rgba(3,6,14,.65)}
+.orbital-entry__message{margin:23px 0 12px;font-size:clamp(18px,2.15vw,28px);letter-spacing:-.035em;font-weight:400;color:#edf2fa}
+.orbital-entry__description{margin:0;color:#a8b5c8;font-size:clamp(13px,1.1vw,15px);line-height:1.8;font-weight:400}
+.orbital-launch{display:flex;flex-direction:column;gap:17px;padding:0;margin-top:34px;background:transparent;border:0;color:#ffffff;border-radius:0;cursor:pointer;transition:opacity .25s}
+.orbital-launch__symbol{position:relative;display:grid;place-items:center;width:76px;height:76px;border:1px solid rgba(214,66,75,.65);border-radius:50%;background:rgba(15,23,46,.8);transition:transform .35s,background .35s,box-shadow .35s}
+.orbital-launch__symbol::before,.orbital-launch__symbol::after{content:'';position:absolute;inset:-6px 35px;border-top:1px solid #e0747d;border-bottom:1px solid #e0747d;pointer-events:none}
+.orbital-launch__symbol::after{transform:rotate(90deg)}
+.orbital-launch__ring{position:absolute;inset:-11px;border:1px dashed rgba(214,66,75,.35);border-radius:50%;transition:transform .8s}
+.orbital-launch svg{width:26px;height:26px;transition:transform .3s}
+.orbital-launch__label{font-size:12px;font-weight:500;letter-spacing:.035em}
+.orbital-launch:hover .orbital-launch__symbol{transform:scale(1.09);background:#252039;box-shadow:0 0 38px rgba(214,66,75,.26)}
+.orbital-launch:hover .orbital-launch__ring{transform:rotate(70deg)}
+.orbital-launch:hover svg{transform:translate(2px,-2px)}
+.orbital-launch:focus-visible{outline:0}
+.orbital-launch:focus-visible .orbital-launch__symbol{outline:2px solid #ffffff;outline-offset:12px;box-shadow:0 0 38px rgba(214,66,75,.34)}
+.orbital-launch:disabled{cursor:wait;opacity:.7}
+.orbital-entry.is-entering .orbital-entry__world{animation:orbital-dive 1450ms cubic-bezier(.65,0,.25,1) forwards}
+.orbital-entry.is-entering .orbital-entry__center{animation:orbital-depart 700ms ease forwards;pointer-events:none}
+.orbital-entry.is-entering .orbital-entry__header,.orbital-entry.is-entering .orbital-entry__footer{animation:orbital-depart 400ms ease forwards}
+@keyframes orbital-dive{0%{transform:translate(-50%,-50%) scale(1);opacity:.93}55%{opacity:1}100%{transform:translate(-50%,-50%) scale(9);opacity:0}}
+@keyframes orbital-depart{to{opacity:0;transform:translateY(-14px);filter:blur(6px)}}
+
+/* Access: centered at every width, with natural scrolling for short viewports. */
+.app.app-auth.immersive-auth{position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-height:100vh;min-height:100svh;padding:100px clamp(18px,4vw,64px) 60px;background:radial-gradient(ellipse at 16% 72%,rgba(143,44,53,.14),transparent 50%),radial-gradient(ellipse at 85% 20%,rgba(26,40,71,.26),transparent 52%),#05070b;overflow:visible}
+.immersive-auth__navigation{position:absolute;top:30px;left:clamp(22px,4vw,64px);right:clamp(22px,4vw,64px);display:flex;justify-content:space-between;align-items:center;gap:18px}
+.auth-return{display:inline-flex;align-items:center;gap:9px;padding:10px 0;border:0;background:transparent;color:#a8b5c8;font-size:12px;font-weight:400}
+.auth-return:hover{color:#ffffff}.auth-return:focus-visible{outline:2px solid #d96a73;outline-offset:5px}
+.form-section.auth-screen.auth-screen--immersive{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.04fr);width:min(1060px,100%);max-width:1060px;margin:0;padding:0;gap:0;border:1px solid #35415c;border-radius:22px;overflow:hidden;background:#0f172e;box-shadow:0 28px 100px rgba(0,0,0,.28);backdrop-filter:none;animation:auth-arrive 600ms ease both}
+.auth-story{position:relative;isolation:isolate;display:flex;flex-direction:column;min-width:0;overflow:hidden;padding:clamp(28px,3.4vw,48px);background:radial-gradient(ellipse at 32% 95%,rgba(143,44,53,.24),transparent 62%),linear-gradient(150deg,#111d35,#0b1221);border-right:1px solid #34415c}
+.auth-story__eyebrow{margin:0 0 30px;color:#d96a73;font-size:10px;text-transform:uppercase;letter-spacing:.14em}
+.auth-story h2{position:relative;z-index:1;margin:0 0 18px;max-width:340px;color:#ffffff;font-size:clamp(28px,3.3vw,44px);font-weight:500;line-height:1.12;letter-spacing:-.045em}
+.auth-story>p:not(.auth-story__eyebrow){position:relative;z-index:1;margin:0;color:#a8b5c8;font-size:14px;line-height:1.8}
+.auth-story__globe{position:absolute;left:50%;bottom:-50px;width:460px;height:460px;transform:translateX(-50%);z-index:-1;opacity:.8}
+.auth-story__caption{position:relative;margin-top:auto;padding-top:210px;color:#a8b5c8;font-size:10px;letter-spacing:.11em;text-transform:uppercase}
+.auth-screen--immersive .auth-form-panel{min-width:0;max-height:none;overflow:visible;padding:38px clamp(24px,3.4vw,48px);background:transparent;overscroll-behavior:auto}
+.auth-screen--immersive .auth-form-panel>.eyebrow{margin:0 0 12px;color:#d96a73;font-size:10px;letter-spacing:.16em}
+.auth-screen--immersive .auth-form-panel h1{margin:0 0 12px;font-size:clamp(24px,2.4vw,31px);line-height:1.18;letter-spacing:-.035em;color:#ffffff}
+.auth-screen--immersive .auth-form-panel>p:not(.eyebrow):not(.message){margin:0 0 25px;color:#a8b5c8;line-height:1.7;font-size:13px}
+.auth-screen--immersive .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:25px;padding:5px;border:1px solid #34415c;border-radius:9px;background:#0b1426}
+.auth-screen--immersive .auth-tabs button{min-height:41px;margin:0;padding:9px 8px;border:0;border-radius:5px;background:transparent;color:#a8b5c8;font-size:12px;font-weight:500}
+.auth-screen--immersive .auth-tabs button.active{color:#ffffff;background:linear-gradient(135deg,rgba(143,44,53,.38),rgba(26,40,71,.8));box-shadow:0 1px 5px rgba(0,0,0,.2)}
+.auth-screen--immersive .auth-tabs button.active::after{display:none}
+.auth-screen--immersive .auth-tabs button:focus-visible{outline:2px solid #d96a73;outline-offset:1px}
+.auth-screen--immersive .auth-grid{display:flex;flex-direction:column;gap:16px;margin:0;padding:0;border:0;background:none;box-shadow:none;backdrop-filter:none}
+.auth-screen--immersive .field-row{min-width:0;gap:7px}.auth-screen--immersive .field-row label{color:#dbe4f2;font-size:12px;font-weight:500}
+.auth-screen--immersive .field-row input{width:100%;min-width:0;min-height:47px;padding:12px 14px;border:1px solid #34425f;border-radius:8px;background:#0a1325;color:#ffffff;font-size:16px;box-shadow:none}
+.auth-screen--immersive .field-row input:focus{outline:0;border-color:#d6424b;box-shadow:0 0 0 3px rgba(214,66,75,.15)}
+.auth-screen--immersive .field-row input::placeholder{color:#7e8da4}
+.auth-screen--immersive .form-actions{margin-top:9px}
+.auth-screen--immersive .form-actions button{width:100%;min-height:47px;padding:12px 16px;border:1px solid #d64b50;border-radius:8px;background:#bd343b;color:#fff;font-size:13px;font-weight:600}
+.auth-screen--immersive .form-actions button:hover:not(:disabled){background:#d1474d;transform:none;box-shadow:0 4px 20px rgba(214,66,75,.2)}
+.auth-screen--immersive .form-actions button:focus-visible{outline:2px solid #efbdc1;outline-offset:3px}
+.auth-screen--immersive .form-actions button:disabled{opacity:.6;cursor:wait}
+.auth-screen--immersive .auth-hint{color:#98a8be;font-size:11px;font-style:normal;line-height:1.6}
+.auth-screen--immersive .message{margin-top:18px;overflow-wrap:anywhere}
+@keyframes auth-arrive{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* Application sizing: retain a full-width canvas and give wide screens balanced margins. */
+.app-route-frame{display:flex;flex-direction:column;width:100%;min-width:0;min-height:100vh;min-height:100svh}
+.app.shell{width:100%;min-width:0;min-height:100svh}
+.app.shell .side-nav{flex-shrink:0;align-self:flex-start;position:sticky;top:0;height:100vh;height:100svh}
+.app.shell .content-panel{min-width:0;width:0}
+.content-panel>section,.content-panel>.stacked-sections{width:100%;min-width:0;max-width:1660px;margin-inline:auto;padding-inline:clamp(18px,2.6vw,42px)}
+.content-panel .score-row{gap:18px;flex-wrap:wrap}
+.content-panel .card-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.content-panel .field-row{min-width:0}
+.content-panel .field-row :is(input,textarea,select){max-width:100%;min-width:0}
+.content-panel :is(.table-wrapper,.table-wrap,.data-table-wrapper){max-width:100%;overflow-x:auto}
+.content-panel .active-operational-context{flex-wrap:wrap;min-width:0}
+.content-panel .active-operational-context strong{min-width:0;overflow-wrap:anywhere}
+.territorial-inspector,.map-shell>article{max-width:calc(100% - 32px)}
+.map-shell>div[aria-label="Mapa territorial WebGL"]{height:clamp(360px,65svh,620px)!important}
+@media(max-width:1100px) and (min-width:769px){.app.shell .side-nav{width:240px}.content-panel>section{padding-inline:24px}}
+@media(max-width:800px){
+ .form-section.auth-screen.auth-screen--immersive{grid-template-columns:minmax(0,1fr);max-width:520px;border-radius:17px}
+ .auth-story{display:none}.auth-screen--immersive .auth-form-panel{padding:30px clamp(22px,5vw,38px)}
+ .app.app-auth.immersive-auth{padding-top:90px;padding-bottom:36px}
+ .immersive-auth__navigation{top:22px}.immersive-auth__navigation .orbital-wordmark{font-size:10px;letter-spacing:.08em}
+}
+@media(max-width:768px){
+ .app.shell .side-nav{position:fixed;height:100svh;width:280px}
+ .app.shell .content-panel{width:100%;padding-top:70px}
+ .content-panel>section,.content-panel>.stacked-sections{padding-inline:18px}
+ .content-panel :is(.dashboard-grid,.dashboard-grid.grid-2,.dashboard-grid.grid-3,.metric-grid){grid-template-columns:minmax(0,1fr)}
+ .content-panel .form-actions{gap:8px;flex-wrap:wrap}.content-panel .form-actions button{min-height:42px}
+}
+@media(max-width:520px){
+ .orbital-entry{padding:22px;min-height:100svh}.orbital-entry__edition{font-size:10px;max-width:104px;text-align:right;line-height:1.6}
+ .orbital-entry__world{width:150vw;max-width:650px;top:44%}
+ .orbital-entry__center{padding:64px 0 72px}.orbital-entry__eyebrow{font-size:9px;letter-spacing:.16em;margin-bottom:22px}
+ .orbital-entry__center h1{font-size:clamp(42px,11.6vw,60px)}.orbital-entry__message{margin-top:22px;font-size:19px}
+ .orbital-entry__description{font-size:12px}.orbital-launch{margin-top:32px}.orbital-launch__symbol{width:68px;height:68px}.orbital-launch__symbol::before,.orbital-launch__symbol::after{inset:-6px 31px}
+ .orbital-entry__footer{justify-content:center;font-size:10px}.orbital-entry__coordinates{display:none}
+ .auth-return{font-size:11px}.immersive-auth__navigation .orbital-brandmark{width:15px;height:15px}.immersive-auth__navigation .orbital-wordmark{gap:8px}
+}
+@media(max-height:600px) and (min-width:521px){.orbital-entry__center{padding:35px 0}.orbital-entry__center h1{font-size:clamp(48px,8vw,88px)}.orbital-entry__eyebrow{margin-bottom:15px}.orbital-launch{margin-top:20px}.orbital-launch__symbol{width:58px;height:58px}.orbital-launch__symbol::before,.orbital-launch__symbol::after{inset:-6px 26px}.orbital-entry__description{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.orbital-entry *, .immersive-auth *{animation:none!important;transition:none!important}.orbital-entry__world{will-change:auto}}

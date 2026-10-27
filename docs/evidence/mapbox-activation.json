@@ -1,0 +1,110 @@
+{
+  "checked_at": "2026-10-25T03:15:52.747Z",
+  "endpoint": "Mapbox Geocoding v6",
+  "permanent_requested": true,
+  "http_status": 200,
+  "accepted": true,
+  "feature_count": 1,
+  "results": [
+    {
+      "id": "dXJuOm1ieHBsYzpYV2d5",
+      "name": "Quibdó",
+      "coordinates": [
+        -76.65969,
+        5.691707
+      ],
+      "type": "place",
+      "country": "Colombia"
+    }
+  ],
+  "attribution": "© 2026 Mapbox and its suppliers. All rights reserved. Use of this data is subject to the Mapbox Terms of Service. (https://www.mapbox.com/about/maps/)",
+  "configuration": {
+    "local_backend": true,
+    "staging_backend": true,
+    "production_changed": false,
+    "variables": [
+      {
+        "name": "MAPBOX_GEOCODING_PERMANENT",
+        "type": "encrypted",
+        "target": [
+          "preview"
+        ]
+      },
+      {
+        "name": "MAPBOX_ACCESS_TOKEN",
+        "type": "sensitive",
+        "target": [
+          "preview"
+        ]
+      }
+    ],
+    "frontend_artifact_scan": {
+      "files_checked": 18,
+      "token_absent": true
+    }
+  },
+  "integration": {
+    "status": "passed",
+    "run_id": "atlas-core-20261025032443-c64faad01e45",
+    "completed_at": "2026-10-25T03:26:27.352Z",
+    "checks": 11,
+    "mapbox": {
+      "provider": "mapbox_geocoding_v6_permanent",
+      "actual_suggestions_without_search_submission": true,
+      "attribution_visible": true,
+      "server_only_token": true
+    },
+    "cleanup_passed": true,
+    "deployments": {
+      "api": {
+        "id": "dpl_H5FCBqTtQVx2cmFwhkoKxDQMmhSg",
+        "url": "backstage-staging-3xtdv3jb1-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "preview"
+      },
+      "web": {
+        "id": "dpl_AxQpwyDzK5vtJwsjV8ULuaQF15md",
+        "url": "backstage-staging-f1ilit6v3-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "preview"
+      }
+    },
+    "screenshots": [
+      "docs/evidence/origin-live-ui/atlas-core-20261025032443-c64faad01e45/mapbox-autocomplete.png",
+      "docs/evidence/origin-live-ui/atlas-core-20261025032443-c64faad01e45/comparison-real-evidence.png",
+      "docs/evidence/origin-live-ui/atlas-core-20261025032443-c64faad01e45/map-3d.png",
+      "docs/evidence/origin-live-ui/atlas-core-20261025032443-c64faad01e45/map-globo.png",
+      "docs/evidence/origin-live-ui/atlas-core-20261025032443-c64faad01e45/map-2d.png",
+      "docs/evidence/origin-live-ui/atlas-core-20261025032443-c64faad01e45/map-mobile.png"
+    ]
+  },
+  "postflight": {
+    "passed": true,
+    "checked_at": "2026-10-25T03:28:26.953Z",
+    "targets": [
+      {
+        "type": "api",
+        "domain": "backstage-staging-api.vercel.app",
+        "deployment_id": "dpl_H5FCBqTtQVx2cmFwhkoKxDQMmhSg",
+        "health": 200,
+        "anonymous_protection": 302,
+        "application_auth_required": 401,
+        "mapbox_keys": [
+          "MAPBOX_GEOCODING_PERMANENT",
+          "MAPBOX_ACCESS_TOKEN"
+        ]
+      },
+      {
+        "type": "web",
+        "domain": "backstage-staging-web.vercel.app",
+        "deployment_id": "dpl_AxQpwyDzK5vtJwsjV8ULuaQF15md",
+        "health": 200,
+        "anonymous_protection": 302,
+        "application_auth_required": 401,
+        "mapbox_keys": []
+      }
+    ],
+    "monitor_healthy": true,
+    "production_unchanged": true
+  }
+}

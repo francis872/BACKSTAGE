@@ -1,0 +1,53 @@
+{
+  "started_at": "2026-10-26T20:25:54.101Z",
+  "run_id": "e6e5ec78-8b6a-4713-ba05-e72121f39f40",
+  "scope": "fresh_owned_atlas_test_database_and_local_http",
+  "production_changes": false,
+  "remote_deployment": false,
+  "docker_used": false,
+  "checks": [
+    {
+      "name": "owned_namespace_and_additive_indexes_created_without_touching_source",
+      "passed": true
+    },
+    {
+      "name": "actual_http_creation_idempotency_and_zero_coordinates",
+      "passed": true
+    },
+    {
+      "name": "actual_atlas_tenant_isolation_and_viewer_denial",
+      "passed": true
+    },
+    {
+      "name": "actual_concurrent_transactions_prevent_over_allocation_without_inventing_child_geometry",
+      "passed": true
+    },
+    {
+      "name": "generic_asset_mutation_cannot_bypass_layer_rules",
+      "passed": true
+    },
+    {
+      "name": "real_revision_conflict_and_archive_parent_guard",
+      "passed": true
+    }
+  ],
+  "operations_checks": [
+    "actual_atlas_encryption_idempotency_and_tenant_isolation",
+    "actual_version_transitions_and_personal_payload_erasure",
+    "actual_concurrent_payments_and_exact_recorded_balance",
+    "actual_concurrent_exclusive_reservations_reject_overlap",
+    "general_event_routes_cannot_disclose_or_mutate_private_versions",
+    "native_mfa_blocks_password_only_login_and_recovery_code_replay",
+    "native_mfa_disable_renews_session_and_invalidates_older_credentials"
+  ],
+  "native_mfa_verified": true,
+  "encryption_keys_ephemeral": true,
+  "status": "failed",
+  "failure": {
+    "name": "Error",
+    "code": null,
+    "message": "PH integration could not complete"
+  },
+  "owned_temporary_database_removed": true,
+  "completed_at": "2026-10-26T20:27:35.629Z"
+}

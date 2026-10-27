@@ -1,0 +1,1204 @@
+{
+  "created_at": "20261025T164829Z",
+  "inventory": {
+    "controllers": 22,
+    "routes": 33,
+    "services": 58,
+    "repositories": 6,
+    "domain": 85,
+    "infrastructure": 6,
+    "middleware": 8,
+    "realtime": 3,
+    "scripts": 22
+  },
+  "route_contracts": [
+    {
+      "file": "backend/routes/accountSecurity.routes.js",
+      "method": "GET",
+      "path": "/capabilities"
+    },
+    {
+      "file": "backend/routes/accountSecurity.routes.js",
+      "method": "POST",
+      "path": "/forgot-password"
+    },
+    {
+      "file": "backend/routes/accountSecurity.routes.js",
+      "method": "POST",
+      "path": "/reset-password"
+    },
+    {
+      "file": "backend/routes/accountSecurity.routes.js",
+      "method": "POST",
+      "path": "/verify-email"
+    },
+    {
+      "file": "backend/routes/accountSecurity.routes.js",
+      "method": "POST",
+      "path": "/request-verification"
+    },
+    {
+      "file": "backend/routes/accountSecurity.routes.js",
+      "method": "POST",
+      "path": "/change-password"
+    },
+    {
+      "file": "backend/routes/accountSecurity.routes.js",
+      "method": "GET",
+      "path": "/sessions"
+    },
+    {
+      "file": "backend/routes/accountSecurity.routes.js",
+      "method": "POST",
+      "path": "/sessions/revoke-all"
+    },
+    {
+      "file": "backend/routes/accountSecurity.routes.js",
+      "method": "DELETE",
+      "path": "/sessions/:id"
+    },
+    {
+      "file": "backend/routes/accountSecurity.routes.js",
+      "method": "POST",
+      "path": "/logout"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "POST",
+      "path": "/projects"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "POST",
+      "path": "/plan"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "GET",
+      "path": "/:id/candidates"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "POST",
+      "path": "/:id/candidates"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "DELETE",
+      "path": "/:id/candidates/:locationId"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "POST",
+      "path": "/compare"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "GET",
+      "path": "/operations"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "GET",
+      "path": "/:id/risks"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "PUT",
+      "path": "/:id/risks/review"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "PUT",
+      "path": "/:id/probability"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "GET",
+      "path": "/:id/probability"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "POST",
+      "path": "/:id/commands"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "POST",
+      "path": "/:id/report/generate"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "GET",
+      "path": "/:id/report"
+    },
+    {
+      "file": "backend/routes/analysis.routes.js",
+      "method": "GET",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "GET",
+      "path": "/algorithms"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "GET",
+      "path": "/spatial-rules"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "POST",
+      "path": "/gis"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "GET",
+      "path": "/jobs"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "GET",
+      "path": "/jobs/:id"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "GET",
+      "path": "/jobs/:id/reproducibility"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "GET",
+      "path": "/jobs/:id/export"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "POST",
+      "path": "/multicriteria"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "POST",
+      "path": "/multicriteria/sensitivity"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "POST",
+      "path": "/multicriteria/ahp-weights"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "POST",
+      "path": "/financial"
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "method": "POST",
+      "path": "/risk-simulation"
+    },
+    {
+      "file": "backend/routes/assets.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/assets.routes.js",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/assets.routes.js",
+      "method": "GET",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/auditLogs.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/auditLogs.routes.js",
+      "method": "GET",
+      "path": "/chain-status"
+    },
+    {
+      "file": "backend/routes/auth.routes.js",
+      "method": "POST",
+      "path": "/login"
+    },
+    {
+      "file": "backend/routes/auth.routes.js",
+      "method": "POST",
+      "path": "/register"
+    },
+    {
+      "file": "backend/routes/auth.routes.js",
+      "method": "POST",
+      "path": "/invitations/accept"
+    },
+    {
+      "file": "backend/routes/auth.routes.js",
+      "method": "GET",
+      "path": "/me"
+    },
+    {
+      "file": "backend/routes/auth.routes.js",
+      "method": "PATCH",
+      "path": "/me"
+    },
+    {
+      "file": "backend/routes/auth.routes.js",
+      "method": "GET",
+      "path": "/organizations"
+    },
+    {
+      "file": "backend/routes/auth.routes.js",
+      "method": "POST",
+      "path": "/switch-organization"
+    },
+    {
+      "file": "backend/routes/bsie.routes.js",
+      "method": "GET",
+      "path": "/methods"
+    },
+    {
+      "file": "backend/routes/bsie.routes.js",
+      "method": "GET",
+      "path": "/jobs"
+    },
+    {
+      "file": "backend/routes/bsie.routes.js",
+      "method": "POST",
+      "path": "/jobs"
+    },
+    {
+      "file": "backend/routes/bsie.routes.js",
+      "method": "GET",
+      "path": "/jobs/:id"
+    },
+    {
+      "file": "backend/routes/bsie.routes.js",
+      "method": "POST",
+      "path": "/jobs/:id/cancel"
+    },
+    {
+      "file": "backend/routes/bsie.routes.js",
+      "method": "POST",
+      "path": "/jobs/:id/retry"
+    },
+    {
+      "file": "backend/routes/bsie.routes.js",
+      "method": "GET",
+      "path": "/jobs/:id/export"
+    },
+    {
+      "file": "backend/routes/cleanCom.routes.js",
+      "method": "GET",
+      "path": "/cases"
+    },
+    {
+      "file": "backend/routes/cleanCom.routes.js",
+      "method": "GET",
+      "path": "/cases/:caseId/audit"
+    },
+    {
+      "file": "backend/routes/cleanCom.routes.js",
+      "method": "GET",
+      "path": "/cases/:caseId/layers/:layerId/features"
+    },
+    {
+      "file": "backend/routes/comparisons.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/comparisons.routes.js",
+      "method": "GET",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/comparisons.routes.js",
+      "method": "GET",
+      "path": "/:id/reproducibility"
+    },
+    {
+      "file": "backend/routes/comparisons.routes.js",
+      "method": "GET",
+      "path": "/:id/export"
+    },
+    {
+      "file": "backend/routes/comparisons.routes.js",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/comparisons.routes.js",
+      "method": "POST",
+      "path": "/:id/project"
+    },
+    {
+      "file": "backend/routes/feed.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/feed.routes.js",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/feed.routes.js",
+      "method": "POST",
+      "path": "/:id/comments"
+    },
+    {
+      "file": "backend/routes/geography.routes.js",
+      "method": "GET",
+      "path": "/capabilities"
+    },
+    {
+      "file": "backend/routes/geography.routes.js",
+      "method": "GET",
+      "path": "/route-plans"
+    },
+    {
+      "file": "backend/routes/geography.routes.js",
+      "method": "GET",
+      "path": "/route-plans/:id"
+    },
+    {
+      "file": "backend/routes/geography.routes.js",
+      "method": "POST",
+      "path": "/route-plans"
+    },
+    {
+      "file": "backend/routes/insights.routes.js",
+      "method": "GET",
+      "path": "/summary"
+    },
+    {
+      "file": "backend/routes/insights.routes.js",
+      "method": "GET",
+      "path": "/opportunities"
+    },
+    {
+      "file": "backend/routes/insights.routes.js",
+      "method": "POST",
+      "path": "/opportunities/:locationId/projects"
+    },
+    {
+      "file": "backend/routes/integrations.routes.js",
+      "method": "POST",
+      "path": "/sources"
+    },
+    {
+      "file": "backend/routes/integrations.routes.js",
+      "method": "POST",
+      "path": "/events"
+    },
+    {
+      "file": "backend/routes/integrations.routes.js",
+      "method": "GET",
+      "path": "/events/pending"
+    },
+    {
+      "file": "backend/routes/integrations.routes.js",
+      "method": "POST",
+      "path": "/events/:id/complete"
+    },
+    {
+      "file": "backend/routes/layers.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/layers.routes.js",
+      "method": "GET",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/layers.routes.js",
+      "method": "GET",
+      "path": "/:id/features"
+    },
+    {
+      "file": "backend/routes/locations.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/locations.routes.js",
+      "method": "GET",
+      "path": "/nearby"
+    },
+    {
+      "file": "backend/routes/locations.routes.js",
+      "method": "GET",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/locations.routes.js",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/locations.routes.js",
+      "method": "PUT",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/locations.routes.js",
+      "method": "DELETE",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/operationalEvents.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/operationalEvents.routes.js",
+      "method": "GET",
+      "path": "/alerts"
+    },
+    {
+      "file": "backend/routes/operationalEvents.routes.js",
+      "method": "GET",
+      "path": "/summary"
+    },
+    {
+      "file": "backend/routes/operationalEvents.routes.js",
+      "method": "PUT",
+      "path": "/:id/acknowledge"
+    },
+    {
+      "file": "backend/routes/operationalEvents.routes.js",
+      "method": "PUT",
+      "path": "/:id/resolve"
+    },
+    {
+      "file": "backend/routes/operations.routes.js",
+      "method": "GET",
+      "path": "/health"
+    },
+    {
+      "file": "backend/routes/operations.routes.js",
+      "method": "GET",
+      "path": "/metrics"
+    },
+    {
+      "file": "backend/routes/operations.routes.js",
+      "method": "GET",
+      "path": "/executions"
+    },
+    {
+      "file": "backend/routes/operations.routes.js",
+      "method": "GET",
+      "path": "/analysis/:id/diagnostics"
+    },
+    {
+      "file": "backend/routes/operations.routes.js",
+      "method": "GET",
+      "path": "/business-rules"
+    },
+    {
+      "file": "backend/routes/operations.routes.js",
+      "method": "PUT",
+      "path": "/business-rules"
+    },
+    {
+      "file": "backend/routes/operations.routes.js",
+      "method": "POST",
+      "path": "/business-rules/review"
+    },
+    {
+      "file": "backend/routes/operations.routes.js",
+      "method": "POST",
+      "path": "/business-rules/exceptions"
+    },
+    {
+      "file": "backend/routes/operations.routes.js",
+      "method": "GET",
+      "path": "/monitor"
+    },
+    {
+      "file": "backend/routes/realEstate.routes.js",
+      "method": "GET",
+      "path": "/portfolio"
+    },
+    {
+      "file": "backend/routes/realEstate.routes.js",
+      "method": "GET",
+      "path": "/properties"
+    },
+    {
+      "file": "backend/routes/realEstate.routes.js",
+      "method": "GET",
+      "path": "/valuations"
+    },
+    {
+      "file": "backend/routes/realEstate.routes.js",
+      "method": "GET",
+      "path": "/valuations/:id"
+    },
+    {
+      "file": "backend/routes/realEstate.routes.js",
+      "method": "POST",
+      "path": "/valuations"
+    },
+    {
+      "file": "backend/routes/realEstate.routes.js",
+      "method": "PUT",
+      "path": "/valuations/:id"
+    },
+    {
+      "file": "backend/routes/realEstate.routes.js",
+      "method": "DELETE",
+      "path": "/valuations/:id"
+    },
+    {
+      "file": "backend/routes/recommendations.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/recommendations.routes.js",
+      "method": "GET",
+      "path": "/summary"
+    },
+    {
+      "file": "backend/routes/recommendations.routes.js",
+      "method": "GET",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/recommendations.routes.js",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/recommendations.routes.js",
+      "method": "POST",
+      "path": "/from-analysis/:analysisRunId"
+    },
+    {
+      "file": "backend/routes/recommendations.routes.js",
+      "method": "POST",
+      "path": "/:id/review"
+    },
+    {
+      "file": "backend/routes/recommendations.routes.js",
+      "method": "PUT",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/recommendations.routes.js",
+      "method": "DELETE",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/retailZones.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/retailZones.routes.js",
+      "method": "GET",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/retailZones.routes.js",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/retailZones.routes.js",
+      "method": "PUT",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/retailZones.routes.js",
+      "method": "DELETE",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/riskAssessments.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/riskAssessments.routes.js",
+      "method": "GET",
+      "path": "/locations/:locationId/history"
+    },
+    {
+      "file": "backend/routes/riskAssessments.routes.js",
+      "method": "GET",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/riskAssessments.routes.js",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/riskAssessments.routes.js",
+      "method": "PUT",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/riskAssessments.routes.js",
+      "method": "DELETE",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/riskComponents.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/riskComponents.routes.js",
+      "method": "GET",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/riskComponents.routes.js",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/riskComponents.routes.js",
+      "method": "PUT",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/riskComponents.routes.js",
+      "method": "DELETE",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/scoring.routes.js",
+      "method": "POST",
+      "path": "/evaluate"
+    },
+    {
+      "file": "backend/routes/scoring.routes.js",
+      "method": "GET",
+      "path": "/latest/:location_id"
+    },
+    {
+      "file": "backend/routes/soi.routes.js",
+      "method": "GET",
+      "path": "/catalog"
+    },
+    {
+      "file": "backend/routes/soi.routes.js",
+      "method": "GET",
+      "path": "/configuration"
+    },
+    {
+      "file": "backend/routes/soi.routes.js",
+      "method": "GET",
+      "path": "/summary"
+    },
+    {
+      "file": "backend/routes/soi.routes.js",
+      "method": "PUT",
+      "path": "/configuration"
+    },
+    {
+      "file": "backend/routes/soi.routes.js",
+      "method": "PATCH",
+      "path": "/assets/:id"
+    },
+    {
+      "file": "backend/routes/soi.routes.js",
+      "method": "GET",
+      "path": "/operations/:id/assets"
+    },
+    {
+      "file": "backend/routes/soi.routes.js",
+      "method": "PUT",
+      "path": "/operations/:id/assets"
+    },
+    {
+      "file": "backend/routes/soi.routes.js",
+      "method": "POST",
+      "path": "/imports/preview"
+    },
+    {
+      "file": "backend/routes/soi.routes.js",
+      "method": "POST",
+      "path": "/imports/commit"
+    },
+    {
+      "file": "backend/routes/soi.routes.js",
+      "method": "GET",
+      "path": "/comparisons"
+    },
+    {
+      "file": "backend/routes/soi.routes.js",
+      "method": "POST",
+      "path": "/comparisons"
+    },
+    {
+      "file": "backend/routes/soiFleet.routes.js",
+      "method": "GET",
+      "path": "/status"
+    },
+    {
+      "file": "backend/routes/soiFleet.routes.js",
+      "method": "GET",
+      "path": "/sources"
+    },
+    {
+      "file": "backend/routes/soiFleet.routes.js",
+      "method": "GET",
+      "path": "/vehicles/:id/positions"
+    },
+    {
+      "file": "backend/routes/soiFleet.routes.js",
+      "method": "POST",
+      "path": "/sources"
+    },
+    {
+      "file": "backend/routes/soiFleet.routes.js",
+      "method": "PATCH",
+      "path": "/sources/:id"
+    },
+    {
+      "file": "backend/routes/soiFleet.routes.js",
+      "method": "POST",
+      "path": "/vehicles/:id/positions"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/openapi.json"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/catalog"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/events"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/dashboard"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/reports"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/reports/:id/export"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/optimization"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/optimization/:id/reproducibility"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/optimization/:id/export"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/optimization/:id/reproduce"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/optimization/:id/approve"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/optimization/:id/compare"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/predict"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/climate"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/coverage"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/executions/:kind/:id/retry"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/executions/:kind/:id/cancel"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/integrations/:id/status"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/integrations/:id/sync"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/resources/:kind"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/resources/:kind/:id"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "GET",
+      "path": "/resources/:kind/:id/history"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/resources/:kind"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "PATCH",
+      "path": "/resources/:kind/:id"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/resources/:kind/:id/void"
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "method": "POST",
+      "path": "/alerts/:id/state"
+    },
+    {
+      "file": "backend/routes/soiTrips.routes.js",
+      "method": "GET",
+      "path": "/policy"
+    },
+    {
+      "file": "backend/routes/soiTrips.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/soiTrips.routes.js",
+      "method": "GET",
+      "path": "/:id/points"
+    },
+    {
+      "file": "backend/routes/soiTrips.routes.js",
+      "method": "DELETE",
+      "path": "/expired"
+    },
+    {
+      "file": "backend/routes/soiTrips.routes.js",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/soiTrips.routes.js",
+      "method": "PATCH",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/soiTrips.routes.js",
+      "method": "POST",
+      "path": "/:id/points"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "GET",
+      "path": "/weather"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "GET",
+      "path": "/live-context"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "GET",
+      "path": "/intent"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "GET",
+      "path": "/sources"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "POST",
+      "path": "/sources"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "PATCH",
+      "path": "/sources/:id/status"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "GET",
+      "path": "/jobs"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "GET",
+      "path": "/status"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "GET",
+      "path": "/geocode"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "GET",
+      "path": "/reverse-geocode"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "GET",
+      "path": "/search"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "GET",
+      "path": "/nearby"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "POST",
+      "path": "/routes/compute"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "POST",
+      "path": "/risk/evaluate"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "POST",
+      "path": "/risk/scenario"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "POST",
+      "path": "/measure"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "POST",
+      "path": "/ingest/geojson"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "POST",
+      "path": "/ingest/remote"
+    },
+    {
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "method": "GET",
+      "path": "/tiles/:z/:x/:y"
+    },
+    {
+      "file": "backend/routes/terrain.routes.js",
+      "method": "GET",
+      "path": "/surface"
+    },
+    {
+      "file": "backend/routes/terrain.routes.js",
+      "method": "POST",
+      "path": "/analyze"
+    },
+    {
+      "file": "backend/routes/terrain.routes.js",
+      "method": "POST",
+      "path": "/hydrology"
+    },
+    {
+      "file": "backend/routes/terrain.routes.js",
+      "method": "POST",
+      "path": "/profile"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "GET",
+      "path": "/units"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "GET",
+      "path": "/units/:id"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "POST",
+      "path": "/units"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "PUT",
+      "path": "/units/:id"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "DELETE",
+      "path": "/units/:id"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "GET",
+      "path": "/facilities"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "POST",
+      "path": "/facilities"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "GET",
+      "path": "/dimension-scores"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "POST",
+      "path": "/dimension-scores"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "GET",
+      "path": "/units/:id/index"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "POST",
+      "path": "/units/:id/index/recompute"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "GET",
+      "path": "/units/:id/gaps"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "POST",
+      "path": "/units/:id/gaps/detect"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "POST",
+      "path": "/units/:id/gaps/:gapId/projects"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "GET",
+      "path": "/gaps"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "POST",
+      "path": "/units/:id/simulate"
+    },
+    {
+      "file": "backend/routes/territorial.routes.js",
+      "method": "GET",
+      "path": "/units/:id/simulations"
+    },
+    {
+      "file": "backend/routes/users.routes.js",
+      "method": "GET",
+      "path": "/invitations"
+    },
+    {
+      "file": "backend/routes/users.routes.js",
+      "method": "POST",
+      "path": "/invitations"
+    },
+    {
+      "file": "backend/routes/users.routes.js",
+      "method": "DELETE",
+      "path": "/invitations/:id"
+    },
+    {
+      "file": "backend/routes/users.routes.js",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/users.routes.js",
+      "method": "GET",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/users.routes.js",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "file": "backend/routes/users.routes.js",
+      "method": "PUT",
+      "path": "/:id"
+    },
+    {
+      "file": "backend/routes/users.routes.js",
+      "method": "PUT",
+      "path": "/:id/password"
+    },
+    {
+      "file": "backend/routes/users.routes.js",
+      "method": "DELETE",
+      "path": "/:id"
+    }
+  ],
+  "source_snapshot": {
+    "directory": ".vercel/phase2-before-20261025T164829Z",
+    "files": 502,
+    "sha256": "2a1e9836ddf7625890c941194309927dedeac051ceb416f4f4fea6d79026ea43"
+  },
+  "persistence": "MongoDB Atlas",
+  "frontend_changes_planned": false,
+  "production_writes_planned": false
+}

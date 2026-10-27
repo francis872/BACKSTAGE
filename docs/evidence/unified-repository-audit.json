@@ -1,0 +1,21 @@
+{
+  "audited_at": "2026-10-26T01:06:36.941Z",
+  "scope": "repository_before_horizontal_property_changes",
+  "attachment_sha256": "7a7a860ae643157399b3af7cea5e813a80e272555ca6a844827807a624c1518e",
+  "attachment_bytes": 6722,
+  "attachment_truncated_at": "3.3 Administracion / Proveedores; supplementary scope supplied in chat",
+  "git_status_entries": 414,
+  "files_by_root": {
+    "backend": 339,
+    "frontend/src": 109,
+    "shared": 10,
+    "bsie": 8,
+    "sanitary": 6,
+    "probability": 35,
+    "deployment": 5,
+    "scripts": 32
+  },
+  "runtime": "Node24, Express4, React18, Vite5, MapLibre6, MongoDB6 driver; Python scientific engines existing",
+  "new_dependencies": [],
+  "new_docker_usage": false
+}

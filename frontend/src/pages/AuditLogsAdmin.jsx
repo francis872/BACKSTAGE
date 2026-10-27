@@ -1,3 +1,4 @@
+import './AuditLogsAdmin.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { apiRequest } from '../lib/api';
 import { getSessionToken } from '../lib/auth';
@@ -109,9 +110,9 @@ export default function AuditLogsAdmin({ currentUser }) {
       id: `${source}-${event.audit_log_id}-${event.created_at || Date.now()}`,
       source,
       action: event.action,
-      targetType: event.target_type,
-      targetId: event.target_id,
-      actor: event.actor_email,
+      targetType: event.resource_type || event.target_type,
+      targetId: event.resource_id || event.target_id,
+      actor: event.user_id || event.actor_email,
       createdAt: event.created_at,
       organizationId: event.organization_id,
     };
@@ -128,7 +129,7 @@ export default function AuditLogsAdmin({ currentUser }) {
       if (!response.ok) {
         throw new Error(data.error || 'No se pudieron consultar los logs de auditoría.');
       }
-      const loadedRows = data.audit_logs || [];
+      const loadedRows = Array.isArray(data) ? data : data.audit_logs || [];
       setRows(loadedRows);
       if (loadedRows.length > 0) {
         latestSeenIdRef.current = Math.max(latestSeenIdRef.current, Number(loadedRows[0].audit_log_id) || 0);
@@ -178,7 +179,7 @@ export default function AuditLogsAdmin({ currentUser }) {
     socket.onmessage = (event) => {
       try {
         const payload = JSON.parse(event.data);
-        if (payload.type === 'audit-log-appended' && payload.data) {
+        if ((payload.event || payload.type) === 'audit-log-appended' && payload.data) {
           appendSecurityEvent(payload.data, 'ws');
         }
       } catch (error) {
@@ -209,7 +210,7 @@ export default function AuditLogsAdmin({ currentUser }) {
         if (!response.ok) {
           throw new Error(data.error || 'No se pudo sondear auditoría.');
         }
-        const incoming = (data.audit_logs || []).filter(
+        const incoming = (Array.isArray(data) ? data : data.audit_logs || []).filter(
           (item) => Number(item.audit_log_id) > latestSeenIdRef.current
         );
         incoming
@@ -231,9 +232,11 @@ export default function AuditLogsAdmin({ currentUser }) {
     if (chainStatus.error) {
       return { status: 'error', label: 'Sin acceso a estado de cadena' };
     }
-    if (!chainStatus.chain_enabled) {
+    if (!(chainStatus.enabled ?? chainStatus.chain_enabled)) {
       return { status: 'warning', label: 'Cadena hash deshabilitada' };
     }
+    if(chainStatus.complete===false && chainStatus.valid)return {status:'warning',label:'Prefijo verificado; quedan registros por comprobar'};
+    if(chainStatus.checked===0)return {status:'neutral',label:'Sin registros para verificar'};
     if (chainStatus.valid) {
       return { status: 'ok', label: 'Cadena hash íntegra' };
     }
@@ -241,7 +244,7 @@ export default function AuditLogsAdmin({ currentUser }) {
   }, [chainStatus]);
 
   return (
-    <section className="form-section">
+    <section className="form-section audit-workspace">
       <h2>Auditoría y seguridad</h2>
       <p>Visibilidad operativa de identidad, trazabilidad criptográfica y eventos críticos.</p>
 
@@ -251,8 +254,8 @@ export default function AuditLogsAdmin({ currentUser }) {
           <p className={`status-pill jwt-${jwtState.status}`}>{jwtState.label}</p>
           <ul>
             <li>Usuario: {jwtState.payload?.email || currentUser?.email || 'N/D'}</li>
-            <li>Rol: {jwtState.payload?.role || currentUser?.role || 'N/D'}</li>
-            <li>Organización: {jwtState.payload?.organization_id || currentUser?.organization_id || 'N/D'}</li>
+            <li>Rol: {currentUser?.role || jwtState.payload?.role || 'N/D'}</li>
+            <li>Organización: {currentUser?.organization_id || jwtState.payload?.organization_id || 'N/D'}</li>
             <li>Expira: {formatDateTime(jwtState.payload?.exp ? jwtState.payload.exp * 1000 : null)}</li>
             <li>Tiempo restante: {formatRemaining(jwtState.remainingSeconds)}</li>
           </ul>
@@ -331,10 +334,10 @@ export default function AuditLogsAdmin({ currentUser }) {
               <tr key={row.audit_log_id}>
                 <td>{row.audit_log_id}</td>
                 <td>{new Date(row.created_at).toLocaleString()}</td>
-                <td>{row.actor_email || row.actor_user_id}</td>
+                <td>{row.user_id || row.actor_email || row.actor_user_id}</td>
                 <td>{row.action}</td>
                 <td>
-                  {row.target_type} #{row.target_id || '-'}
+                  {row.resource_type || row.target_type} #{row.resource_id || row.target_id || '-'}
                 </td>
                 <td>{row.organization_id}</td>
                 <td>{row.event_hash ? `${String(row.event_hash).slice(0, 10)}...` : 'legacy'}</td>

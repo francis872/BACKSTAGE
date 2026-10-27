@@ -1,0 +1,70 @@
+{
+  "started_at": "2026-10-26T01:23:17.777Z",
+  "run_id": "3788b4c6-e677-468d-b2ca-aa6661894948",
+  "scope": "fresh_owned_atlas_test_database_and_local_http",
+  "production_changes": false,
+  "remote_deployment": false,
+  "docker_used": false,
+  "checks": [
+    {
+      "name": "owned_namespace_and_additive_indexes_created_without_touching_source",
+      "passed": true
+    },
+    {
+      "name": "actual_http_creation_idempotency_and_zero_coordinates",
+      "passed": true
+    },
+    {
+      "name": "actual_atlas_tenant_isolation_and_viewer_denial",
+      "passed": true
+    },
+    {
+      "name": "actual_concurrent_transactions_prevent_over_allocation_without_inventing_child_geometry",
+      "passed": true
+    },
+    {
+      "name": "generic_asset_mutation_cannot_bypass_layer_rules",
+      "passed": true
+    },
+    {
+      "name": "real_revision_conflict_and_archive_parent_guard",
+      "passed": true
+    },
+    {
+      "name": "built_browser_journey_persists_real_atlas_entities",
+      "passed": true
+    },
+    {
+      "name": "canonical_audit_chain_valid_after_http_and_browser_mutations",
+      "passed": true
+    }
+  ],
+  "browser": {
+    "mode": "built_ui_local_ph_api_real_isolated_atlas",
+    "checks": [
+      "real_ui_creates_coproperty_in_atlas",
+      "real_ui_creates_hierarchy_and_exact_declared_coefficient",
+      "real_ui_revision_update_preserves_hierarchy",
+      "reload_recovers_layer_and_unlocated_entity_without_invented_coordinates",
+      "no_horizontal_overflow_320",
+      "no_horizontal_overflow_390",
+      "no_horizontal_overflow_1440",
+      "real_ui_archives_leaf_preserving_its_record",
+      "current_viewer_role_removes_write_actions"
+    ],
+    "runtime_errors": [],
+    "ambient_api_responses_isolated": true,
+    "login_journey_verified": false,
+    "webgl_rendering_verified": false,
+    "external_map_requests_blocked": true,
+    "new_browser_installation": false
+  },
+  "audit_chain_valid": true,
+  "retained_before_cleanup": {
+    "assets": 6,
+    "audit_events": 9
+  },
+  "status": "passed",
+  "owned_temporary_database_removed": true,
+  "completed_at": "2026-10-26T01:24:05.670Z"
+}

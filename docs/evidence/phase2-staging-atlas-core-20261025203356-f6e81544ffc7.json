@@ -1,0 +1,32 @@
+{
+  "run_id": "atlas-core-20261025203356-f6e81544ffc7",
+  "started_at": "2026-10-25T20:33:56.064Z",
+  "mode": "real_protected_staging_atlas_separate_worker",
+  "api_interception": false,
+  "data_kind": "SIMULATED_OWNED_TEST_FIXTURES",
+  "production_changes": false,
+  "checks": [],
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "deployments": {
+    "api": {
+      "id": "dpl_9Zsc6VGBXduCGphFJK1b8yVEhBDH",
+      "url": "backstage-staging-f14mjkttu-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_8kGSBjtZ9BoxMwL9UjyTXeVicUaL",
+      "url": "backstage-staging-qfv1xs92t-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "status": "failed",
+  "failure": {
+    "stage": "preflight",
+    "name": "TypeError",
+    "message": "fetch failed",
+    "cause": "ENOTFOUND"
+  },
+  "completed_at": "2026-10-25T20:34:00.750Z"
+}

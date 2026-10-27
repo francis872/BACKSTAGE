@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-10-21T23:50:48.254Z",
+  "mode": "deployed_assets_with_isolated_api_fixtures",
+  "site": "https://backstage-637qxqj0n-franciscogloopez-8505s-projects.vercel.app",
+  "passed": [
+    "workspace",
+    "asset_draft_survives_navigation",
+    "browser_back",
+    "sector_configuration",
+    "route_miami_la_inputs",
+    "bsie_geojson_upload_and_validation_result",
+    "bsie_spatial_model_selection",
+    "bsie_temporal_controls",
+    "sanitary_center_render",
+    "sanitary_category_form_submission",
+    "sanitary_optimization_controls",
+    "sanitary_prediction_controls_and_source_kind",
+    "sanitary_measurement_timeline_excludes_invalid",
+    "sanitary_factor_provenance_fields",
+    "comparator_render"
+  ],
+  "runtimeErrors": 0
+}

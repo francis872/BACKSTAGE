@@ -1,22 +1,9 @@
-const { query } = require('./db');
+const d = require('./infrastructure/atlasDocuments');
 
-async function loadLocationData(locationId) {
-  const locationResult = await query('SELECT * FROM locations WHERE location_id = $1', [locationId]);
-  if (locationResult.rows.length === 0) return null;
-
-  const location = locationResult.rows[0];
-  const riskResult = await query('SELECT * FROM risk_assessments WHERE location_id = $1 ORDER BY assessed_at DESC LIMIT 1', [locationId]);
-  const indicatorsResult = await query('SELECT indicator_name, value FROM location_indicators WHERE location_id = $1 ORDER BY indicator_date DESC LIMIT 10', [locationId]);
-  const marketResult = await query('SELECT score FROM location_market_scores WHERE location_id = $1', [locationId]);
-  const suitabilityResult = await query('SELECT score_value FROM site_suitability_scores WHERE location_id = $1 ORDER BY created_at DESC LIMIT 5', [locationId]);
-
-  return {
-    location,
-    risk: riskResult.rows[0] || null,
-    indicators: indicatorsResult.rows,
-    marketScores: marketResult.rows.map((row) => Number(row.score) || 0),
-    suitabilityScores: suitabilityResult.rows.map((row) => Number(row.score_value) || 0),
-  };
+async function loadLocationData(locationId,organizationId){
+ const scope={...d.org(organizationId),location_id:d.id(locationId)};const location=await d.one('locations',scope);if(!location)return null;
+ const [risk,indicators,market,suitability]=await Promise.all([d.one('risk_assessments',scope,{assessed_at:-1}),d.find('location_indicators',scope,{indicator_date:-1},10),d.find('location_market_scores',scope),d.find('site_suitability_scores',scope,{created_at:-1},5)]);
+ return {location,risk,indicators,marketScores:market.map(r=>Number(r.score)||0),suitabilityScores:suitability.map(r=>Number(r.score_value)||0)};
 }
 
 function clamp(value, min, max) {
@@ -100,19 +87,16 @@ function buildScoreDetails(data) {
   return details;
 }
 
-async function evaluateLocation(locationId, modelId = null) {
-  const data = await loadLocationData(locationId);
+async function evaluateLocation(locationId, modelId = null, organizationId) {
+  const data = await loadLocationData(locationId, organizationId);
+  if (!data) throw new (require('./utils/ApiError'))(404, 'Ubicación no encontrada.');
   const score = computeCompositeScore(data);
   const details = buildScoreDetails(data);
 
-  const insertResult = await query(
-    `INSERT INTO scoring_results (model_id, location_id, score, details)
-     VALUES ($1, $2, $3, $4) RETURNING *`,
-    [modelId, locationId, score, details]
-  );
+  const row=await d.insert('scoring_results','scoring_result_id',{...d.org(organizationId),location_id:d.id(locationId),model_id:modelId,score,details,evaluated_at:new Date()});
 
   return {
-    result: insertResult.rows[0],
+    result: row,
     details,
   };
 }

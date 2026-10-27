@@ -1,0 +1,201 @@
+{
+  "checked_at": "2026-10-22T22:48:22.118206+00:00",
+  "phase": 4,
+  "status": "local_implementation_complete_with_atlas_staging_gate",
+  "backend": {
+    "passed": 273,
+    "failed": 0,
+    "external_skipped": 1,
+    "new_platform_core_tests": 10
+  },
+  "frontend": {
+    "passed": 26,
+    "failed": 0
+  },
+  "browser": {
+    "existing": 26,
+    "design": 20,
+    "workflow": 11,
+    "platform_core": 9,
+    "runtime_errors": 0,
+    "final_screenshots": 50,
+    "initial_diagnostic_screenshots": 3
+  },
+  "build": {
+    "passed": true,
+    "modules": 129
+  },
+  "packaging": [
+    {
+      "type": "api",
+      "source": "soi-api-1792709071325",
+      "files_verified": 221,
+      "passed": true
+    },
+    {
+      "type": "web",
+      "source": "soi-web-1792709073926",
+      "files_verified": 138,
+      "passed": true
+    }
+  ],
+  "changed_or_new_source_hashes": [
+    {
+      "path": ".github/workflows/ci-vercel.yml",
+      "sha256": "e72bbc5e6dded30b293f0429d2de0c4efe44b290511c88e1198e7daa179dc389"
+    },
+    {
+      "path": "PROJECT_STATUS.md",
+      "sha256": "49566d73164954c6839370207a46f9f2b375ac601e29e163cb8239c395460313"
+    },
+    {
+      "path": "README.md",
+      "sha256": "82d84c5046bae26c543e46d11589ad69f5004cc3a799b66c7344b9c7874fa14b"
+    },
+    {
+      "path": "backend/controllers/locations.controller.js",
+      "sha256": "03861e933fdf5bf93f3c5966b09e79fe0a292b2b2d13a1049902950459490d5c"
+    },
+    {
+      "path": "backend/controllers/users.controller.js",
+      "sha256": "f28a830db27f3545157bbe20fc1ffba0663489b231b842584b7b83e274baee21"
+    },
+    {
+      "path": "backend/domain/helpers/fakeIdentityMongo.js",
+      "sha256": "e49316ca7ddf65248c0f76ff892cfe2ec5e49a6e53d7884c3e034c696a1046e4"
+    },
+    {
+      "path": "backend/domain/mongoIdentity.test.js",
+      "sha256": "d889d9da0260acec613ab6a2910bdf88589de7a15f3e27b882487f62f6290784"
+    },
+    {
+      "path": "backend/domain/platformCore.test.js",
+      "sha256": "b9c2a19af7748b6e1c572dad4dc3c16fa7d52684759d75cab2a7faefbc0e8ec8"
+    },
+    {
+      "path": "backend/infrastructure/mongoIndexRegistry.js",
+      "sha256": "8532df51517e1fa22e59485e0e7316134eef1ed34f1b630c98b2e67be06a109a"
+    },
+    {
+      "path": "backend/middleware/auditLogger.js",
+      "sha256": "eb3a9ae2b6e6e27c685e65e8c50994aa2858d73661a1f551b205ad7d5926c9cd"
+    },
+    {
+      "path": "backend/repositories/analysis.repository.js",
+      "sha256": "1e3d8ff313507a67245c93f9638a34731b0a069b862f0ca54194cede4f34d10b"
+    },
+    {
+      "path": "backend/routes/auth.routes.js",
+      "sha256": "6d7203150ac53a56c17b9b35da3cd629c8097cbcf63d2ed1df5f924371f0c021"
+    },
+    {
+      "path": "backend/routes/users.routes.js",
+      "sha256": "6ff48c20537147ac6293330e44fa5e671a293fa2c99ab0783f8f9bd129bfcc99"
+    },
+    {
+      "path": "backend/services/assets.service.js",
+      "sha256": "32d7b78571cfad1e0df0e2cadbf86a489ad790c86a041425b4ff6dd47403c297"
+    },
+    {
+      "path": "backend/services/auditLogs.service.js",
+      "sha256": "b4f4c3cda511adc4d1ecb791d44648012a91afc5613d3f611693e7d62995d375"
+    },
+    {
+      "path": "backend/services/comparisons.service.js",
+      "sha256": "6a16532df0eea45227d7d345670ac1ac56991b7208db60784693de660cd5f540"
+    },
+    {
+      "path": "backend/services/locations.service.js",
+      "sha256": "4f1b7b01ff9ba7163a8e9240e5eb01916ae91d7931818985a922528c88de7084"
+    },
+    {
+      "path": "backend/services/mongoAudit.service.js",
+      "sha256": "99aebd78fa62d003a962af3a84042c83f2a36f6814afdbca00eed4c00633a51a"
+    },
+    {
+      "path": "backend/services/mongoIdentity.service.js",
+      "sha256": "19a52d1d6b02b13cf7d4c90f6b28029683c73002d1ba491a8bd651800d421d58"
+    },
+    {
+      "path": "backend/services/platformAudit.service.js",
+      "sha256": "e0d4e207bb6726657415aaf458184a6ae1460f9a091c5232c53b865b0d4abc43"
+    },
+    {
+      "path": "backend/services/soiMongoAudit.service.js",
+      "sha256": "d58f5d78e69e375ead5ef9633e29dc06c8fb385cb31c5fceeace990c8b7551d4"
+    },
+    {
+      "path": "docs/backstage-2.0/CHANGELOG.md",
+      "sha256": "8500c4d8dc69210942c83583ef0f76443cc22c8db24e949fc273e7b2ef723b51"
+    },
+    {
+      "path": "docs/backstage-2.0/CORE_API.md",
+      "sha256": "2790063d1de49fa91ece8ac137ebf3c4bdee69202f0c54347f6bb58190ca05fd"
+    },
+    {
+      "path": "docs/backstage-2.0/DEPLOYMENT.md",
+      "sha256": "0960c2534b9054573de4604b1cb49e5a14c03da0b4bbe198b40ae5af8f77fae7"
+    },
+    {
+      "path": "docs/backstage-2.0/IMPLEMENTATION_ROADMAP.md",
+      "sha256": "46b92af8fb9616bfe7bcfad9d992011276e06a0cf9b1872b77580609fdde6e4e"
+    },
+    {
+      "path": "docs/backstage-2.0/PHASE_4_REPORT.md",
+      "sha256": "60bbdba584626cd042ed237e57e3b7e4b7d12c049533b8e9534fab583a95ce87"
+    },
+    {
+      "path": "docs/backstage-2.0/PLATFORM_CORE.md",
+      "sha256": "3ac35297e521dc47936f3ee6c3fe52125aaa903bf764e37e0588d94bc77f3a4a"
+    },
+    {
+      "path": "docs/backstage-2.0/ROLLBACK.md",
+      "sha256": "2359c99de945a8efcf26151a208139a500f184958618df77994d7e20583722d4"
+    },
+    {
+      "path": "docs/backstage-2.0/TEST_STRATEGY.md",
+      "sha256": "e3ee63759abacfed198f6cde07d74cce58c8ebc81cb27c0d43f7e29565e71d22"
+    },
+    {
+      "path": "frontend/package.json",
+      "sha256": "e4d84114a8322df5e4b58fb7cefee5135e6e9dc3fc02b3ce0447cc65bee764c0"
+    },
+    {
+      "path": "frontend/scripts/soi-browser-smoke.mjs",
+      "sha256": "4045034fa6c1b5d7362da7fc0055ead9d0ccb05eac032dad5135318e68ef40e3"
+    },
+    {
+      "path": "frontend/src/App.jsx",
+      "sha256": "1261836b8a212a6ed321903a2e6ee8446c0517289409c8c5ce293dbe955a7622"
+    },
+    {
+      "path": "frontend/src/components/InvitationJoin.jsx",
+      "sha256": "aa8f93c8c9027a52ea52231b4007be8b442f9b7b5863d7ff615f5d579b1cdf23"
+    },
+    {
+      "path": "frontend/src/pages/AuditLogsAdmin.css",
+      "sha256": "8e595691cb2754ad5def151fc139cabc5c8d0644415a89ae8f30382b3a8ac7f1"
+    },
+    {
+      "path": "frontend/src/pages/AuditLogsAdmin.jsx",
+      "sha256": "0879b480802a738f2920c4d05690c3bc3deba58e70c79b8bb59a3022630ab2c3"
+    },
+    {
+      "path": "frontend/src/pages/UsersAdmin.jsx",
+      "sha256": "fc0ad3d2295fb76942917f769c5c1295473df6005ddd981c7ed303f19e988dc2"
+    },
+    {
+      "path": "scripts/verify-prepared-backstage.js",
+      "sha256": "7ee4eae4ed43cf0ba0b10aeeb3da0997049ceaabfdd7f3adf109fce9bfb9e1de"
+    }
+  ],
+  "atlas_writes": false,
+  "indexes_applied": false,
+  "deployed": false,
+  "limits": [
+    "Atlas persistence and concurrency not certified by Mongo fixtures",
+    "Invitation link shared manually; no email provider or automatic mailbox verification",
+    "Atomic audit covers enumerated operations; generic HTTP audit remains asynchronous",
+    "Native WebSocket checked locally; hosting support remains unverified"
+  ]
+}

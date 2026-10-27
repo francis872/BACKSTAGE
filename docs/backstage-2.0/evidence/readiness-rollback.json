@@ -1,0 +1,62 @@
+{
+  "started_at": "2026-10-24T16:14:44.512Z",
+  "scope": "dedicated_protected_staging_aliases_only",
+  "production_changes": false,
+  "data_restore": false,
+  "checks": [
+    "accepted_pair_preflight",
+    "previous_pair_aliases_protection_mongodb_and_web_assets_verified",
+    "accepted_pair_restored_and_verified"
+  ],
+  "previous": {
+    "api": {
+      "project_id": "prj_b8QR9h6618xv5xhAdAWLGheZhJsO",
+      "project_name": "backstage-staging-api",
+      "deployment": {
+        "id": "dpl_CaecTh5V5RJLoAnYvmcxkcpxLXV9",
+        "url": "backstage-staging-16m43mycx-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "preview"
+      },
+      "alias": "backstage-staging-api.vercel.app"
+    },
+    "web": {
+      "project_id": "prj_Adl43dUBZ79gEmihyrCVCyYC80eA",
+      "project_name": "backstage-staging-web",
+      "deployment": {
+        "id": "dpl_H6WVviGNj6QXG87kaKmnHvjFpBd7",
+        "url": "backstage-staging-kjruuebns-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "preview"
+      },
+      "alias": "backstage-staging-web.vercel.app"
+    }
+  },
+  "accepted": {
+    "api": {
+      "project_id": "prj_b8QR9h6618xv5xhAdAWLGheZhJsO",
+      "project_name": "backstage-staging-api",
+      "alias": "backstage-staging-api.vercel.app",
+      "deployment": {
+        "id": "dpl_3BG4YRnq1uhMjBuYBKMMK1EQh8Yq",
+        "url": "backstage-staging-oj406svva-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "preview"
+      }
+    },
+    "web": {
+      "project_id": "prj_Adl43dUBZ79gEmihyrCVCyYC80eA",
+      "project_name": "backstage-staging-web",
+      "alias": "backstage-staging-web.vercel.app",
+      "deployment": {
+        "id": "dpl_96mKM6xEKxmouQc5KYjRnZc1UqJe",
+        "url": "backstage-staging-lcio4bezo-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "preview"
+      }
+    }
+  },
+  "accepted_pair_restored": true,
+  "status": "passed",
+  "finished_at": "2026-10-24T16:14:59.776Z"
+}

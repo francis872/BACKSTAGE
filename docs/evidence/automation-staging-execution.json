@@ -1,0 +1,164 @@
+{
+  "checked_at": "2026-10-26T00:21:27.605Z",
+  "mode": "read_only_observer_of_deployed_vercel_daemons",
+  "run_id": "auto-20261025234838-1315eafd",
+  "production_changes": false,
+  "local_worker_started": false,
+  "physical_pc_powered_off_verified": false,
+  "checks": [
+    {
+      "name": "dedicated_staging_database_ownership_and_original_production_unchanged",
+      "passed": true,
+      "production_aliases": {
+        "api": "dpl_FfGqHQQk5CEXGjcsje9yqaUSC1VE",
+        "web": "dpl_BCE7C3mvdoR4ftrRAahTiE78XHpo"
+      }
+    },
+    {
+      "name": "deployed_status_endpoint_denies_missing_secret_and_returns_only_owned_test_jobs",
+      "passed": true
+    },
+    {
+      "name": "cloud_clock_scheduled_known_risk_without_local_execution",
+      "passed": true,
+      "expected_risk": 0.125
+    },
+    {
+      "name": "real_deployed_process_termination_expired_lease_persisted_backoff_and_new_instance_recovery",
+      "passed": true,
+      "attempts": 2,
+      "retry_pending_events": 1
+    },
+    {
+      "name": "actual_workflow_timeout_is_terminal",
+      "passed": true
+    },
+    {
+      "name": "unchanged_python_engine_runs_inside_deployed_container",
+      "passed": true,
+      "expected_complete_graph_moran": -0.3333333333333333
+    },
+    {
+      "name": "repeated_scheduler_invocations_preserve_one_job_and_one_completion_fact_per_case",
+      "passed": true
+    },
+    {
+      "name": "canonical_audit_chain_valid",
+      "passed": true
+    },
+    {
+      "name": "completed_evidence_input_result_and_manifest_hashes_verify",
+      "passed": true
+    }
+  ],
+  "deployment_id": "dpl_vHsnth9UK3m2LEGk9pG3FmWDsdqe",
+  "initial_execution_deployment_id": "dpl_vHsnth9UK3m2LEGk9pG3FmWDsdqe",
+  "observed_deployment_id": "dpl_EVu1bjPBUXERghUKamWFw3HjPkGp",
+  "vercel_project_id": "prj_ktyBc2g5IFnDtQsSZHOuGMY5TE6h",
+  "planned_pc_off_execution": {
+    "case_id": "pc-off-observation",
+    "scheduled_for": "2026-10-26T00:53:21.015Z",
+    "programmed_at": "2026-10-26T00:06:42.814Z"
+  },
+  "jobs": [
+    {
+      "id": 1,
+      "case_id": "known-risk",
+      "status": "COMPLETED",
+      "attempts": 1,
+      "scheduled_for": "2026-10-25T23:53:21.015Z",
+      "programmed_at": "2026-10-25T23:53:06.015Z",
+      "trigger": "deployed_daemon_clock",
+      "started_at": "2026-10-25T23:53:21.282Z",
+      "completed_at": "2026-10-25T23:53:22.240Z",
+      "duration_ms": 106.2973929999971,
+      "execution_instances": [
+        "9b46428a-13a6-4c69-bb6a-c9cf501a075f"
+      ],
+      "result_sha256": "bb45276d287becd35def08d680ce4b02b8263afe63a9c7c02bf87c818b231e2a"
+    },
+    {
+      "id": 2,
+      "case_id": "interruption-recovery",
+      "status": "COMPLETED",
+      "attempts": 2,
+      "scheduled_for": "2026-10-25T23:53:51.015Z",
+      "programmed_at": "2026-10-25T23:53:06.015Z",
+      "trigger": "deployed_daemon_clock",
+      "started_at": "2026-10-25T23:53:53.300Z",
+      "completed_at": "2026-10-25T23:54:43.981Z",
+      "duration_ms": 100.18410199999926,
+      "execution_instances": [
+        "748b9800-729f-4fb2-9771-76655921583e",
+        "9b46428a-13a6-4c69-bb6a-c9cf501a075f"
+      ],
+      "result_sha256": "bb45276d287becd35def08d680ce4b02b8263afe63a9c7c02bf87c818b231e2a"
+    },
+    {
+      "id": 3,
+      "case_id": "workflow-timeout",
+      "status": "TIMED_OUT",
+      "attempts": 1,
+      "scheduled_for": "2026-10-25T23:54:51.015Z",
+      "programmed_at": "2026-10-25T23:53:06.015Z",
+      "trigger": "deployed_daemon_clock",
+      "started_at": "2026-10-25T23:54:51.327Z",
+      "completed_at": "2026-10-25T23:54:52.224Z",
+      "duration_ms": 119.17816299999686,
+      "execution_instances": [
+        "1c335e60-3bee-4b7a-9869-b285d59060bb"
+      ],
+      "result_sha256": null
+    },
+    {
+      "id": 4,
+      "case_id": "known-moran",
+      "status": "COMPLETED",
+      "attempts": 1,
+      "scheduled_for": "2026-10-25T23:55:21.015Z",
+      "programmed_at": "2026-10-25T23:53:06.015Z",
+      "trigger": "deployed_daemon_clock",
+      "started_at": "2026-10-25T23:55:22.790Z",
+      "completed_at": "2026-10-25T23:55:25.012Z",
+      "duration_ms": 1441.0965200000064,
+      "execution_instances": [
+        "1c335e60-3bee-4b7a-9869-b285d59060bb"
+      ],
+      "result_sha256": "f8e781838d23d71aa6a1f11ada0683802a4932d2c30bbd5e9a74bf91e3acc07f"
+    },
+    {
+      "id": 5,
+      "case_id": "function-expiry-recovery",
+      "status": "COMPLETED",
+      "attempts": 2,
+      "scheduled_for": "2026-10-26T00:00:18.539Z",
+      "programmed_at": "2026-10-26T00:00:18.539Z",
+      "trigger": "controlled_function_timeout_probe",
+      "started_at": "2026-10-26T00:00:18.582Z",
+      "completed_at": "2026-10-26T00:01:09.892Z",
+      "duration_ms": 177.02165499999865,
+      "execution_instances": [
+        "5e8a7999-400b-4942-9efc-2367c2c5d5b1",
+        "3ca3f63d-4962-47f1-ba3e-cf0c2fbd962a"
+      ],
+      "result_sha256": "bb45276d287becd35def08d680ce4b02b8263afe63a9c7c02bf87c818b231e2a"
+    },
+    {
+      "id": 6,
+      "case_id": "capacity-risk",
+      "status": "COMPLETED",
+      "attempts": 1,
+      "scheduled_for": "2026-10-26T00:09:58.650Z",
+      "programmed_at": "2026-10-26T00:09:43.650Z",
+      "trigger": "deployed_daemon_clock",
+      "started_at": "2026-10-26T00:09:58.998Z",
+      "completed_at": "2026-10-26T00:09:59.951Z",
+      "duration_ms": 100.61385199999859,
+      "execution_instances": [
+        "d59227cc-68f4-4573-a5b3-a665df5593bf"
+      ],
+      "result_sha256": "bb45276d287becd35def08d680ce4b02b8263afe63a9c7c02bf87c818b231e2a"
+    }
+  ],
+  "status": "passed"
+}

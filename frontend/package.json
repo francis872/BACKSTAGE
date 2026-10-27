@@ -3,11 +3,19 @@
   "version": "3.1.0",
   "private": true,
   "description": "Interfaz de BACKSTAGE Intelligence",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "test:soi-ui": "node scripts/soi-browser-smoke.mjs",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "node scripts/deploy.mjs"
+    "deploy": "node scripts/deploy.mjs",
+    "test:design-ui": "node scripts/soi-browser-smoke.mjs --phase2",
+    "test:workspace-ui": "node scripts/soi-browser-smoke.mjs --phase3",
+    "test:core-ui": "node scripts/soi-browser-smoke.mjs --phase4"
   },
   "dependencies": {
     "maplibre-gl": "^6.11.2",

@@ -1,0 +1,10 @@
+{
+    "checked_at":  "2026-10-24T04:08:26.2759556Z",
+    "task_name":  "BACKSTAGE-Staging-Monitor-F8B21D9C",
+    "state":  "Ready",
+    "interval_minutes":  5,
+    "scope":  "protected_staging_only",
+    "requires_local_computer_and_signed_in_user":  true,
+    "external_alert_delivery":  false,
+    "production_monitoring":  false
+}

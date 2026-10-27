@@ -1,0 +1,314 @@
+{
+  "baseline": "scoped code backup before Origin, 298 files; excludes pre-existing unrelated working tree changes",
+  "baseline_archive_sha256": "5fbeecdb1338e4ea67f15a886f3d81de9a017cb0525e4fdf7defdaf2e5999757",
+  "modified_from_scoped_baseline": [
+    {
+      "path": "frontend/src/App.jsx",
+      "before_sha256": "97a089b8922e543e6b218f3a072a1ba60ee18c2340c31e3d5b59a40c423d914b",
+      "after_sha256": "f96f1dbcd82428688aa0cdf6160dc0803d69df9b1869853c9f3d9ab80e8248c3"
+    },
+    {
+      "path": "frontend/src/components/SpatialSearch.jsx",
+      "before_sha256": "1b07d7e1e97e0b03783356b678f0ed10cb3337d58a1c9695dd2badd41eb3cc73",
+      "after_sha256": "de243d73dc766e337f0d5b375d6d2f605dcdaac997164b63772b3355a86c4ebc"
+    },
+    {
+      "path": "frontend/src/components/TerritoryLiveBar.jsx",
+      "before_sha256": "95f4ed4b8aa3f1d782e83e1d0a374f7a94a9a9384eca8e6b6de841a18f88b18f",
+      "after_sha256": "1506bdeaff66940db0dead640e89ee635232cc03d30fbe62fd113758486393f2"
+    },
+    {
+      "path": "frontend/src/lib/auth.js",
+      "before_sha256": "f2b08690d791b959858d8a07c522cb60b1aca5e9ea4e28a0565775825afd7420",
+      "after_sha256": "9259911196919c57772f3dce17dc07e2c2afd2fcde574892213ed047f67cfda9"
+    },
+    {
+      "path": "frontend/src/lib/comparisonCandidates.mjs",
+      "before_sha256": "1c22d6b9bca09ca512c788f8378ca5719c4c9048df2cd7de8938c2514d182319",
+      "after_sha256": "f0c74ad898dcea0fc8b84e3b1f29c45de3298e7b0f8277b7016c56129afceb63"
+    },
+    {
+      "path": "frontend/src/lib/navigationRegistry.mjs",
+      "before_sha256": "af5a7fecf31865fe80fe937a83691f9a467825f1d3eff98aabdf6767bda909e8",
+      "after_sha256": "aaa32c777d7b6e69f39aa14b53df66159b4abe0a82779c837a0ed09102f338ff"
+    },
+    {
+      "path": "frontend/src/lib/operationalContext.js",
+      "before_sha256": "60d75bcc850c1fa8f086dfa66ef7c103f4041bb47102673a1cfbbd043ba8a329",
+      "after_sha256": "f3e886366cb0a48af5c6fafce76b1f823ce829e44284086ef84161178b26bb32"
+    },
+    {
+      "path": "frontend/src/lib/projectContext.mjs",
+      "before_sha256": "8ba1f930ee72763104ab04928a32f921f5e1c130cb51380825601d6fd11dadbe",
+      "after_sha256": "fa4839d685c46b49936c5cf83bd44a39ee1bd758b746d1a98b4c2e9f0c025661"
+    },
+    {
+      "path": "frontend/src/lib/territory.js",
+      "before_sha256": "71610e3f938ead96d9be077ce6ee98fe65a04331ce561791e6f550c12c4bb51a",
+      "after_sha256": "7750ce0c80b08ef8e2dd07423e1c0d2e8b771c83923554dc54328a49f319bb91"
+    },
+    {
+      "path": "frontend/src/pages/AdvancedComparator.jsx",
+      "before_sha256": "0ee9617fe65fe654b9fc076bc9e60c285bb6ec959c165a9074df5612aedc20d1",
+      "after_sha256": "ff1501ba950c094c57cf1c9f34888b6d7d0004b972e5e7e4fba9b97b8dd1ec3d"
+    },
+    {
+      "path": "frontend/src/pages/LegacyAdvancedComparator.jsx",
+      "before_sha256": "7fe2cb29b2725c1d4f7821afd839ac526e5d7e63e465c66c2caf5a5805940beb",
+      "after_sha256": "8077a0df71f89818d5d8c2bd02054eca8f04b2ec3629f3f7537bc77cfcc94940"
+    },
+    {
+      "path": "frontend/src/pages/MissionControl.jsx",
+      "before_sha256": "e7812ac061f2df526bc494fafcef414e6d7293011046e672996a2724257c0a03",
+      "after_sha256": "efdf09a922f5408973d7d2f18eb64b3a16d2b54bc3a31f08bbc0a399f0c5dfed"
+    },
+    {
+      "path": "frontend/src/pages/NativeTerritorialExplorer.jsx",
+      "before_sha256": "018f0b9963ecc303d77ad1e4ad91fdd2d772d70010d76488f71a3af2d05ed9ec",
+      "after_sha256": "77aa399743c24b7d924fb82ca11bebfc096ea8bfb7da9cb080281da27d07757a"
+    },
+    {
+      "path": "frontend/src/pages/RetailZones.jsx",
+      "before_sha256": "6bd4de1658fe185688beaa4ecc385676aa9e5de05cafe01417edba239c8828ff",
+      "after_sha256": "e798f16b1b2d8162c3d514fa92375311daa84aad33a008166f7440a2527b1fb0"
+    },
+    {
+      "path": "frontend/src/pages/SoiRoutes.jsx",
+      "before_sha256": "8723f0c1babecfb384d9517df2500e8bba35f80db07904482d143c4af685375c",
+      "after_sha256": "e7c3a227aabcae9bd4b759ca93460079e33c6979c1fe4ef00270fbccf00b400a"
+    },
+    {
+      "path": "frontend/src/pages/UsersAdmin.jsx",
+      "before_sha256": "0048d44e06abc6a02572c726d53d707c273407e26eb92520d85d213bac3e59d1",
+      "after_sha256": "11f300696800ce80654d2b3f65446616456c31a7dd8890d40e3689421604b625"
+    },
+    {
+      "path": "frontend/src/styles/theme.css",
+      "before_sha256": "032232a6b5ee57b6a1ce770e3b1c7760370141d48932481bc4527b0d2aafa3fb",
+      "after_sha256": "67c167c7b85686166be59bbb7c635a4d019113f11efe1a6c7b77e6261241497e"
+    },
+    {
+      "path": "frontend/tests/designContrast.test.mjs",
+      "before_sha256": "6219b72ecfe847b3cd19fd4c07169fd4a58e87d354f4931926880c2532ace1f0",
+      "after_sha256": "d542f1e1d979d7c908ffd16b94876627c7fb0500e517b51a388496d751edd913"
+    },
+    {
+      "path": "frontend/tests/platformNavigation.test.mjs",
+      "before_sha256": "07d21d93fb40e83c635b9ba682d5a204866db143e0ceb0a5892f858606099635",
+      "after_sha256": "faf02974753d7d95a2dc1441fa8bdcc6eb5dc637252d12207ea8fe38b4c81b21"
+    },
+    {
+      "path": "frontend/scripts/soi-browser-smoke.mjs",
+      "before_sha256": "c8095b96f2a6313c326c0b6fc7b695c817c624bc6586e2cfd680d69b0a77dbe6",
+      "after_sha256": "16d656006955f015b1b0b5e0bfd2696f59680ca4fa10fa09b1e312f96b4d719b"
+    },
+    {
+      "path": "backend/services/comparisons.service.js",
+      "before_sha256": "534e9e84dfea689b6b76c1fa8e8313041710c09c0d40f871984166b33b804061",
+      "after_sha256": "6346b38b305dd28920c1a6cfe6857201fea570c5d2c1dfe81b922510df4cef78"
+    },
+    {
+      "path": "backend/services/geography.service.js",
+      "before_sha256": "d3ad593eb00ec675b9e2a25bd94c35a2b9d67e49d752ad7a9744234435e7f469",
+      "after_sha256": "31130148f123933b77ea0cdc8b248e5e8a79cd0471945a8e2b4f000bd2a4587d"
+    },
+    {
+      "path": "backend/services/mongoIdentity.service.js",
+      "before_sha256": "19a52d1d6b02b13cf7d4c90f6b28029683c73002d1ba491a8bd651800d421d58",
+      "after_sha256": "1183e819e390ff455d80fb479aa23a278c005e5dcce3eae5d0a80d2ed5012d24"
+    },
+    {
+      "path": "backend/routes/auth.routes.js",
+      "before_sha256": "f4321ee43901a1a38e9bce970e355ce3cdafc43f9029aeb3c584037414260ebe",
+      "after_sha256": "034353090320090eae14ed16356043e78afcbcd92829acb5ccb46b5cf7fdd50b"
+    },
+    {
+      "path": "backend/domain/workspaceContext.js",
+      "before_sha256": "66251eac36971b917aaff74fb164ff5fe03c1ea0de4f1b4b4f26385dccada4b4",
+      "after_sha256": "41bd4fbd42e8e88d74cda3c5e5866ce7501cede26d8c15f8c45b8dfb75c822f3"
+    },
+    {
+      "path": "backend/domain/workspaceFlow.test.js",
+      "before_sha256": "a190fb0cc32028d3c66ebf3378c7ef431a38e5705801209980c83aaf2c0d6282",
+      "after_sha256": "a6f7b81ee4671a19f6d9bce4b4c388643b9a464f72d70dec332a3e247faf5ed8"
+    },
+    {
+      "path": "backend/middleware/auditLogger.js",
+      "before_sha256": "eb3a9ae2b6e6e27c685e65e8c50994aa2858d73661a1f551b205ad7d5926c9cd",
+      "after_sha256": "883a899bcf10237f472aa2478c8698b8efdc5f4b78641e87bd9874b1119e3eec"
+    },
+    {
+      "path": "backend/index.js",
+      "before_sha256": "8c7d1e58ca803f9f483fd8f4f5cad63ce408096844d9212c7ee702072ee6c172",
+      "after_sha256": "4bf0c69270be010e29aad93d9472a1848aa0b529f2b12aa4372be664e3a24236"
+    }
+  ],
+  "new_files": [
+    {
+      "path": "frontend/src/components/CapabilityBoundary.jsx",
+      "sha256": "a541c05651408fa21f215607514e91c3a67332fd56f4ca3900cb5c6ce0357d75"
+    },
+    {
+      "path": "frontend/src/components/ExplorerWorkspace.jsx",
+      "sha256": "06d9524b41a48784843c1989024e19dd12b1d3f982e7ad559dab98392ac125bb"
+    },
+    {
+      "path": "frontend/src/components/MapLayerControl.jsx",
+      "sha256": "10045670452ac54ca0f2079be95a0138dea3989e2fd7778d06db134db0c8bcdd"
+    },
+    {
+      "path": "frontend/src/lib/sourceLabel.mjs",
+      "sha256": "29624e068fde92bb2a871106a962a79afc9fec5db3aa51c62a4364eed9bcbdee"
+    },
+    {
+      "path": "frontend/src/pages/Account.jsx",
+      "sha256": "df911f081d07be40846b591d14dbd3b298ae2be628f6e00335073e9bda827a8a"
+    },
+    {
+      "path": "frontend/src/pages/Feed.jsx",
+      "sha256": "ab6688d646fbff4a0730ea07960ad6d1fdf285428c5bdbe534d120b7f8695535"
+    },
+    {
+      "path": "frontend/src/styles/origin.css",
+      "sha256": "004e04481dfbe379021b224bdc0523b8bbde93233c0777f8e33f0b6afe00efaa"
+    },
+    {
+      "path": "frontend/tests/originStability.test.mjs",
+      "sha256": "3e8f712fdd35dbb330dd1e3a8572e4f529aa97baaa04b154a7d60bd0d693b3a1"
+    },
+    {
+      "path": "frontend/tests/originRendering.test.mjs",
+      "sha256": "8ad32cde4d47f824d3167220c69acd4b032fafce301b9e832040c426804782b8"
+    },
+    {
+      "path": "frontend/scripts/origin-browser-scenarios.mjs",
+      "sha256": "7e1d83c69ab913bcddff6605e26c84bd344f48f9b2b4cc019269333599ea825e"
+    },
+    {
+      "path": "backend/services/collaboration.service.js",
+      "sha256": "55eded7c5bf5d80a7f8cf23e80a51afcc0b1cd313f3168097ad74d4761e010b9"
+    },
+    {
+      "path": "backend/routes/feed.routes.js",
+      "sha256": "02d9c33bdb808a3efc9b87369d67a96b99cdb8ef33789ab582200cc55df2ca4c"
+    },
+    {
+      "path": "backend/domain/originAccount.test.js",
+      "sha256": "5f5d564885d5193625370c2c7a2f59b139d43e83d5fc5166e2c3bb09faed3f22"
+    },
+    {
+      "path": "backend/domain/originCollaboration.test.js",
+      "sha256": "49599519b80550738dab34eb57029c8e39256440f0a028644c8c023df34a3e82"
+    },
+    {
+      "path": "backend/domain/originComparisonProject.test.js",
+      "sha256": "15c642f826807a9f20109f791c218c373cd2ca1011a02caca434a9bca1b082f8"
+    },
+    {
+      "path": "backend/domain/originMapbox.test.js",
+      "sha256": "820e3bc4070176143e42954361d2da24fba3fb5a22e018f99859c50757fcee21"
+    },
+    {
+      "path": "backend/domain/originRouteProject.test.js",
+      "sha256": "5933d8225bab0256e4666bbf849849f121c69bfa48b6c377147877756bd17e86"
+    }
+  ],
+  "known_supporting_files_not_in_scoped_baseline": [
+    {
+      "path": "backend/.env.example",
+      "sha256": "86f86d6e93949075e5d2fe0839e2b8bf3e1d28bc452f66099936cb82a644c652"
+    },
+    {
+      "path": "backend/scripts/verify-origin-staging.js",
+      "sha256": "febf04f0f867410b16aa9bf4b4faf33ba59ad92bb536936c563d284d773ad734"
+    },
+    {
+      "path": "backend/scripts/verify-staging.js",
+      "sha256": "2791e3ed34ede0d216a3f1783a2e3a69bea2534ed48f41d4b763da28ea23023c"
+    },
+    {
+      "path": "scripts/staging-vercel.js",
+      "sha256": "09447384f6afbdf76a5b0ce9ea5122474555a09ddfc944261cf77c6265b52a0b"
+    },
+    {
+      "path": "backend/scripts/run-regression.js",
+      "sha256": "3423a48b79af14aec2b67ade6aae00f05af0d39bcc8cb9d0582edda0475cf816"
+    }
+  ],
+  "shared_contracts_unchanged": [
+    {
+      "path": "shared/businessRules.v1.json",
+      "sha256": "c15dcc565086c385ca53a13ed6f512d19299987db4b6ea63167035644f249135"
+    },
+    {
+      "path": "shared/commercialPolicy.draft.v1.json",
+      "sha256": "c05293bd589acbb77403cb08154301cd1ef2e486fb8d0c4adcd50d9ef7440c67"
+    },
+    {
+      "path": "shared/comparison.mjs",
+      "sha256": "c14ea34fbd0bfd0988030f9edf7a77fa69106cf98359becb03af09c071220c85"
+    },
+    {
+      "path": "shared/comparison.v1.mjs",
+      "sha256": "ab29abdeee6be7c402186e113be7af3047bdfe3f96c0c2af436722990ef5f2a5"
+    },
+    {
+      "path": "shared/comparison.v2.mjs",
+      "sha256": "ba35c22147bf17199cd2d79b4994498d6d8ebc1e38dc6332272ddcddbf4286e4"
+    },
+    {
+      "path": "shared/decimal.mjs",
+      "sha256": "391cf002d8c301662ada54cf378c9eb171778bac460f8f79f310bb4152e23ac1"
+    },
+    {
+      "path": "shared/financial.v2.mjs",
+      "sha256": "04870b8c2feb98c5bd4d57e62ba14869e1c027f899347cb423a5f0aa8c2cabb1"
+    },
+    {
+      "path": "shared/modules.json",
+      "sha256": "27b8499dd7ec5d226711d02e253e13b65530a2efa56b162a7ee16965a5a60276"
+    },
+    {
+      "path": "shared/soiComparison.mjs",
+      "sha256": "a03041d5fc4dbf894a98692afd15a53dcca90e2729ccfc18d1aa13e3bc770e4e"
+    },
+    {
+      "path": "shared/spatialRules.v1.json",
+      "sha256": "5640ab7997cc224ec92b0979629893cd71933280c653a2c7f44cfd8b6d60e306"
+    }
+  ],
+  "documentation_files": [
+    {
+      "path": "docs/BACKSTAGE_ARCHITECTURE.md",
+      "sha256": "09cfbdf88bb814959262f1fee1c50c5a9b6fbd3730cd0090c639908df91083f2"
+    },
+    {
+      "path": "docs/BACKSTAGE_AUDIT.md",
+      "sha256": "93e44b99d5d010690f79ea5c7f0c59964fbfb0bbf13ecbd42b357aebd0fe210c"
+    },
+    {
+      "path": "docs/BACKSTAGE_DESIGN_SYSTEM.md",
+      "sha256": "2baddff5bc3dc75206f969f00bb44e5e79d9885744a586947c88e9fd14d33772"
+    },
+    {
+      "path": "docs/BACKSTAGE_DOMAIN_MODEL.md",
+      "sha256": "7269981c91137d5df72657bfcd85f9acb585349c862d2851cc67b5f8b539b18d"
+    },
+    {
+      "path": "docs/BACKSTAGE_GEOSPATIAL_ENGINE.md",
+      "sha256": "8aee5443af0ec1c44eb9e7ea4e9389a5cb8a7ba483803e94c5e138b0bfd6164f"
+    },
+    {
+      "path": "docs/BACKSTAGE_IMPLEMENTATION_STATUS.md",
+      "sha256": "342af8200d8c122bd7e97dbd22d529daa8e603a101bbca90fce7ed47aeaab78b"
+    },
+    {
+      "path": "docs/BACKSTAGE_MIGRATION_PLAN.md",
+      "sha256": "15546f4e7d011c196080ec02c9e0634a4e12ab43007b33ece1c630aaa320ad05"
+    },
+    {
+      "path": "docs/BACKSTAGE_TEST_REPORT.md",
+      "sha256": "d8ed137776a6bba156f4f89667667fe9dee868e2ee2319cb0e7a121ecce0a5be"
+    }
+  ]
+}

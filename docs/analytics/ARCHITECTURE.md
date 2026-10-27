@@ -23,7 +23,7 @@ Service (backend/services/analytics.service.js)
   -> guarda resultado o error, marca succeeded/failed, calcula duración
 Domain (backend/domain/analytics/*.js)
   -> funciones puras, deterministas, con pruebas doradas (backend/domain/analytics/__tests__)
-PostgreSQL
+MongoDB Atlas
   -> tabla analytics_jobs: organización, usuario, algoritmo, versión,
      parámetros, resultado, error, duración, timestamps
 ```
@@ -53,7 +53,7 @@ persistentes) no requiere cambiar los controllers ni el frontend.
 
 | Capa | Responsabilidad | Lo que NO hace |
 |---|---|---|
-| `domain/analytics/*.js` | Algoritmos puros (normalización, multicriterio, financiero, riesgo) | No conoce Express, PostgreSQL ni HTTP |
+| `domain/analytics/*.js` | Algoritmos puros (normalización, multicriterio, financiero, riesgo) | No conoce Express, MongoDB Atlas ni HTTP |
 | `infrastructure/analytics/algorithmRegistry.js` | Catálogo cerrado de algoritmos ejecutables por nombre+versión | No acepta fórmulas arbitrarias del cliente |
 | `repositories/analyticsJobs.repository.js` | Único lugar con SQL de `analytics_jobs` | No contiene reglas de negocio |
 | `services/analytics.service.js` | Orquesta ejecución + trazabilidad + límites de tamaño | No contiene fórmulas matemáticas |

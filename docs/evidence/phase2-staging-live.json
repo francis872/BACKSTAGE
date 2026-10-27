@@ -1,0 +1,107 @@
+{
+  "run_id": "atlas-core-20261025203601-dd11a00a47c7",
+  "started_at": "2026-10-25T20:36:01.801Z",
+  "mode": "real_protected_staging_atlas_separate_worker",
+  "api_interception": false,
+  "data_kind": "SIMULATED_OWNED_TEST_FIXTURES",
+  "production_changes": false,
+  "checks": [
+    {
+      "name": "authorized_test_target_http_authentication_and_original_production_unchanged",
+      "passed": true
+    },
+    {
+      "name": "closed_catalog_preserves_available_engines_and_reports_missing_algorithms",
+      "passed": true
+    },
+    {
+      "name": "concurrent_http_idempotency_and_cross_tenant_denial",
+      "passed": true
+    },
+    {
+      "name": "real_optimistic_revision_conflict",
+      "passed": true
+    },
+    {
+      "name": "separate_process_workers_claim_once_execute_real_js_python_and_honor_dependencies",
+      "passed": true,
+      "workers": [
+        {
+          "exit_code": 0,
+          "finished_attempts": 0,
+          "duration_ms": 5992.228300000001
+        },
+        {
+          "exit_code": 0,
+          "finished_attempts": 1,
+          "duration_ms": 13403.395100000002
+        }
+      ],
+      "known_risk": 0.125,
+      "known_complete_graph_moran": -0.3333333333333333
+    },
+    {
+      "name": "project_link_geojson_and_historical_hashes_without_legacy_access_bypass",
+      "passed": true
+    },
+    {
+      "name": "explicit_repeat_preserves_original_and_cancellation_is_state_checked",
+      "passed": true
+    },
+    {
+      "name": "real_controlled_expired_lease_recovery_and_stale_worker_fencing",
+      "passed": true
+    },
+    {
+      "name": "real_worker_timeout_preserves_terminal_state",
+      "passed": true
+    },
+    {
+      "name": "real_defense_evaluation_requires_another_admin_without_applying_sensitive_changes",
+      "passed": true
+    },
+    {
+      "name": "source_crud_event_idempotency_parent_integrity_and_foreign_source_rejected",
+      "passed": true
+    },
+    {
+      "name": "bounded_real_http_reads_under_concurrency",
+      "passed": true,
+      "requests": 20,
+      "concurrency": 4,
+      "p95_ms": 632.6777000000002,
+      "scope": "owned_fixture_reads_not_production_capacity"
+    },
+    {
+      "name": "real_canonical_audit_chain_and_payload_minimization",
+      "passed": true
+    },
+    {
+      "name": "documented_core_contracts_and_public_events_hide_dispatch_leases",
+      "passed": true
+    }
+  ],
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "deployments": {
+    "api": {
+      "id": "dpl_9Zsc6VGBXduCGphFJK1b8yVEhBDH",
+      "url": "backstage-staging-f14mjkttu-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_8kGSBjtZ9BoxMwL9UjyTXeVicUaL",
+      "url": "backstage-staging-qfv1xs92t-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "status": "passed",
+  "cleanup": {
+    "passed": true,
+    "only_proved_owned_records": true,
+    "shared_counters_global_leases_and_security_traces_preserved": true,
+    "backup_sha256": "fa8f675a174d0d013abb5cc5ae290926160667204ce99dcdda156e63644516ce"
+  },
+  "completed_at": "2026-10-25T20:37:54.242Z"
+}

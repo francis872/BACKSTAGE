@@ -1,0 +1,13 @@
+export function normativeFact(spec,value,document,locator){
+ if(!document||document.erased||document.review?.decision!=='accepted_for_facts')throw Error('Selecciona un documento vigente aceptado para acreditar datos.');
+ if(typeof locator!=='string'||!locator.trim())throw Error('Indica la página o apartado que acredita el dato.');
+ if(value==='')throw Error('Selecciona o escribe un valor comprobado.');
+ let parsed=value;
+ if(spec.type==='boolean'){if(!['true','false'].includes(value))throw Error('Selecciona Sí o No según la evidencia.');parsed=value==='true';}
+ if(spec.type==='integer'){if(!/^(0|[1-9]\d*)$/.test(value)||!Number.isSafeInteger(Number(value))||Number(value)>spec.max)throw Error('Entero fuera del rango del dato.');parsed=Number(value);}
+ if(spec.type==='money'&&!/^(0|[1-9]\d{0,29})$/.test(value))throw Error('Usa un entero de unidades monetarias mínimas, sin separadores.');
+ if(spec.type==='identifier'&&!/^[1-9]\d*$/.test(value))throw Error('Usa un identificador positivo.');
+ if(spec.type==='choice'&&!spec.values.includes(value))throw Error('Selecciona un valor del catálogo.');
+ return{value:parsed,document_id:document.record_id,document_revision:document.revision,locator:locator.trim()};
+}
+export const normativeLabels={CUMPLE:'Cumple la condición evaluada',NO_CUMPLE:'No cumple la condición evaluada',REQUIERE_REVISION:'Requiere revisión',accepted_for_facts:'Aceptado para acreditar datos',rejected:'Rechazado',disputed:'Con discrepancia',approved:'Interpretación aprobada',needs_review:'Pendiente de revisión',agree:'Conforme con la evaluación',disagree:'Discrepancia registrada',needs_more_evidence:'Se necesita más evidencia',internal_regulation:'Reglamento interno',organization_evidence:'Evidencia de la organización',territorial_reference:'Referencia territorial aportada',national_reference:'Referencia nacional aportada',residential:'Residencial',commercial:'Comercial',mixed:'Mixto',standard:'Sin categoría VIS/VIP',ordinary:'Ordinaria',extraordinary:'Extraordinaria',second_call:'Segunda convocatoria',universal:'Universal',non_presential:'No presencial',written:'Comunicación escrita',own_right:'Por derecho propio',assembly:'Asamblea',board:'Consejo',administrator:'Administrador',joint_owners:'Propietarios administradores conjuntos',annual_budget:'Presupuesto anual',ordinary_fees:'Cuotas ordinarias',extraordinary_fees:'Cuotas extraordinarias',non_economic:'No económica',approved_budget:'Presupuesto aprobado',regulation_formula:'Fórmula expresa del reglamento',automatic_smmlv:'Indexación automática por salario mínimo',automatic_ipc:'Indexación automática por IPC'};

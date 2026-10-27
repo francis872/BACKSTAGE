@@ -1,0 +1,43 @@
+{
+  "run_id": "atlas-core-20261025183947-0c6348798ac8",
+  "started_at": "2026-10-25T18:39:47.777Z",
+  "mode": "real_protected_staging_atlas_separate_worker",
+  "api_interception": false,
+  "data_kind": "SIMULATED_OWNED_TEST_FIXTURES",
+  "production_changes": false,
+  "checks": [
+    {
+      "name": "authorized_test_target_http_authentication_and_original_production_unchanged",
+      "passed": true
+    }
+  ],
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "deployments": {
+    "api": {
+      "id": "dpl_6sj5BZ8HFJoDZeVSZDo89DSY5MxE",
+      "url": "backstage-staging-ldlss8ktr-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_B6ayVUhs65k4J85UHjcwh5hnaXoF",
+      "url": "backstage-staging-6vmplqokd-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "status": "failed",
+  "failure": {
+    "stage": "registration",
+    "name": "AssertionError",
+    "message": "GET /computational/catalog returned unexpected HTTP status",
+    "cause": null
+  },
+  "cleanup": {
+    "passed": true,
+    "only_proved_owned_records": true,
+    "shared_counters_global_leases_and_security_traces_preserved": true,
+    "backup_sha256": "8fcc6f4de1b54fd92cc77d8c3f4ff78bc711c130371d3d89f3263add22a4cc03"
+  },
+  "completed_at": "2026-10-25T18:40:11.346Z"
+}

@@ -1,0 +1,31 @@
+{
+  "checked_at": "2026-10-27T03:40:26.917Z",
+  "scope": "bounded_read_only_api_telemetry_window",
+  "deployment_id": "dpl_FfGqHQQk5CEXGjcsje9yqaUSC1VE",
+  "window_started_at": "2026-10-27T03:25:20.064Z",
+  "window_ended_at": "2026-10-27T03:40:20.064Z",
+  "raw_logs_persisted": false,
+  "raw_identifiers_retained": false,
+  "external_alerts_sent": 0,
+  "status": "verified_bounded_sample_only",
+  "request_log_records": 5,
+  "structured_http_events": 5,
+  "parse_failures": 0,
+  "truncated_or_possible_limit": false,
+  "complete_window_certified": false,
+  "metrics": {
+    "requests": 5,
+    "server_errors": 0,
+    "client_errors": 0,
+    "rate_limited": 0,
+    "critical_requests": 0,
+    "critical_server_errors": 0,
+    "invalid_records": 0,
+    "latency_p50_ms": 10.33,
+    "latency_p95_ms": 191.51,
+    "server_error_ratio": 0,
+    "raw_identifiers_retained": false
+  },
+  "metrics_stream_scheduled": false,
+  "production_error_budget_certified": false
+}

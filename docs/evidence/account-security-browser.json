@@ -1,0 +1,28 @@
+{
+  "checked_at": "2026-10-25T16:33:34.527Z",
+  "mode": "isolated_ui_with_api_fixtures",
+  "passed": [
+    "login_recovery_link",
+    "authentication_backgrounds_are_neutral",
+    "missing_mail_provider_is_explicit_and_request_disabled",
+    "missing_link_disables_password_reset",
+    "token_removed_from_url_and_not_persisted",
+    "confirmation_validated_before_request",
+    "reset_submits_captured_token_and_returns_to_login",
+    "used_link_error_is_readable",
+    "verification_requires_explicit_confirmation",
+    "account_does_not_offer_unconfigured_mail",
+    "wrong_current_password_keeps_user_signed_in",
+    "successful_password_change_clears_browser_session",
+    "revoke_all_closes_current_browser"
+  ],
+  "screenshots": [
+    "login-desktop.png",
+    "recovery-mobile.png",
+    "reset-confirmed-mobile.png",
+    "account-security-mobile.png"
+  ],
+  "runtimeErrors": 0,
+  "real_email_delivery": false,
+  "real_atlas_mutations": false
+}

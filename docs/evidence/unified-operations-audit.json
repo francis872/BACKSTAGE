@@ -1,0 +1,27 @@
+{
+    "audited_at":  "2026-10-26T01:34:20.162Z",
+    "git_status_entries":  425,
+    "baseline":  "horizontal-property-postflight.json",
+    "reused":  [
+                   "locations",
+                   "operational_events",
+                   "identity_users",
+                   "identity_memberships",
+                   "soi_audit_events",
+                   "soi_audit_heads",
+                   "BCO",
+                   "BSIE"
+               ],
+    "missing_contracts":  [
+                              "SATYA",
+                              "Vault"
+                          ],
+    "production_changes":  false,
+    "docker_used":  false,
+    "new_dependencies":  [
+
+                         ],
+    "source_backup":  ".vercel/unified-ops-before-1792978460146",
+    "architecture_correction":  "Backstage Identity, Security and Hebra are native. SATYA and Vault are not dependencies; previous missing_contracts are historical audit observations.",
+    "external_identity_dependencies":  false
+}

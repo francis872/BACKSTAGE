@@ -11,28 +11,6 @@ function DimensionBreakdown({ scores }) {
   const entries = Object.entries(scores || {});
   if (entries.length === 0) return null;
 
-  const completeWorkflow = async () => {
-    if (!analysisId) return;
-    setCompleting(true);
-    setMessage('');
-    try {
-      const res = await apiRequest(`/analysis/${analysisId}/report/generate`, { method: 'POST' });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'No se pudo completar el flujo operativo.');
-      setMessage(`Proyecto #${analysisId} completado: report_ready.`);
-      if (onNavigate) {
-        onNavigate('mission-control', {
-          analysis_run_id: Number(analysisId),
-          project_name: selectedRun?.project_name || operationalContext?.project_name,
-          city: selectedRun?.city || operationalContext?.city,
-        });
-      }
-    } catch (error) {
-      setMessage(`Error: ${error.message}`);
-    } finally {
-      setCompleting(false);
-    }
-  };
 
   return (
     <div className="dimension-breakdown">
@@ -89,6 +67,30 @@ function Reports({ operationalContext, onNavigate }) {
     () => availableRuns.find((item) => String(item.analysis_run_id) === String(analysisId)),
     [availableRuns, analysisId]
   );
+
+  const completeWorkflow = async () => {
+    if (!analysisId) return;
+    setCompleting(true);
+    setMessage('');
+    try {
+      const res = await apiRequest(`/analysis/${analysisId}/report/generate`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudo completar el flujo operativo.');
+      setMessage(`Proyecto #${analysisId} completado: report_ready.`);
+      if (onNavigate) {
+        onNavigate('mission-control', {
+          analysis_run_id: Number(analysisId),
+          project_name: selectedRun?.project_name || operationalContext?.project_name,
+          city: selectedRun?.city || operationalContext?.city,
+        });
+      }
+    } catch (error) {
+      setMessage(`Error: ${error.message}`);
+    } finally {
+      setCompleting(false);
+    }
+  };
+
 
   const loadReport = async (event) => {
     event.preventDefault();

@@ -1,0 +1,11 @@
+const express=require('express');
+const {authenticate}=require('../auth');
+const {requireOrganizationContext}=require('../middleware/organizationContext');
+const wrap=require('../utils/asyncHandler');
+const {service}=require('../services/collaboration.service');
+const router=express.Router();
+router.use(authenticate,requireOrganizationContext);
+router.get('/',wrap(async(req,res)=>res.json(await service.list(req.organization.organization_id,req.user.user_id,req.query))));
+router.post('/',wrap(async(req,res)=>res.status(201).json(await service.publish(req.organization.organization_id,req.user.user_id,req.body))));
+router.post('/:id/comments',wrap(async(req,res)=>res.status(201).json(await service.comment(req.organization.organization_id,req.user.user_id,req.params.id,req.body))));
+module.exports=router;

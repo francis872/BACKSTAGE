@@ -1,0 +1,282 @@
+{
+  "checked_at": "2026-10-24T03:33:16.442767+00:00",
+  "backup": {
+    "directory": ".vercel/backstage-spatial-rules-20261024T030337Z",
+    "files": 985,
+    "sha256": "abc4035b869f094ae7bcaeb5891382f7961507d8d3a5f3c67eb222f923bbd88d"
+  },
+  "runtime_files": [
+    {
+      "file": "shared/spatialRules.v1.json",
+      "before_sha256": null,
+      "after_sha256": "5640ab7997cc224ec92b0979629893cd71933280c653a2c7f44cfd8b6d60e306",
+      "matches_ready_source": [
+        "api",
+        "web"
+      ]
+    },
+    {
+      "file": "backend/services/spatialEvidence.service.js",
+      "before_sha256": null,
+      "after_sha256": "b5cae5e214b4e31f99bf5d48b00195b1afb3a93e4d0c7369951da5bfbcf04d38",
+      "matches_ready_source": [
+        "api"
+      ]
+    },
+    {
+      "file": "backend/services/optimizationEvidence.service.js",
+      "before_sha256": null,
+      "after_sha256": "1d4c43e24ed776064c22a95273b282e7c09d5ff85b1c21fb4ab128bbf6207e42",
+      "matches_ready_source": [
+        "api"
+      ]
+    },
+    {
+      "file": "backend/services/analytics.service.js",
+      "before_sha256": "83480cc73d177d7ed8d21df982b23539742a687133ff6fd316f26f3573b771d1",
+      "after_sha256": "b92e93b3315878b674b81dc29a801291856be97c3a3b74b2126d1ad67e18ac79",
+      "matches_ready_source": [
+        "api"
+      ]
+    },
+    {
+      "file": "backend/services/soiSanitaryAnalytics.service.js",
+      "before_sha256": "ba7f337f933168d08f15a694856741db33ea385df14171cbbfed4ba99d1e5513",
+      "after_sha256": "71e314ec625cedd6f83fe2314fd1a3b38ac474c2456132c474d93190ef71aab8",
+      "matches_ready_source": [
+        "api"
+      ]
+    },
+    {
+      "file": "backend/services/soiMongo.service.js",
+      "before_sha256": "d3e9e0a3fa8d10bbfc644c515869227a4c38399a4f85e83f498f967e1faea7d9",
+      "after_sha256": "e8c0075f3793edc8ca6f04806669bbff9044ae366b8567773b10899098ab0bf4",
+      "matches_ready_source": [
+        "api"
+      ]
+    },
+    {
+      "file": "backend/controllers/analytics.controller.js",
+      "before_sha256": "6dd239289d4ffbc0fcd337e60604b5e9a6762a4adbf0c31d058a4caad204bcec",
+      "after_sha256": "4d4bfdff1708a912eca021f376046ec3af6a5d797515ef68b604e17a6c75a16e",
+      "matches_ready_source": [
+        "api"
+      ]
+    },
+    {
+      "file": "backend/routes/analytics.routes.js",
+      "before_sha256": "e7e5a4bb7b6b9a35032ba35c606dc273161546c1dcfb793ed7706aa4b08ffa5e",
+      "after_sha256": "fbe395e3e8b0aa165194e53faf418bc26f37bb77b3998ef12805bdfe7f73bfcb",
+      "matches_ready_source": [
+        "api"
+      ]
+    },
+    {
+      "file": "backend/routes/soiSanitary.routes.js",
+      "before_sha256": "38d6ff50b68cf5a0c8fe23560a5324ac01aab26816c76d3cf79b411cd2e58195",
+      "after_sha256": "891dce5d33cc58da2691e5a5c1a073f832b6ca20bfe6d1b741d7a404dcb3b954",
+      "matches_ready_source": [
+        "api"
+      ]
+    },
+    {
+      "file": "deployment/vercel-api.json",
+      "before_sha256": null,
+      "after_sha256": "c2e51dda537b015558e66fdbb4c869761bab447be30331b724a94803604db97d",
+      "matches_ready_source": [
+        "api"
+      ]
+    },
+    {
+      "file": "frontend/src/components/SpatialAnalysisPanel.jsx",
+      "before_sha256": null,
+      "after_sha256": "85fff041fd34c51fc684eac021d95bfb22d78f12b7df7e65bef17402267eac2e",
+      "matches_ready_source": [
+        "web"
+      ]
+    },
+    {
+      "file": "frontend/src/components/OptimizationEvidence.jsx",
+      "before_sha256": null,
+      "after_sha256": "395de3757dfa78b4ba8ab969d26559e72ac78236a3e1e74630f1b5f246f27f76",
+      "matches_ready_source": [
+        "web"
+      ]
+    },
+    {
+      "file": "frontend/src/components/AnalyticsEvidence.jsx",
+      "before_sha256": "340d9ddc4b315829b48cd42e4f858c7e20e6006f662ff8a878df4a4f86699614",
+      "after_sha256": "769c4ce273a9db29457537acc8447d9ca859568fb50b353a18150b54811c8cfd",
+      "matches_ready_source": [
+        "web"
+      ]
+    },
+    {
+      "file": "frontend/src/components/SanitaryWorkspace.jsx",
+      "before_sha256": "ccdac9dd7d74ac459c87a43aab18e27a8a06194087ef39daba56df9b807ed1fd",
+      "after_sha256": "698018c0ef7791c66be7b15806be7d6de2812c81e334c0e712ac4de84fa13bfd",
+      "matches_ready_source": [
+        "web"
+      ]
+    },
+    {
+      "file": "frontend/src/components/SanitaryAnalysisForms.jsx",
+      "before_sha256": "e2ed4d08196a5eb4a74679c9897daf471a0b0cf64cf002bb65508ac04ed0ad86",
+      "after_sha256": "855ca65dbda4d7e7b3e5ed2e500467c92cc7a85749b511a1896decd20c5ab3b2",
+      "matches_ready_source": [
+        "web"
+      ]
+    },
+    {
+      "file": "frontend/src/pages/AdvancedComparator.jsx",
+      "before_sha256": "a770822811b9bbdc6eb8c5b7c0882467d6f779ee94281e3ab1b730717fb12bbb",
+      "after_sha256": "0ee9617fe65fe654b9fc076bc9e60c285bb6ec959c165a9074df5612aedc20d1",
+      "matches_ready_source": [
+        "web"
+      ]
+    },
+    {
+      "file": "frontend/src/pages/SoiWorkspace.jsx",
+      "before_sha256": "de256c06f00f2c4190901c04d878fec1e05a7c87f3384d77185e036d22de3c28",
+      "after_sha256": "d805554599187468c2813690dce53839d4bfe0bbfdafbd5631e483a1f1beab16",
+      "matches_ready_source": [
+        "web"
+      ]
+    }
+  ],
+  "preserved_files": [
+    {
+      "file": "backend/spatial/core.js",
+      "sha256": "6ed6ba50f66c6d62dc2e64f762274fe4b5087fe10fbede0dcd36641c864ee459",
+      "unchanged": true
+    },
+    {
+      "file": "sanitary/routing.py",
+      "sha256": "35d68becd01db45e7ae6adbcf7fcc4d3985b4bfce90daeb6b1c73ba89dabc714",
+      "unchanged": true
+    },
+    {
+      "file": "sanitary/engine.py",
+      "sha256": "6fe0fb42c7dbad591606acb46e312d0dbb090067e574b0d36219acb4bf3b8546",
+      "unchanged": true
+    },
+    {
+      "file": "backend/infrastructure/platformMongo.js",
+      "sha256": "8a701fcb15726c423b07ff013102906d6a2e77df0d4d9d025dcea9cebde35a12",
+      "unchanged": true
+    },
+    {
+      "file": "backend/infrastructure/mongoIndexRegistry.js",
+      "sha256": "8532df51517e1fa22e59485e0e7316134eef1ed34f1b630c98b2e67be06a109a",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/App.jsx",
+      "sha256": "1261836b8a212a6ed321903a2e6ee8446c0517289409c8c5ce293dbe955a7622",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/App.css",
+      "sha256": "859e8730651fea8209ff051a81de4edb7a8094f35386095f147c974660bc2d06",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/styles/theme.css",
+      "sha256": "032232a6b5ee57b6a1ce770e3b1c7760370141d48932481bc4527b0d2aafa3fb",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/components/OrbitalEntry.jsx",
+      "sha256": "5d6198915bcb1f45911c98cbadf658be9ead68fe8d4e7410d3af6e80da9358d2",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/components/OrbitalGlobe.jsx",
+      "sha256": "614e859ff8bdf49f962207d74da748a21db982fa7abc5e1affd20ebb135ceff6",
+      "unchanged": true
+    },
+    {
+      "file": "backend/services/analyticsEvidence.service.js",
+      "sha256": "f300684c523114e84498acd2bf62dec95f59364235a3a5aad68320003b743de9",
+      "unchanged": true
+    },
+    {
+      "file": "backend/services/intelligenceContract.service.js",
+      "sha256": "01320af37a7b6ef0df84eefe39f1fd8d0959a9752b038143f2c0ae9772be152e",
+      "unchanged": true
+    },
+    {
+      "file": "backend/services/analysis.service.js",
+      "sha256": "7e592527011dc20d23536e5f60469a5f737e03616d40bd3ff498f2f45a6aa2c6",
+      "unchanged": true
+    },
+    {
+      "file": "backend/domain/analytics/financial.js",
+      "sha256": "2291492fe93f9c2e9ea2ca87064218a5c8a7f30087f2637d5e4e8319045c71f8",
+      "unchanged": true
+    },
+    {
+      "file": "backend/domain/analytics/risk.js",
+      "sha256": "0d94465f028b9ed28cc1f9f8534cb9bfd81ecbca947e54b0035d7a825289f722",
+      "unchanged": true
+    },
+    {
+      "file": "backend/domain/analytics/normalization.js",
+      "sha256": "3b1372454ec00118a1f1faab8d17788be552a1de3bd8399b1de730e45f69e19f",
+      "unchanged": true
+    },
+    {
+      "file": "shared/financial.v2.mjs",
+      "sha256": "04870b8c2feb98c5bd4d57e62ba14869e1c027f899347cb423a5f0aa8c2cabb1",
+      "unchanged": true
+    },
+    {
+      "file": "shared/decimal.mjs",
+      "sha256": "391cf002d8c301662ada54cf378c9eb171778bac460f8f79f310bb4152e23ac1",
+      "unchanged": true
+    },
+    {
+      "file": "shared/comparison.mjs",
+      "sha256": "c14ea34fbd0bfd0988030f9edf7a77fa69106cf98359becb03af09c071220c85",
+      "unchanged": true
+    },
+    {
+      "file": "shared/comparison.v1.mjs",
+      "sha256": "ab29abdeee6be7c402186e113be7af3047bdfe3f96c0c2af436722990ef5f2a5",
+      "unchanged": true
+    },
+    {
+      "file": "shared/comparison.v2.mjs",
+      "sha256": "ba35c22147bf17199cd2d79b4994498d6d8ebc1e38dc6332272ddcddbf4286e4",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/pages/RealEstatePortfolio.jsx",
+      "sha256": "aee107029c6a8a85bff1a0a1c4f70ce17a6d0fe9c320335878c60d3319871c52",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/pages/ProbabilityEngine.jsx",
+      "sha256": "64107bda97976c6e29be5a51890452cb81a44e3c4c364a1bd2af13731fc59d88",
+      "unchanged": true
+    }
+  ],
+  "deployments": {
+    "api": {
+      "id": "dpl_CaecTh5V5RJLoAnYvmcxkcpxLXV9",
+      "url": "backstage-staging-16m43mycx-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_H6WVviGNj6QXG87kaKmnHvjFpBd7",
+      "url": "backstage-staging-kjruuebns-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "validation_run": "atlas-core-20261024033020-dca8c3257a1d",
+  "integration_checks": 18,
+  "cleanup_confirmed": true,
+  "schema_migrations": false
+}

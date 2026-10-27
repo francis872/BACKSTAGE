@@ -1,0 +1,36 @@
+{
+  "checked_at": "2026-10-22T23:30:56.829Z",
+  "previous_reference": "phase_4_validated_sources",
+  "changes": [
+    {
+      "type": "api",
+      "path": "backend/services/scientificRpc.service.js",
+      "before_sha256": "c2760ddfd9b0854de5072a6453073949f5ce17932001c6a8cf83f83921cf4a96",
+      "deployed_sha256": "f23cf57b5d9f5e5c89439425a8e55a5ac448df9b0c7894edd50471482e8b2127"
+    },
+    {
+      "type": "web",
+      "path": "frontend/api/index.js",
+      "before_sha256": "7f607031f1f24c789267117734618e52823e8be2288bcce35a7a70cdb77f0ddd",
+      "deployed_sha256": "6d277db16eb53c9cb86c8682eaca51eefa30329e43d8ef3fe5d97f59658338a4"
+    }
+  ],
+  "checks": [
+    {
+      "type": "api",
+      "previous_files_compared": 221,
+      "deployed_files": 223
+    },
+    {
+      "type": "web",
+      "previous_files_compared": 138,
+      "deployed_files": 138
+    }
+  ],
+  "all_previous_application_files_preserved_except_listed_transport_changes": true,
+  "frontend_visual_and_workflow_sources_unchanged": true,
+  "local_regression_tests_passed": 4,
+  "staging_integration_checks_passed": 9,
+  "api_interception": false,
+  "production_projects_unchanged": true
+}

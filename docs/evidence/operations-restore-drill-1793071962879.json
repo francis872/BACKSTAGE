@@ -1,0 +1,20 @@
+{
+  "started_at": "2026-10-27T03:30:56.348Z",
+  "scope": "fresh_owned_synthetic_atlas_source_and_restore",
+  "source_operational_data_read": false,
+  "production_changes": false,
+  "scheduled_backup_verified": false,
+  "managed_snapshot_verified": false,
+  "external_custody_verified": false,
+  "checks": [],
+  "status": "failed",
+  "failure": {
+    "name": "MongoBulkWriteError",
+    "code": 11000
+  },
+  "cleanup": {
+    "passed": true,
+    "owned_databases_removed": 1
+  },
+  "completed_at": "2026-10-27T03:31:07.129Z"
+}

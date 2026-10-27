@@ -1,0 +1,70 @@
+{
+  "checked_at": "2026-10-26T00:25:09.369Z",
+  "run_id": "auto-20261025234838-1315eafd",
+  "scope": "owned_automation_staging_not_enterprise_production",
+  "deployment_id": "dpl_EVu1bjPBUXERghUKamWFw3HjPkGp",
+  "source_manifest_files": 256,
+  "current_runtime_source_hashes_verified": 247,
+  "source_manifest_sha256": "9483c19e7a3669b7b6b1a856c7f4621c445f5f5f281d69443a2af1c2fc38eff7",
+  "daemon": {
+    "status": "ready",
+    "ready": 2,
+    "desired": 2,
+    "instances_alive": true,
+    "provider_observed_at": [
+      "2026-10-26T00:19:12.211Z",
+      "2026-10-26T00:19:12.211Z"
+    ]
+  },
+  "tests": {
+    "total": 396,
+    "passed": 395,
+    "skipped": 1,
+    "failed": 0
+  },
+  "documents_verified": 8,
+  "evidence": {
+    "automation-staging-execution": {
+      "status": "passed",
+      "sha256": "08de60c7a5bcfbf6735b4b8977a3d5e6aef9287b57b4f4654a3b3d34ba9fd710"
+    },
+    "automation-function-expiry": {
+      "status": "passed",
+      "sha256": "537d9cb0aec28d71aae19d200db16b606a6c667fc95ba69e0f6cea7a12b99f92"
+    },
+    "automation-staging-restore": {
+      "status": "passed",
+      "sha256": "b74d345905ede77bc8d29c4def27bbc2f78b2e18651e4bb994cf69232fc35a90"
+    },
+    "automation-capacity": {
+      "status": "passed",
+      "sha256": "9d47e6d76b127a529bb05a699e8f9e9da841fdcc0dfd13068d88b5db173da565"
+    },
+    "automation-rollback": {
+      "status": "passed",
+      "sha256": "65e9db35a5c2f6c4504e94efbd77c6dcf43375070582f39c66cffbc79bac422d"
+    },
+    "automation-atlas-readiness": {
+      "status": "audited_with_production_blockers",
+      "sha256": "6659e20808502aa09bc6dade0a1a867d38ac86b03619093800ae95b00b79674d"
+    }
+  },
+  "production_aliases": {
+    "api": "dpl_FfGqHQQk5CEXGjcsje9yqaUSC1VE",
+    "web": "dpl_BCE7C3mvdoR4ftrRAahTiE78XHpo"
+  },
+  "production_changes": false,
+  "local_worker_started": false,
+  "physical_pc_powered_off_verified": false,
+  "planned_pc_off_execution": {
+    "case_id": "pc-off-observation",
+    "scheduled_for": "2026-10-26T00:53:21.015Z",
+    "programmed_at": "2026-10-26T00:06:42.814Z"
+  },
+  "external_monitor_host_configured": false,
+  "administrator_alert_receipt_verified": false,
+  "atlas_admin_connection_confirmed": false,
+  "least_privilege_verified": false,
+  "production_decision": "NO_GO",
+  "status": "passed_with_explicit_production_blockers"
+}

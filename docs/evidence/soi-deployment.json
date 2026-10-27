@@ -1,0 +1,25 @@
+{
+  "published_at": "2026-10-21T23:55:00.651607+00:00",
+  "status": "published_and_verified",
+  "site": "https://backstage-web-seven.vercel.app",
+  "api": "https://backstage-api.vercel.app",
+  "database": "MongoDB Atlas",
+  "runtime_database_driver": "mongodb",
+  "schema_version": 2,
+  "api_deployment_id": "dpl_93uunWbhwbeQdh3WtqkLxwmrdEjF",
+  "web_deployment_id": "dpl_5sviMLHKHcFxekswJNmqtWZecp9E",
+  "source_env_files_excluded": true,
+  "evidence": [
+    "soi-release-checks.json",
+    "soi-atlas-only-live.json",
+    "soi-cloud-live.json",
+    "soi-cloud-science.json",
+    "soi-cloud-ui.json",
+    "soi-public-release.json"
+  ],
+  "gps_provider_configured": false,
+  "environmental_provider_configured": false,
+  "industrial_control_enabled": false,
+  "api_source_manifest_sha256": "e86989ca813ef9b8dc99a2da3e10060e73b029291377e6bd493b8a909849a42c",
+  "web_source_manifest_sha256": "b4113844b6888cff92ab4a56cde84a3022bc8ae46fe7877df12b316f3c6209f1"
+}

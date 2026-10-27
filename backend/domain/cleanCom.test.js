@@ -1,0 +1,96 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const os = require('node:os');
+const { gzipSync } = require('node:zlib');
+const crypto = require('node:crypto');
+process.env.NODE_ENV = 'test';
+process.env.SPATIAL_STORE = 'memory';
+process.env.JWT_SECRET = 'clean-com-local-test-only-secret';
+const { ArtifactRepository } = require('../cleancom/repository');
+const { CleanComService } = require('../cleancom/service');
+const { createControllers } = require('../controllers/cleanCom.controller');
+const { createRouter } = require('../routes/cleanCom.routes');
+const { createToken } = require('../auth');
+const express = require('express');
+const errorHandler = require('../middleware/errorHandler');
+
+test('Clean Com artifact paths are not public endpoints of the platform', async (t) => {
+  const app = require('../index');
+  const server = app.listen(0, '127.0.0.1');
+  t.after(() => server.close());
+  await new Promise((resolve) => server.once('listening', resolve));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const raw = await fetch(base + '/cleancom/data/empresas-varias-2025/audit.json');
+  assert.equal(raw.status, 404);
+  assert.deepEqual(await raw.json(), { error: 'Archivo interno no disponible.' });
+  assert.equal((await fetch(base + '/clean-com/cases/empresas-varias-2025/audit')).status, 401);
+});
+
+test('Clean Com enforces workspace boundaries, pages real geometry and rejects corrupt evidence', async (t) => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'backstage-cleancom-test-'));
+  assert.equal(path.dirname(path.resolve(root)), path.resolve(os.tmpdir()));
+  assert.ok(path.basename(root).startsWith('backstage-cleancom-test-'));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  await fs.mkdir(path.join(root, 'fixture'));
+  const collection = { type: 'FeatureCollection', features: [0, 1].map((x) => ({ type: 'Feature', id: x, geometry: { type: 'Point', coordinates: [x, 0] }, properties: { code: `00${x}` } })) };
+  const compressed = gzipSync(JSON.stringify(collection));
+  const preview = { count: 2, file: 'points.geojson.gz', sha256: crypto.createHash('sha256').update(compressed).digest('hex') };
+  const audit = { schema: 'clean-com/audit-v1', complete: true, case: { id: 'fixture', title: 'Unit test fixture' }, source: { sha256: 'source-test-version' }, layers: [{ id: 'points', recordCount: 2, preview, crs: { name: 'WGS84' } }, { id: 'table', recordCount: 2, preview: { count: 0 } }], summary: { status: 'available', efficiency: { missing: ['verified distances'] } } };
+  await fs.writeFile(path.join(root, 'fixture/audit.json'), JSON.stringify(audit));
+  await fs.writeFile(path.join(root, 'fixture/points.geojson.gz'), compressed);
+  const repository = new ArtifactRepository({ root, entries: [{ id: 'fixture', artifactDirectory: 'fixture' }], bindings: { fixture: [1] } });
+  const service = new CleanComService(repository);
+  const membershipsByUser = new Map();
+  const app = express();
+  app.use('/clean-com', createRouter(createControllers(service), {
+    getUserMemberships: async (userId) => membershipsByUser.get(userId) || [],
+    resolveMembership: require('../services/organization.service').resolveMembership,
+  }));
+  app.use(errorHandler);
+  const server = app.listen(0, '127.0.0.1');
+  t.after(() => server.close());
+  await new Promise((resolve) => server.once('listening', resolve));
+  const base = `http://127.0.0.1:${server.address().port}/clean-com`;
+  const token = (organizationId, role = 'viewer') => {
+    const userId = organizationId * 10 + (role === 'unknown' ? 1 : 2);
+    const memberships = [{ organization_id: organizationId, role, organization_name: 'Test' }];
+    membershipsByUser.set(userId, memberships);
+    return createToken({ user_id: userId, role, organization_id: organizationId, memberships });
+  };
+  const request = (route, organizationId = 1, extra = {}) => fetch(base + route, { headers: { Authorization: `Bearer ${token(organizationId)}`, ...extra } });
+  assert.equal((await fetch(base + '/cases')).status, 401);
+  assert.equal((await request('/cases', 1)).status, 200);
+  assert.deepEqual(await (await request('/cases', 2)).json(), []);
+  assert.equal((await request('/cases/fixture/audit', 2)).status, 404);
+  assert.equal((await request('/cases/fixture/audit', 1, { 'X-Organization-Id': '2' })).status, 403);
+  const first = await (await request('/cases/fixture/layers/points/features?limit=1')).json();
+  assert.equal(first.features[0].properties.code, '000');
+  assert.equal(first.metadata.nextOffset, 1);
+  assert.equal((await request('/cases/fixture/layers/points/features', 2)).status, 404);
+  const second = await (await request('/cases/fixture/layers/points/features?offset=1&limit=1')).json();
+  assert.equal(second.features[0].properties.code, '001');
+  assert.equal(second.metadata.nextOffset, null);
+  const filtered = await (await request('/cases/fixture/layers/points/features?bbox=-0.1,-0.1,0.1,0.1')).json();
+  assert.equal(filtered.features.length, 1);
+  assert.equal((await request('/cases/fixture/layers/table/features')).status, 422);
+  assert.equal((await request('/cases/fixture/layers/points/features?limit=0')).status, 400);
+  assert.equal((await request('/cases/fixture/layers/points/features?bbox=,,,')).status, 400);
+  assert.equal((await request('/cases/fixture/layers/points/features?bbox=10,0,-10,1')).status, 400);
+  assert.equal((await request('/cases/fixture/layers/points/features?bbox=-200,0,0,1')).status, 400);
+  assert.equal((await request('/cases/fixture/audit', 1, { Authorization: `Bearer ${token(1, 'unknown')}` })).status, 403);
+  repository.entries[0].accessScope = 'shared_authenticated';
+  assert.equal((await fetch(base + '/cases/fixture/audit')).status, 401);
+  const sharedCases = await (await request('/cases', 2)).json();
+  assert.equal(sharedCases[0].accessScope, 'shared_authenticated');
+  assert.equal((await request('/cases/fixture/audit', 2)).status, 200);
+  assert.equal((await request('/cases/fixture/layers/points/features', 2)).status, 200);
+  assert.equal((await request('/cases/fixture/audit', 1, { 'X-Organization-Id': '2' })).status, 403);
+  assert.deepEqual(await repository.allowedEntries(null), []);
+  assert.equal((await request('/cases/fixture/audit', 2, { Authorization: `Bearer ${token(2, 'unknown')}` })).status, 403);
+  repository.cache.clear();
+  await fs.writeFile(path.join(root, 'fixture/points.geojson.gz'), 'corrupted');
+  assert.equal((await request('/cases/fixture/layers/points/features')).status, 503);
+  await assert.rejects(service.audit(1, '../fixture'), { statusCode: 404 });
+});

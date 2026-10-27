@@ -9,6 +9,7 @@ class WorldModel {
     if (!input?.id || !input?.name) throw new TypeError('El mundo requiere id y name.');
     return this.store.upsert(COLLECTIONS.worlds, {
       _id: input.id,
+      organizationId: input.organizationId,
       name: input.name,
       coordinateSystem: input.coordinateSystem || 'WGS84+BACKSTAGE_LOCAL',
       version: Number(input.version || 1),
@@ -34,10 +35,11 @@ class WorldModel {
 
   async upsertSpatialObject(input) {
     const document = validateSpatialObject(input);
-    const previous = await this.store.get(COLLECTIONS.objects, document.id);
+    const previous = await this.store.get(COLLECTIONS.objects, document.id, document.organizationId);
     if (previous) {
       await this.store.upsert(COLLECTIONS.versions, {
         _id: `${document.id}:${previous.version}`,
+        organizationId: document.organizationId,
         objectId: document.id,
         version: previous.version,
         snapshot: previous,

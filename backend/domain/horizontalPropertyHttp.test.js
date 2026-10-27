@@ -1,0 +1,35 @@
+const test = require('node:test'), assert = require('node:assert/strict');
+process.env.JWT_SECRET = 'isolated-horizontal-property-http-fixture-secret';
+const express = require('express');
+const { setup } = require('./helpers/computationalFixture');
+const { createMongoIdentityService } = require('../services/mongoIdentity.service');
+const { resolveMembership } = require('../services/organization.service');
+const { createAssetsRouter } = require('../routes/assets.routes');
+const { createHorizontalPropertyService } = require('../services/horizontalProperty.service');
+const { createToken } = require('../auth');
+
+test('PH layer HTTP and existing proxy enforce authentication, permissions, idempotency and tenant isolation', async t => {
+  const s = setup(), ph = createHorizontalPropertyService(s.infra), identity = createMongoIdentityService(s.infra);
+  const app = express(); app.use(express.json()); app.use('/assets', createAssetsRouter({}, { getUserMemberships: identity.getUserMemberships, resolveMembership }, ph)); app.use(require('../middleware/errorHandler'));
+  const server = app.listen(0, '127.0.0.1'); await new Promise(r => server.once('listening', r)); t.after(() => { server.closeAllConnections(); server.close(); });
+  process.env.BACKEND_URL = `http://127.0.0.1:${server.address().port}`; process.env.BACKEND_PROTECTION_BYPASS = '';
+  const { default: proxy } = await import(require('node:url').pathToFileURL(require('node:path').resolve(__dirname, '../../frontend/api/index.js')));
+  const web = express(); web.use(express.json()); web.use((req, res, next) => Promise.resolve(proxy(req, res)).catch(next));
+  const front = web.listen(0, '127.0.0.1'); await new Promise(r => front.once('listening', r)); t.after(() => { front.closeAllConnections(); front.close(); });
+  const base = `http://127.0.0.1:${front.address().port}/api/assets/layers/horizontal-property`;
+  const request = (suffix = '', { user = 1, body, method = body ? 'POST' : 'GET', key = 'http_ph_idempotent_key', org } = {}) => fetch(base + suffix, { method, headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key, ...(user ? { Authorization: `Bearer ${createToken({ user_id: user, organization_id: user === 5 ? 20 : 10, role: 'admin' })}` } : {}), ...(org ? { 'X-Organization-Id': String(org) } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}) });
+  const body = { name: 'HTTP root', kind: 'coproperty', source_name: 'Synthetic HTTP fixture' };
+  assert.equal((await request('/catalog', { user: null })).status, 401);
+  assert.equal((await request('', { user: 4, body })).status, 403);
+  const created = await request('', { body }); assert.equal(created.status, 201); const root = (await created.json()).data;
+  assert.equal((await request('', { body })).status, 200);
+  assert.equal((await request(`/${root.location_id}`, { user: 5 })).status, 404);
+  assert.equal((await request('/catalog', { user: 5, org: 10 })).status, 403);
+  assert.equal((await request('/geojson')).status, 200);
+  assert.equal((await request(`/${root.location_id}`, { method: 'PATCH', body: { revision: 1, name: 'Renamed' } })).status, 200);
+  assert.equal((await request(`/${root.location_id}`, { method: 'PATCH', body: { revision: 1, name: 'Stale' } })).status, 409);
+  assert.equal((await request(`/${root.location_id}/archive`, { body: { revision: 2 } })).status, 200);
+  assert.equal((await request()).status, 200); assert.equal((await (await request()).json()).data.length, 0);
+  s.f.data().identity_users.find(u => u.user_id === 1).session_version = 1;
+  assert.equal((await request('/catalog')).status, 401);
+});

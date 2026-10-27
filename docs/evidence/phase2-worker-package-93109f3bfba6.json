@@ -1,0 +1,11 @@
+{
+  "prepared": true,
+  "deployed_as_continuous_worker": false,
+  "directory": ".vercel/soi-api-1792953416828",
+  "archive": "worker-source.zip",
+  "source_files": 270,
+  "sha256": "93109f3bfba6d08f603c3e5c5a1e4cc806f16aa272002be728e922f5c9f5d8d6",
+  "command": "npm start",
+  "requirements": "Node 24, Python/scientific requirements and explicitly configured authorized Atlas environment",
+  "contains_private_environment": false
+}

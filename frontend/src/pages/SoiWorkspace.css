@@ -1,0 +1,12 @@
+.soi-workspace { display: grid; gap: 1rem; }
+.soi-form { display: grid; grid-template-columns: repeat(auto-fit,minmax(190px,1fr)); gap: 1rem; padding: 1.2rem; border: 1px solid #344360; border-radius: 12px; }
+.soi-form h3,.soi-form p,.soi-form pre,.soi-form textarea { grid-column: 1 / -1; }
+.soi-form label { display: grid; gap: .4rem; align-content: start; }
+.soi-workspace pre,.soi-route pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 320px; overflow: auto; }
+.soi-metrics,.soi-records { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: .7rem; }
+.soi-metrics .card,.soi-records button { display: grid; gap: .5rem; }
+.soi-workspace .cleancom-map,.soi-route .cleancom-map { min-height: 360px; height: 50vh; border-radius: 12px; }
+.soi-route { display: grid; gap: 1rem; }
+.soi-waypoint { display: flex; flex-wrap: wrap; gap: .6rem; align-items: end; padding: .8rem; border: 1px solid #344360; border-radius: 8px; }
+.soi-waypoint label { display: grid; gap: .4rem; flex: 1; min-width: 130px; }
+.soi-route input,.soi-form input,.soi-form select,.soi-form textarea { max-width: 100%; }

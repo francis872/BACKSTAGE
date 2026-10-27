@@ -1,0 +1,481 @@
+
+> backstage-intelligence-backend@3.1.0 test
+> node scripts/run-regression.js
+
+✔ reset sends one private link, keeps only its hash and preserves accounts, membership and administrator role (103.8005ms)
+✔ unknown accounts and cooldown return the same response; missing mail is explicit for every account (12.243ms)
+✔ tokens expire, have one purpose, and a failed mail delivery cannot leave a usable link (30.3936ms)
+✔ revoking one session preserves another; closing all invalidates tracked and legacy tokens (25.5025ms)
+✔ password change requires current credentials and revokes old access without rotating signing keys (20.8845ms)
+✔ audit failure rolls back a password mutation and unknown input cannot modify roles or target another account (20.6709ms)
+✔ session list is bounded and never returns bearer identifiers, hashes or another account sessions (137.1571ms)
+✔ HTTP credentials, protected resources and active WebSockets share session revocation (600.109ms)
+✔ interpreta una intención territorial simple sin exigir parámetros técnicos (6.3077ms)
+✔ extrae el territorio de solicitudes de riesgo y oportunidad (1.9007ms)
+✔ separa alternativas en solicitudes comparativas (1.0717ms)
+✔ prepara los tres territorios con coordenadas y motores explícitos para Comparator (3.8434ms)
+✔ resuelve candidatos dentro de la organización y no fabrica resultados vacíos (17.2654ms)
+✔ uses the public territory adapter when Atlas has no match and carries resolved data state (2.017ms)
+✔ rechaza prompts cortos y planes sin organización (2.9318ms)
+✔ no crea puntajes cuando faltan métricas territoriales (4.6474ms)
+✔ conserva valores observados de cero y distingue cero de ausencia (0.8665ms)
+✔ analytics service executes TOPSIS, financial and risk engines and records versioned job traces (147.5884ms)
+✔ netPresentValue: golden case -100 today + 110 next period at 10% => NPV = 0 (3.8463ms)
+✔ netPresentValue: undiscounted sum when rate is 0 (1.2774ms)
+✔ netPresentValue: rejects invalid discount rate (3.0133ms)
+✔ netPresentValue: rejects too-short cash flow series (3.1284ms)
+✔ internalRateOfReturn: golden case -100 -> 110 has IRR = 10% (1.4194ms)
+✔ internalRateOfReturn: returns null (not NaN/0) when cash flows never change sign (0.5997ms)
+✔ internalRateOfReturn is consistent with netPresentValue (NPV at IRR ~= 0) (0.7987ms)
+✔ capRate: golden case NOI 50000 / value 1000000 = 5% (0.5934ms)
+✔ capRate: rejects non-positive property value (0.657ms)
+✔ paybackPeriod: golden case interpolates within the recovery period (0.9543ms)
+✔ paybackPeriod: returns null when investment is never recovered (0.6115ms)
+✔ discountedPaybackPeriod: is never shorter than the simple payback period (1.0482ms)
+✔ discountedCashFlowValue: golden case with zero discount rate is a plain sum (0.9883ms)
+✔ discountedCashFlowValue: includes discounted terminal value (0.6579ms)
+✔ normalizeWeights: weights always sum to 1 (3.8077ms)
+✔ normalizeWeights: rejects missing criteria (1.0093ms)
+✔ normalizeWeights: rejects negative weights (2.2433ms)
+✔ weightedSum: alternative that dominates on both criteria wins (golden case) (2.4694ms)
+✔ weightedSum: throws on missing criterion values (0.7346ms)
+✔ weightedSum: throws when alternatives have mismatched criteria sets (0.6069ms)
+✔ topsis: dominant alternative wins and closeness is within [0,1]*100 (1.7373ms)
+✔ topsis: ranking is a strict permutation (no duplicate ranks, correct count) (2.5315ms)
+✔ ahpWeights: golden 3x3 Saaty-style matrix produces weights summing to 1 and a numeric CR (1.6872ms)
+✔ ahpWeights: rejects non-square or wrongly-sized matrices (1.3803ms)
+✔ ahpWeights: rejects non-positive entries (0.5825ms)
+✔ sensitivityAnalysis: reports stability and never crashes on the golden case (2.3429ms)
+✔ minMax: normalizes to [0,1] with correct benefit orientation (5.4647ms)
+✔ minMax: cost orientation inverts the scale (0.5712ms)
+✔ minMax: constant series returns flat values and flags constant (0.661ms)
+✔ minMax: throws on empty array (2.8871ms)
+✔ minMax: throws on non-numeric values (1.0666ms)
+✔ zScore: known values produce known standardized results (0.9713ms)
+✔ zScore: constant series returns zeros and flags constant (0.6254ms)
+✔ robustScale: constant series returns zeros and flags constant (0.9459ms)
+✔ robustScale: median is subtracted and scaled by IQR (0.9191ms)
+✔ logTransform: throws for zero or negative values (2.0089ms)
+✔ logTransform: correct for positive values (0.7332ms)
+✔ winsorize: clips values outside the requested quantile bounds (0.9139ms)
+✔ winsorize: rejects invalid bounds (0.5598ms)
+✔ quantile/median: sanity checks against known distributions (0.5134ms)
+✔ riskFromComponents: golden case threat=exposure=vulnerability=0.5 => risk=0.125 (3.2964ms)
+✔ riskFromComponents: rejects values outside [0,1] (0.9636ms)
+✔ expectedLoss: golden case probability 0.2 x impact 100000 = 20000 (2.3181ms)
+✔ classifyProbabilityImpact: golden low/low case (1.075ms)
+✔ classifyProbabilityImpact: golden high/severe case (0.7168ms)
+✔ monteCarloSimulate: is reproducible given the same seed (17.4402ms)
+✔ monteCarloSimulate: different seeds produce different results (10.0757ms)
+✔ monteCarloSimulate: percentiles are ordered p5 <= p50 <= p95 (13.6038ms)
+✔ monteCarloSimulate: rejects out-of-range iteration counts (resource limit) (1.386ms)
+✔ stressTest: multiplier increases risk and is capped at 1 per component (1.1447ms)
+✔ geographicConcentration: two equal-share groups give HHI = 0.5 (1.1385ms)
+✔ geographicConcentration: single group gives maximum concentration (HHI = 1) (0.5265ms)
+✔ geographicConcentration: rejects items without group/value (0.6322ms)
+✔ la aplicación registra todas las rutas sin controladores indefinidos (3560.5671ms)
+{"event":"http.completed","request_id":"startup-smoke","method":"GET","route":"/health","status":503,"duration_ms":97.95}
+✔ health sin Atlas devuelve 503, conserva correlación y no filtra secretos (558.4927ms)
+{"event":"http.completed","request_id":"3e22a434-e19f-4439-a4de-10d1385a2162","method":"GET","route":"/health","status":503,"duration_ms":2.56}
+✔ el handler serverless Vercel conserva la ruta original al reescribir /api (152.7955ms)
+{"event":"http.completed","request_id":"ab584e5e-d102-4534-8190-87248ddbfa3b","method":"POST","route":"/register","status":400,"duration_ms":91.54}
+No se pudo persistir el audit log: La persistencia de BACKSTAGE no está configurada. Contacta al administrador.
+✔ Vercel enruta /api/auth/register al backend JSON, no al fallback SPA (123.9868ms)
+✔ Atlas assets retain geometry, zero coordinates and source metadata while preventing tenant override (11.9155ms)
+✔ Atlas asset writes reject invalid geometry and missing organization (2.4701ms)
+✔ Atlas valuations enforce owned property references and tenant-scoped reads, updates and deletion (20.8111ms)
+✔ Atlas analysis result replacement is atomic and tenant reads are isolated (10.5396ms)
+✔ Atlas services load MongoDB without an alternate database driver (3.13ms)
+✔ Atlas recommendation review persists the decision and rejects cross-tenant changes (16.771ms)
+✔ Atlas validation defaults to a plan and cleanup selectors cannot become unscoped (74.7355ms)
+✔ mail configuration requires a trusted HTTPS application origin and a clean sender (4.9908ms)
+✔ recovery uses fragment tokens, server-only credentials, bounded delivery and safe provider errors (4.0616ms)
+{"event":"http.completed","request_id":"f897f163-2755-49ba-9af0-0edb93923f1d","method":"POST","route":"/auth/register","status":201,"duration_ms":987.38}
+No se pudo persistir el audit log: La persistencia de BACKSTAGE no está configurada. Contacta al administrador.
+{"event":"http.completed","request_id":"45067c19-a739-4437-ada9-36ce42220868","method":"POST","route":"/register","status":409,"duration_ms":930.39}
+No se pudo persistir el audit log: La persistencia de BACKSTAGE no está configurada. Contacta al administrador.
+{"event":"http.completed","request_id":"373639ec-4690-49db-b56e-424ee9e1cd87","method":"GET","route":"/auth/me","status":200,"duration_ms":41.13}
+{"event":"http.completed","request_id":"4b64b037-e559-46f7-b95f-38c97f8fe95b","method":"POST","route":"/auth/login","status":200,"duration_ms":797.94}
+No se pudo persistir el audit log: La persistencia de BACKSTAGE no está configurada. Contacta al administrador.
+✔ registration creates a workspace, admin membership, and authenticated session (3010.8637ms)
+{"event":"http.completed","request_id":"d8a3c6ce-ec1a-4806-9be0-c2140c7dff37","method":"POST","route":"/register","status":400,"duration_ms":4.61}
+No se pudo persistir el audit log: La persistencia de BACKSTAGE no está configurada. Contacta al administrador.
+✔ public registration cannot choose a role or join an organization by id (51.9474ms)
+(node:30496) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Usuario/OneDrive/Escritorio/backstage_v310/BACKSTAGE-3.1.0/frontend/api/index.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"event":"http.completed","request_id":"f119dc86-0ccd-43e6-95a8-81978d509223","method":"POST","route":"/auth/register","status":201,"duration_ms":955.29}
+No se pudo persistir el audit log: La persistencia de BACKSTAGE no está configurada. Contacta al administrador.
+{"event":"http.completed","request_id":"220f2ca4-a50b-4984-92b5-1137fbfaf4e8","method":"POST","route":"/auth/login","status":200,"duration_ms":847}
+No se pudo persistir el audit log: La persistencia de BACKSTAGE no está configurada. Contacta al administrador.
+{"event":"http.completed","request_id":"943e9659-c3e0-400d-8d08-ebaddc5ec4d6","method":"GET","route":"/auth/me","status":200,"duration_ms":27.89}
+{"event":"http.completed","request_id":"27fd1089-0af1-4821-b8ca-3393b9aae1ea","method":"GET","route":"/terrain/surface","status":200,"duration_ms":17.45}
+{"event":"http.completed","request_id":"e8524a4c-e339-4058-9e25-77b29d472c39","method":"GET","route":"/spatial/search","status":200,"duration_ms":7.65}
+{"event":"http.completed","request_id":"248137e1-ae5b-463a-87bc-70a627e7f6b5","method":"GET","route":"unmatched","status":403,"duration_ms":4.63}
+{"event":"http.completed","request_id":"dce67225-e52a-4952-9200-dfa4fba8e90b","method":"GET","route":"/auth/me","status":200,"duration_ms":9.58}
+[auth] session rejected {"reason":"invalid signature","request_id":"949efc81-d154-420a-8c9f-5526e35453f6"}
+{"event":"http.completed","request_id":"949efc81-d154-420a-8c9f-5526e35453f6","method":"GET","route":"/auth/me","status":401,"duration_ms":2.54}
+[auth] session rejected {"reason":"jwt expired","request_id":"2ff4a29c-919b-498b-9b8b-0bb13a83d302"}
+{"event":"http.completed","request_id":"2ff4a29c-919b-498b-9b8b-0bb13a83d302","method":"GET","route":"/auth/me","status":401,"duration_ms":2.32}
+[auth] session rejected {"reason":"JsonWebTokenError","request_id":"74be6d28-2670-4107-9fdd-e3d5e2754a98"}
+{"event":"http.completed","request_id":"74be6d28-2670-4107-9fdd-e3d5e2754a98","method":"GET","route":"/auth/me","status":401,"duration_ms":12.13}
+[auth] session rejected {"reason":"JsonWebTokenError","request_id":"7bbe3b4d-3233-405d-b63f-19e41dc416c4"}
+{"event":"http.completed","request_id":"7bbe3b4d-3233-405d-b63f-19e41dc416c4","method":"GET","route":"/auth/me","status":401,"duration_ms":3.63}
+[auth] session rejected {"reason":"jwt signature is required","request_id":"d13f1355-6c08-4e66-88dd-3f2093f7d78f"}
+{"event":"http.completed","request_id":"d13f1355-6c08-4e66-88dd-3f2093f7d78f","method":"GET","route":"/auth/me","status":401,"duration_ms":2.21}
+✔ real login tokens survive the web proxy; signature, expiry and workspace isolation remain enforced (2433.8426ms)
+✔ uses exponential backoff with cap (3.0776ms)
+✔ only safe technical workflow states are eligible (0.7707ms)
+✔ cooldown and max attempts prevent retry storms (4.6838ms)
+✔ BSIE jobs persist scoped results, deduplicate, export and deny other tenants (20.3664ms)
+✔ BSIE cancellation, retries, errors and crashed final lease are bounded (10.2924ms)
+✔ BSIE datasets and weight caches use current organization and exact immutable input (5.941ms)
+✔ BSIE authenticated HTTP uses fresh role and supports queued result export (2018.0464ms)
+✔ Mongo audit chain detects content tampering and deletion of its final event (11.2146ms)
+✔ Mongo audit hashes survive actual BSON serialization of optional request metadata (42.2349ms)
+✔ Node invokes real Python engine without blocking the event loop (16582.138ms)
+✔ operational rules preserve existing SLA defaults, version overrides and audit changes atomically (18.9506ms)
+✔ rules and exceptions use current admin membership, reject invalid limits and stay tenant scoped (6.1601ms)
+✔ source freshness distinguishes current, stale, missing, future, historical and simulated data without certification (2.7404ms)
+✔ exception binds exact reviewed source, project and policy, has a bounded expiry, and does not rewrite engine evidence (14.2375ms)
+✔ failure to persist canonical audit rolls back policy changes and their revision (2.918ms)
+{"event":"http.completed","request_id":"fa0d27ac-4c54-4269-a68c-e143804546f3","method":"GET","route":"unmatched","status":404,"duration_ms":20.83}
+{"event":"http.completed","request_id":"039264cb-2c8d-4c28-9f47-c2315fdb6d32","method":"GET","route":"unmatched","status":401,"duration_ms":48.47}
+✔ Clean Com artifact paths are not public endpoints of the platform (1068.3469ms)
+ApiError: La vista geográfica no superó la comprobación de integridad.
+    at ArtifactRepository.collection (C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\backend\cleancom\repository.js:76:21)
+    at async CleanComService.features (C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\backend\cleancom\service.js:53:42)
+    at async C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\backend\controllers\cleanCom.controller.js:8:57 {
+  statusCode: 503
+}
+✔ Clean Com enforces workspace boundaries, pages real geometry and rejects corrupt evidence (534.0444ms)
+✔ BCO rejects cycles, unknown versions/algorithms, injected attributes and unbounded contracts before writes (243.925ms)
+✔ creation is idempotent and CRUD uses fresh role, owner, state, revision and tenant attributes (34.638ms)
+✔ worker schedules dependency-ready tasks in bounded parallel batches and preserves reproducible results (159.8934ms)
+✔ reviewed JavaScript algorithms execute in the real isolated runtime and retain deterministic math (1027.1633ms)
+✔ cancellation fences running work; timeouts and explicit retries never overwrite the original result (254.9743ms)
+✔ global and organization leases cap work, recover crashes and fence stale workers (35.3462ms)
+✔ an audit failure rolls back job and outbox; expiry is enforced before TTL and replay cannot reveal expired data (49.8952ms)
+✔ outbox retries use stable delivery IDs, no duplicate business writes, and exhausted crashed deliveries stop (5.0257ms)
+✔ completed runs retain integrity, can repeat with a new key and detect changed snapshots (17.6168ms)
+✔ workers recheck current writer permission and preserve failed tasks instead of inventing a completion (27.4094ms)
+✔ position workflows enforce retention and owner privacy even for same-organization viewers (3.5859ms)
+✔ a defense proposal requires another current administrator and the exact reviewed result hash (13.0346ms)
+✔ scheduler respects the existing Python runner one-per-organization limit (307.0981ms)
+✔ final commit drains an in-flight renewal and prevents heartbeat write contention (178.9853ms)
+(node:10912) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Usuario/OneDrive/Escritorio/backstage_v310/BACKSTAGE-3.1.0/frontend/api/index.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ Core HTTP and web proxy enforce idempotency, asynchronous execution, current roles and organization isolation (962.0098ms)
+✔ Node deployment retains scientific fingerprint assets that static JavaScript tracing can omit (157.3644ms)
+✔ real acceptance cleanup covers workflow, event and source collections while excluding shared counters (50.1085ms)
+✔ worker retries transient failures with bounded backoff, recovers and never logs the exception body (19.4791ms)
+✔ one-shot worker fails visibly and a dispatcher failure does not erase an already committed job (4.0571ms)
+✔ Marching Squares genera un segmento sobre una pendiente (5.3399ms)
+✔ genera intervalos y marca cada quinta curva como maestra (6.9927ms)
+✔ rechaza matrices o intervalos inválidos (1.27ms)
+✔ resolves tenant metrics and Atlas context with explicit missing fields and no invented confidence (5.1487ms)
+✔ does not query metric stores when territory coordinates are absent (0.8042ms)
+✔ financial v2 independently known values, cents above safe integers, DCF and half-away rounding (12.9499ms)
+✔ IRR reports root convergence, negative return and ambiguity instead of fabricating a root (1.5963ms)
+✔ strict financial inputs reject silent coercion, invalid rates, unit-period mismatch and excessive horizon (9.3011ms)
+✔ new analysis is server-owned, canonical and repeatable; every manifest dimension is checked without writes (33.5019ms)
+✔ Monte Carlo records actual defaults/model and is invariant to submitted object key order (129.2007ms)
+✔ Monte Carlo rejects malformed distributions, unsafe seeds, hostile factor names and unbounded requests (6.3801ms)
+✔ legacy financial and seeded simulation preserve their original results and do not backfill integrity (63.2554ms)
+✔ job, project reference and audit commit together; tenant and client forged metadata cannot override authority (24.5942ms)
+✔ failure after real transaction operations rolls back result, project reference and audit together (5.1993ms)
+✔ HTTP replay/export use current membership, allow viewer reading and deny writes, revoked and foreign tenants (1477.9741ms)
+✔ mide una línea geodésica sobre la superficie terrestre (2.713ms)
+✔ calcula área y perímetro de un polígono GeoJSON (1.3884ms)
+✔ rechaza geometrías no admitidas o incompletas (1.496ms)
+✔ D8 dirige y acumula flujo hacia el punto más bajo (4.1499ms)
+✔ delimita la cuenca de aporte de una salida (1.0356ms)
+✔ genera drenajes y formas del terreno como GeoJSON trazable (6.9747ms)
+✔ calcula un perfil topográfico interpolado y distancia acumulada (2.8406ms)
+✔ rechaza salidas y perfiles fuera de contrato (2.1389ms)
+✔ integration source CRUD is versioned, masks config and checks actual parent/organization on event ingestion (45.8712ms)
+✔ integration configuration rejects credentials and injection; canonical audit omits all raw payloads (6.327ms)
+✔ known monetary cents beyond binary integer precision remain distinct and produce 100/50/0 (11.0979ms)
+✔ decimal parser rejects silent coercion, excessive precision, nonfinite values and ambiguous units (1.7172ms)
+✔ exact ratios match independent weighted case and preserve affine invariance (24.8055ms)
+✔ restrictions compare exact cents, missing zero-weight data stays inactive and ties are explicit (3.0597ms)
+✔ rounding is explicit and the total is rounded after exact aggregation (1.7802ms)
+✔ save stores server-owned contract, exact decimal strings, unit/source and uncertainty without fabricated verification (75.9135ms)
+✔ canonical JSON ignores object key order and rejects undefined, NaN and infinity (3.7677ms)
+✔ tampering of input, result, units, engine or manifest fails verification and prevents a new project (58.0336ms)
+✔ legacy snapshots replay with the frozen original engine without adding historical hashes (51.6811ms)
+✔ unknown engine versions are preserved for reading and explicitly refuse replay/project creation (5.9719ms)
+✔ projects reference immutable snapshot hashes, stay idempotent and cannot cross organizations (14.3674ms)
+✔ snapshot and audit are rolled back together if contract save cannot commit (6.4816ms)
+✔ HTTP verification/export apply current role and tenant; read-only viewer may verify but cannot save (1505.3532ms)
+✔ parseBbox converts a valid bounding box to numbers (7.238ms)
+✔ parseBbox rejects malformed bounding boxes (1.751ms)
+✔ geometryIntersectsBbox detects points and polygons without PostGIS (1.2265ms)
+{"event":"http.completed","request_id":"1096f2a6-4fd1-41c7-97ec-d15c1ff164c9","method":"POST","route":"/auth/register","status":201,"duration_ms":916.63}
+{"event":"http.completed","request_id":"e60e4ec2-a159-4b72-ba8b-a4b3dfd9a3af","method":"GET","route":"unmatched","status":401,"duration_ms":51.47}
+{"event":"http.completed","request_id":"93d213a7-c7c5-49f7-9ec0-cd199aeea593","method":"GET","route":"/real-estate/properties","status":200,"duration_ms":11.38}
+{"event":"http.completed","request_id":"7d43cc72-74aa-445f-87e3-7f17e103f95e","method":"POST","route":"/analysis/projects","status":201,"duration_ms":22.82}
+{"event":"http.completed","request_id":"ff645a78-25fe-4152-8918-e77116f42de3","method":"GET","route":"/analysis/:id","status":200,"duration_ms":5.06}
+{"event":"http.completed","request_id":"047e12f4-0f0c-45d8-9a2e-56a51a5612ad","method":"POST","route":"/compare","status":400,"duration_ms":32.77}
+{"event":"http.completed","request_id":"7536e497-bd0b-4099-82fe-cd48ad761d6c","method":"POST","route":"/compare","status":400,"duration_ms":6.12}
+{"event":"http.completed","request_id":"f070b71d-1803-4acb-8771-d7f1253005f7","method":"POST","route":"/compare","status":400,"duration_ms":3.6}
+{"event":"http.completed","request_id":"d86eda73-3668-4f40-9ab1-b40a91742acc","method":"GET","route":"unmatched","status":401,"duration_ms":2.2}
+{"event":"http.completed","request_id":"dcf2b4a2-14ea-475c-955d-5478f9e4612a","method":"GET","route":"/spatial/geocode","status":200,"duration_ms":14.77}
+{"event":"http.completed","request_id":"2bbaaf7a-7975-48ea-aeca-49a4aa00bce5","method":"GET","route":"/geocode","status":400,"duration_ms":5.64}
+{"event":"http.completed","request_id":"eec4ab07-5a61-4653-9b7e-2decc5205dcc","method":"GET","route":"/spatial/reverse-geocode","status":200,"duration_ms":998.37}
+{"event":"http.completed","request_id":"6e332103-90ee-4862-9edc-eb36f0ec92ca","method":"POST","route":"/spatial/sources","status":201,"duration_ms":4.94}
+{"event":"http.completed","request_id":"0efd9661-4d59-4c66-b3d1-4d8666571f1a","method":"POST","route":"/spatial/ingest/geojson","status":201,"duration_ms":7.88}
+{"event":"http.completed","request_id":"9e20de5a-f93d-4c55-bdcd-77b494397022","method":"GET","route":"/spatial/search","status":200,"duration_ms":4.35}
+{"event":"http.completed","request_id":"254fb14f-04c3-4526-871b-7a88bc929a71","method":"GET","route":"/spatial/nearby","status":200,"duration_ms":4.31}
+{"event":"http.completed","request_id":"b6b40bc9-2057-43a4-9d13-8ec0f62d560a","method":"GET","route":"/nearby","status":400,"duration_ms":3.5}
+{"event":"http.completed","request_id":"8bfd15a4-3031-4bc1-a6f9-3f82239e682f","method":"POST","route":"/spatial/routes/compute","status":200,"duration_ms":6.78}
+{"event":"http.completed","request_id":"30ec7684-1ed1-435d-a41b-5ff05c5fb1f4","method":"POST","route":"/routes/compute","status":422,"duration_ms":3.68}
+{"event":"http.completed","request_id":"67eb3e9e-7f94-4eed-82d8-76038f317a1a","method":"POST","route":"/spatial/measure","status":200,"duration_ms":3.54}
+{"event":"http.completed","request_id":"a9cd9c63-c6fe-49b2-87ef-e4732db82dd0","method":"GET","route":"/terrain/surface","status":200,"duration_ms":8.2}
+{"event":"http.completed","request_id":"7536b93b-6db0-4857-948d-c64a4cef28c9","method":"POST","route":"/terrain/analyze","status":200,"duration_ms":6.37}
+{"event":"http.completed","request_id":"b488431a-b11b-43ad-97ac-53b8faa151d5","method":"POST","route":"/terrain/hydrology","status":200,"duration_ms":7.52}
+{"event":"http.completed","request_id":"2adb9837-52a3-4a9d-8954-0ac846cf4957","method":"POST","route":"/terrain/profile","status":200,"duration_ms":5.16}
+{"event":"http.completed","request_id":"aeba68d5-238c-4a53-9191-777c6b7c668f","method":"POST","route":"/spatial/risk/evaluate","status":200,"duration_ms":3.8}
+{"event":"http.completed","request_id":"6627d16a-f4bd-48c9-b11c-1c378b5b0a2b","method":"POST","route":"/analytics/multicriteria","status":201,"duration_ms":6.8}
+{"event":"http.completed","request_id":"eb2920b1-a44e-44fa-a6fa-b04907c04cf6","method":"POST","route":"/analytics/financial","status":201,"duration_ms":44.85}
+{"event":"http.completed","request_id":"91292f57-1370-4e15-9a09-e4a1591ccaf2","method":"POST","route":"/analytics/risk-simulation","status":201,"duration_ms":5.85}
+{"event":"http.completed","request_id":"92ac7660-b25b-4ce0-ad26-3e4e31319ac4","method":"POST","route":"/analysis/plan","status":200,"duration_ms":795.41}
+✔ authenticated spatial and terrain APIs execute their mathematical engines (3444.0228ms)
+✔ Mongo DNS override is explicit, validates IPs and never changes OS DNS (20.967ms)
+✔ Mongo identity indexes have no user seeds; registration and login keep public numeric IDs and omit secrets (72.836ms)
+✔ Mongo registration rolls back organization and user on membership failure, rejects duplicate or role injection (26.0995ms)
+✔ Mongo workspace switching and user admin operations isolate organizations and protect last administrator (65.3609ms)
+✔ Mongo administrator cannot reset a multi-organization password or claim an existing global account by email (59.5887ms)
+✔ HTTP register/login/me/switch and users admin use Mongo fresh memberships without SQL or preseeded accounts (1202.3836ms)
+✔ creates SLA condition only when breached (3.4097ms)
+✔ stale project produces critical recalculation condition (0.6357ms)
+✔ critical risks remain supervised until workflow closes (0.7033ms)
+✔ agrupa factores, calcula promedio y ordena oportunidades (5.2698ms)
+✔ descarta factores inválidos sin fabricar valores (2.3825ms)
+✔ production does not expose fallback organizations or memberships without MongoDB Atlas (25.1338ms)
+✔ own profile changes contact fields with audit and preserves credentials and administrator rights (18.2431ms)
+✔ self-service profile cannot alter roles, organizations or credentials (3.2721ms)
+✔ an administrator cannot accidentally revoke or demote themself even when another administrator exists (4.0061ms)
+✔ private feed posts persist and do not appear in other organizations (23.3992ms)
+✔ explicit sharing permits collaboration but never exposes a foreign project reference (11.3312ms)
+✔ viewer writes, unknown recipients and foreign project links are rejected atomically (2.5666ms)
+✔ revoked access is checked from storage rather than stale token claims (3.3258ms)
+✔ feed input and pagination reject Mongo operators, overlong content and invalid bounds (2.667ms)
+✔ comparison evidence links to the existing project without duplicating it or replacing its purpose (104.815ms)
+✔ comparison cannot be relinked to another project or read through another tenant (15.7095ms)
+✔ Mapbox autocomplete is disabled without both server token and permanent storage configuration (6.2355ms)
+✔ authorized autocomplete requests permanent Mapbox Geocoding and preserves typed provenance without secrets (8.4413ms)
+✔ Mapbox errors and invalid provider geometry fail safely without leaking URLs, credentials or replacement locations (3.2735ms)
+✔ Mapbox validates requests and keeps existing explicit geocoder independent (3.5618ms)
+✔ road plan and project retain an atomic evidence reference, server-calculated hash and original purpose (40.0219ms)
+✔ foreign project denies provider calls and failed audit rolls back both route plan and project reference (11.9339ms)
+✔ perception preserves CRS, source, zero coordinates and explicit uncertainty without claiming detection or verification (9.3122ms)
+✔ position review uses meters/seconds, consent, observation kind and geofence without a GPS provider (18.9426ms)
+✔ defense chooses thresholds only on training, reports holdout errors and never applies a proposal (3.1083ms)
+✔ neutral contracts have no industry imports; explicit source/index adapters own storage composition (1192.4818ms)
+✔ new core dependency graph is acyclic and platform route mounts are unique (110.6701ms)
+✔ invitation binds recipient, server role and organization; stores only a hash and requires one explicit acceptance (129.7427ms)
+✔ expired, revoked, foreign-tenant and no-longer-authorized invitations cannot grant membership (51.3483ms)
+✔ audit failure rolls back invitation creation, acceptance, role change and revocation (33.7465ms)
+✔ audit request sanitization recursively removes credentials without mutating input (5.4906ms)
+✔ HTTP and native WebSocket use persisted invitation, downgrade and revocation with stale tokens (2257.1326ms)
+✔ disabled administrator does not satisfy the last-active-administrator invariant (32.8557ms)
+✔ asset, analysis and project facts share their mutation transaction and audit failures roll back state (138.2631ms)
+✔ membership revocation also invalidates older pending invitations for the same recipient (16.0134ms)
+✔ capability revocation is read from persisted organization configuration, independent of role claims (19.0551ms)
+✔ HTTP audit derives original resource paths, strips URL queries and sanitizes nested retained credentials (151.6073ms)
+✔ platform assets preserve distinct identities, scope, coordinates and cross-source pagination without copying data (19.5523ms)
+✔ platform inventory respects disabled module capability and does not claim verification (1.212ms)
+✔ universal comparison recalculates, preserves snapshots and blocks tenant spoofing and incomplete evidence (57.0859ms)
+✔ platform HTTP uses current membership and role instead of claims for generic asset access (303.1117ms)
+(node:2092) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Usuario/OneDrive/Escritorio/backstage_v310/BACKSTAGE-3.1.0/frontend/src/lib/territory.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ general asset registration flows through the original repository, map projection and comparison snapshot (137.6916ms)
+✔ original writer routes cannot restore a stale admin token after current membership downgrades (110.6284ms)
+✔ aplica cabeceras seguras y conserva un request id válido (3.228ms)
+✔ reemplaza request ids inseguros (2.0078ms)
+✔ limita intentos por dirección y email y permite después de la ventana (1.43ms)
+✔ probability result persists version, synthetic mode, provenance, and honest null confidence (29.1031ms)
+✔ probability persistence rejects unsupported data modes (2.0171ms)
+✔ readiness returns 503 on dependency failure and recovers to 200 without inventing a store (11.4525ms)
+✔ structured HTTP telemetry preserves correlation and excludes queries, bodies, IDs and tokens (2.7069ms)
+✔ shared account budget survives separate middleware instances and does not retain the account identifier (11.1378ms)
+✔ shared limiter fails closed when Atlas is unavailable and rejects invalid identities before storage (1.6389ms)
+✔ encrypted backup preserves original BSON types and rejects corrupted ciphertext and wrong keys (16.4357ms)
+✔ restore suspends only TTL deletion while preserving all other index options (1.0857ms)
+✔ monitor opens a persistent incident only after repeated failures and resolves after repeated recovery (5.1911ms)
+✔ monitor requires healthy MongoDB, request correlation and denied unprotected access; it never follows redirects (80.5615ms)
+✔ consulta hasta nueve teselas y cruza el antimeridiano sin índices inválidos (6.5003ms)
+✔ decodifica protobuf vectorial auténtico conservando nombre, categoría y coordenadas (113.4403ms)
+✔ deduplica puntos entre teselas, limita el radio y conserva versión y atribución (13.8888ms)
+✔ no devuelve ausencia de lugares cuando fallan todas las teselas (6.5976ms)
+✔ normaliza una evaluación y calcula su promedio reproducible (4.3183ms)
+✔ rechaza indicadores incompletos o fuera del intervalo (1.6732ms)
+✔ clasifica el puntaje con bandas operativas (0.6644ms)
+✔ normaliza un componente y conserva el puntaje cero (5.8248ms)
+✔ migra aliases heredados a la dimensión de amenaza (0.9335ms)
+✔ rechaza tipos desconocidos y puntajes fuera de rango (2.151ms)
+✔ aplica cambios y limita las variables al intervalo unitario (4.2226ms)
+✔ compara el riesgo base y el escenario por celda (4.877ms)
+✔ valida amenaza y cantidad de celdas (2.8984ms)
+✔ construye grafo vial y ajusta coordenadas al nodo cercano (8.9343ms)
+✔ A* y Dijkstra encuentran la ruta conectada de menor costo (1.9718ms)
+✔ no inventa duración cuando la red no declara velocidad y rechaza componentes desconectados (1.9685ms)
+✔ búsqueda y cercanía consultan objetos territoriales activos (9.5487ms)
+✔ solo incorpora a rutas fuentes declaradas viales, no líneas genéricas (6.2105ms)
+✔ scientific RPC signs exact payload, bounds output and rejects redirects or incompatible results (160.8156ms)
+✔ deterministic costs, provenance and reversed benefit orientation (14.6766ms)
+✔ candidate counts, WGS84 bounds and malformed JSON are rejected (3.1153ms)
+✔ weights change ranking and zero, negative and infinity are invalid (2.3567ms)
+✔ missing values block, exclude or penalize explicitly; restrictions never accept unknown (1.4333ms)
+✔ ties are explicit, zero weight missing criteria are ignored and invalid constraints fail (4.8045ms)
+✔ assets never inherit the legacy Colombia default for unspecified or foreign countries (3.9632ms)
+✔ CSV supports quoted commas, escaped quotes, multiline and BOM (9.3006ms)
+✔ preview validates all records without writing and binds digest to tenant and source (3.9398ms)
+✔ geometry rejects empty, invalid WGS84, short lines and unclosed rings (2.5667ms)
+✔ GeoJSON has per-record errors and requires WGS84 FeatureCollection (2.4379ms)
+✔ Mongo test-double: source authorization whitelist, retention and capabilities (13.7679ms)
+✔ Mongo test-double: ingestion uses explicit external source and tenant vehicle; browser flags discarded (9.5524ms)
+✔ Mongo test-double: event replay idempotent; conflicting duplicate and impossible jumps roll back (39.8011ms)
+✔ Mongo test-double: revoked sources deny ingestion, stale status and expired history are explicit (8.8463ms)
+✔ Mongo test-double: pre-consent, absent event, inaccurate, stale and bulk duplicated events rejected (2.4546ms)
+✔ Mongo test-double: source authorization CAS conflict aborts every telemetry write (2.2904ms)
+✔ SOI HTTP uses current memberships, scopes MongoDB and rejects JWT role escalation or revocation (500.6103ms)
+✔ Mongo isolated: assets, crews, service orders and operations share tenant-owned references (1117.8306ms)
+✔ Mongo isolated: imports are atomic, repeat-safe and do not promote source assertions (11.2833ms)
+✔ Mongo isolated: assigned order cannot remove its crew and asset ID is removable (12.4907ms)
+✔ Mongo sanitary incident workflow requires assignment, evidence and authorized closure (5.9449ms)
+✔ sanitary waste ledger links tenants, preserves units and completes with durable events (42.1713ms)
+✔ sanitary data source, permissions and immutable ledgers cannot be promoted by the client (1.7121ms)
+✔ measurement ingestion deduplicates alerts, respects data kind, timestamps and unit (18.2337ms)
+✔ carbon calculation freezes factor version, converts compatible units and rejects double counting (13.8048ms)
+✔ voided and invalid readings cannot remain current, and simulations cannot suppress measured alerts (19.7211ms)
+✔ sanitation work and actual route compliance retain their tenant-owned references (5.3863ms)
+✔ sanitary optimization snapshots tenant resources, deduplicates and requires supervisor approval (52.1463ms)
+✔ optimization does not invent kg capacity, road distances or estimated emissions (8.2844ms)
+✔ sanitary HTTP refreshes memberships and never trusts JWT role or another tenant header (1757.013ms)
+✔ failed scientific run is persisted with safe errors and cannot be approved (4.8117ms)
+✔ a routing time limit does not become a false proof of infeasibility (12.0222ms)
+✔ scientific retries recover a failed run without duplicating its identity (20.6547ms)
+✔ dashboard and report preserve units, provenance kinds and immutable snapshots (7.5538ms)
+✔ coverage uses actual inventory geometries and distinguishes simulated execution (5.4763ms)
+✔ climate route sampling persists provider failures and never invents rainfall (3.4461ms)
+✔ read-only connector is bound to tenant and handles absent credentials honestly (5.3499ms)
+✔ Traccar adapter fetches GET only, maps declared devices and rejects stale/unknown precision (5.1089ms)
+✔ Mongo test-double: trip consent, numeric IDs, owner/tenant isolation and operation ownership (40.7674ms)
+✔ Mongo test-double: GPS append atomic distance, replay, pause, resume and terminal protection (38.0005ms)
+✔ Mongo test-double: invalid batch rolls back every position and distance; no pre-consent positions (2.9933ms)
+✔ Mongo test-double: expired positions hidden before TTL sweep and manual cleanup is owner scoped (3.6519ms)
+✔ Mongo test-double: injected document adapter is used without SQL queries (2.1305ms)
+✔ Mongo test-double: trip CAS conflict rejects batch without inserting positions (2.0241ms)
+✔ GPS point and transition validation are independent of storage (5.0196ms)
+✔ distancia nativa es cero para el mismo punto (3.7003ms)
+✔ distancia nativa aproxima un grado sobre el ecuador (0.7347ms)
+✔ point-in-polygon clasifica interior y exterior (0.8348ms)
+✔ quadtree indexa y consulta puntos (4.1199ms)
+✔ GIS known equatorial and antimeridian distances preserve symmetry and are not road distances (7.5238ms)
+✔ GIS closed ring reports boundary separately and rejects ambiguous coordinates, CRS and antimeridian polygons (7.5275ms)
+✔ GIS contract detects input/result/reference/rule tampering and never trusts a declared certification (9.1601ms)
+✔ optimization materializes existing defaults, rules, source and resource state; links one immutable project reference (54.0676ms)
+✔ business constraints validate source, capacities, duplicate IDs, matrix units/order and objectives before search (31.7767ms)
+✔ tampering, resource changes and changed business configuration block new approval (68.2342ms)
+✔ independent verifier rejects mathematically invalid routes even if a new manifest is computed (20.9307ms)
+✔ repeated bounded search excludes timing noise, accepts another valid schedule and never overwrites the snapshot (20.9327ms)
+✔ capacity proof is independently checked and time-limited absence is not certified as a proof (6.895ms)
+✔ real unchanged Python solver satisfies independently checked known tour and capacity infeasibility (15233.2608ms)
+✔ result, project reference and domain event roll back together after a completion failure (3.4109ms)
+✔ configuration revisions and their audit fact commit together without inventing an operational rule (10.4864ms)
+✔ optimization HTTP allows current viewers to inspect/export but rejects replay, foreign organization and revoked access (606.7112ms)
+✔ convierte coordenadas WGS84 a teselas XYZ y recupera sus límites (5.6141ms)
+✔ asigna una geometría a las teselas que cubre (1.1644ms)
+✔ exige licencia y rechaza coordenadas fuera de WGS84 (3.4584ms)
+✔ ingiere GeoJSON con procedencia y lo sirve por tesela (12.9774ms)
+✔ aísla las fuentes por organización (1.5052ms)
+✔ organizaciones pueden reutilizar IDs sin leer ni sobrescribir objetos ajenos (11.623ms)
+✔ simplifica líneas conservando extremos y forma significativa (13.8979ms)
+✔ preserva anillos cerrados y reduce tolerancia al aumentar zoom (1.6419ms)
+✔ caché LRU limita entradas y puede invalidarse (1.3821ms)
+✔ fuentes remotas solo aceptan HTTPS y dominios autorizados (2.6192ms)
+✔ crea mundo, celda y objeto espacial versionado (5.9221ms)
+✔ registra procedencia obligatoria (3.4029ms)
+✔ Atlas crea singleton reutilizable con URI y memory funciona sin credenciales (38.9186ms)
+✔ producción exige Atlas y no cae silenciosamente a memoria (1.6795ms)
+✔ Atlas namespacea IDs por organización y exige tenant en lecturas (2.7576ms)
+✔ errores del driver Atlas se convierten a 503 sin filtrar detalles (10.3229ms)
+(node:32680) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Usuario/OneDrive/Escritorio/backstage_v310/BACKSTAGE-3.1.0/frontend/api/index.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ protected proxy uses its server credential, preserves tenant headers and refuses redirects (151.3461ms)
+✔ scientific automation bypass is sent only to the self deployment (8.7552ms)
+✔ proxy rejects malformed JSON and platform body parse failures as 400 without sending them upstream (3.2554ms)
+✔ proxy serializes valid raw JSON once and preserves retry headers for the caller (3.5424ms)
+✔ calcula pendiente, orientación y relieve para una superficie (3.5006ms)
+✔ reescala una malla con interpolación bilineal (3.011ms)
+✔ genera terreno procedimental determinista y niveles de detalle (13.8725ms)
+✔ conecta segmentos contiguos en polilíneas (0.5791ms)
+✔ servicio rechaza bbox inválido (1.6809ms)
+{"event":"http.completed","request_id":"174a0c41-b2e7-48d5-80d4-9bb1494270ae","method":"POST","route":"/auth/register","status":201,"duration_ms":809.31}
+{"event":"http.completed","request_id":"24e9e657-3b4c-4add-b125-2b3592bb3632","method":"POST","route":"/analysis/compare","status":201,"duration_ms":32.2}
+✔ POST /analysis/compare runs TOPSIS for three resolved cities and persists the result (1042.534ms)
+✔ clasifica los umbrales de riesgo de forma determinista (3.093ms)
+✔ calcula incendio con contribuciones explicables (4.999ms)
+✔ combina amenazas sin confundir confianza con riesgo (0.9406ms)
+✔ rechaza entradas incompletas, fuera de rango o modos inválidos (1.8532ms)
+✔ rechaza coordenadas ausentes y fuera de rango, preservando el cero geográfico (6.5047ms)
+✔ consulta el punto seleccionado y conserva valores nulos, unidades y procedencia del modelo (15.5661ms)
+✔ deduplica solicitudes simultáneas, reutiliza la caché y la renueva al vencer (5.6491ms)
+✔ la cartografía limita radio y tamaño y conserva la fecha y atribución OSM (5.6181ms)
+✔ una fuente caída no oculta la otra ni fabrica valores meteorológicos (2.7823ms)
+✔ consulta una alternativa cartográfica cuando falla la primera y comunica su procedencia (3.1282ms)
+{"event":"http.completed","request_id":"fd029044-7658-4379-bb54-95e2e30c1ec6","method":"GET","route":"unmatched","status":401,"duration_ms":20.48}
+{"event":"http.completed","request_id":"6b67a1e4-4ddf-4672-bd9d-8168ea5dd81c","method":"GET","route":"unmatched","status":401,"duration_ms":3.35}
+{"event":"http.completed","request_id":"33422868-36a4-46d1-b804-d2d660f40e62","method":"GET","route":"unmatched","status":401,"duration_ms":2}
+✔ los endpoints actuales requieren sesión y contexto de organización (2898.783ms)
+✔ resolves real geocoder fields, bounds, ODbL attribution, and caches the result (21.5578ms)
+✔ returns null when the public provider has no matching territory (1.338ms)
+✔ translates provider throttling to service unavailable (2.5088ms)
+✔ returns ambiguous alternatives and applies only explicitly supplied context bias (3.1482ms)
+✔ reverse geocoding returns normalized address and provider attribution (2.5029ms)
+✔ an explicit international country qualifier overrides the active territory bias (2.0811ms)
+✔ native sockets enforce tenant, channel, persisted role, revocation and token validity (531.4578ms)
+✔ territory validation retains geographic zero and never grants a verification claim (19.9149ms)
+✔ project territory retains bounded provider attribution and storage metadata without accepting secrets or verification claims (1.7805ms)
+✔ comparison links one original project atomically, retaining both asset identities and immutable evidence (110.1926ms)
+✔ link failure rolls back project creation and allows a clean retry (34.5231ms)
+✔ project conversion enforces tenant, role, asset ownership and existing-link integrity (7.9408ms)
+✔ HTTP workflow registers an asset, saves evidence, creates and recovers the original scoped project (1294.6737ms)
+✔ [HTTP/isolated] geographic router enforces fresh tenant permissions and opaque infrastructure errors (415.088ms)
+✔ [unit/isolated] WGS84 rejects blanks, null, booleans and out of range values (6.8824ms)
+✔ [unit/isolated] geocoder reuses resolver and labels precision without invented accuracy (3.7181ms)
+✔ [unit/isolated] reverse preserves requested point distinct from provider match (1.5292ms)
+✔ [unit/isolated] explicit longitude,latitude resolves without a network call (1.3296ms)
+✔ [unit/isolated] capabilities lists only explicitly available routing profiles (5.7988ms)
+✔ [unit/isolated] autocomplete never calls public Nominatim (1.5656ms)
+✔ [unit/isolated] Photon autocomplete has source, coordinates and unverified precision (2.7349ms)
+✔ [unit/isolated] OSRM contract requests road geometry, stops, steps and alternatives (7.0218ms)
+✔ [unit/isolated] route never replaces no-route, failures or incomplete provider response with straight line (5.8692ms)
+✔ [unit/isolated] ordered intermediate stops remain in OSRM request and response legs (2.9671ms)
+✔ [unit/isolated] DEM samples actual response with 90m resolution and no synthetic fallback (3.0758ms)
+✔ [unit/isolated] DEM profile follows input polyline and computes sample ascent/descent (2.9681ms)
+✔ [unit/isolated] real DEM surface uses provider grid and compatible terrain fields, then cache (17.5013ms)
+✔ [unit/isolated] DEM surface rejects excess resolution and missing provider data without procedural fallback (1.986ms)
+✔ [unit/isolated] DEM per-organization quotas stop excess samples before provider calls and reset (10.055ms)
+✔ [unit/Mongo isolated] saved road plans preserve provider data and scope all operations to organization (7.1552ms)
+✔ [unit/Mongo isolated] MongoDB failure does not fall back to SQL or memory (1.1706ms)
+﹣ [integration/live opt-in] Miami to Los Angeles real road route (0.3881ms) # SKIP
+✔ [unit/Mongo isolated] public Nominatim holds shared Mongo lease and cooldown across resolver instances (18.1146ms)
+✔ [unit/Mongo isolated] public Nominatim fails closed when MongoDB is unavailable (1.1016ms)
+ℹ tests 379
+ℹ suites 0
+ℹ pass 378
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 35531.9147

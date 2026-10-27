@@ -1,0 +1,255 @@
+{
+  "source_archive_sha256": "414513c5d7452cbb867e70b8da9763b5d5d5686f8f4d9cda93626b6dda1313a7",
+  "scope": "existing code snapshot before unified account-security increment",
+  "changed_existing_files": [
+    {
+      "path": "backend/auth.js",
+      "before_sha256": "d49a0def8640aa81712d99b5e68d708cb5287e7ca07e77152c6c7caa9763487d",
+      "after_sha256": "44e54ab7bd1aaf9d185cee52c78b37af756824aa144ad9cec16d109d7ccaa74b"
+    },
+    {
+      "path": "backend/middleware/atlasRateLimiter.js",
+      "before_sha256": "cf5bd9c555fa7c6c59cb3c2db7cd68885354b79f941ec490695d7f136448b5d5",
+      "after_sha256": "c278111a1dd674d236b31ce66c862bc2db231d15c34ec498ab8fd321e69e9352"
+    },
+    {
+      "path": "backend/middleware/auditLogger.js",
+      "before_sha256": "883a899bcf10237f472aa2478c8698b8efdc5f4b78641e87bd9874b1119e3eec",
+      "after_sha256": "13423e531baa2179bba8a4085ca1bc050ffb48ea38cf9762c632a3256c215c0d"
+    },
+    {
+      "path": "backend/middleware/organizationContext.js",
+      "before_sha256": "6c281e15b34a507526d68fd14028822f488a5c4b890bc5451004aa5decad730b",
+      "after_sha256": "c582bd7ea8e692c03a37fcad784c4716397cb3c11ec28a5fab018d564c18430b"
+    },
+    {
+      "path": "backend/realtime/wsServer.js",
+      "before_sha256": "70822e7c93594f8f37f9c1207b68264d8a96b45c4fad2d751fff34481cdcfee4",
+      "after_sha256": "0758dc85b6c540beaea9f3bd9163fb959ee8c1bf1cca35b447c18112132ab4f6"
+    },
+    {
+      "path": "backend/routes/auth.routes.js",
+      "before_sha256": "034353090320090eae14ed16356043e78afcbcd92829acb5ccb46b5cf7fdd50b",
+      "after_sha256": "9cc14a3fd44edfd86edc8e9734bcc6f74abc541dcfdddfc901ca19b8400275e8"
+    },
+    {
+      "path": "backend/scripts/run-regression.js",
+      "before_sha256": "3423a48b79af14aec2b67ade6aae00f05af0d39bcc8cb9d0582edda0475cf816",
+      "after_sha256": "bc3f949d89c0160a91ba3f696526f7271f2e5c0c9dc2972f73527135d05b9e3f"
+    },
+    {
+      "path": "backend/services/mongoIdentity.service.js",
+      "before_sha256": "1183e819e390ff455d80fb479aa23a278c005e5dcce3eae5d0a80d2ed5012d24",
+      "after_sha256": "07890a0ec571b04dc118406798551a62fbe664bcbee305933aaae54b08741aee"
+    },
+    {
+      "path": "frontend/scripts/soi-browser-smoke.mjs",
+      "before_sha256": "16d656006955f015b1b0b5e0bfd2696f59680ca4fa10fa09b1e312f96b4d719b",
+      "after_sha256": "3794b7b7edfbc5588f592fbc18411d9ae15b3b403d5718cbdfbaa1360be2ce8b"
+    },
+    {
+      "path": "frontend/src/App.jsx",
+      "before_sha256": "f96f1dbcd82428688aa0cdf6160dc0803d69df9b1869853c9f3d9ab80e8248c3",
+      "after_sha256": "7a1ac507b234555fda4a5c302da521690b4c716f846f5507c40e87a4c6c4294f"
+    },
+    {
+      "path": "frontend/src/pages/Account.jsx",
+      "before_sha256": "df911f081d07be40846b591d14dbd3b298ae2be628f6e00335073e9bda827a8a",
+      "after_sha256": "ab3be6ac32d199f38e692b730b222a78b07879bf287113f19e89429fdee3917c"
+    },
+    {
+      "path": "frontend/src/pages/Reports.jsx",
+      "before_sha256": "75223103ca959f8c1ef0546ad8e87840ec093a6c80573708d2858d21dfba8a42",
+      "after_sha256": "b79293440d71f645335f627ce790f399d105bc935dd628a2d002f70a6442e444"
+    },
+    {
+      "path": "frontend/src/styles/origin.css",
+      "before_sha256": "004e04481dfbe379021b224bdc0523b8bbde93233c0777f8e33f0b6afe00efaa",
+      "after_sha256": "7b022c3d19bc2b47651c4a955bf08255134e5a7e05d145ba4b1c5bf7e0b7be0e"
+    },
+    {
+      "path": "frontend/tests/originRendering.test.mjs",
+      "before_sha256": "8ad32cde4d47f824d3167220c69acd4b032fafce301b9e832040c426804782b8",
+      "after_sha256": "e9e68765680b6d80241334ffb683c5be0ed48b3366b95fb57dabde1ae56e00e2"
+    },
+    {
+      "path": "scripts/staging-vercel.js",
+      "before_sha256": "09447384f6afbdf76a5b0ce9ea5122474555a09ddfc944261cf77c6265b52a0b",
+      "after_sha256": "96a768e0432ff16c304107d5dbf3f3d69e5a0ede858c5ac8ce73f33a4929b74a"
+    }
+  ],
+  "new_implementation_and_verification_files": [
+    {
+      "path": "backend/domain/identityCredentials.js",
+      "sha256": "9a8adae004d2ba451b9165f1c4a04782fd387d90551bec18c6617ba11514e873"
+    },
+    {
+      "path": "backend/domain/accountSecurity.test.js",
+      "sha256": "a3e807bc9a72c248a355dcf4048065865e355197aa01ce9c14f43287e81d2b79"
+    },
+    {
+      "path": "backend/domain/accountSecurityHttp.test.js",
+      "sha256": "01621b99b9a1cac417d58d12254621a366b151316f44ac863cc37e4eacbc888a"
+    },
+    {
+      "path": "backend/domain/authMail.test.js",
+      "sha256": "cad126b1f26d256fbe57539e070ffec3b525688f22d4d53b4c81b9557b7f35d6"
+    },
+    {
+      "path": "backend/services/accountSecurity.service.js",
+      "sha256": "7e089ad78b5d095651aa65d4eacd78af27d7d7c0f5b9ecca1decca679f9dcb2b"
+    },
+    {
+      "path": "backend/services/authMail.service.js",
+      "sha256": "9b03ceda844fa7861a4c6e22af3047ff21b812639a30448fb3e533811795d507"
+    },
+    {
+      "path": "backend/routes/accountSecurity.routes.js",
+      "sha256": "2b15b46698a8d9219bd20e13096dacad9584ee7acdd0f29fef7737b6d28a584b"
+    },
+    {
+      "path": "backend/scripts/verify-account-security-staging.js",
+      "sha256": "02480ec419f70e9b51a65f5b2f3f1a5429f76dfd0f88a89807debbc5e23ef827"
+    },
+    {
+      "path": "frontend/src/pages/AccountRecovery.jsx",
+      "sha256": "6631bcf420623b28147bbe35240d2d6ac6d63d019cf54ec957af80e178511ef1"
+    },
+    {
+      "path": "frontend/src/components/AccountSecurityPanel.jsx",
+      "sha256": "6c1cff49c10e1e25636fb22cc4027f7f0898412a83b86e782e9bc9497181d943"
+    },
+    {
+      "path": "frontend/scripts/account-security-scenarios.mjs",
+      "sha256": "0d81ac4d15b10b5872f465ba9db4f0fddddbd5415c34edc20d3547b01e73cd15"
+    },
+    {
+      "path": "scripts/verify-unified-staging.js",
+      "sha256": "2d386cc377434dd564574471d284f7d54522294fa1b323ad9343f424271fcfc5"
+    }
+  ],
+  "missing_snapshot_files": [],
+  "preserved_engine_files": [
+    {
+      "path": "bsie/benchmark.py",
+      "sha256": "5c366b2e41b4c39300d19eaeb67c6fdd8c479e6571c49c4bcf95bf77160693ed",
+      "unchanged": true
+    },
+    {
+      "path": "bsie/engine.py",
+      "sha256": "ecf239af7af2489193d858e25a6a9e4088b9c55bacefb3a4e8621bd4f285cafb",
+      "unchanged": true
+    },
+    {
+      "path": "bsie/requirements-test.txt",
+      "sha256": "9ae0ed81f2acd1f91ee4973c4332809d7e3a266c9e224c617791d89f4c63511d",
+      "unchanged": true
+    },
+    {
+      "path": "bsie/requirements.txt",
+      "sha256": "ea9c44d3a4a5df35cc43ea7a1b2824c1bc686105a488f4ff3f911af2f4f2195c",
+      "unchanged": true
+    },
+    {
+      "path": "bsie/temporal.py",
+      "sha256": "705a79fd15a6c9a9b551b8cb1e2d89edab56216af1fef86c8f9fe1c2684785b1",
+      "unchanged": true
+    },
+    {
+      "path": "bsie/test_advanced.py",
+      "sha256": "832a98191c887d1dc4515214854c8a691921d00804f5415b5942d07228985693",
+      "unchanged": true
+    },
+    {
+      "path": "bsie/test_engine.py",
+      "sha256": "46007e9e1cbee60ed43d4efb1b7c7171d517e5923ae06b41c4ef8181bc38833f",
+      "unchanged": true
+    },
+    {
+      "path": "bsie/test_temporal.py",
+      "sha256": "50d28046a7d070646f78cce44b34f385f547939977d38373707870419b9b7815",
+      "unchanged": true
+    },
+    {
+      "path": "sanitary/benchmark.py",
+      "sha256": "61eb61489eba4d5eba2d150d409c49e649eae0e5ff717d6e290a24eb3a7b716d",
+      "unchanged": true
+    },
+    {
+      "path": "sanitary/engine.py",
+      "sha256": "6fe0fb42c7dbad591606acb46e312d0dbb090067e574b0d36219acb4bf3b8546",
+      "unchanged": true
+    },
+    {
+      "path": "sanitary/predictive.py",
+      "sha256": "25f3d76465c29266bc4732997b7492d800764f7f3be12a1f8006784e2ad04748",
+      "unchanged": true
+    },
+    {
+      "path": "sanitary/requirements.txt",
+      "sha256": "cb313032c331d802fa36d8b35f7f7a578f9a4cfb92aa9b14b5110ad986f7e0f4",
+      "unchanged": true
+    },
+    {
+      "path": "sanitary/routing.py",
+      "sha256": "35d68becd01db45e7ae6adbcf7fcc4d3985b4bfce90daeb6b1c73ba89dabc714",
+      "unchanged": true
+    },
+    {
+      "path": "sanitary/test_engine.py",
+      "sha256": "cec971a9030540414b2c63ddd7b679ef2d66386f3f4a53f9dcb09599ab74f257",
+      "unchanged": true
+    },
+    {
+      "path": "shared/businessRules.v1.json",
+      "sha256": "c15dcc565086c385ca53a13ed6f512d19299987db4b6ea63167035644f249135",
+      "unchanged": true
+    },
+    {
+      "path": "shared/commercialPolicy.draft.v1.json",
+      "sha256": "c05293bd589acbb77403cb08154301cd1ef2e486fb8d0c4adcd50d9ef7440c67",
+      "unchanged": true
+    },
+    {
+      "path": "shared/comparison.mjs",
+      "sha256": "c14ea34fbd0bfd0988030f9edf7a77fa69106cf98359becb03af09c071220c85",
+      "unchanged": true
+    },
+    {
+      "path": "shared/comparison.v1.mjs",
+      "sha256": "ab29abdeee6be7c402186e113be7af3047bdfe3f96c0c2af436722990ef5f2a5",
+      "unchanged": true
+    },
+    {
+      "path": "shared/comparison.v2.mjs",
+      "sha256": "ba35c22147bf17199cd2d79b4994498d6d8ebc1e38dc6332272ddcddbf4286e4",
+      "unchanged": true
+    },
+    {
+      "path": "shared/decimal.mjs",
+      "sha256": "391cf002d8c301662ada54cf378c9eb171778bac460f8f79f310bb4152e23ac1",
+      "unchanged": true
+    },
+    {
+      "path": "shared/financial.v2.mjs",
+      "sha256": "04870b8c2feb98c5bd4d57e62ba14869e1c027f899347cb423a5f0aa8c2cabb1",
+      "unchanged": true
+    },
+    {
+      "path": "shared/modules.json",
+      "sha256": "27b8499dd7ec5d226711d02e253e13b65530a2efa56b162a7ee16965a5a60276",
+      "unchanged": true
+    },
+    {
+      "path": "shared/soiComparison.mjs",
+      "sha256": "a03041d5fc4dbf894a98692afd15a53dcca90e2729ccfc18d1aa13e3bc770e4e",
+      "unchanged": true
+    },
+    {
+      "path": "shared/spatialRules.v1.json",
+      "sha256": "5640ab7997cc224ec92b0979629893cd71933280c653a2c7f44cfd8b6d60e306",
+      "unchanged": true
+    }
+  ],
+  "not_an_atlas_backup": true
+}

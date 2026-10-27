@@ -1,0 +1,56 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+process.env.JWT_SECRET = 'isolated-account-security-http-key';
+process.env.BCRYPT_ROUNDS = '4';
+const express = require('express');
+const WebSocket = require('ws');
+const { fixture } = require('./helpers/soiMongoMemoryFixture');
+const { createMongoIdentityService } = require('../services/mongoIdentity.service');
+const { createAccountSecurityService } = require('../services/accountSecurity.service');
+const { createAccountSecurityRouter } = require('../routes/accountSecurity.routes');
+const { authenticate } = require('../auth');
+const { createRequireOrganizationContext } = require('../middleware/organizationContext');
+const { resolveMembership } = require('../services/organization.service');
+const { attachSecurityWebSocketServer } = require('../realtime/wsServer');
+
+test('HTTP credentials, protected resources and active WebSockets share session revocation', async t => {
+  const f = fixture();
+  const infra = {getMongoDatabase: async()=>f.options.database, withMongoTransaction:f.options.transaction,nextId:f.options.nextId,cleanDocument:r=>r};
+  const identity = createMongoIdentityService(infra);
+  const security = createAccountSecurityService(infra,{mailer:{configured:()=>false}});
+  const credentials={name:'Owned fixture',email:'owned-http@example.invalid',password:'fixture-http-password',organization_name:'Owned workspace'};
+  const owner=await identity.register(credentials);
+  const memberships={getUserMemberships:identity.getUserMemberships,resolveMembership};
+  const app=express();app.use(express.json());
+  app.use('/auth',createAccountSecurityRouter(security,{limiterFactory:()=> (req,res,next)=>next()}));
+  app.get('/auth/me',authenticate,async(req,res,next)=>{try{await identity.validateSession(req.user);res.json(await identity.me(req.user.user_id,req.user.organization_id));}catch(e){next(e);}});
+  app.get('/resource',authenticate,createRequireOrganizationContext(memberships),(req,res)=>res.json({organization_id:req.organization.organization_id}));
+  app.use((error,req,res,next)=>res.status(error.statusCode||500).json({error:error.message}));
+  const server=app.listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));
+  const wsServer=attachSecurityWebSocketServer(server,{memberships,revalidateIntervalMs:20});
+  t.after(()=>{wsServer.close();server.closeAllConnections();server.close();});
+  const base=`http://127.0.0.1:${server.address().port}`;
+  const request=(path,token,body,method=body?'POST':'GET')=>fetch(base+path,{method,headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})},...(body?{body:JSON.stringify(body)}:{})});
+  const cap=await request('/auth/capabilities');assert.equal(cap.headers.get('cache-control'),'no-store');assert.equal((await cap.json()).password_recovery_email,false);
+  const unavailable=[];
+  for(const email of[credentials.email,'unknown@example.invalid']){const r=await request('/auth/forgot-password',null,{email});assert.equal(r.status,503);unavailable.push(await r.json());}
+  assert.deepEqual(...unavailable);
+  for(const path of['/auth/reset-password','/auth/verify-email']){const r=await request(path,null,{token:'x'.repeat(43),...(path.includes('reset')?{password:'fixture-new-password'}:{})});assert.equal(r.status,410);assert(!JSON.stringify(await r.json()).includes(credentials.email));}
+  assert.equal((await request('/auth/sessions')).status,401);
+  assert.equal((await request('/auth/me',owner.token)).status,200);
+  assert.equal((await request('/resource',owner.token)).status,200);
+  const socket=new WebSocket(base.replace('http:','ws:')+'/ws/operations',{headers:{Authorization:`Bearer ${owner.token}`}});
+  t.after(()=>socket.terminate());
+  await new Promise((resolve,reject)=>{socket.once('message',resolve);socket.once('error',reject);});
+  const closed=new Promise(resolve=>socket.once('close',code=>resolve(code)));
+  assert.equal((await request('/auth/change-password',owner.token,{current_password:'wrong-password',password:'fixture-new-password'})).status,403);
+  assert.equal((await request('/auth/me',owner.token)).status,200);
+  const change=await request('/auth/change-password',owner.token,{current_password:credentials.password,password:'fixture-new-password'});assert.equal(change.status,200);assert.equal((await change.json()).requires_login,true);
+  for(const path of['/auth/me','/resource','/auth/sessions'])assert.equal((await request(path,owner.token)).status,401);
+  assert.equal(await closed,1008);
+  const denied=new WebSocket(base.replace('http:','ws:')+'/ws/operations',{headers:{Authorization:`Bearer ${owner.token}`}});
+  t.after(()=>denied.terminate());
+  await new Promise((resolve,reject)=>{denied.once('unexpected-response',(req,res)=>{assert.equal(res.statusCode,403);res.resume();denied.terminate();resolve();});denied.once('error',()=>{});denied.once('open',()=>reject(Error('Revoked session opened a socket')));});
+  const fresh=await identity.login({...credentials,password:'fixture-new-password'});assert.equal((await request('/auth/me',fresh.token)).status,200);assert.equal(fresh.user.user_id,owner.user.user_id);assert.equal(fresh.user.organization_id,owner.user.organization_id);assert.equal(fresh.user.role,'admin');
+  assert.equal((await request('/auth/logout',fresh.token,{})).status,200);assert.equal((await request('/resource',fresh.token)).status,401);
+});

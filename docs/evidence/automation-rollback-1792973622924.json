@@ -1,0 +1,20 @@
+{
+  "started_at": "2026-10-26T00:12:32.530Z",
+  "run_id": "auto-20261025234838-1315eafd",
+  "scope": "owned_automation_project_only",
+  "previous_deployment": "dpl_vHsnth9UK3m2LEGk9pG3FmWDsdqe",
+  "current_deployment": "dpl_EVu1bjPBUXERghUKamWFw3HjPkGp",
+  "production_changes": false,
+  "checks": [
+    {
+      "name": "explicitly_cleared_daemon_scaling_override",
+      "passed": true
+    }
+  ],
+  "status": "failed",
+  "failure": {
+    "name": "Error",
+    "code": null
+  },
+  "completed_at": "2026-10-26T00:12:38.222Z"
+}

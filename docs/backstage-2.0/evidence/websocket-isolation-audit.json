@@ -1,0 +1,8 @@
+{
+  "mode": "isolated_local_transport_no_database_or_provider",
+  "cross_tenant_security_event_received": true,
+  "viewer_security_subscription_accepted": true,
+  "source": "backend/realtime/wsServer.js",
+  "production_transport_activation_verified": false,
+  "persistent_records_written": 0
+}

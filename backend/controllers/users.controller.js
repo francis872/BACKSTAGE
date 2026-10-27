@@ -13,12 +13,12 @@ const getUserById = asyncHandler(async (req, res) => {
 });
 
 const createUser = asyncHandler(async (req, res) => {
-  const row = await usersService.createUser(req.body || {}, req.organization.organization_id);
+  const row = await usersService.createUser(req.body || {}, req.organization.organization_id, req.user.user_id);
   res.status(201).json(row);
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  const row = await usersService.updateUser(req.params.id, req.body || {}, req.organization.organization_id);
+  const row = await usersService.updateUser(req.params.id, req.body || {}, req.organization.organization_id, req.user.user_id);
   res.json(row);
 });
 
@@ -27,13 +27,13 @@ const updatePassword = asyncHandler(async (req, res) => {
   if (!password) {
     throw new ApiError(400, 'password es requerido.');
   }
-  const row = await usersService.updateUserPassword(req.params.id, password, req.organization.organization_id);
+  const row = await usersService.updateUserPassword(req.params.id, password, req.organization.organization_id, req.user.user_id);
   res.json(row);
 });
 
 const deleteUser = asyncHandler(async (req, res) => {
-  const row = await usersService.deleteUser(req.params.id, req.organization.organization_id);
-  res.json({ message: 'Usuario eliminado correctamente.', deleted: row });
+  const row = await usersService.deleteUser(req.params.id, req.organization.organization_id, req.user.user_id);
+  res.json({ message: 'Acceso revocado en esta organización.', deleted: row });
 });
 
 module.exports = { listUsers, getUserById, createUser, updateUser, updatePassword, deleteUser };

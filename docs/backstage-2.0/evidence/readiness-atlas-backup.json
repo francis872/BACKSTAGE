@@ -1,0 +1,60 @@
+{
+  "run_id": "atlas-full-20261024161620-7ada2a41e368",
+  "started_at": "2026-10-24T16:16:20.546Z",
+  "scope": "all_accessible_user_databases_all_collections",
+  "system_databases_excluded": [
+    "admin",
+    "config",
+    "local"
+  ],
+  "cluster_configuration_and_atlas_users_included": false,
+  "managed_snapshot_or_pitr": false,
+  "source_writes": 0,
+  "restore_requested": true,
+  "checks": [
+    "all_user_databases_inventoried",
+    "shared_snapshot_time",
+    "unchanged_collection_and_index_metadata",
+    "encrypted_backup_readback",
+    "authenticated_encryption_tamper_rejected",
+    "restore_from_saved_ciphertext",
+    "isolated_database_names",
+    "all_document_bson_hashes_equal",
+    "collection_options_and_indexes_equal_except_ttl_disabled",
+    "scratch_databases_removed_source_untouched"
+  ],
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "snapshot_at_cluster_time": {
+    "$timestamp": {
+      "t": 1792858651,
+      "i": 24
+    }
+  },
+  "databases": 1,
+  "collections": 75,
+  "documents": 149,
+  "bson_document_bytes": 67387,
+  "indexes": 238,
+  "backup": {
+    "private_file": ".vercel/atlas-full-20261024161620-7ada2a41e368/data.bson.aes256gcm",
+    "sha256": "968c95dc14ee9ba408ae88e1400e30849aee6c0c89d74da6f5a7df6a7307c011",
+    "plaintext_sha256": "f8fccf7969882fd4c701d4db07f6766b6db22c1c33e3206480ca17b3201aca8b",
+    "key_storage": "separate_private_directory_not_packaged",
+    "encrypted": "AES-256-GCM",
+    "readback_verified": true,
+    "tamper_rejected": true
+  },
+  "restore": {
+    "isolated_databases": 1,
+    "collections_verified": 75,
+    "documents_verified": 149,
+    "indexes_verified": 238,
+    "original_bson_bytes_verified": true,
+    "collection_options_verified": true,
+    "ttl_indexes_suspended_for_verification": 5,
+    "source_routing_changed": false,
+    "isolated_databases_remaining": 0
+  },
+  "status": "backup_and_isolated_restore_passed",
+  "completed_at": "2026-10-24T16:18:58.722Z"
+}

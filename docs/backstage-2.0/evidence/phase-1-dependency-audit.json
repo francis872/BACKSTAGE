@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-10-22T01:48:52.987881+00:00",
+  "method": "npm audit --omit=dev --audit-level=high --json",
+  "observed_in_this_session": true,
+  "scope": "production JavaScript dependencies only",
+  "backend": {
+    "exit_code": 0,
+    "reported_vulnerabilities": 0,
+    "production_dependencies": 130
+  },
+  "frontend": {
+    "exit_code": 0,
+    "reported_vulnerabilities": 0,
+    "production_dependencies": 36
+  }
+}

@@ -1,210 +1,34 @@
-const { query } = require('../db');
-const ApiError = require('../utils/ApiError');
-const analysisRepository = require('../repositories/analysis.repository');
-const operationalEvents = require('./operationalEvents.service');
-
-const STATUSES = ['proposed', 'under_review', 'approved', 'rejected', 'in_progress', 'completed', 'expired'];
-const PRIORITIES = ['low', 'medium', 'high', 'critical'];
-
-async function assertLocationBelongsToOrganization(locationId, organizationId) {
-  const location = await query(
-    'SELECT location_id FROM locations WHERE location_id = $1 AND organization_id = $2',
-    [locationId, organizationId]
-  );
-  if (location.rows.length === 0) {
-    throw new ApiError(400, 'location_id no pertenece a la organización activa.');
-  }
+const d=require('../infrastructure/atlasDocuments');
+const ApiError=require('../utils/ApiError');
+const analysisRepository=require('../repositories/analysis.repository');
+const operationalEvents=require('./operationalEvents.service');
+const STATUSES=['proposed','under_review','approved','rejected','in_progress','completed','expired'];
+const PRIORITIES=['low','medium','high','critical'];
+const TRANSITIONS={proposed:['under_review','approved','rejected'],under_review:['approved','rejected'],approved:['in_progress','expired'],in_progress:['completed','expired'],rejected:[],completed:[],expired:[]};
+const scope=(id,org)=>({...d.org(org),recommendation_id:d.id(id)});
+async function enrich(row,org){const q=d.org(org);const l=row.location_id?await d.one('locations',{...q,location_id:row.location_id}):null;const u=row.reviewed_by_user_id?await d.one('identity_users',{user_id:row.reviewed_by_user_id}):null;const a=row.analysis_run_id?await d.one('analysis_runs',{...q,analysis_run_id:row.analysis_run_id}):null;return {...row,location_name:l?.name,location_city:l?.city,reviewed_by_name:u?.name,analysis_project_name:a?.project_name};}
+function validate(data){if(data.status&&!STATUSES.includes(data.status))throw new ApiError(400,'status inválido.');if(data.priority&&!PRIORITIES.includes(data.priority))throw new ApiError(400,'priority inválida.');}
+async function listRecommendations(org,{status,priority,limit=50}={}){validate({status,priority});const rows=await d.find('recommendations',{...d.org(org),...(status?{status}:{}),...(priority?{priority}:{})},{requested_at:-1},200);rows.sort((a,b)=>PRIORITIES.indexOf(b.priority)-PRIORITIES.indexOf(a.priority));return Promise.all(rows.slice(0,Math.min(Number(limit)||50,200)).map(r=>enrich(r,org)));}
+async function getSummary(org){const rows=await (await d.collection('recommendations')).aggregate([{$match:d.org(org)},{$group:{_id:'$status',count:{$sum:1}}}]).toArray();const by_status=Object.fromEntries(STATUSES.map(s=>[s,0]));for(const r of rows)by_status[r._id]=r.count;return {by_status,total:Object.values(by_status).reduce((a,b)=>a+b,0),pending_review:by_status.proposed+by_status.under_review};}
+const getRecommendationById=async(id,org)=>enrich(d.required(await d.one('recommendations',scope(id,org))),org);
+async function inputRecord(data,org){validate(data);if(!data.location_id||!data.query_type)throw new ApiError(400,'location_id y query_type son requeridos.');await require('./locations.service').getLocationById(data.location_id,org);if(data.analysis_run_id)d.required(await d.one('analysis_runs',{...d.org(org),analysis_run_id:d.id(data.analysis_run_id)}));return {...d.pick(data,'location_id query_type parameters result score title priority confidence expected_impact analysis_run_id'),location_id:d.id(data.location_id)};}
+async function createRecommendation(data,user,context){return d.insert('recommendations','recommendation_id',{...await inputRecord(data,context.organization_id),...d.org(context.organization_id),requested_by_user_id:user.user_id,requested_at:new Date(),status:'proposed'});}
+async function updateRecommendation(id,data,context){return d.required(await d.update('recommendations',scope(id,context.organization_id),await inputRecord(data,context.organization_id)));}
+const deleteRecommendation=async(id,context)=>d.required(await d.remove('recommendations',scope(id,context.organization_id)));
+async function reviewRecommendation(id,organizationId,sessionUser,{decision,notes}){
+ const current=await getRecommendationById(id,organizationId);
+ if(!TRANSITIONS[current.status]?.includes(decision))throw new ApiError(400,'Transición inválida.');
+ if(['approved','rejected'].includes(decision)&&!notes)throw new ApiError(400,'Se requiere una justificación (notes).');
+ const row=await d.withMongoTransaction(async(database,session)=>{
+  if(current.analysis_run_id&&['approved','in_progress','completed'].includes(decision))await require('./businessRules.service').service.assertFreshnessIn(database,session,{organizationId,userId:sessionUser.user_id},current.analysis_run_id);
+  const changed=d.cleanDocument(await database.collection('recommendations').findOneAndUpdate({...scope(id,organizationId),status:current.status,analysis_run_id:current.analysis_run_id??null,updated_at:current.updated_at??null},{$set:{status:decision,reviewed_by_user_id:sessionUser.user_id,review_notes:notes||null,reviewed_at:new Date(),updated_at:new Date()}},{session,returnDocument:'after',includeResultMetadata:false}));
+  if(!changed)throw new ApiError(409,'La recomendación cambió concurrentemente.');
+  if(changed.analysis_run_id&&['approved','rejected'].includes(decision))await database.collection('analysis_runs').updateOne({...d.org(organizationId),analysis_run_id:changed.analysis_run_id},{$set:{'metadata.operational_recommendation_reviewed_at':new Date(),'metadata.operational_recommendation_reviewed_by_user_id':sessionUser.user_id,'metadata.operational_recommendation_decision':decision,'metadata.operational_recommendation_id':changed.recommendation_id,updated_at:new Date()}},{session});
+  return changed;
+ });
+ if(row.analysis_run_id)await operationalEvents.emit({organizationId,analysisRunId:row.analysis_run_id,actorUserId:sessionUser.user_id,eventType:`recommendation.${decision}`,severity:decision==='rejected'?'warning':'info',title:'Recomendación actualizada',message:notes||decision,target:decision==='approved'?'reports':'intelligence-recommendations',payload:{recommendation_id:row.recommendation_id,decision}});
+ return row;
 }
-
-async function listRecommendations(organizationId, { status, priority, limit = 50 } = {}) {
-  const conditions = ['r.organization_id = $1'];
-  const params = [organizationId];
-
-  if (status) {
-    if (!STATUSES.includes(status)) throw new ApiError(400, `status inválido. Valores permitidos: ${STATUSES.join(', ')}.`);
-    params.push(status);
-    conditions.push(`r.status = $${params.length}`);
-  }
-  if (priority) {
-    if (!PRIORITIES.includes(priority)) throw new ApiError(400, `priority inválida. Valores permitidos: ${PRIORITIES.join(', ')}.`);
-    params.push(priority);
-    conditions.push(`r.priority = $${params.length}`);
-  }
-  params.push(Math.min(Number(limit) || 50, 200));
-
-  const result = await query(
-    `SELECT r.*, l.name AS location_name, l.city AS location_city,
-            u.name AS reviewed_by_name, ar.project_name AS analysis_project_name
-     FROM recommendations r
-     LEFT JOIN locations l ON l.location_id = r.location_id
-     LEFT JOIN users u ON u.user_id = r.reviewed_by_user_id
-     LEFT JOIN analysis_runs ar ON ar.analysis_run_id = r.analysis_run_id
-     WHERE ${conditions.join(' AND ')}
-     ORDER BY
-       CASE r.priority WHEN 'critical' THEN 0 WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END,
-       r.requested_at DESC
-     LIMIT $${params.length}`,
-    params
-  );
-  return result.rows;
-}
-
-async function getSummary(organizationId) {
-  const result = await query(
-    `SELECT status, COUNT(*)::int AS count, COALESCE(AVG(confidence), 0)::float AS avg_confidence
-     FROM recommendations WHERE organization_id = $1 GROUP BY status`,
-    [organizationId]
-  );
-  const byStatus = Object.fromEntries(STATUSES.map((s) => [s, 0]));
-  result.rows.forEach((row) => { byStatus[row.status] = row.count; });
-
-  const pendingReview = await query(
-    `SELECT COUNT(*)::int AS count FROM recommendations
-     WHERE organization_id = $1 AND status IN ('proposed', 'under_review')`,
-    [organizationId]
-  );
-
-  return {
-    by_status: byStatus,
-    total: Object.values(byStatus).reduce((acc, v) => acc + v, 0),
-    pending_review: pendingReview.rows[0].count,
-  };
-}
-
-async function getRecommendationById(id, organizationId) {
-  const result = await query(
-    `SELECT r.*, l.name AS location_name, l.city AS location_city,
-            u.name AS reviewed_by_name, ar.project_name AS analysis_project_name
-     FROM recommendations r
-     LEFT JOIN locations l ON l.location_id = r.location_id
-     LEFT JOIN users u ON u.user_id = r.reviewed_by_user_id
-     LEFT JOIN analysis_runs ar ON ar.analysis_run_id = r.analysis_run_id
-     WHERE r.recommendation_id = $1 AND r.organization_id = $2`,
-    [id, organizationId]
-  );
-  if (result.rows.length === 0) throw new ApiError(404, 'Recomendación no encontrada.');
-  return result.rows[0];
-}
-
-async function createRecommendation(data, sessionUser, organizationContext) {
-  const {
-    location_id, query_type, parameters, result: resultPayload, score,
-    title, priority, confidence, expected_impact, analysis_run_id,
-  } = data;
-  if (!location_id || !query_type) {
-    throw new ApiError(400, 'location_id y query_type son requeridos.');
-  }
-  if (priority && !PRIORITIES.includes(priority)) {
-    throw new ApiError(400, `priority inválida. Valores permitidos: ${PRIORITIES.join(', ')}.`);
-  }
-  await assertLocationBelongsToOrganization(location_id, organizationContext.organization_id);
-  const inserted = await query(
-    `INSERT INTO recommendations
-       (location_id, query_type, parameters, result, score, organization_id, requested_by_user_id,
-        title, priority, confidence, expected_impact, analysis_run_id, status)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'proposed')
-     RETURNING *`,
-    [
-      location_id, query_type, parameters || null, resultPayload || null, score || null,
-      organizationContext.organization_id, sessionUser.user_id,
-      title || null, priority || null, confidence ?? null, expected_impact || null, analysis_run_id || null,
-    ]
-  );
-  return inserted.rows[0];
-}
-
-async function updateRecommendation(id, data, organizationContext) {
-  const { location_id, query_type, parameters, result: resultPayload, score, title, priority, expected_impact } = data;
-  await assertLocationBelongsToOrganization(location_id, organizationContext.organization_id);
-  if (priority && !PRIORITIES.includes(priority)) {
-    throw new ApiError(400, `priority inválida. Valores permitidos: ${PRIORITIES.join(', ')}.`);
-  }
-  const updated = await query(
-    `UPDATE recommendations SET
-       location_id = $1, query_type = $2, parameters = $3, result = $4, score = $5,
-       title = COALESCE($6, title), priority = COALESCE($7, priority), expected_impact = COALESCE($8, expected_impact)
-     WHERE recommendation_id = $9
-       AND organization_id = $10
-     RETURNING *`,
-    [location_id, query_type, parameters || null, resultPayload || null, score || null,
-      title || null, priority || null, expected_impact || null, id, organizationContext.organization_id]
-  );
-  if (updated.rows.length === 0) throw new ApiError(404, 'Recomendación no encontrada.');
-  return updated.rows[0];
-}
-
-async function deleteRecommendation(id, organizationContext) {
-  const deleted = await query(
-    'DELETE FROM recommendations WHERE recommendation_id = $1 AND organization_id = $2 RETURNING *',
-    [id, organizationContext.organization_id]
-  );
-  if (deleted.rows.length === 0) throw new ApiError(404, 'Recomendación no encontrada.');
-  return deleted.rows[0];
-}
-
-const TRANSITIONS = {
-  proposed: ['under_review', 'approved', 'rejected'],
-  under_review: ['approved', 'rejected'],
-  approved: ['in_progress', 'expired'],
-  in_progress: ['completed', 'expired'],
-  rejected: [],
-  completed: [],
-  expired: [],
-};
-
-async function reviewRecommendation(id, organizationId, sessionUser, { decision, notes }) {
-  if (!['approved', 'rejected', 'under_review', 'in_progress', 'completed'].includes(decision)) {
-    throw new ApiError(400, `decision inválida. Valores permitidos: ${STATUSES.join(', ')}.`);
-  }
-  const current = await getRecommendationById(id, organizationId);
-  const allowedNext = TRANSITIONS[current.status] || [];
-  if (!allowedNext.includes(decision)) {
-    throw new ApiError(
-      400,
-      `Transición inválida: "${current.status}" -> "${decision}". Transiciones permitidas desde "${current.status}": ${allowedNext.join(', ') || 'ninguna'}.`
-    );
-  }
-  if ((decision === 'approved' || decision === 'rejected') && !notes) {
-    throw new ApiError(400, 'Se requiere una justificación (notes) para aprobar o rechazar una recomendación.');
-  }
-  const updated = await query(
-    `UPDATE recommendations SET
-       status = $1, reviewed_by_user_id = $2, review_notes = $3, reviewed_at = now()
-     WHERE recommendation_id = $4 AND organization_id = $5
-     RETURNING *`,
-    [decision, sessionUser.user_id, notes || null, id, organizationId]
-  );
-  const row = updated.rows[0];
-  if (row?.analysis_run_id && (decision === 'approved' || decision === 'rejected')) {
-    await query(
-      `UPDATE analysis_runs
-       SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object(
-         'operational_recommendation_reviewed_at', now(),
-         'operational_recommendation_reviewed_by_user_id', $1,
-         'operational_recommendation_decision', $2,
-         'operational_recommendation_id', $3
-       ),
-       updated_at = now()
-       WHERE analysis_run_id = $4 AND organization_id = $5`,
-      [sessionUser.user_id, decision, row.recommendation_id, row.analysis_run_id, organizationId]
-    );
-  }
-  if (row?.analysis_run_id) {
-    await operationalEvents.emit({
-      organizationId,
-      analysisRunId: Number(row.analysis_run_id),
-      actorUserId: sessionUser?.user_id,
-      eventType: `recommendation.${decision}`,
-      severity: decision === 'rejected' ? 'warning' : decision === 'approved' ? 'success' : 'info',
-      title: decision === 'approved' ? 'Recomendación aprobada' : decision === 'rejected' ? 'Recomendación rechazada' : 'Recomendación actualizada',
-      message: notes || `Estado de recomendación: ${decision}.`,
-      target: decision === 'approved' ? 'reports' : 'intelligence-recommendations',
-      payload: { recommendation_id: row.recommendation_id, decision },
-    });
-  }
-  return row;
-}
-
 function inferPriority(rankPosition, riskClassification) {
   if (riskClassification?.severity === 'critical') return 'critical';
   if (riskClassification?.severity === 'high') return 'high';
@@ -250,14 +74,6 @@ function classifyCandidateRisk(candidate, riskRows) {
   return { severity, average: Number(average.toFixed(4)), max_component: Number(maxComponent.toFixed(4)) };
 }
 
-/**
- * Generates draft recommendations directly from a completed analysis
- * run's multicriteria ranking, linking each recommendation back to the
- * run and candidate that produced it (traceability requirement). Uses
- * the TOPSIS closeness coefficient (0-100) as the confidence basis and
- * rank position as an explainable, documented priority heuristic — never
- * presented as more than that.
- */
 async function generateFromAnalysisRun(analysisRunId, organizationId, sessionUser, { topN = 1 } = {}) {
   const run = await analysisRepository.getAnalysisRunByIdForOrganization(analysisRunId, organizationId);
   if (!run) throw new ApiError(404, 'Análisis no encontrado.');
@@ -280,12 +96,7 @@ async function generateFromAnalysisRun(analysisRunId, organizationId, sessionUse
   const created = [];
   for (const candidate of candidates) {
     if (!candidate.location_id) continue;
-    const existing = await query(
-      `SELECT recommendation_id FROM recommendations
-       WHERE analysis_run_id = $1 AND location_id = $2 AND organization_id = $3`,
-      [analysisRunId, candidate.location_id, organizationId]
-    );
-    if (existing.rows.length > 0) continue;
+    if (await d.one('recommendations',{...d.org(organizationId),analysis_run_id:d.id(analysisRunId),location_id:candidate.location_id})) continue;
 
     const riskClassification = classifyCandidateRisk(candidate, riskRows);
     const probabilityObservation = probabilityResult.observation_evaluation || {};
@@ -315,46 +126,10 @@ async function generateFromAnalysisRun(analysisRunId, organizationId, sessionUse
       },
     };
 
-    const inserted = await query(
-      `INSERT INTO recommendations
-         (location_id, query_type, parameters, result, score, organization_id, requested_by_user_id,
-          title, priority, confidence, expected_impact, analysis_run_id, status)
-       VALUES ($1, 'operational_decision', $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'proposed')
-       RETURNING *`,
-      [
-        candidate.location_id,
-        {
-          analysis_run_id: Number(analysisRunId),
-          rank_position: candidate.rank_position,
-          weights: run.criteria_weights,
-          probability_completed_at: run.metadata?.probability_completed_at || null,
-          risk_reviewed_at: run.metadata?.risk_reviewed_at || null,
-        },
-        resultPayload,
-        candidate.score_total,
-        organizationId,
-        sessionUser.user_id,
-        `${run.project_name}: ${candidate.candidate_name}`,
-        inferPriority(candidate.rank_position, riskClassification),
-        Number(confidence.toFixed(4)),
-        buildExpectedImpact(candidate, probabilityResult, riskClassification),
-        analysisRunId,
-      ]
-    );
-    created.push(inserted.rows[0]);
+    const row=await createRecommendation({location_id:candidate.location_id,query_type:'operational_decision',parameters:{analysis_run_id:Number(analysisRunId),rank_position:candidate.rank_position,weights:run.criteria_weights,probability_completed_at:run.metadata?.probability_completed_at||null,risk_reviewed_at:run.metadata?.risk_reviewed_at||null},result:resultPayload,score:candidate.score_total,title:`${run.project_name}: ${candidate.candidate_name}`,priority:inferPriority(candidate.rank_position,riskClassification),confidence:Number(confidence.toFixed(4)),expected_impact:buildExpectedImpact(candidate,probabilityResult,riskClassification),analysis_run_id:Number(analysisRunId)},sessionUser,{organization_id:organizationId});
+    created.push(row);
   }
-
-  await query(
-    `UPDATE analysis_runs
-     SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object(
-       'operational_recommendation_generated_at', now(),
-       'operational_recommendation_generated_by_user_id', $1,
-       'operational_recommendation_count', $2
-     ),
-     updated_at = now()
-     WHERE analysis_run_id = $3 AND organization_id = $4`,
-    [sessionUser.user_id, created.length, analysisRunId, organizationId]
-  );
+  await d.update('analysis_runs',{...d.org(organizationId),analysis_run_id:d.id(analysisRunId)},{'metadata.operational_recommendation_generated_at':new Date(),'metadata.operational_recommendation_generated_by_user_id':sessionUser.user_id,'metadata.operational_recommendation_count':created.length});
 
   await operationalEvents.emit({
     organizationId,
@@ -371,32 +146,7 @@ async function generateFromAnalysisRun(analysisRunId, organizationId, sessionUse
   return created;
 }
 
-async function getExampleRecommendation() {
-  const locationResult = await query(
-    `SELECT l.name, l.address, h.metric->>'queue_minutes' AS queue_minutes, h.metric->>'occupancy' AS occupancy
-     FROM locations l
-     LEFT JOIN location_histories h ON h.location_id = l.location_id
-     WHERE l.external_id = 'retail-anchor-001'
-     ORDER BY h.observed_at DESC LIMIT 1`
-  );
-
-  const restaurant = locationResult.rows[0];
-  if (!restaurant) {
-    return { message: 'No se encontró un restaurante de ejemplo en la base de datos.' };
-  }
-
-  const queueMinutes = restaurant.queue_minutes ? Number(restaurant.queue_minutes) : null;
-  const occupancy = restaurant.occupancy ? Number(restaurant.occupancy) : null;
-  const message = queueMinutes
-    ? `El restaurante ${restaurant.name} tiene una fila estimada de ${queueMinutes} minutos. Si recorres 600 metros adicionales ahorrarás 14 minutos.`
-    : `El restaurante ${restaurant.name} no tiene datos de espera en este momento, pero está disponible para análisis.`;
-
-  return {
-    message,
-    location: { name: restaurant.name, address: restaurant.address, queue_minutes: queueMinutes, occupancy },
-  };
-}
-
+async function getExampleRecommendation(){return {message:'No hay datos de ejemplo configurados.'};}
 module.exports = {
   STATUSES,
   PRIORITIES,

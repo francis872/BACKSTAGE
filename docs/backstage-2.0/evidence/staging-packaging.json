@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-10-22T23:30:26.601Z",
+  "mode": "source_manifest_integrity",
+  "checks": [
+    {
+      "type": "api",
+      "source": "soi-api-1792711316493",
+      "files_verified": 223,
+      "passed": true
+    },
+    {
+      "type": "web",
+      "source": "soi-web-1792711423001",
+      "files_verified": 138,
+      "passed": true
+    }
+  ]
+}

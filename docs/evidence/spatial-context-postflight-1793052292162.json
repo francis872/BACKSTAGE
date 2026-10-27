@@ -1,0 +1,167 @@
+{
+  "checked_at": "2026-10-26T21:55:35.086Z",
+  "status": "passed_with_explicit_scope_limits",
+  "scope": "contextual_ph_spatial_analysis_local_python_api_browser_and_owned_test_atlas",
+  "baseline": {
+    "backend": {
+      "total": 417,
+      "passed": 416,
+      "skipped": 1,
+      "failed": 0
+    },
+    "frontend": {
+      "total": 36,
+      "passed": 36,
+      "skipped": 0,
+      "failed": 0
+    }
+  },
+  "regression": {
+    "backend": {
+      "total": 425,
+      "passed": 424,
+      "skipped": 1,
+      "failed": 0
+    },
+    "frontend": {
+      "total": 36,
+      "passed": 36,
+      "skipped": 0,
+      "failed": 0
+    },
+    "scientific_passed": 27,
+    "build_passed": true
+  },
+  "atlas_spatial_checks": 8,
+  "retained_operations_checks": 7,
+  "browser_checks": 18,
+  "moran_statistic": -0.1041666666666667,
+  "independent_reference": -0.10416666666666671,
+  "owned_temporary_database_removed": true,
+  "audit_chain_valid": true,
+  "scientific_and_shared_sources_unchanged": 25,
+  "primary_navigation_unchanged": true,
+  "new_dependencies": [],
+  "docker_used": false,
+  "remote_deployment": false,
+  "production_changes": false,
+  "sensitive_real_data_used": false,
+  "external_identity_dependencies": false,
+  "scoped_credential_scan_passed": true,
+  "local_document_links_checked": 15,
+  "webgl_rendering_verified": false,
+  "thematic_result_map_layer_implemented": false,
+  "production_readiness": "NO_GO",
+  "sources": [
+    {
+      "file": "backend/domain/propertySpatialAnalysis.js",
+      "sha256": "1d7f849d8dc44df4f97b635d0be91d685b2a7909201ecea7f33f417260ca35bb"
+    },
+    {
+      "file": "backend/domain/propertySpatialAnalysis.test.js",
+      "sha256": "2a1fbf1cc528d727e8964b8583bb56a19623244eafcce4a5d675000511dff679"
+    },
+    {
+      "file": "backend/domain/helpers/soiMongoMemoryFixture.js",
+      "sha256": "af5d8be0b234b55abfcbf9cc056667c4a4ee967413442ef756e1c8a5bc5164fe"
+    },
+    {
+      "file": "backend/services/propertySpatialDataset.js",
+      "sha256": "6a3448f8bdbf99b524118b3faa5e9afbd71a0dbaf48a76734508c4e509fcbbc8"
+    },
+    {
+      "file": "backend/services/propertySpatialAnalysis.service.js",
+      "sha256": "a8406b70717e7088fc29a89df0cdcd3a6f8bc194a660c512c2bda1d2384207ea"
+    },
+    {
+      "file": "backend/services/propertyOperations.service.js",
+      "sha256": "5a63479daf63d4cb2fd3515e16754ba45461b8ef9ab026d6d281df980987d6ad"
+    },
+    {
+      "file": "backend/routes/propertySpatialAnalysis.routes.js",
+      "sha256": "2758c983234ab6b05354dbbed26a273da5d911ca1049c2608b2fd75bd0a8b33d"
+    },
+    {
+      "file": "backend/routes/assets.routes.js",
+      "sha256": "901b1c39c325bdb54b89e51c45d0795e9c6d4cd9fe7564b0f3eb4a040f65a572"
+    },
+    {
+      "file": "backend/repositories/operationalEvents.repository.js",
+      "sha256": "7698a1e97b6a6f68da0ae6816ae5bb8351b15e818f63a5339b182e3dd3ef7106"
+    },
+    {
+      "file": "backend/infrastructure/mongoIndexRegistry.js",
+      "sha256": "b659049e05a88ec3a8be9e1b18e225f7ddc25878377c5d227117bafdfa1d503c"
+    },
+    {
+      "file": "backend/infrastructure/propertySpatialOpenApi.js",
+      "sha256": "2fb2c7ad7c3c7937965d67362e2c2c68f06a6daaa9f9584a82b3a102e45a8af5"
+    },
+    {
+      "file": "backend/infrastructure/coreOpenApi.js",
+      "sha256": "9f1dd125a52c6aee8126ce5c7f5b1bc3351f03d77e7209e2738d04f8c457709f"
+    },
+    {
+      "file": "frontend/src/components/PropertySpatialAnalysisPanel.jsx",
+      "sha256": "9121f7e698342a30688aff958e2d238be78cea206a4b997cf396f42216e20b2d"
+    },
+    {
+      "file": "frontend/src/components/HorizontalPropertyLayer.jsx",
+      "sha256": "ac479b33505164fc74ea3d373479c23bae87bb588af83815734f75fe2248be9b"
+    },
+    {
+      "file": "scripts/property-spatial-live-scenarios.js",
+      "sha256": "3ff4d4ddb60bbc27cf4ddc474867a8ff6474a7e26b27e6179eacca2b124a042b"
+    },
+    {
+      "file": "scripts/verify-horizontal-property.js",
+      "sha256": "ee9cbfbc0026f8f456ab18534008cb8c259eeb5e75fdb98ea03f58aab84fcd46"
+    },
+    {
+      "file": "frontend/scripts/horizontal-property-browser.mjs",
+      "sha256": "8a0d03f3c0a2305095615c6657246fca227bf33e5f2b229b35354f9fc93055dd"
+    },
+    {
+      "file": "scripts/verify-spatial-context-postflight.js",
+      "sha256": "47ee4e7a8cce1c185679e4b64a402b3d9a8f9c3b5008d37db3639c178ce0f745"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "docs/evidence/spatial-context-live.json",
+      "sha256": "4c61619eca8f491863a2c288dd8868b752037e1b72d308ec01572fc4575806f9"
+    },
+    {
+      "file": "docs/evidence/spatial-context-backend-tests.txt",
+      "sha256": "8f8280b094376efecc374ff15061fbec344f483d73f9853a33bc6b5038305b47"
+    },
+    {
+      "file": "docs/evidence/spatial-context-frontend-tests.txt",
+      "sha256": "c251119787e61f92b8da48af99689904db02debe6955d5914afec8c7a0bee511"
+    },
+    {
+      "file": "docs/evidence/spatial-context-science-tests.txt",
+      "sha256": "8d7d2158eb2a56001e24c80d10a0ac91a690b63ae42b63b881a0d1a702e182ff"
+    },
+    {
+      "file": "docs/evidence/spatial-context-build.txt",
+      "sha256": "e8f6ec1a55bf0fc09948d1f02fa6f7c80a52bf4b011d6bb974e8a72bb0b51b93"
+    },
+    {
+      "file": "docs/evidence/spatial-context-baseline-backend.txt",
+      "sha256": "21a3326077c6e23404e756e15275e4f768b7a5b72ba88b77418b8fbab058cfb8"
+    },
+    {
+      "file": "docs/evidence/spatial-context-baseline-frontend.txt",
+      "sha256": "44b437afa9f6882565de1cbef404feca107a276199b91593a7147aa0c7bd735c"
+    },
+    {
+      "file": "docs/BACKSTAGE_SPATIAL_CONTEXT_INCREMENT.md",
+      "sha256": "6b8c35e354bef00074639c47f7e69e167b1162344546627182a32faa8cad9a73"
+    },
+    {
+      "file": "docs/BACKSTAGE_UNIFIED_INCREMENTAL_PLAN.md",
+      "sha256": "03c092cbcaeb1d5722bbf652c01d708aa4c00736b98d0e9eb05c091b91c2e965"
+    }
+  ]
+}

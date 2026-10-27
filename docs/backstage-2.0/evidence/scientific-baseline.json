@@ -1,0 +1,42 @@
+{
+  "checked_at": "2026-10-22T00:57:23.848608+00:00",
+  "mode": "local_mathematical_fixtures_no_live_provider",
+  "results": [
+    {
+      "suite": "bsie",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "Ran 27 tests in 11.888s",
+        "OK"
+      ]
+    },
+    {
+      "suite": "sanitary",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "Ran 11 tests in 5.664s",
+        "OK"
+      ]
+    },
+    {
+      "suite": "scientific-rpc",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "Ran 1 test in 3.388s",
+        "OK"
+      ]
+    },
+    {
+      "suite": "probability",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "Ran 6 tests in 5.956s",
+        "OK"
+      ]
+    }
+  ]
+}

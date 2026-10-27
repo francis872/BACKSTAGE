@@ -1,0 +1,451 @@
+{
+  "mode": "plan",
+  "version": 1,
+  "destructive": false,
+  "indexes": {
+    "identity_users": [
+      {
+        "key": {
+          "user_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "email": 1
+        },
+        "options": {
+          "unique": true
+        }
+      }
+    ],
+    "identity_organizations": [
+      {
+        "key": {
+          "organization_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "slug": 1
+        },
+        "options": {
+          "unique": true
+        }
+      }
+    ],
+    "identity_memberships": [
+      {
+        "key": {
+          "organization_id": 1,
+          "user_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "user_id": 1
+        },
+        "options": {}
+      }
+    ],
+    "soi_configuration": [
+      {
+        "key": {
+          "organization_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      }
+    ],
+    "soi_assets": [
+      {
+        "key": {
+          "location_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "location_id": -1
+        },
+        "options": {}
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "external_id": 1
+        },
+        "options": {
+          "unique": true,
+          "partialFilterExpression": {
+            "external_id": {
+              "$type": "string"
+            }
+          }
+        }
+      },
+      {
+        "key": {
+          "geometry": "2dsphere"
+        },
+        "options": {}
+      }
+    ],
+    "soi_operations": [
+      {
+        "key": {
+          "operation_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "operation_id": -1
+        },
+        "options": {}
+      }
+    ],
+    "soi_vehicles": [
+      {
+        "key": {
+          "vehicle_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "plate": 1
+        },
+        "options": {
+          "unique": true
+        }
+      }
+    ],
+    "soi_incidents": [
+      {
+        "key": {
+          "incident_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "incident_id": -1
+        },
+        "options": {}
+      }
+    ],
+    "soi_crews": [
+      {
+        "key": {
+          "crew_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "crew_id": -1
+        },
+        "options": {}
+      }
+    ],
+    "soi_service_orders": [
+      {
+        "key": {
+          "service_order_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "status": 1,
+          "service_order_id": -1
+        },
+        "options": {}
+      }
+    ],
+    "soi_imports": [
+      {
+        "key": {
+          "import_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "preview_hash": 1
+        },
+        "options": {
+          "unique": true
+        }
+      }
+    ],
+    "soi_comparisons": [
+      {
+        "key": {
+          "comparison_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "comparison_id": -1
+        },
+        "options": {}
+      }
+    ],
+    "soi_route_plans": [
+      {
+        "key": {
+          "route_plan_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "route_plan_id": -1
+        },
+        "options": {}
+      }
+    ],
+    "soi_trips": [
+      {
+        "key": {
+          "trip_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "user_id": 1
+        },
+        "options": {
+          "unique": true,
+          "partialFilterExpression": {
+            "open": true
+          }
+        }
+      },
+      {
+        "key": {
+          "expires_at": 1
+        },
+        "options": {
+          "expireAfterSeconds": 0
+        }
+      }
+    ],
+    "soi_trip_points": [
+      {
+        "key": {
+          "point_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "trip_id": 1,
+          "recorded_at": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "user_id": 1,
+          "trip_id": 1,
+          "point_id": 1
+        },
+        "options": {}
+      },
+      {
+        "key": {
+          "expires_at": 1
+        },
+        "options": {
+          "expireAfterSeconds": 0
+        }
+      }
+    ],
+    "soi_fleet_sources": [
+      {
+        "key": {
+          "source_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "active": 1
+        },
+        "options": {}
+      }
+    ],
+    "soi_vehicle_positions": [
+      {
+        "key": {
+          "position_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "vehicle_id": 1,
+          "source_id": 1,
+          "event_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "vehicle_id": 1,
+          "recorded_at": -1
+        },
+        "options": {}
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "vehicle_id": 1,
+          "position_id": 1
+        },
+        "options": {}
+      },
+      {
+        "key": {
+          "expires_at": 1
+        },
+        "options": {
+          "expireAfterSeconds": 0
+        }
+      }
+    ],
+    "soi_audit_events": [
+      {
+        "key": {
+          "audit_log_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "created_at": -1
+        },
+        "options": {}
+      }
+    ],
+    "soi_audit_heads": [],
+    "soi_provider_locks": [],
+    "bsie_jobs": [
+      {
+        "key": {
+          "job_id": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "organization_id": 1,
+          "request_hash": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "state": 1,
+          "lease_until": 1,
+          "created_at": 1
+        },
+        "options": {}
+      },
+      {
+        "key": {
+          "expires_at": 1
+        },
+        "options": {
+          "expireAfterSeconds": 0
+        }
+      }
+    ],
+    "bsie_weights": [
+      {
+        "key": {
+          "organization_id": 1,
+          "request_hash": 1
+        },
+        "options": {
+          "unique": true
+        }
+      },
+      {
+        "key": {
+          "expires_at": 1
+        },
+        "options": {
+          "expireAfterSeconds": 0
+        }
+      }
+    ],
+    "soi_counters": []
+  }
+}

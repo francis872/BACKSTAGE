@@ -1,0 +1,56 @@
+{
+  "started_at": "2026-10-24T18:33:42.446Z",
+  "origin": "https://backstage-web-seven.vercel.app",
+  "deployment": "dpl_BCE7C3mvdoR4ftrRAahTiE78XHpo",
+  "mode": "anonymous_real_chrome_no_interception_or_submission",
+  "checks": [
+    {
+      "name": "original_orbital_identity_preserved",
+      "passed": true
+    },
+    {
+      "name": "entry_opens_clear_spanish_login",
+      "passed": true
+    },
+    {
+      "name": "login_labels_and_no_horizontal_overflow_320",
+      "passed": true
+    },
+    {
+      "name": "login_labels_and_no_horizontal_overflow_390",
+      "passed": true
+    },
+    {
+      "name": "login_labels_and_no_horizontal_overflow_768",
+      "passed": true
+    },
+    {
+      "name": "login_labels_and_no_horizontal_overflow_1440",
+      "passed": true
+    },
+    {
+      "name": "show_and_hide_password_without_submission",
+      "passed": true
+    },
+    {
+      "name": "registration_has_explanatory_labels",
+      "passed": true
+    },
+    {
+      "name": "no_runtime_exceptions_or_failed_site_responses",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "production-ui/entry-desktop.png",
+    "production-ui/login-320.png",
+    "production-ui/login-390.png",
+    "production-ui/login-768.png",
+    "production-ui/login-1440.png",
+    "production-ui/signup-desktop.png"
+  ],
+  "runtime_errors": [],
+  "failed_own_responses": [],
+  "passed": true,
+  "completed_at": "2026-10-24T18:33:47.446Z"
+}

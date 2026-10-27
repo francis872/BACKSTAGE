@@ -1,0 +1,204 @@
+{
+  "checked_at": "2026-10-26T20:47:34.564Z",
+  "status": "passed_with_explicit_scope_limits",
+  "scope": "native_identity_security_hebra_and_contextual_ph_local_api_and_test_atlas",
+  "regression": {
+    "backend": {
+      "total": 417,
+      "passed": 416,
+      "failed": 0,
+      "skipped": 1
+    },
+    "frontend": {
+      "total": 36,
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_passed": true
+  },
+  "live_checks": 8,
+  "operations_checks": 7,
+  "browser_checks": 13,
+  "owned_test_database_removed": true,
+  "canonical_audit_chain_valid": true,
+  "scientific_and_shared_files_unchanged": 25,
+  "local_document_links_checked": 17,
+  "scoped_public_artifact_credential_scan_passed": true,
+  "new_dependencies": [],
+  "docker_used": false,
+  "remote_deployment": false,
+  "production_changes": false,
+  "production_readiness": "NO_GO",
+  "encryption_keys_configured_for_production": false,
+  "external_identity_dependencies": false,
+  "webgl_rendering_verified": false,
+  "sources": [
+    {
+      "file": "backend/domain/propertyOperations.js",
+      "sha256": "6e5d1dcef16080a27f3061b01c60cea088758447334dc8d1276b0f1e52addc8f"
+    },
+    {
+      "file": "backend/domain/totp.js",
+      "sha256": "cc3a3d0bc9a3d0369d5724ed584723f5c472d5c00e7e2b7ea63ecaba1d228027"
+    },
+    {
+      "file": "backend/utils/inputValidation.js",
+      "sha256": "c09266bd15fe8c0063e0a3a89bbc8e37eb62faf54f52a2ef5f2e079b35fc42b3"
+    },
+    {
+      "file": "backend/services/propertyOperations.service.js",
+      "sha256": "601c9650e85f4df94d9b17209c9dbb413df68a91860ca7a109b3fd702b525ad4"
+    },
+    {
+      "file": "backend/services/hebraCipher.service.js",
+      "sha256": "c6378820297167477b4d38e7340b092e6568e750d14a42cb8c95eb964cf0ade1"
+    },
+    {
+      "file": "backend/services/identityMfa.service.js",
+      "sha256": "14d8380eba2af071d5cd78f130b42f0f2f666336aab34dbfb77af5f575a2e4c0"
+    },
+    {
+      "file": "backend/services/mongoIdentity.service.js",
+      "sha256": "794e63bfd7e802dd8aaaa94f6223c95fa864e5bc52dc8e58bd7fa0d90fd43c3b"
+    },
+    {
+      "file": "backend/services/horizontalProperty.service.js",
+      "sha256": "d782e30dd04ffdc044c32780240d0e06bb2fc47a05d805e1751c553b87811816"
+    },
+    {
+      "file": "backend/routes/propertyOperations.routes.js",
+      "sha256": "713b179169928ff1aaebba055db7d0aa3f6fd8e7f5800d51a610fb647a9399c7"
+    },
+    {
+      "file": "backend/routes/identityMfa.routes.js",
+      "sha256": "5cc8b473430d24a6029a7cc3bdff6ceb75d566665880db78fccb442c30cb9f4a"
+    },
+    {
+      "file": "backend/routes/auth.routes.js",
+      "sha256": "6cb479fceffe76c541dec34fb6fcc02750ef9b69972f0f1a9dbab8bff46c3b82"
+    },
+    {
+      "file": "backend/routes/assets.routes.js",
+      "sha256": "5cc2d81d3d517cff1dc23526a088e37084b0e60b47bad3bbbb5d16e35efe3734"
+    },
+    {
+      "file": "backend/infrastructure/mongoIndexRegistry.js",
+      "sha256": "6d180787fa97e494ac8d85c6279c7d97405f9affd894ba3f109b8c7e7bc4d99a"
+    },
+    {
+      "file": "backend/infrastructure/coreOpenApi.js",
+      "sha256": "c4738ce88072275a4df268fe719d37627676d17626ddcd9b0737345e8484d9ce"
+    },
+    {
+      "file": "backend/infrastructure/unifiedOperationsOpenApi.js",
+      "sha256": "f24677b6458805b43fe3aeff3ad238bb86e86ee2946c4385eb128eedb64121bf"
+    },
+    {
+      "file": "backend/repositories/operationalEvents.repository.js",
+      "sha256": "b6a051d4c0235b43851aaa738ed60d638745dd5ad63498109b6742decb5a7162"
+    },
+    {
+      "file": "backend/middleware/auditLogger.js",
+      "sha256": "e8232d3de59cf20ba63c9a77ca0688fb6212e546f7a634aef26b6896be28371e"
+    },
+    {
+      "file": "frontend/src/App.jsx",
+      "sha256": "e23f53c6caaac00d9dc5833c8d1d52d4d61d1524f6b5c3fe32a0aed88ceadf3c"
+    },
+    {
+      "file": "frontend/src/components/IdentityMfaPanel.jsx",
+      "sha256": "2d6da107ce75de148869dc4f4ba03e050fc8306b8393c25fd6613129996c387d"
+    },
+    {
+      "file": "frontend/src/components/AccountSecurityPanel.jsx",
+      "sha256": "e6ed3d9c1f0c179d0d11c5dd62a6395c1a937a8ec14073276de7e0d223d28ecd"
+    },
+    {
+      "file": "frontend/src/components/PropertyOperationsPanel.jsx",
+      "sha256": "99f14a06ad30d1b722dda1c29ca1a436416bd85a9714d6536ede234a658fd6aa"
+    },
+    {
+      "file": "frontend/src/components/HorizontalPropertyLayer.jsx",
+      "sha256": "d6cf0fe25c46330c622c70ff5555b04530c7e36cce4179929f8154f377bca817"
+    },
+    {
+      "file": "frontend/src/lib/api.js",
+      "sha256": "6ed880df62894e8563a31e95172bf5d9cafc6ffe64ea7bce2f1d8031a921c520"
+    },
+    {
+      "file": "frontend/src/lib/monetaryUnits.mjs",
+      "sha256": "ca54ab1d79597679dff515915489d212af84bc06c7d3388c90dd0306148dea2f"
+    },
+    {
+      "file": "scripts/verify-horizontal-property.js",
+      "sha256": "71068d6d6c9a8e1ffbad5afa043c1774788e6a656faf3f5ef3e7fa93ebdc3a87"
+    },
+    {
+      "file": "scripts/property-operations-live-scenarios.js",
+      "sha256": "e3dac6f472576c916727c020fdc8d90f7712f3903e6b4da8dd9e1532b0b41e24"
+    },
+    {
+      "file": "frontend/scripts/horizontal-property-browser.mjs",
+      "sha256": "d16a40e8f385b46b9b85c677c463af66f0307a1f427afb1d31a187b85a70d3dc"
+    },
+    {
+      "file": "scripts/verify-unified-operations-postflight.js",
+      "sha256": "ddb9c2446b5effe27ce90728d2cb97ba4b099f244df07db9f54caf0a2127dc6e"
+    },
+    {
+      "file": "backend/domain/propertyOperations.test.js",
+      "sha256": "31e87a8325513dc19e58b20ad54302d4fb492a542175e87fbccf0178e6913599"
+    },
+    {
+      "file": "backend/domain/identityMfa.test.js",
+      "sha256": "a65820840c6abd13af0f791b03d10c082bd6d7ac2e53685684d951391e18b7e4"
+    },
+    {
+      "file": "backend/domain/unifiedOperationsHttp.test.js",
+      "sha256": "7efed0cdf56822a96482fb5b4cc1c1db976f6a6bfc805ab95c8f2a42d98669f3"
+    },
+    {
+      "file": "frontend/tests/monetaryUnits.test.mjs",
+      "sha256": "aef88d06b78c24679980f05fe9d1fd1f2afbcce2acb5a5f17af225279bd5f4d3"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "docs/evidence/unified-operations-live.json",
+      "sha256": "18e3c8d8eb513fb7ad17302eaece9b260cc079845ec30ab3f809f3d58c01ded1"
+    },
+    {
+      "file": "docs/evidence/unified-operations-audit.json",
+      "sha256": "f7b860dd92cbfdf5176c86fcc208da64fd2b3e2b212a684feb5549bef55b3034"
+    },
+    {
+      "file": "docs/evidence/unified-operations-backend-tests.txt",
+      "sha256": "a3ebed59a286418e4517de813a236cf8b0b2c7a99abe4587a4e365c42f34a808"
+    },
+    {
+      "file": "docs/evidence/unified-operations-frontend-tests.txt",
+      "sha256": "d4dbb0074a6b9d7240a2e8b86b2e84b75077d61d3a3ac1a022dc65eb4f98dd08"
+    },
+    {
+      "file": "docs/evidence/unified-operations-build.txt",
+      "sha256": "e2970137165f8f630e5a23ae0c746da6068ef90f6cb8f5b6ebfed4940f6b8de5"
+    },
+    {
+      "file": "docs/BACKSTAGE_NATIVE_TRUST_ARCHITECTURE.md",
+      "sha256": "374bb6615296f72fc21ae7efedd7e7ded75a1787258b5576f4654f1a38e62308"
+    },
+    {
+      "file": "docs/BACKSTAGE_UNIFIED_OPERATIONS_REPORT.md",
+      "sha256": "09318d7a88574da865caf7ebc9d9d0c212a164342c2902832c607462d6371230"
+    },
+    {
+      "file": "docs/BACKSTAGE_UNIFIED_INCREMENTAL_PLAN.md",
+      "sha256": "6119c9b9581b2b93b8f045331a6579382002a5fa906f9356125463748f859c95"
+    },
+    {
+      "file": "docs/BACKSTAGE_UNIFIED_OPERATIONS_AUDIT.md",
+      "sha256": "f6b17fe493e7630a69768862e84fcce2258ac43ec8bca630e7e9e04e27bca162"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+.normative-intelligence{margin-top:18px;border-top:1px solid var(--border);padding-top:12px;min-width:0}
+.normative-intelligence summary{cursor:pointer;padding:10px 0;font-weight:600;line-height:1.5}
+.normative-intelligence :is(form,article,aside){min-width:0;margin:14px 0}
+.normative-intelligence :is(p,li,a,code){overflow-wrap:anywhere}
+.normative-intelligence pre{white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;padding:10px;border:1px solid var(--border);font-size:.875rem;line-height:1.6}
+.normative-intelligence form{display:grid;gap:12px}
+.normative-intelligence aside{display:grid;gap:8px}
+.normative-intelligence li{margin-bottom:10px}
+.normative-intelligence input[type=checkbox]{width:auto;min-height:24px;margin-right:8px}

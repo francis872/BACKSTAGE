@@ -2,8 +2,29 @@ node_modules/
 frontend/node_modules/
 backend/node_modules/
 .env
+.env.*
+.env.*.local
 backend/.env
+backend/.env.*
+backend/.env.*.local
 *.log
 .DS_Store
 .vercel/
 frontend/dist/
+**/*.gdb/
+backend/cleancom/data/bindings.json
+backend/cleancom/data/*/audit.json
+backend/cleancom/data/*/*.geojson.gz
+cleancom/**/__pycache__/
+.vercel
+.env*
+!.env.example
+# Local scientific runtime and transient analysis artifacts
+.venv-bsie/
+bsie/__pycache__/
+sanitary/__pycache__/
+deployment/__pycache__/
+# Generated Python and Windows shell caches are never release sources.
+**/__pycache__/
+*.py[cod]
+/Microsoft/

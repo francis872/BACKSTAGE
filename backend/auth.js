@@ -60,6 +60,8 @@ function createToken(user) {
     organization_slug: user.organization_slug || null,
     organization_name: user.organization_name || null,
     memberships: Array.isArray(user.memberships) ? user.memberships : [],
+    sv: user.session_version ?? 0,
+    ...(user.session_id ? { jti: user.session_id } : {}),
   };
 
   return jwt.sign(payload, JWT_SECRET, {
@@ -74,6 +76,7 @@ function verifyToken(token) {
     throw new Error('JWT_SECRET es obligatorio para validar sesiones.');
   }
   return jwt.verify(token, JWT_SECRET, {
+    algorithms: ['HS256'],
     issuer: JWT_ISSUER,
     audience: JWT_AUDIENCE,
   });
@@ -81,11 +84,11 @@ function verifyToken(token) {
 
 function authenticate(req, res, next) {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Token de autenticación requerido.' });
+  if (typeof authHeader !== 'string' || !/^Bearer\s+\S+$/i.test(authHeader.trim())) {
+    return res.status(401).json({ error: 'Inicia sesión para continuar.', code: 'SESSION_REQUIRED', request_id: req.requestId });
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.trim().split(/\s+/)[1];
 
   try {
     const payload = verifyToken(token);
@@ -98,10 +101,15 @@ function authenticate(req, res, next) {
       organization_slug: payload.organization_slug || null,
       organization_name: payload.organization_name || null,
       memberships: Array.isArray(payload.memberships) ? payload.memberships : [],
+      session_version: payload.sv ?? 0,
+      session_id: payload.jti || null,
     };
     next();
   } catch (error) {
-    return res.status(401).json({ error: 'Token inválido o expirado.' });
+    if (!JWT_SECRET) return res.status(503).json({ error: 'El servicio de acceso no está disponible.', code: 'AUTH_UNAVAILABLE' });
+    const reason = ['jwt malformed', 'jwt signature is required', 'invalid signature', 'jwt expired', 'invalid algorithm'].includes(error.message) ? error.message : error.name;
+    console.warn('[auth] session rejected', JSON.stringify({ reason, request_id: req.requestId }));
+    return res.status(401).json({ error: 'Tu sesión venció o no es válida. Inicia sesión de nuevo.', code: error.name === 'TokenExpiredError' ? 'SESSION_EXPIRED' : 'SESSION_INVALID', request_id: req.requestId });
   }
 }
 

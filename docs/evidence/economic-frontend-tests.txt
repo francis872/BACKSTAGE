@@ -1,0 +1,71 @@
+
+> backstage-intelligence-frontend@3.1.0 test
+> node --test tests/*.test.mjs
+
+(node:31660) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Usuario/OneDrive/Escritorio/backstage_v310/BACKSTAGE-3.1.0/frontend/src/lib/territory.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ map retains composite identity and real line/polygon geometry; camera centers are not point observations (3.4133ms)
+✔ candidate selection keeps sanitary and general identities separate and never converts missing coordinates to zero (1.1973ms)
+✔ context distinguishes assets at the same point and clears asset identity when selecting a new territory (1.108ms)
+✔ shared controls retain readable contrast in normal, hover, pressed and semantic states (5.2456ms)
+✔ legacy consumers resolve to the authorized Origin monochrome identity (0.5143ms)
+✔ economic UI supports zero, signed openings and exact large string money without changing payment validation (2.2697ms)
+✔ economic map uses only own geometries and clears private overlay for another object, organization or role (1.8818ms)
+(node:37804) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Usuario/OneDrive/Escritorio/backstage_v310/BACKSTAGE-3.1.0/frontend/src/lib/territory.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ an unlocated PH unit opens its ancestor geometry while keeping the unit selection and project context (2.9149ms)
+✔ PH remains a map layer and does not add a fifth primary destination (2.6648ms)
+✔ operational money converts decimal text into exact minor units and displays it without binary rounding (2.3207ms)
+Warning: useLayoutEffect does nothing on the server, because its effect cannot be encoded into the server renderer's output format. This will lead to a mismatch between the initial, non-hydrated UI and the intended UI. To avoid this, useLayoutEffect should only be used in components that render exclusively on the client. See https://reactjs.org/link/uselayouteffect-ssr for common fixes.
+    at Modal (C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\origin-rendering-check.cjs:346:18)
+    at section
+    at ConfigurableComparator (C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\origin-rendering-check.cjs:1172:35)
+    at AdvancedComparator2 (C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\origin-rendering-check.cjs:1830:61)
+✔ the real comparator renders geographic provider source objects from a saved project (35.3513ms)
+✔ an existing project can open Reports with its operational completion action (24.2823ms)
+(node:21884) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Usuario/OneDrive/Escritorio/backstage_v310/BACKSTAGE-3.1.0/frontend/src/lib/auth.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ restricted browser storage cannot crash login, territory, project or comparison navigation (5.8222ms)
+✔ regional exploration retains a project, its canonical site and comparison without assigning them to another organization (1.6036ms)
+✔ quota exhaustion preserves a workspace in memory and clearing it does not revive stale values (0.839ms)
+✔ map coordinates and provider URLs become stable candidate identities accepted by the existing engine (1.1089ms)
+✔ late project recovery cannot erase evidence opened through navigation or force the legacy comparator (0.8175ms)
+✔ four primary destinations integrate existing capabilities and retain deep links (3.0661ms)
+✔ neutral views consume platform contracts while historical comparison algorithm imports remain compatible (15.9782ms)
+✔ protected requests preserve Headers, application token and selected organization (45.799ms)
+✔ concurrent unauthorized requests clear one session and emit one recovery event (3.9659ms)
+✔ late failure from a previous token cannot log out a new session (1.7143ms)
+✔ login rejection, permission denial and temporary service failure do not expire an existing session (2.1805ms)
+✔ access is stored only after the backend verifies the exact user and organization (7.4902ms)
+✔ progress follows road segments and recognizes a deviation (2.1831ms)
+✔ GPS rejects stale positions and invalid accuracy (0.7683ms)
+✔ los selectores de mapa de módulos distintos no compiten y conservan el borrador (2.1114ms)
+✔ cambiar de territorio descarta proyectos y coordenadas del objetivo anterior (0.5741ms)
+✔ mantiene el borrador y permite abrir un proyecto nuevo en un territorio nuevo (0.2648ms)
+✔ no hereda contexto de otra organización (0.3874ms)
+✔ la asociación territorial excluye registros sin ubicación y homónimos extranjeros (0.5931ms)
+✔ acepta cero geográfico pero rechaza null, texto vacío y pares inválidos (1.4833ms)
+(node:22788) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Usuario/OneDrive/Escritorio/backstage_v310/BACKSTAGE-3.1.0/frontend/src/lib/territory.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ context persists composite identities and zero coordinates within the active user and tenant (6.0418ms)
+✔ unowned legacy context is ignored, and logout removes browser workspace references (0.5247ms)
+✔ recovering a project uses its canonical territory, assets and comparison without inheriting another project (1.0735ms)
+✔ selecting a new territory invalidates stale project and analysis references (0.4495ms)
+✔ starting an analysis without an existing territory retains its declared draft name (0.4865ms)
+✔ reopening the same canonical project restores its reference after a territory change (0.4212ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 447.7255

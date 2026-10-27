@@ -1,0 +1,28 @@
+{
+  "checked_at": "2026-10-22T00:56:46.829534+00:00",
+  "mode": "offline_isolated_tests_no_live_tenant_or_provider",
+  "results": [
+    {
+      "suite": "backend",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "ℹ tests 250",
+        "ℹ pass 249",
+        "ℹ fail 0",
+        "ℹ skipped 1"
+      ]
+    },
+    {
+      "suite": "frontend",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "ℹ tests 13",
+        "ℹ pass 13",
+        "ℹ fail 0",
+        "ℹ skipped 0"
+      ]
+    }
+  ]
+}

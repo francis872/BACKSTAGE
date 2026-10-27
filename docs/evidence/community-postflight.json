@@ -1,0 +1,221 @@
+{
+  "checked_at": "2026-10-27T02:22:20.542Z",
+  "status": "passed_with_explicit_scope_limits",
+  "scope": "contextual_community_native_document_reuse_and_two_organization_document_release",
+  "baseline": {
+    "backend": {
+      "total": 456,
+      "passed": 455,
+      "failed": 0,
+      "skipped": 1
+    },
+    "frontend": {
+      "total": 40,
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "regression": {
+    "backend": {
+      "total": 465,
+      "passed": 464,
+      "failed": 0,
+      "skipped": 1
+    },
+    "frontend": {
+      "total": 41,
+      "passed": 41,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_passed": true
+  },
+  "atlas_community_checks": 8,
+  "atlas_normative_regression_checks": 8,
+  "atlas_economic_regression_checks": 8,
+  "browser_checks": 23,
+  "owned_temporary_database_removed": true,
+  "audit_chain_valid": true,
+  "secondary_document_body_store": false,
+  "automatic_legal_obligations_certification": false,
+  "primary_navigation_unchanged": true,
+  "retained_navigation_package_and_core_files": 11,
+  "retained_operational_service_files": 4,
+  "scientific_and_shared_sources_unchanged": 24,
+  "webgl_rendering_verified": false,
+  "colab_started": false,
+  "production_readiness": "NO_GO",
+  "new_dependencies": [],
+  "docker_used": false,
+  "remote_deployment": false,
+  "production_changes": false,
+  "sensitive_real_data_used": false,
+  "external_identity_dependencies": false,
+  "scoped_credential_scan_passed": true,
+  "local_document_links_checked": 104,
+  "sources": [
+    {
+      "file": "shared/communityKnowledge.v1.mjs",
+      "sha256": "b44a53c584ab16581432dd9b57451b76fea3215e9666e2a10f29055ceb37f5a7"
+    },
+    {
+      "file": "backend/services/communityKnowledge.service.js",
+      "sha256": "c257e763ca7d37049885ccd2cd6b7d6ffe6bce0e7ef6ab13fdc5faa4e0c1585d"
+    },
+    {
+      "file": "backend/services/nativeDocumentFormat.js",
+      "sha256": "16de5549feb7889092926910c649208b1a95c211f1b77d82019f0dd3bfb2672f"
+    },
+    {
+      "file": "backend/services/normativeIntelligence.service.js",
+      "sha256": "f8230f4026f760dd687c438ad23e4d44c2d66d0bc6d36338c2ecc8020b698399"
+    },
+    {
+      "file": "backend/routes/communityKnowledge.routes.js",
+      "sha256": "0e7a2793d91402cc8da06acca7d785457fb8ef1a98399bc7eb0151d2b1cd71ae"
+    },
+    {
+      "file": "backend/routes/assets.routes.js",
+      "sha256": "609bf7114130bc2be44432026b0e35b05b7484f349094a27ec27e11b13284330"
+    },
+    {
+      "file": "backend/infrastructure/communityOpenApi.js",
+      "sha256": "350f2c85834d2a7808b26cf1701a71bc98908533c1332e5ca09f239a0fd22e11"
+    },
+    {
+      "file": "backend/infrastructure/coreOpenApi.js",
+      "sha256": "f1f7ebb97796d204cc01fc9157eb24fb7b4a8d81ddac1109b87f8d0f0860c049"
+    },
+    {
+      "file": "backend/infrastructure/mongoIndexRegistry.js",
+      "sha256": "e3f1906adf40c126b9544be7a57e01e122c0afee59707ec27917e4c3f2c11b4e"
+    },
+    {
+      "file": "backend/repositories/operationalEvents.repository.js",
+      "sha256": "340a27f5d00d07106a3693d175d1f2fbf5132927020f10cdb6fc1c72dbfb0426"
+    },
+    {
+      "file": "backend/domain/communityKnowledge.test.js",
+      "sha256": "2d162083fdbf6305eeee7ebe9ae461f0b68f6885a64421b95354ddec979e03b2"
+    },
+    {
+      "file": "frontend/src/components/CommunityKnowledgePanel.jsx",
+      "sha256": "216f1c1bb43ada36b94ee227bbb5fcaf1c980a750c9dada1d749fb673bfbe39a"
+    },
+    {
+      "file": "frontend/src/components/CommunityKnowledgePanel.css",
+      "sha256": "926835d0514d760e382dbda94c3e7701d26653ec4c948b76ac6d8bb2e37724db"
+    },
+    {
+      "file": "frontend/src/components/HorizontalPropertyLayer.jsx",
+      "sha256": "28cdc85adedff409bc7d7af509a36b613892c0936fa52e65b053ed16793de9c8"
+    },
+    {
+      "file": "frontend/src/components/ExplorerWorkspace.jsx",
+      "sha256": "de011828e1b699982714ed036973f52a3c533c7f8b85a4ed88f903db7a769144"
+    },
+    {
+      "file": "frontend/src/pages/NativeTerritorialExplorer.jsx",
+      "sha256": "9b8b607540cde22158947bc106d33724d11d9d6a27e49a6c0933c73f5fd5f2e1"
+    },
+    {
+      "file": "frontend/src/lib/assetGeometry.mjs",
+      "sha256": "c6683897f2fca405b78eca4df697b43e0b8d26709ccf167bcec908e95192b5ad"
+    },
+    {
+      "file": "frontend/tests/communityRendering.test.mjs",
+      "sha256": "b4bfe555a1d94461e05186bd6d0ce9133f7d8f7550013350756bc7ded78ca6cb"
+    },
+    {
+      "file": "frontend/scripts/community-browser-scenarios.mjs",
+      "sha256": "f2c976036e882b0d8e979b532a841b3c82226bbbb7705f767228eca7119653d3"
+    },
+    {
+      "file": "frontend/scripts/horizontal-property-browser.mjs",
+      "sha256": "9f8acf8694d113ee3f8e0de7adfdc11d4e8699e100e66801bc7084b19ec48dc8"
+    },
+    {
+      "file": "scripts/community-live-scenarios.js",
+      "sha256": "3cae4c1e65a94bf655f19b62c9601ae641832df5e2dad203f8f1d065c09bfac2"
+    },
+    {
+      "file": "scripts/verify-horizontal-property.js",
+      "sha256": "ace256bfea7b34d3d5886a1db1a51279ca7ca9b89f194d96608a4d3d67943e1e"
+    },
+    {
+      "file": "scripts/audit-community-test-data.js",
+      "sha256": "26e6b2dd88490a5825ff4b671cfa161273f45a4e2660641bb198b2aa63703b7f"
+    },
+    {
+      "file": "scripts/run-community-example.js",
+      "sha256": "bc6e4456541d4dc4a47ebee9b5bcea1ec0123a0408ea76ad219925c38ccb3a14"
+    },
+    {
+      "file": "scripts/verify-community-postflight.js",
+      "sha256": "a83178d2905888cc25e5a9956338e22697d92847492a28eb786a476f358e5954"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "docs/evidence/community-live.json",
+      "sha256": "65f6f5b99d002003ef331eedcfae3179e25fb83c1a58ee76f8aa993062c1bfca"
+    },
+    {
+      "file": "docs/evidence/community-data-audit.json",
+      "sha256": "2b1c2b12053786e11a299f7d0b4d85112b43dc16cafcd9b21817dcb354b86fac"
+    },
+    {
+      "file": "docs/evidence/community-baseline-backend.txt",
+      "sha256": "1e8ddcda29c3ea5bde870077f43c862660394677629b0b1f5a917bd1cac3800a"
+    },
+    {
+      "file": "docs/evidence/community-baseline-frontend.txt",
+      "sha256": "37904d61f04677ce3fb380e26c112961e87fe1d63f9d526a7e18b4eabda35501"
+    },
+    {
+      "file": "docs/evidence/community-backend-tests.txt",
+      "sha256": "6d8a4b780612900b61a14ff551e4b3f07d87b40ccf69c26d8ec9ce3a2d84aa84"
+    },
+    {
+      "file": "docs/evidence/community-frontend-tests.txt",
+      "sha256": "6967c10d08bbd5ed85ebb5327359a8429b63d2233bbb3e72099e36535a4e5fcc"
+    },
+    {
+      "file": "docs/evidence/community-build.txt",
+      "sha256": "09a966854598e5c4d807027b70a18dc94b340faa9b01611e865004b626e9cdd0"
+    },
+    {
+      "file": "docs/examples/community-knowledge.json",
+      "sha256": "9f5494f73ae1cce06a57a1bb185a3f8ab15094b17818d24ba4c65e9145cca935"
+    },
+    {
+      "file": "docs/examples/community-knowledge-result.json",
+      "sha256": "aa4b7a82b5c81f4b5f49df067f91c9ec8526359cfb1d9a17de12ff67e58c6299"
+    },
+    {
+      "file": "docs/BACKSTAGE_COMMUNITY.md",
+      "sha256": "1c2a3a5faa457f56203da55ee93b15bc89fb0749d7336392237dbf6307b4357c"
+    },
+    {
+      "file": "docs/backstage-2.0/READINESS_REPORT.md",
+      "sha256": "62b878354e3f5fbdb168f045e9c7e0a56172fc50b3b93b2e0b1d671a84ec6d8d"
+    },
+    {
+      "file": "docs/BACKSTAGE_UNIFIED_INCREMENTAL_PLAN.md",
+      "sha256": "c47598e4ece27b412aa978dac1018003822d07acdc11f05728955df5740eece1"
+    },
+    {
+      "file": "docs/BACKSTAGE_IMPLEMENTATION_STATUS.md",
+      "sha256": "4b65b1f2634af0f467e0c1e4b6550dd5dd233fad5e138e3f7ade0ecf0ff78bf8"
+    },
+    {
+      "file": "docs/BACKSTAGE_ARCHITECTURE.md",
+      "sha256": "d9b714f2d9ff5ce2ff0acbc0565a2e21c9bf4325f44af7e891641419def7f509"
+    },
+    {
+      "file": "docs/evidence/community-desktop.png",
+      "sha256": "45786c345b15e04dac5d61f16f15ebaee33a7af283ca4dc848a580a642e416fb"
+    }
+  ]
+}

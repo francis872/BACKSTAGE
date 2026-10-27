@@ -1,0 +1,48 @@
+{
+  "checked_at": "2026-10-27T03:35:16.677Z",
+  "scope": "read_only_metadata_of_existing_production_and_previous_pair",
+  "status": "bloqueado",
+  "checks": [
+    {
+      "name": "api_candidate_project_and_ready_state",
+      "verified": true
+    },
+    {
+      "name": "web_candidate_project_and_ready_state",
+      "verified": true
+    }
+  ],
+  "historical_keys_available": false,
+  "mfa_compatibility_verified": false,
+  "contracts_verified": false,
+  "execution_requires_explicit_authorization": true,
+  "alias_mutations": 0,
+  "data_restore": false,
+  "plan_only": true,
+  "current": {
+    "api": {
+      "project_id": "prj_jjeZc5dTOxYm4yD5jgfGfdEAAB4O",
+      "id": "dpl_FfGqHQQk5CEXGjcsje9yqaUSC1VE"
+    },
+    "web": {
+      "project_id": "prj_9IJyARVoFEpyYnhoXmnZ6G0uXtDQ",
+      "id": "dpl_BCE7C3mvdoR4ftrRAahTiE78XHpo"
+    }
+  },
+  "candidate": {
+    "api": {
+      "project_id": "prj_jjeZc5dTOxYm4yD5jgfGfdEAAB4O",
+      "id": "dpl_93uunWbhwbeQdh3WtqkLxwmrdEjF",
+      "ready_state": "READY"
+    },
+    "web": {
+      "project_id": "prj_9IJyARVoFEpyYnhoXmnZ6G0uXtDQ",
+      "id": "dpl_5sviMLHKHcFxekswJNmqtWZecp9E",
+      "ready_state": "READY"
+    }
+  },
+  "reason": "Historical key availability, MFA/session compatibility and data contracts are not verified for the previous pair. Future release IDs must be bound after an explicitly authorized build.",
+  "previous_application_invoked": false,
+  "production_config_changes": false,
+  "production_deployment_changes": false
+}

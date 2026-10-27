@@ -1,0 +1,59 @@
+{
+  "checked_at": "2026-10-25T23:54:19.338Z",
+  "mode": "read_only_observer_of_deployed_vercel_daemons",
+  "run_id": "auto-20261025234838-1315eafd",
+  "production_changes": false,
+  "local_worker_started": false,
+  "physical_pc_powered_off_verified": false,
+  "checks": [
+    {
+      "name": "dedicated_staging_database_ownership_and_original_production_unchanged",
+      "passed": true,
+      "production_aliases": {
+        "api": "dpl_FfGqHQQk5CEXGjcsje9yqaUSC1VE",
+        "web": "dpl_BCE7C3mvdoR4ftrRAahTiE78XHpo"
+      }
+    },
+    {
+      "name": "deployed_status_endpoint_denies_missing_secret_and_returns_only_owned_test_jobs",
+      "passed": true
+    }
+  ],
+  "deployment_id": "dpl_vHsnth9UK3m2LEGk9pG3FmWDsdqe",
+  "vercel_project_id": "prj_ktyBc2g5IFnDtQsSZHOuGMY5TE6h",
+  "jobs": [
+    {
+      "id": 1,
+      "case_id": "known-risk",
+      "status": "COMPLETED",
+      "attempts": 1,
+      "scheduled_for": "2026-10-25T23:53:21.015Z",
+      "programmed_at": "2026-10-25T23:53:06.015Z",
+      "trigger": "deployed_daemon_clock",
+      "started_at": "2026-10-25T23:53:21.282Z",
+      "completed_at": "2026-10-25T23:53:22.240Z",
+      "duration_ms": 106.2973929999971,
+      "execution_instances": [
+        "9b46428a-13a6-4c69-bb6a-c9cf501a075f"
+      ],
+      "result_sha256": "bb45276d287becd35def08d680ce4b02b8263afe63a9c7c02bf87c818b231e2a"
+    },
+    {
+      "id": 2,
+      "case_id": "interruption-recovery",
+      "status": "RUNNING",
+      "attempts": 1,
+      "scheduled_for": "2026-10-25T23:53:51.015Z",
+      "programmed_at": "2026-10-25T23:53:06.015Z",
+      "trigger": "deployed_daemon_clock",
+      "started_at": "2026-10-25T23:53:53.300Z",
+      "completed_at": null,
+      "duration_ms": null,
+      "execution_instances": [
+        "748b9800-729f-4fb2-9771-76655921583e"
+      ],
+      "result_sha256": null
+    }
+  ],
+  "status": "pending_cloud_schedule"
+}

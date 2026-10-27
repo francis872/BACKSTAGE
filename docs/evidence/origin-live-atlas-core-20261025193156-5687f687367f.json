@@ -1,0 +1,31 @@
+{
+  "run_id": "atlas-core-20261025193156-5687f687367f",
+  "started_at": "2026-10-25T19:31:57.003Z",
+  "mode": "real_protected_origin_browser_atlas_public_geocoding",
+  "api_interception": false,
+  "checks": [],
+  "screenshots": [],
+  "production_changes": false,
+  "deployments": {
+    "api": {
+      "id": "dpl_9Zsc6VGBXduCGphFJK1b8yVEhBDH",
+      "url": "backstage-staging-f14mjkttu-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_8kGSBjtZ9BoxMwL9UjyTXeVicUaL",
+      "url": "backstage-staging-qfv1xs92t-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "status": "failed",
+  "failure": {
+    "stage": "preflight",
+    "name": "TypeError",
+    "cause": "UND_ERR_CONNECT_TIMEOUT",
+    "message": "fetch failed"
+  },
+  "completed_at": "2026-10-25T19:32:09.169Z"
+}

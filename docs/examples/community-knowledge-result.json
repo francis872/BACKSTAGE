@@ -1,0 +1,68 @@
+{
+  "synthetic_only": true,
+  "verified": true,
+  "input_sha256": "4cc8375f70ea60a74ce85be62038ec66fd6e141476e5b2959d466b5197c7ce44",
+  "engine_source_sha256": "b44a53c584ab16581432dd9b57451b76fea3215e9666e2a10f29055ceb37f5a7",
+  "result_sha256": "a21e0c90b544e499d5e02081af44ffd3f85a145c6297acd07b886cb94c7209b7",
+  "result": {
+    "version": "community-text-rules-1",
+    "classification": {
+      "suggested": "policy",
+      "scores": [
+        {
+          "category": "policy",
+          "matched_keywords": 2
+        },
+        {
+          "category": "minutes",
+          "matched_keywords": 1
+        },
+        {
+          "category": "report",
+          "matched_keywords": 1
+        },
+        {
+          "category": "contract",
+          "matched_keywords": 0
+        },
+        {
+          "category": "procedure",
+          "matched_keywords": 0
+        },
+        {
+          "category": "regulation",
+          "matched_keywords": 0
+        }
+      ],
+      "method": "keyword_presence_counts_not_probability",
+      "automatically_legal": false
+    },
+    "candidates": [
+      {
+        "id": "candidate-1",
+        "start_utf16": 37,
+        "end_utf16": 80,
+        "line": 2,
+        "kind": "possible_duty",
+        "conditional": false,
+        "requires_human_review": true
+      },
+      {
+        "id": "candidate-2",
+        "start_utf16": 81,
+        "end_utf16": 125,
+        "line": 3,
+        "kind": "prohibition",
+        "conditional": true,
+        "requires_human_review": true
+      }
+    ],
+    "truncated": false,
+    "offset_encoding": "JavaScript UTF-16 code units",
+    "legal_obligations_certified": false,
+    "limitations": [
+      "Las coincidencias pueden omitir obligaciones o detectar frases que no lo sean.",
+      "Revisar negación, contexto, excepciones y aplicabilidad; no se calculan plazos legales."
+    ]
+  }
+}

@@ -46,7 +46,7 @@ class SpatialIngestionPipeline {
   }
 
   async ingestGeoJSON({ organizationId, worldId, sourceId, collection, minZoom = 8, maxZoom = 12 }) {
-    const source = await this.store.get(COLLECTIONS.sources, sourceId);
+    const source = await this.store.get(COLLECTIONS.sources, sourceId, organizationId);
     if (!source || String(source.organizationId) !== String(organizationId)) throw new Error('Fuente no encontrada para la organización activa.');
     const geojson = validateFeatureCollection(collection);
     if (![minZoom, maxZoom].every(Number.isInteger) || minZoom < 0 || maxZoom > 22 || minZoom > maxZoom) {
@@ -115,7 +115,7 @@ class SpatialIngestionPipeline {
 
   async setSourceStatus({ organizationId, sourceId, status }) {
     if (!['active', 'archived'].includes(status)) throw new TypeError('status debe ser active o archived.');
-    const source = await this.store.get(COLLECTIONS.sources, sourceId);
+    const source = await this.store.get(COLLECTIONS.sources, sourceId, organizationId);
     if (!source || String(source.organizationId) !== String(organizationId)) throw new Error('Fuente no encontrada para la organización activa.');
     const updated = await this.store.upsert(COLLECTIONS.sources, { ...source, status, updatedAt: new Date() });
     const result = await this.store.updateMany(COLLECTIONS.objects, { organizationId, sourceId }, { status, updatedAt: new Date() });
@@ -146,8 +146,19 @@ class SpatialIngestionPipeline {
   }
 
   async roadFeatures({ organizationId, worldId }) {
-    const objects = await this.store.list(COLLECTIONS.objects, { organizationId, worldId }, { limit: 5000 });
-    return { type: 'FeatureCollection', features: objects.filter((object) => object.status !== 'archived' && ['LineString', 'MultiLineString'].includes(object.geometry.type))
+    const [objects, sources] = await Promise.all([
+      this.store.list(COLLECTIONS.objects, { organizationId, worldId }, { limit: 5000 }),
+      this.store.list(COLLECTIONS.sources, { organizationId }),
+    ]);
+    const roadSources = new Set(sources.filter((source) => source.status === 'active'
+      && /road|street|highway|vial|carretera|vía/i.test(source.dataset)).map((source) => source._id));
+    return { type: 'FeatureCollection', features: objects.filter((object) => {
+      if (object.status !== 'active' || !['LineString', 'MultiLineString'].includes(object.geometry.type)) return false;
+      const properties = object.properties || {};
+      return roadSources.has(object.sourceId)
+        || Boolean(properties.highway || properties.speedKph || properties.maxspeed)
+        || /^(?:road|street|highway|vial|carretera|vía)$/i.test(String(properties.objectType || object.objectType));
+    })
       .map((object) => ({ type: 'Feature', id: object.id, geometry: object.geometry, properties: object.properties || {} })) };
   }
 }

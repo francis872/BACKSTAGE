@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "completed_at": "2026-10-26T22:45:05.116Z",
+  "optimizer": {
+    "independent_reference": "scipy.optimize.linprog HiGHS",
+    "reference_version": "1.18.1",
+    "cases": 48,
+    "objective_tolerance": 0.000001,
+    "exhaustive_integer_cases_in_unit_tests": 208
+  },
+  "bounded_pure_engine_performance": {
+    "entities": 500,
+    "events": 5000,
+    "months": 36,
+    "runs": 4,
+    "minimum_ms": 218,
+    "median_ms": 251,
+    "maximum_ms": 344,
+    "environment": "local Node; synthetic in-memory snapshot; no HTTP or Atlas load",
+    "production_capacity_certified": false
+  },
+  "production_python_dependency_added": false,
+  "packages_installed": false
+}

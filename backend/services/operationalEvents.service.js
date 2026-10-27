@@ -3,6 +3,7 @@ const repository = require('../repositories/operationalEvents.repository');
 const { publishOperationalEvent } = require('../realtime/operationalEvents');
 
 const ALLOWED_SEVERITIES = new Set(['info', 'success', 'warning', 'critical']);
+const publicEvent=row=>{if(!row)return row;const {outbox,...event}=row;return event;};
 
 async function emit(input) {
   if (!input?.organizationId || !input?.eventType || !input?.title) {
@@ -18,12 +19,12 @@ async function emit(input) {
 
 async function list(organizationId, options = {}) {
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
-  return repository.listEvents({ organizationId, ...options });
+  return (await repository.listEvents({ organizationId, ...options })).map(publicEvent);
 }
 
 async function alerts(organizationId, limit = 20) {
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
-  const events = await repository.listEvents({ organizationId, limit: Math.min(Number(limit) || 20, 100) });
+  const events = await list(organizationId, { limit: Math.min(Number(limit) || 20, 100) });
   return events.filter((event) => event.severity === 'warning' || event.severity === 'critical');
 }
 
@@ -37,7 +38,7 @@ async function acknowledge(eventId, sessionUser, organizationContext) {
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
   const row = await repository.acknowledgeEvent({ eventId, organizationId, userId: sessionUser?.user_id });
   if (!row) throw new ApiError(404, 'Alerta no encontrada.');
-  return row;
+  return publicEvent(row);
 }
 
 async function resolve(eventId, sessionUser, organizationContext) {
@@ -45,7 +46,7 @@ async function resolve(eventId, sessionUser, organizationContext) {
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
   const row = await repository.resolveEvent({ eventId, organizationId, userId: sessionUser?.user_id });
   if (!row) throw new ApiError(404, 'Alerta no encontrada.');
-  return row;
+  return publicEvent(row);
 }
 
 module.exports = { emit, list, alerts, summary, acknowledge, resolve };

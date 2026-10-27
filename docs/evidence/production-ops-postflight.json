@@ -1,0 +1,25 @@
+{
+  "checked_at": "2026-10-25T23:13:14.257Z",
+  "mode": "read_only_production_ops_postflight",
+  "checks": [
+    {
+      "name": "all_owned_test_collections_absent_from_new_connection",
+      "passed": true,
+      "run_id": "atlas-core-20261025230706-fde564883b9f",
+      "collections": 16
+    },
+    {
+      "name": "original_production_aliases_unchanged",
+      "passed": true
+    },
+    {
+      "name": "runtime_source_package_matches_local_files",
+      "passed": true,
+      "files": 247,
+      "docker_image_built": false,
+      "continuous_worker_deployed": false
+    }
+  ],
+  "production_changes": false,
+  "status": "passed"
+}

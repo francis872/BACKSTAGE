@@ -1,0 +1,12 @@
+{
+  "version": "backstage-commercial-rules-1",
+  "basis": "configurable_operational_baseline",
+  "sla_clock": "elapsed_hours_from_project_updated_at",
+  "sla_hours": { "probability_pending": 48, "risk_review_pending": 24, "recommendation_review_pending": 24, "default": 72 },
+  "source_max_age_hours": { "ORGANIZATION_PROVIDED": 720, "IMPORTED": 720, "EXTERNAL_API": 24, "HISTORICAL": null, "SIMULATED": null },
+  "exception_max_hours": 24,
+  "approval_role": "admin",
+  "alert_owner_role": "admin",
+  "exception_scope": "source_freshness_review_only",
+  "historical_and_simulated_policy": "historical_snapshot_or_simulation_label_required_no_claim_of_current_observation"
+}

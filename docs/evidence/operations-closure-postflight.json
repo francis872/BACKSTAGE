@@ -1,0 +1,158 @@
+{
+  "checked_at": "2026-10-27T03:45:26.047Z",
+  "status": "verified_scoped_checks_with_external_operations_blocked",
+  "decision": "NO_GO",
+  "regression": {
+    "backend": {
+      "total": 471,
+      "passed": 470,
+      "failed": 0,
+      "skipped": 1
+    },
+    "frontend": {
+      "total": 41,
+      "passed": 41,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_passed": true
+  },
+  "application_source_files_unchanged": 25,
+  "vercel_projects_unchanged": 4,
+  "deployments_aliases_protection_and_environment_metadata_unchanged": true,
+  "vercel_mutation_tools_invoked": false,
+  "real_user_activation": false,
+  "operational_user_records_used": false,
+  "key_recovery_checks": 11,
+  "external_key_custody_verified": false,
+  "synthetic_atlas_restore_checks": 5,
+  "synthetic_restore": {
+    "collections": 10,
+    "documents": 19,
+    "indexes": 39,
+    "ttl_suspended_during_verification": 1,
+    "validation_ms": 13152,
+    "source_overwritten": false
+  },
+  "owned_databases_removed": 2,
+  "managed_production_backup_verified": false,
+  "production_rollback_executed": false,
+  "real_messages_sent": 0,
+  "independent_monitor_certified": false,
+  "administrator_alert_receipt_verified": false,
+  "matrix_summary": {
+    "verificado": 9,
+    "pendiente": 2,
+    "bloqueado": 6
+  },
+  "scoped_secret_scan_passed": true,
+  "local_links_checked": 100,
+  "sources": [
+    {
+      "file": "scripts/operations/controls.cjs",
+      "sha256": "2659b25f8350b8fb7220b1d23161d556f6e50b7ae4b88d4d68c0ac65977b1182"
+    },
+    {
+      "file": "scripts/operations/audit-live.js",
+      "sha256": "62332580e01016a31a101abfef42bd1802772379e957ff99f15ae059432f92eb"
+    },
+    {
+      "file": "scripts/operations/key-drill.js",
+      "sha256": "64c1cc10f3f19a70cd033f808cafa22a4d1c1ebcf638077b08aaef7ffc08b4f8"
+    },
+    {
+      "file": "scripts/operations/restore-drill.js",
+      "sha256": "ba1a3da47f849f6cf2b68f3e282751c4c327ebe3b7bcd107a9a3ed067245fc9b"
+    },
+    {
+      "file": "scripts/operations/resend-preflight.js",
+      "sha256": "a167e8fa2fd106af262409ea80681a8833775b1b3a36594ec3cc419fe87972e3"
+    },
+    {
+      "file": "scripts/operations/observe-release.js",
+      "sha256": "e039d205af865c5276f7d6640a65fec316992ecf629c7d5f5965ff0139c1fe10"
+    },
+    {
+      "file": "scripts/operations/collect-telemetry.js",
+      "sha256": "5ad2955b481504628a625b212a41322deac9b72f6b809ae2d8041619fa2177c8"
+    },
+    {
+      "file": "scripts/operations/rollback-plan.js",
+      "sha256": "1f610a88f68382d5cc9235d0c0e7391f77f656fecf50ab18dcafd16857da308d"
+    },
+    {
+      "file": "scripts/operations/postflight.js",
+      "sha256": "a7fa016ca284b486b1c64a07e88df129952cb9d1adf2d8a3f5ea7f2ae0cb2c38"
+    },
+    {
+      "file": "backend/domain/operationsClosure.test.js",
+      "sha256": "37343b46744f5dbec25c00cef8a91b08f75cb74eb6c740390c814fda72fc3089"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "docs/evidence/operations-closure-audit-before.json",
+      "sha256": "66079aeb8e8d96a796cad351e73c45264e2db27b42913b80c58e74d09f6d1eee"
+    },
+    {
+      "file": "docs/evidence/operations-closure-audit-after.json",
+      "sha256": "b185191ba5b30a8692e4783bcd1b29c9bb1b7c1e63682b5fb30f4499e8e72ac9"
+    },
+    {
+      "file": "docs/evidence/operations-atlas-connection.json",
+      "sha256": "480521b1e3ba7d57c1e5f5fb5142938ca045aad634390cc38c5ef67f4b367084"
+    },
+    {
+      "file": "docs/evidence/operations-key-recovery.json",
+      "sha256": "dbcf2168b1bb90b8230971bc6b00a6256675f5d697aedf23291d314545cdb368"
+    },
+    {
+      "file": "docs/evidence/operations-restore-drill.json",
+      "sha256": "a058fdca40aa81c4c64ff21f4ddad42eadbfac7d8dcac23b37918ba33b21ea72"
+    },
+    {
+      "file": "docs/evidence/operations-resend-preflight.json",
+      "sha256": "6590969ca91e7a2eb35569e5f80985cda039f478cd511b1092826b4fee129e6e"
+    },
+    {
+      "file": "docs/evidence/operations-observability.json",
+      "sha256": "2108ff23dcaf7866a89998388a13cbc8c5c46950ddb3de432d3c7b183dd5ee8a"
+    },
+    {
+      "file": "docs/evidence/operations-telemetry-sample.json",
+      "sha256": "22a4fc7b01ef81ca053d3458cc8f9f344ca0c32d6c0d9b7a56040715aa8cebca"
+    },
+    {
+      "file": "docs/evidence/operations-rollback-plan.json",
+      "sha256": "7e219bd3cd2ddf6b8bc91ce51fad857a4e62001389098246c9e2100c68a0028d"
+    },
+    {
+      "file": "docs/evidence/operations-readiness-matrix.json",
+      "sha256": "9026302a8272d37e2698831c395bccf907e36fead8b1ad2eac61e408beb83669"
+    },
+    {
+      "file": "docs/evidence/operations-closure-backend-tests.txt",
+      "sha256": "c5a45018a36209a6dd98b10343552f194611d1291553cc50872ae5a2fc2aa229"
+    },
+    {
+      "file": "docs/evidence/operations-closure-frontend-tests.txt",
+      "sha256": "66797d8e8fd4b5836f9bb269d66223950bec40174d0569687979ecd0038544d3"
+    },
+    {
+      "file": "docs/evidence/operations-closure-build.txt",
+      "sha256": "2ad437cf08880b1873bf3cf7381dfc61f8f2f5c07fa9670332cea8d2f3d6faad"
+    },
+    {
+      "file": "docs/BACKSTAGE_OPERATIONS_CLOSURE.md",
+      "sha256": "3e4ff01b07ebda7e2fd204e41b9c7deca49b4287549861486b433d3f68ebbcac"
+    },
+    {
+      "file": "docs/backstage-2.0/READINESS_REPORT.md",
+      "sha256": "0e5a92d3896baff889887e40cb35d37974447605ac49f6d77ed991062207a0a3"
+    },
+    {
+      "file": "docs/BACKSTAGE_PRODUCTION_GO_NO_GO.md",
+      "sha256": "bbd10a6439a4d70d9886d540102e503c2c3d9e19c621b78631eb52e1c95847d0"
+    }
+  ]
+}

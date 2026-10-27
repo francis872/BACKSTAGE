@@ -1,0 +1,264 @@
+{
+  "checked_at": "2026-10-26T22:52:06.775Z",
+  "status": "passed_with_explicit_scope_limits",
+  "scope": "economic_core_and_contextual_ph_adapter_local_api_browser_and_owned_test_atlas",
+  "baseline": {
+    "backend": {
+      "total": 425,
+      "passed": 424,
+      "skipped": 1,
+      "failed": 0
+    },
+    "frontend": {
+      "total": 36,
+      "passed": 36,
+      "skipped": 0,
+      "failed": 0
+    }
+  },
+  "regression": {
+    "backend": {
+      "total": 441,
+      "passed": 440,
+      "skipped": 1,
+      "failed": 0
+    },
+    "frontend": {
+      "total": 38,
+      "passed": 38,
+      "skipped": 0,
+      "failed": 0
+    },
+    "build_passed": true
+  },
+  "atlas_economic_checks": 8,
+  "browser_checks": 20,
+  "optimizer_independent_cases": 48,
+  "optimizer_exhaustive_cases": 208,
+  "pure_engine_performance": {
+    "entities": 500,
+    "events": 5000,
+    "months": 36,
+    "runs": 4,
+    "minimum_ms": 218,
+    "median_ms": 251,
+    "maximum_ms": 344,
+    "environment": "local Node; synthetic in-memory snapshot; no HTTP or Atlas load",
+    "production_capacity_certified": false
+  },
+  "owned_temporary_database_removed": true,
+  "audit_chain_valid": true,
+  "scientific_and_shared_sources_unchanged": 24,
+  "existing_exact_decimal_and_financial_sources_unchanged": true,
+  "primary_navigation_unchanged": true,
+  "webgl_rendering_verified": false,
+  "thematic_categorical_balance_layer_implemented": true,
+  "additional_sector_adapters_implemented": false,
+  "bank_reconciliation_implemented": false,
+  "normative_certification": false,
+  "new_dependencies": [],
+  "docker_used": false,
+  "remote_deployment": false,
+  "production_changes": false,
+  "sensitive_real_data_used": false,
+  "external_identity_dependencies": false,
+  "scoped_credential_scan_passed": true,
+  "local_document_links_checked": 91,
+  "production_readiness": "NO_GO",
+  "sources": [
+    {
+      "file": "shared/economicMoney.mjs",
+      "sha256": "6b4d39fa6b933a22613300b97102f7a7002ec8ea08743e141b422ce5d46c33e3"
+    },
+    {
+      "file": "shared/economicPlanning.mjs",
+      "sha256": "6422ee7bd12da9a570ab7ecbc09b53b00344c3503da4059e1bc7cbeb8bbe388c"
+    },
+    {
+      "file": "shared/economics.v1.mjs",
+      "sha256": "2b0b0c6d24f551bda65e8e3e9442e7cc51e137a20d24600821ac319ec66a5f36"
+    },
+    {
+      "file": "backend/domain/propertyOperations.js",
+      "sha256": "1f23dc3a5b7504d7f3056d1195d42bcaf131fd8b0d3df363b0aa5919c0d07f2a"
+    },
+    {
+      "file": "backend/services/propertyOperations.service.js",
+      "sha256": "944aa9abc49a1f6ad2bbbe0579ebfa06a8219e36e8fa2fb3348e98689ce67cdc"
+    },
+    {
+      "file": "backend/services/horizontalProperty.service.js",
+      "sha256": "6fae711427dbac68f85ed309a856806ff80aa13ecd6ce51e505ddfd1f48cc0d1"
+    },
+    {
+      "file": "backend/services/economicSnapshot.js",
+      "sha256": "dc2bfef9c532378e4d52af1a09c52115658a9216726d6635e0c6809551340d90"
+    },
+    {
+      "file": "backend/services/economicIntelligence.service.js",
+      "sha256": "d1c5f2d84c2a7b1762105a7a2067dcbbb2a4b574e9088c99a2fbb76a161f4f45"
+    },
+    {
+      "file": "backend/services/hebraPackedDocument.service.js",
+      "sha256": "c5ece7732b1de9032f3a9bae304b55d98cf4be2e6cee995c4738f35a328f6c7a"
+    },
+    {
+      "file": "backend/routes/assets.routes.js",
+      "sha256": "8b4f81e00e0516089256832444e962e2288ea719784098670dfd01856be5d902"
+    },
+    {
+      "file": "backend/routes/economicIntelligence.routes.js",
+      "sha256": "8580c30afc19f9551f6449345e97a0ef548a7e6d8be17278299592abf6aa8a1b"
+    },
+    {
+      "file": "backend/repositories/operationalEvents.repository.js",
+      "sha256": "db8b9363d77c28e01c1555e6e51d8735b29e9b879d81983037dc8b38f3cea52f"
+    },
+    {
+      "file": "backend/infrastructure/coreOpenApi.js",
+      "sha256": "f6718ea10f389d1be2ce0efa1c87867a22dfa075d5194a6c5210a9d800813413"
+    },
+    {
+      "file": "backend/infrastructure/economicOpenApi.js",
+      "sha256": "96a106fcb9898a523a3f4dff69c62c571b9b94eed595e8290909a39e204ea49e"
+    },
+    {
+      "file": "backend/infrastructure/mongoIndexRegistry.js",
+      "sha256": "8fc3bf6bcab5d6101907d894b0fb3f832f4a3e52a6b41870ce13f515275689ac"
+    },
+    {
+      "file": "backend/domain/economics.test.js",
+      "sha256": "5da855a93580907a9e87a9195740e678f6131fd63ae498e7c1fef36c10c5fc40"
+    },
+    {
+      "file": "backend/domain/economicIntelligence.test.js",
+      "sha256": "0e7995669968a2cfa57648fc5a39e129b489ec59b0d60acbd4f20f6f9bf02b3e"
+    },
+    {
+      "file": "frontend/src/components/EconomicIntelligencePanel.jsx",
+      "sha256": "fae827465e9a5f343a8290e8d6a2b6fc2c1386a31868d015807546c2101e9977"
+    },
+    {
+      "file": "frontend/src/components/PropertyOperationsPanel.jsx",
+      "sha256": "4633e8002ba1674c9e7144cd34e1e35392ff6e5b2d9016ab43f8ddef99435c24"
+    },
+    {
+      "file": "frontend/src/components/HorizontalPropertyLayer.jsx",
+      "sha256": "92d025822737ae478d789c3d3f30b82a0527ab5e3a0135d575e00e93aa014dbf"
+    },
+    {
+      "file": "frontend/src/components/ExplorerWorkspace.jsx",
+      "sha256": "07b961cc9a107ac8b7fdb1f2cdbf63e28d4485370342bb210644d9890a43cc5a"
+    },
+    {
+      "file": "frontend/src/pages/NativeTerritorialExplorer.jsx",
+      "sha256": "2b97bb9112a49200ae364bea6e581be7e84c3c6f719960a1858176268796c94f"
+    },
+    {
+      "file": "frontend/src/lib/monetaryUnits.mjs",
+      "sha256": "ee0f78ca8f11e4720e3f66892faad3b26a00fb0442fe6463d2f84c2cca450125"
+    },
+    {
+      "file": "frontend/src/lib/economicOverlay.mjs",
+      "sha256": "e0f46264d7e99010ead0fe4663e24104132dfc9d23ae429ebec1f211f51b014f"
+    },
+    {
+      "file": "frontend/tests/economics.test.mjs",
+      "sha256": "e6c3c87337ee686640d043c43c70d83a422431b1cd9fce178384f6ed5b24425a"
+    },
+    {
+      "file": "frontend/scripts/horizontal-property-browser.mjs",
+      "sha256": "aa87d88b44403dfadb054c3e9bc9c542d9c7a70cf0eb6aec290823474ea69ec1"
+    },
+    {
+      "file": "scripts/economic-live-scenarios.js",
+      "sha256": "e6c852cbffe8bede16dcff079b9453d03ebcd60f3e148e0a7b50e15165203fa4"
+    },
+    {
+      "file": "scripts/verify-horizontal-property.js",
+      "sha256": "dcc98d26b88cdfd90c142283b8b3b55404acd0bb7ce1bf06eaca1fa2f3f10fc8"
+    },
+    {
+      "file": "scripts/verify-economic-reference.js",
+      "sha256": "bd5bfa7a774454b1c4e47f0762ac8eb1e2ffb5702a677bc5f785e8201d007314"
+    },
+    {
+      "file": "scripts/audit-economic-test-data.js",
+      "sha256": "b38069cc849cee75cb27e750f88bab73311515afd6e6ce78d20d902311b14b2d"
+    },
+    {
+      "file": "scripts/run-economic-example.js",
+      "sha256": "58c952cedb82b7315bd70770fe6aa8aa7b45d28b356d21d4e34acf2f3a5d79a5"
+    },
+    {
+      "file": "scripts/verify-economic-postflight.js",
+      "sha256": "9f86e8f847c3056921f55241e71467707caebfc2c2bc20f348be0140e320da9c"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "docs/evidence/economic-intelligence-live.json",
+      "sha256": "c6afc3114b14c0d6e2ede62ce46248712826c19b6e39c34fb5903c1292c208a5"
+    },
+    {
+      "file": "docs/evidence/economics-data-audit.json",
+      "sha256": "bc6dd04cc6b3eb5707212b0d7be1218abe4299226364446f51dcb4c02608479a"
+    },
+    {
+      "file": "docs/evidence/economic-reference-performance.json",
+      "sha256": "03bb2752434a03453358a94469bacdbb9e50b8a90014c1e327dfd8db655c36ca"
+    },
+    {
+      "file": "docs/evidence/economic-baseline-backend.txt",
+      "sha256": "c89093a68bd2ff96220380a761cbee337444199d46ad1ca08fcb60354fb141ec"
+    },
+    {
+      "file": "docs/evidence/economic-baseline-frontend.txt",
+      "sha256": "0802671b04233f48cf209bb4ff1e013f9c43f6d06872b5dbac34654550a826b0"
+    },
+    {
+      "file": "docs/evidence/economic-backend-tests.txt",
+      "sha256": "ec30dfa7b3dfd461ee5db64f77a327acd061126d5395a5b976af583588f10afe"
+    },
+    {
+      "file": "docs/evidence/economic-frontend-tests.txt",
+      "sha256": "287a7e06f7e2efc1e4cdec944c628a1cd6f1280f736318717b143d62ae8be9c8"
+    },
+    {
+      "file": "docs/evidence/economic-build.txt",
+      "sha256": "76c927225d4540eaad5178cbb42c307a3225e9e16a22d2022405f98e3276938f"
+    },
+    {
+      "file": "docs/examples/economic-planning.json",
+      "sha256": "e7f24911075a5d7a5b524678ce09b5803fd2ef56ab609fdc793966d8539f1294"
+    },
+    {
+      "file": "docs/examples/economic-planning-result.json",
+      "sha256": "8157a3c53e05ce31a317816ff7b523b739554b9896bdd3c3950f944d61d751f2"
+    },
+    {
+      "file": "docs/BACKSTAGE_ECONOMIC_INTELLIGENCE.md",
+      "sha256": "e703065c1d63d9e1ead9ea049d03d9b366eecce65a650fab6b2d9a9d898d523f"
+    },
+    {
+      "file": "docs/backstage-2.0/READINESS_REPORT.md",
+      "sha256": "69ee848ac6a23cc7cbd667b749a6965301f746e8fb27330846b51ab120887681"
+    },
+    {
+      "file": "docs/BACKSTAGE_UNIFIED_INCREMENTAL_PLAN.md",
+      "sha256": "53887ce15522442f69bdf84ee9123c332e146c2653fcee72e07f77b63e7825f2"
+    },
+    {
+      "file": "docs/BACKSTAGE_IMPLEMENTATION_STATUS.md",
+      "sha256": "e41abf4dd7c68c459223d7453f14e6755eb0bf041f73df3800e127b4ba963413"
+    },
+    {
+      "file": "docs/BACKSTAGE_ARCHITECTURE.md",
+      "sha256": "411ea973420b13f18b23f2e4317f05e836da58e8b5d7b62fd3c2c434c66f19ca"
+    },
+    {
+      "file": "docs/evidence/economics-desktop.png",
+      "sha256": "b611839b7f0a10f92bc2ecc1bdba565f24214d60423c7d08d9a50c65a4baf8f4"
+    }
+  ]
+}

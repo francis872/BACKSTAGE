@@ -1,0 +1,42 @@
+{
+  "checked_at": "2026-10-22T23:30:01.946Z",
+  "mode": "fresh_process_read_only_staging_postflight",
+  "checks": [
+    {
+      "type": "api",
+      "alias": "backstage-staging-api.vercel.app",
+      "deployment_id": "dpl_2ShVnBmz4kbDzJLDBcnVpvmBWzDJ",
+      "target": "preview",
+      "protected": true,
+      "health": "mongodb_ok",
+      "request_id_forwarded": true
+    },
+    {
+      "type": "web",
+      "alias": "backstage-staging-web.vercel.app",
+      "deployment_id": "dpl_E6pWkSunwf4wgiskxt3PnimRmgdV",
+      "target": "preview",
+      "protected": true,
+      "health": "mongodb_ok",
+      "request_id_forwarded": true
+    }
+  ],
+  "retained_global_request_audit_traces": true,
+  "runs": [
+    {
+      "run_id": "atlas-core-20261022232556-22298721ed7e",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "f182b57bdf87db65b91d10e86d82a38b5d25eb2b7ffde6308b16289e08ee188d",
+      "global_request_trace_count": 3
+    },
+    {
+      "run_id": "atlas-core-20261022232710-8a04a08843c3",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "89cd8db1cc7e8f907bcfc6f7922c05f5e626cca13a05d604d66afecf88ace4d7",
+      "global_request_trace_count": 4
+    }
+  ],
+  "status": "passed"
+}

@@ -1,0 +1,31 @@
+{
+  "mode": "isolated_test_tenant_on_real_mongodb",
+  "run_id": "1ba7edc2-b051-4b73-a47a-76f68b1babfc",
+  "started_at": "2026-10-21T18:58:42.501Z",
+  "checks": [
+    "registration_login_and_current_membership",
+    "assets_crews_operation_assignment_and_completed_service_order",
+    "http_cross_organization_denied",
+    "csv_preview_and_atomic_commit",
+    "real_transaction_rollback",
+    "python_worker_real_persistence_idempotency_export_and_weight_cache",
+    "fleet_truthful_no_provider_state",
+    "sanitary_waste_lifecycle_mass_conversion_idempotency_and_revision_history",
+    "sanitary_measurement_alert_acknowledgment_void_and_current_state_consistency",
+    "sanitation_network_inspection_linked_to_real_persisted_service_order",
+    "carbon_factor_snapshot_calculation_void_and_single_active_correction",
+    "ortools_real_python_bridge_persisted_cvrp_feasibility_and_admin_approval",
+    "real_python_prediction_temporal_backtest_metrics_and_persistence",
+    "sanitary_report_snapshot_export_openapi_and_honest_unconfigured_connector",
+    "persisted_audit_chain",
+    "server_ttl_index_configuration",
+    "actual_server_ttl_deletion"
+  ],
+  "gps_provider_tested": false,
+  "existing_records_modified": false,
+  "replica_set": true,
+  "ttl_sweep": "observed_server_deletion",
+  "status": "passed",
+  "cleanup": "removed_only_verification_tenant_records",
+  "finished_at": "2026-10-21T19:01:07.520Z"
+}
