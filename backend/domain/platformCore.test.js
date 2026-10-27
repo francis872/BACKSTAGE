@@ -1,0 +1,195 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+process.env.JWT_SECRET = 'isolated-platform-core-phase-four-key';
+process.env.BCRYPT_ROUNDS = '4';
+const { fakeIdentityMongo } = require('./helpers/fakeIdentityMongo');
+const { createMongoIdentityService, service: runtimeIdentity } = require('../services/mongoIdentity.service');
+const { createMongoAuditService } = require('../services/mongoAudit.service');
+const credentials = email => ({ email, password: 'isolated-test-password', name: email, organization_name: 'Test workspace' });
+async function setup() {
+  const infrastructure = fakeIdentityMongo(), identity = createMongoIdentityService(infrastructure);
+  const owner = await identity.register(credentials('owner@example.test'));
+  const recipient = await identity.register(credentials('recipient@example.test'));
+  return { infrastructure, identity, owner, recipient, org: owner.user.organization_id, actor: owner.user.user_id };
+}
+test('invitation binds recipient, server role and organization; stores only a hash and requires one explicit acceptance', async () => {
+  const { infrastructure, identity, owner, recipient, org, actor } = await setup();
+  const created = await identity.createInvitation({ email: recipient.user.email, role: 'analyst', organization_id: 999, expires_at: '2099-01-01' }, org, actor);
+  assert.match(created.token, /^[A-Za-z0-9_-]{43}$/);
+  assert.equal(created.invitation.token_hash, undefined);
+  assert.equal(infrastructure.documents('identity_invitations')[0].token, undefined);
+  assert(!JSON.stringify(infrastructure.documents('identity_invitations')).includes(created.token));
+  await assert.rejects(identity.acceptInvitation({ token: created.token }, actor), { statusCode: 403 });
+  const accepted = await identity.acceptInvitation({ token: created.token, role: 'admin', organization_id: 999 }, recipient.user.user_id);
+  assert.equal(accepted.user.organization_id, org); assert.equal(accepted.user.role, 'analyst');
+  assert.equal((await identity.me(recipient.user.user_id, recipient.user.organization_id)).role, 'admin');
+  await assert.rejects(identity.acceptInvitation({ token: created.token }, recipient.user.user_id), { statusCode: 410 });
+  assert(!(await identity.listInvitations(org)).some(row => row.token_hash || row.token));
+  const audit = createMongoAuditService(infrastructure);
+  assert.equal((await audit.verifyAuditChain(org)).valid, true);
+  const rows = await audit.listAuditLogs({ organizationId: org });
+  assert(rows.some(row => row.action === 'invitation.accepted' && row.user_id === recipient.user.user_id));
+  assert(!JSON.stringify(rows).includes(created.token));
+  assert.equal((await identity.getUserMemberships(owner.user.user_id)).length, 1);
+});
+test('expired, revoked, foreign-tenant and no-longer-authorized invitations cannot grant membership', async () => {
+  const { infrastructure, identity, recipient, org, actor } = await setup();
+  const expired = await identity.createInvitation({ email: recipient.user.email }, org, actor);
+  const db = await infrastructure.getMongoDatabase();
+  await db.collection('identity_invitations').updateOne({ invitation_id: expired.invitation.invitation_id }, { $set: { expires_at: new Date(0) } });
+  await assert.rejects(identity.acceptInvitation({ token: expired.token }, recipient.user.user_id), { statusCode: 410 });
+  const revoked = await identity.createInvitation({ email: recipient.user.email }, org, actor);
+  await assert.rejects(identity.revokeInvitation(revoked.invitation.invitation_id, recipient.user.organization_id, recipient.user.user_id), { statusCode: 404 });
+  await identity.revokeInvitation(revoked.invitation.invitation_id, org, actor);
+  await assert.rejects(identity.acceptInvitation({ token: revoked.token }, recipient.user.user_id), { statusCode: 410 });
+  const pending = await identity.createInvitation({ email: recipient.user.email }, org, actor);
+  const second = await identity.createUser({ email: 'second@example.test', password: 'test-password', role: 'admin' }, org, actor);
+  await identity.updateUser(actor, { role: 'viewer' }, org, second.user_id);
+  await assert.rejects(identity.acceptInvitation({ token: pending.token }, recipient.user.user_id), { statusCode: 403 });
+  assert.equal((await identity.getUserMemberships(recipient.user.user_id)).length, 1);
+  await assert.rejects(identity.createInvitation({ email: 'other@example.test' }, org, actor), { statusCode: 403 });
+});
+test('audit failure rolls back invitation creation, acceptance, role change and revocation', async () => {
+  const { infrastructure, identity, recipient, org, actor } = await setup();
+  infrastructure.failNextInsert('soi_audit_events');
+  await assert.rejects(identity.createInvitation({ email: recipient.user.email }, org, actor), { statusCode: 503 });
+  assert.equal(infrastructure.documents('identity_invitations').length, 0);
+  const invitation = await identity.createInvitation({ email: recipient.user.email, role: 'analyst' }, org, actor);
+  infrastructure.failNextInsert('soi_audit_events');
+  await assert.rejects(identity.acceptInvitation({ token: invitation.token }, recipient.user.user_id), { statusCode: 503 });
+  assert.equal((await identity.getUserMemberships(recipient.user.user_id)).length, 1);
+  assert.equal(infrastructure.documents('identity_invitations')[0].status, 'pending');
+  await identity.acceptInvitation({ token: invitation.token }, recipient.user.user_id);
+  for (const operation of [() => identity.updateUser(recipient.user.user_id, { role: 'viewer' }, org, actor), () => identity.deleteUser(recipient.user.user_id, org, actor)]) {
+    infrastructure.failNextInsert('soi_audit_events'); await assert.rejects(operation(), { statusCode: 503 });
+    assert.equal((await identity.me(recipient.user.user_id, org)).role, 'analyst');
+  }
+  await assert.rejects(identity.updateUser(recipient.user.user_id, { role: 'admin' }, org), { statusCode: 403 });
+});
+test('audit request sanitization recursively removes credentials without mutating input', () => {
+  const { sanitizeBody } = require('../services/auditLogs.service');
+  const input = { name: 'Fixture', password: 'secret', nested: { access_token: 'nested secret', values: [{ apiKey: 'key', measurement: 3 }] } };
+  const sanitized = sanitizeBody(input);
+  assert.equal(sanitized.password, '***'); assert.equal(sanitized.nested.access_token, '***');
+  assert.equal(sanitized.nested.values[0].apiKey, '***'); assert.equal(sanitized.nested.values[0].measurement, 3);
+  assert.equal(input.nested.access_token, 'nested secret');
+  const cycle = {}; cycle.self = cycle; assert.equal(sanitizeBody(cycle).self, '[circular]');
+});
+test('HTTP and native WebSocket use persisted invitation, downgrade and revocation with stale tokens', async t => {
+  const { infrastructure, identity, owner, recipient, org, actor } = await setup();
+  const previous = { ...runtimeIdentity }; Object.assign(runtimeIdentity, identity); t.after(() => Object.assign(runtimeIdentity, previous));
+  const express = require('express'), http = require('node:http'), WebSocket = require('ws');
+  const app = express(); app.use(express.json());
+  app.use('/auth', require('../routes/auth.routes')); app.use('/users', require('../routes/users.routes'));
+  const mongo=require('../infrastructure/platformMongo'), originalMongo={...mongo};Object.assign(mongo,infrastructure);t.after(()=>Object.assign(mongo,originalMongo));
+  app.use('/audit-logs',require('../routes/auditLogs.routes'));
+  app.use('/assets', require('../routes/assets.routes').createAssetsRouter({ list: async () => ({ data: [] }), create: async () => ({ asset_id: 'platform:1' }) }));
+  app.use((error, req, res, next) => res.status(error.statusCode || 500).json({ error: error.message }));
+  const server = http.createServer(app), sockets = [];
+  require('../realtime/wsServer').attachSecurityWebSocketServer(server, { revalidateIntervalMs: 20 });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => { for (const ws of sockets) ws.terminate(); server.close(); });
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const request = async (url, token, method = 'GET', body, organization = org, expected = 200) => {
+    const response = await fetch(base + url, { method, headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', 'X-Organization-Id': String(organization) }, ...(body ? { body: JSON.stringify(body) } : {}) });
+    const value = await response.json(); assert.equal(response.status, expected, JSON.stringify(value)); return value;
+  };
+  const invitation = await request('/users/invitations', owner.token, 'POST', { email: recipient.user.email, role: 'admin' }, org, 201);
+  const accepted = await request('/auth/invitations/accept', recipient.token, 'POST', { token: invitation.token });
+  const connect = async channel => {
+    const ws = new WebSocket(`ws://127.0.0.1:${server.address().port}/ws/${channel}`, { headers: { Authorization: `Bearer ${accepted.token}` } });
+    sockets.push(ws); const messages = []; ws.on('message', data => messages.push(JSON.parse(data)));
+    await new Promise((resolve, reject) => { ws.once('open', resolve); ws.once('error', reject); }); return { ws, messages };
+  };
+  const security = await connect('security'), operations = await connect('operations');
+  const until = async condition => { for (let i = 0; i < 100; i++) { if (condition()) return; await new Promise(resolve => setTimeout(resolve, 10)); } assert.fail('Socket authorization timeout'); };
+  await request(`/users/${recipient.user.user_id}`, owner.token, 'PUT', { role: 'viewer' });
+  await request('/users', accepted.token, 'GET', null, org, 403);
+  await request('/audit-logs',accepted.token,'GET',null,org,403);
+  await request('/assets', accepted.token, 'POST', {}, org, 403);
+  await request('/assets', accepted.token);
+  require('../realtime/securityEvents').publishSecurityEvent({ organization_id: org, action: 'after-downgrade' });
+  await until(() => security.ws.readyState === WebSocket.CLOSED);
+  assert(!security.messages.some(row => row.data?.action === 'after-downgrade'));
+  assert.equal(operations.ws.readyState, WebSocket.OPEN);
+  await request(`/users/${recipient.user.user_id}`, owner.token, 'DELETE');
+  await request('/assets', accepted.token, 'GET', null, org, 403);
+  require('../realtime/operationalEvents').publishOperationalEvent({ organization_id: org, title: 'after-revocation' });
+  await until(() => operations.ws.readyState === WebSocket.CLOSED);
+  assert(!operations.messages.some(row => row.data?.title === 'after-revocation'));
+  assert.equal((await identity.me(recipient.user.user_id, recipient.user.organization_id)).role, 'admin');
+  await request('/assets', owner.token, 'GET', null, recipient.user.organization_id, 403);
+  const logs = await request('/audit-logs',owner.token);
+  assert.equal((await request('/audit-logs/chain-status',owner.token)).valid,true);
+  assert(logs.some(row => row.action === 'member.updated' && row.user_id === actor));
+  assert(logs.some(row => row.action === 'member.revoked' && row.resource_id === String(recipient.user.user_id)));
+  assert.equal((await createMongoAuditService(infrastructure).verifyAuditChain(org)).valid, true);
+});
+
+test('disabled administrator does not satisfy the last-active-administrator invariant', async () => {
+  const {infrastructure,identity,org,actor}=await setup();
+  const second=await identity.createUser({email:'disabled@example.test',password:'test-password',role:'admin'},org,actor);
+  await (await infrastructure.getMongoDatabase()).collection('identity_users').updateOne({user_id:second.user_id},{$set:{status:'disabled'}});
+  await assert.rejects(identity.deleteUser(actor,org,actor),{statusCode:409});
+  await assert.rejects(identity.updateUser(actor,{role:'viewer'},org,actor),{statusCode:409});
+});
+test('asset, analysis and project facts share their mutation transaction and audit failures roll back state', async () => {
+  const {fixture}=require('./helpers/soiMongoMemoryFixture');
+  const f=fixture({locations:[],soi_configuration:[{organization_id:7,capabilities:['assets']}]});
+  const infra={getMongoDatabase:async()=>f.options.database,withMongoTransaction:f.options.transaction,nextId:f.options.nextId,cleanDocument:row=>row&&Object.fromEntries(Object.entries(row).filter(([k])=>k!=='_id'))};
+  const context={organizationId:7,userId:1,role:'analyst'};
+  const assets=require('../services/assets.service').createAssetsService(infra);
+  const asset=await assets.create(context,{name:'Test fixture',type:'equipment',longitude:0,latitude:0});
+  const comparison=require('../services/comparisons.service').createComparisonService(infra);
+  const input={project_name:'Fixture decision',candidates:[{id:asset.asset_id,name:asset.name,lng:0,lat:0},{id:'custom:b',name:'B',lng:1,lat:1}],criteria:[{id:'cost',name:'Cost',definition:'Quoted cost',unit:'test',source:'isolated',weight:1,direction:'cost',normalization:'minmax',missing:'block'}],observations:{[asset.asset_id]:{cost:{value:1}},'custom:b':{cost:{value:2}}}};
+  const snapshot=await comparison.save(context,input);
+  const project=await comparison.createProject(context,snapshot.comparison_id);
+  const audit=createMongoAuditService(infra);const rows=await audit.listAuditLogs({organizationId:7});
+  for(const action of ['asset.created','analysis.saved','project.created'])assert(rows.some(row=>row.action===action&&row.user_id===1&&row.organization_id===7));
+  assert.equal((await audit.verifyAuditChain(7)).valid,true);
+  assert.equal((await audit.verifyAuditChain(7,1)).complete,false);
+  assert.equal((await comparison.createProject(context,snapshot.comparison_id)).analysis_run_id,project.analysis_run_id);
+  assert.equal((await audit.listAuditLogs({organizationId:7})).filter(row=>row.action==='project.created').length,1);
+  const failInfra={...infra,withMongoTransaction:work=>f.options.transaction((db,session)=>work({collection(name){const collection=db.collection(name);if(name==='soi_audit_events')collection.insertOne=async()=>{throw new Error('injected audit failure');};return collection;}},session))};
+  const before=structuredClone(f.data());
+  await assert.rejects(require('../services/assets.service').createAssetsService(failInfra).create(context,{name:'Must roll back',type:'equipment'}),/injected audit failure/);
+  assert.deepEqual(f.data(),before);
+  await assert.rejects(require('../services/comparisons.service').createComparisonService(failInfra).save(context,input),/injected audit failure/);
+  assert.deepEqual(f.data(),before);
+  const nextSnapshot=await comparison.save(context,input);const beforeProject=structuredClone(f.data());
+  await assert.rejects(require('../services/comparisons.service').createComparisonService(failInfra).createProject(context,nextSnapshot.comparison_id),/injected audit failure/);
+  assert.deepEqual(f.data(),beforeProject);
+});
+
+test('membership revocation also invalidates older pending invitations for the same recipient', async () => {
+  const {infrastructure,identity,recipient,org,actor}=await setup();
+  const first=await identity.createInvitation({email:recipient.user.email,role:'analyst'},org,actor);
+  const oldPending=await identity.createInvitation({email:recipient.user.email,role:'admin'},org,actor);
+  await identity.acceptInvitation({token:first.token},recipient.user.user_id);
+  await identity.deleteUser(recipient.user.user_id,org,actor);
+  await assert.rejects(identity.acceptInvitation({token:oldPending.token},recipient.user.user_id),{statusCode:410});
+  assert.equal(infrastructure.documents('identity_invitations').filter(row=>row.status==='pending').length,0);
+});
+test('capability revocation is read from persisted organization configuration, independent of role claims', async () => {
+  const {fixture}=require('./helpers/soiMongoMemoryFixture');
+  const f=fixture({soi_configuration:[{organization_id:7,sector:'general',capabilities:['assets']}]});
+  const infra={getMongoDatabase:async()=>f.options.database,withMongoTransaction:f.options.transaction,nextId:f.options.nextId,cleanDocument:row=>row&&Object.fromEntries(Object.entries(row).filter(([k])=>k!=='_id'))};
+  const service=require('../services/soi.service').createSoiService(infra),context={organizationId:7,userId:1,role:'admin'};
+  await service.create(context,'assets',{name:'Before capability revocation',longitude:0,latitude:0});
+  await service.saveConfiguration(context,{sector:'general',capabilities:[]});
+  await assert.rejects(service.create(context,'assets',{name:'After capability revocation',longitude:1,latitude:1}),{statusCode:409});
+  await assert.rejects(service.list(context,'assets'),{statusCode:409});
+  assert.equal(f.data().soi_assets.length,1);
+});
+test('HTTP audit derives original resource paths, strips URL queries and sanitizes nested retained credentials', async t => {
+  const audit=require('../services/auditLogs.service'),original=audit.logAuditEvent;const records=[];
+  audit.logAuditEvent=async row=>records.push(row);t.after(()=>{audit.logAuditEvent=original;});
+  const express=require('express'),app=express();app.use(express.json());app.use(require('../middleware/auditLogger'));
+  app.post('/users/invitations/accept',(req,res)=>{req.user={user_id:1,organization_id:7};res.json({ok:true});});
+  const server=app.listen(0,'127.0.0.1');await new Promise(resolve=>server.once('listening',resolve));t.after(()=>server.close());
+  await fetch(`http://127.0.0.1:${server.address().port}/users/invitations/accept?token=private-query`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:'private-token',nested:{clientSecret:'private-secret'}})});
+  for(let i=0;i<30&&!records.length;i++)await new Promise(resolve=>setTimeout(resolve,5));
+  assert.equal(records.length,1);assert.equal(records[0].request_path,'/users/invitations/accept');assert.equal(records[0].resource_type,'users');
+  assert.equal(records[0].metadata.body.nested.clientSecret,'***');assert.equal(records[0].metadata.query.token,'***');
+  assert(!JSON.stringify(records).includes('private-'));
+});

@@ -1,5 +1,10 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+// Startup checks are offline; live Atlas availability has a separate probe.
+process.env.NODE_ENV = 'test';
+process.env.SPATIAL_STORE = 'memory';
+process.env.MONGODB_URI = '';
+process.env.JWT_SECRET = 'startup-offline-fixture-secret';
 
 test('la aplicación registra todas las rutas sin controladores indefinidos', () => {
   let app;
@@ -7,16 +12,7 @@ test('la aplicación registra todas las rutas sin controladores indefinidos', ()
   assert.equal(typeof app, 'function');
 });
 
-test('health reporta Postgres y almacén espacial sin simular disponibilidad', async (context) => {
-  const previous = { url: process.env.DATABASE_URL, store: process.env.SPATIAL_STORE, env: process.env.NODE_ENV };
-  delete process.env.DATABASE_URL;
-  process.env.SPATIAL_STORE = 'memory';
-  process.env.NODE_ENV = 'test';
-  context.after(() => {
-    for (const [key, value] of [['DATABASE_URL', previous.url], ['SPATIAL_STORE', previous.store], ['NODE_ENV', previous.env]]) {
-      if (value === undefined) delete process.env[key]; else process.env[key] = value;
-    }
-  });
+test('health sin Atlas devuelve 503, conserva correlación y no filtra secretos', async (context) => {
   const app = require('../index');
   const server = app.listen(0, '127.0.0.1');
   context.after(() => server.close());
@@ -26,12 +22,39 @@ test('health reporta Postgres y almacén espacial sin simular disponibilidad', a
   assert.equal(response.status, 503);
   assert.equal(response.headers.get('x-request-id'), 'startup-smoke');
   assert.equal(response.headers.get('x-frame-options'), 'DENY');
-  assert.deepEqual(await response.json(), {
-    status: 'unavailable',
-    postgres: 'unavailable',
-    postgresVersion: null,
-    mongodb: 'disconnected',
-    spatialStore: 'memory',
-    service: 'BACKSTAGE Intelligence Backend',
+  const payload = await response.json();
+  assert.equal(payload.service, 'BACKSTAGE Intelligence Backend');
+  assert.equal(payload.status, 'unavailable');
+  assert.equal(payload.postgres, undefined);
+  assert.equal(payload.primaryStore, 'mongodb');
+  assert.ok(['healthy', 'degraded', 'unavailable', 'connected', 'disconnected'].includes(payload.mongodb));
+  assert.ok(['memory', 'atlas'].includes(payload.spatialStore));
+  assert.equal(payload.mongouri, undefined);
+});
+
+test('el handler serverless Vercel conserva la ruta original al reescribir /api', async (context) => {
+  const handler = require('../api');
+  const server = require('node:http').createServer(handler).listen(0, '127.0.0.1');
+  context.after(() => server.close());
+  await new Promise((resolve) => server.once('listening', resolve));
+  const { port } = server.address();
+  const response = await fetch(`http://127.0.0.1:${port}/api/index?__vercel_path=health&probe=preserved`);
+  assert.equal(response.status, 503);
+  assert.equal((await response.json()).service, 'BACKSTAGE Intelligence Backend');
+});
+
+test('Vercel enruta /api/auth/register al backend JSON, no al fallback SPA', async (context) => {
+  const handler = require('../api');
+  const server = require('node:http').createServer(handler).listen(0, '127.0.0.1');
+  context.after(() => server.close());
+  await new Promise((resolve) => server.once('listening', resolve));
+  const { port } = server.address();
+  const response = await fetch(`http://127.0.0.1:${port}/api/index?__vercel_path=auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({}),
   });
+  assert.equal(response.status, 400);
+  assert.match(response.headers.get('content-type'), /application\/json/);
+  assert.match((await response.json()).error, /organization_name/);
 });

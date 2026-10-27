@@ -1,4 +1,13 @@
 {
+  "algorithm": "backstage.probability.distribution_fit",
+  "algorithm_version": "backstage-probability-fit-v1",
+  "data_mode": "procedural",
+  "confidence_score": null,
+  "confidence_method": null,
+  "source_count": 1,
+  "missing_inputs": [],
+  "data_quality": {"sample_size": 800, "missing_values": 0, "coverage": null, "freshness_days": null},
+  "provenance": {"dataset": "Backstage_Dataset_Probabilistico.csv", "variable": "commercial_rent_cop_m2", "data_sources": ["Sintético"], "source_count": 1, "data_mode": "procedural", "missing_values": 0, "missing_inputs": []},
   "thresholds":{
     "quantile_q":0.2,
     "threshold_ks":0.0432265847,

@@ -1,0 +1,29 @@
+{
+  "version": "backstage-commercial-policy-draft-1",
+  "status": "awaiting_business_owner_decisions",
+  "active": false,
+  "current_behavior": {
+    "sla_hours": { "probability_pending": 48, "risk_review_pending": 24, "recommendation_review_pending": 24, "other_pending_states": 72 },
+    "sla_basis": "existing_orientation_not_contractual_commitment",
+    "clock": "elapsed_hours_from_project_updated_at",
+    "approval_role": "current_organization_admin",
+    "gps_provider": null
+  },
+  "decisions_required": {
+    "sla_hours_by_stage_and_priority": null,
+    "sla_clock_calendar_or_elapsed_and_timezone": null,
+    "source_categories_max_age_and_timestamp_field": null,
+    "exception_eligible_rules_and_maximum_duration": null,
+    "exception_requester_and_approver_separation": null,
+    "approval_responsibles_and_substitutes": null,
+    "notification_destination_and_on_call_owner": null,
+    "backup_retention_rpo_rto_and_off_device_custodian": null,
+    "accepted_peak_concurrency_and_latency_target": null
+  },
+  "exception_control_proposal": {
+    "status": "proposed_not_activated",
+    "required_evidence": ["organization", "project", "rule_version", "reason", "requester", "current_authorized_approver", "approved_at", "expires_at", "audit_event"],
+    "ineligible_for_override": ["organization_isolation", "authentication", "current_membership", "data_integrity", "vehicle_capacity", "source_identity"],
+    "historical_data_rewritten": false
+  }
+}

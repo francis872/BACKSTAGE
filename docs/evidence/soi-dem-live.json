@@ -1,0 +1,42 @@
+{
+  "test": "live_dem_surface",
+  "status": "passed",
+  "verifiedAt": "2026-10-20T15:46:22.849Z",
+  "bbox": [
+    -105.4,
+    39.6,
+    -105.2,
+    39.8
+  ],
+  "resolution": 4,
+  "source": {
+    "name": "Open-Meteo / Copernicus DEM GLO-90",
+    "license": "CC BY 4.0",
+    "attribution": "Copernicus / Open-Meteo",
+    "dataMode": "modelled",
+    "resolutionM": 90
+  },
+  "statistics": {
+    "minElevation": 1775,
+    "maxElevation": 3006,
+    "meanElevation": 2286.75,
+    "relief": 1231,
+    "rows": 4,
+    "columns": 4,
+    "cellSizeM": 7413.005348901772,
+    "cellSizeXM": 5703.562885726867,
+    "cellSizeYM": 7413.005348901772
+  },
+  "precision": {
+    "resolutionM": 90,
+    "sampleSpacingXM": 5703.562885726867,
+    "sampleSpacingYM": 7413.005348901772,
+    "verticalAccuracyM": null
+  },
+  "contourCount": 15,
+  "limitations": [
+    "Model elevation, not surveyed",
+    "Coarse sample spacing",
+    "3D browser rendering not validated by this test"
+  ]
+}

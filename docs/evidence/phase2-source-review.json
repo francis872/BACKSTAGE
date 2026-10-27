@@ -1,0 +1,476 @@
+{
+  "snapshot": {
+    "directory": ".vercel/phase2-before-20261025T164829Z",
+    "files": 502,
+    "sha256": "2a1e9836ddf7625890c941194309927dedeac051ceb416f4f4fea6d79026ea43"
+  },
+  "existing_files_changed": [
+    {
+      "path": "backend/index.js",
+      "before_sha256": "4bf0c69270be010e29aad93d9472a1848aa0b529f2b12aa4372be664e3a24236",
+      "after_sha256": "67a1ff533974ffcced42edea8c4a9a994aa37cc3a16f03039c255cf8af4fd77f"
+    },
+    {
+      "path": "backend/ingestion.js",
+      "before_sha256": "27e7b6803dddcffcaf8d52395586f6c01d45548c349cc1162b3a15f87ef7ff5e",
+      "after_sha256": "62aff0e3637a602648648b48f05d42d8be39fa9ee809bd8a2b1f62e3cb109bec"
+    },
+    {
+      "path": "backend/package.json",
+      "before_sha256": "ea7ecedacf306490dcfbcb2b820035fe7ee8ea31ccab71cf8dfcd3dab772afde",
+      "after_sha256": "61569ae520b712657ee3dc65767861bcf2a6b8f111c1a98632892999637fb402"
+    },
+    {
+      "path": "backend/controllers/integrations.controller.js",
+      "before_sha256": "b9de5b0298db8f7818d59f6a97e77fb1dc8e852110a121736ed7e40aec2a5fd6",
+      "after_sha256": "1925b25ca82974fb5315e26710c5bded0cd43470fbb5f362e9e26b24d5a2ebe7"
+    },
+    {
+      "path": "backend/domain/platformArchitecture.test.js",
+      "before_sha256": "0d70034310121a876b800846bcf26dc8508036cfaea2bae48fac343b8182c84a",
+      "after_sha256": "cb5b8f078d92158874046be47ec6d0c49eef978043f3093b37055249100377e3"
+    },
+    {
+      "path": "backend/infrastructure/mongoIndexRegistry.js",
+      "before_sha256": "8532df51517e1fa22e59485e0e7316134eef1ed34f1b630c98b2e67be06a109a",
+      "after_sha256": "757dac6f9cce9b8f9e6131032f7db685a88bba99e714ff80e4d60b06872be643"
+    },
+    {
+      "path": "backend/middleware/auditLogger.js",
+      "before_sha256": "13423e531baa2179bba8a4085ca1bc050ffb48ea38cf9762c632a3256c215c0d",
+      "after_sha256": "76e96e470e22efad8a3ad0795f0cf9cd79d50ba5a810c6464094d3de5f777467"
+    },
+    {
+      "path": "backend/repositories/analyticsJobs.repository.js",
+      "before_sha256": "ad93d116f7e9cccffdaae37b4b38f079004539a7cd4ee1394a197834c8b396db",
+      "after_sha256": "55038ddd2704638d1fd666deb153b5512fb8256de2b2356a8b4c349b8678b56f"
+    },
+    {
+      "path": "backend/routes/integrations.routes.js",
+      "before_sha256": "07c78ebfeb2ddf96ef4d0a9baf28585e214276cc1bac27476c800ef83a7b9e3a",
+      "after_sha256": "c157c9646b49ee778203649d9efa4bdfd8c429d825f0c5a133c3d8c598414370"
+    },
+    {
+      "path": "backend/routes/operations.routes.js",
+      "before_sha256": "97915dc077b87c51714ad5c10c5246193180ac11caaba89d9af59435dbeac507",
+      "after_sha256": "5d1764af6f2fe3610f65af1b3f282ab58e7af457dc77a843624c62f7eb4c10df"
+    },
+    {
+      "path": "backend/services/integrations.service.js",
+      "before_sha256": "c8d909661417634c4b73ae4484f0935f9810421282db517b8b7c963924de952d",
+      "after_sha256": "a585d5eb52e438edf2cb36751abf91652238583649599e8e0e6a398f44d62fc1"
+    },
+    {
+      "path": "backend/services/operationalEvents.service.js",
+      "before_sha256": "b21143798107271c6beda516230abfabc44a400ee44bb379e11789ee560c1aa6",
+      "after_sha256": "181bc8d9b1700cad9bd9f797ef06fa13f8ce8160ce897fd04a56c18752e77983"
+    },
+    {
+      "path": "frontend/api/index.js",
+      "before_sha256": "814252f254a655dc18a50de9ede7e787af10570a63c595be555ddcf3853ce7c9",
+      "after_sha256": "a560591b2d868ab186bc9e506d22434895f41b889d34673e09505ce33e600362"
+    },
+    {
+      "path": "deployment/vercel-api.json",
+      "before_sha256": "c2e51dda537b015558e66fdbb4c869761bab447be30331b724a94803604db97d",
+      "after_sha256": "66727c77812333b18824df06966d1ddce840712048888dd00c0bbd61c3df9778"
+    },
+    {
+      "path": "scripts/staging-vercel.js",
+      "before_sha256": "96a768e0432ff16c304107d5dbf3f3d69e5a0ede858c5ac8ce73f33a4929b74a",
+      "after_sha256": "1880160732c1be8a4ba5885a250bcc64b62a76172138b3c9e41ef0504e8884af"
+    },
+    {
+      "path": "scripts/verify-unified-staging.js",
+      "before_sha256": "2d386cc377434dd564574471d284f7d54522294fa1b323ad9343f424271fcfc5",
+      "after_sha256": "dcc4b0e962a79eb5cda3fd5e75da9a6c8b47044ea01dfe55ff86fce73688aa06"
+    }
+  ],
+  "new_source_and_verification_files": [
+    {
+      "path": "backend/computational/openapi.js",
+      "sha256": "b54fd80df1fe3e04dc287faca765cd4e92d80e16c8066110c940744f1aebf848"
+    },
+    {
+      "path": "backend/controllers/computational.controller.js",
+      "sha256": "978e928f6fb198e9c7e916fbe8aaf4a52810f3235390f4341edd4975945f8d84"
+    },
+    {
+      "path": "backend/domain/adaptiveDefense.js",
+      "sha256": "6079beee160a6dcc3ec03daed4318c827df618f70368184ef2d3c49f004f7dbc"
+    },
+    {
+      "path": "backend/domain/computational.test.js",
+      "sha256": "c207c8bf7396c0482d483942e5d7e30b4754a49d48783cc43e9864debe6425b5"
+    },
+    {
+      "path": "backend/domain/computationalContract.js",
+      "sha256": "9d65c18bce29f8b45a4527432cb5b1e30e64d5045b6015856e2c18b699adb56f"
+    },
+    {
+      "path": "backend/domain/computationalHttp.test.js",
+      "sha256": "84545806f8baf48fe22156a700921d3d6ab3813861def77982b4c7de105545b6"
+    },
+    {
+      "path": "backend/domain/computationalPackaging.test.js",
+      "sha256": "7eeaad0858f097007da787c9b31397cec615f3286e2aa0c3c8f87104f209ed32"
+    },
+    {
+      "path": "backend/domain/computationalValidationSafety.test.js",
+      "sha256": "0840eb0f6c4c5aa577dc9bba8b908be6d12ebfda7c7299c1c49c7b6a428ebc62"
+    },
+    {
+      "path": "backend/domain/computationalWorkerLoop.test.js",
+      "sha256": "c1e82d99f2a482e56e1cd9350f622ca0ccff066e80a5f20a4d862682ced2a1ae"
+    },
+    {
+      "path": "backend/domain/integrationsSecurity.test.js",
+      "sha256": "eae6116e5285f1ac4b8f6d3e821966536efc90ec20834c69d2ddee7c4e55df28"
+    },
+    {
+      "path": "backend/domain/perception.js",
+      "sha256": "44d03dbc6eb261114a187aee6a49e29805eaa1bf7488613e8e382e66aeeaf3eb"
+    },
+    {
+      "path": "backend/domain/perceptionDefense.test.js",
+      "sha256": "c291f2554a04b60341a56274f2cb11729757e9905e4c348321d2730acb6412d2"
+    },
+    {
+      "path": "backend/domain/helpers/computationalFixture.js",
+      "sha256": "21e7a83d93bb768ba3461dbf8b6e11f6166484237194af4cfdd33b05b22e56f2"
+    },
+    {
+      "path": "backend/infrastructure/coreOpenApi.js",
+      "sha256": "ba2e752a5faa21965c68f7f8b73ff405f6576b9f18334fc1c7326ecee8c1940e"
+    },
+    {
+      "path": "backend/infrastructure/analytics/computationalRegistry.js",
+      "sha256": "7b8f49c59c06cf87bd6ceced5d475d705a59412906c8cbbb4d25837fdfe153d9"
+    },
+    {
+      "path": "backend/repositories/computationalWorkflows.repository.js",
+      "sha256": "70a42fcf2e3e8b77ca64da62dd0f8cc43928a66e2032f5a8a3a75f501f1f99bc"
+    },
+    {
+      "path": "backend/repositories/integrations.repository.js",
+      "sha256": "1731e7987b0ce55f498f86d2a191ca0bd27cf4fbbacf767c4ac89706dbdc2a9c"
+    },
+    {
+      "path": "backend/routes/computational.routes.js",
+      "sha256": "fe913eedad4a13b9015512041a84ecc3b16c7f7cda85b5737a21f2b75de65110"
+    },
+    {
+      "path": "backend/scripts/computational-worker.js",
+      "sha256": "96e3b8fd9c41ea92b90be38cdb38929e15d4993ec850cfaf3d4254313ec20bd1"
+    },
+    {
+      "path": "backend/scripts/initialize-computational.js",
+      "sha256": "2932b75c6c730217887b8c0e385cd9918b22338a475ca3d522391309e0f8b40f"
+    },
+    {
+      "path": "backend/scripts/verify-computational-atlas.js",
+      "sha256": "7d723b7a809578d4832ac7470a0ebf041ae4a6472573adfd9e7d4f5b98fa1ecd"
+    },
+    {
+      "path": "backend/services/algorithmRuntime.service.js",
+      "sha256": "0b7bb5223879caa58dd098bea96d5d1ab889ab0c3dd0bee2474698332fb8ecb1"
+    },
+    {
+      "path": "backend/services/computationalOrchestrator.service.js",
+      "sha256": "0743bd070f61c0f8d2fa0f379097955ce3c1b23c4482117c74280631d5dd8d89"
+    },
+    {
+      "path": "backend/services/computationalOutbox.service.js",
+      "sha256": "f0982e9acfbb834f77d7e69e853479b26efdc65540592306aa30deddddb186b3"
+    },
+    {
+      "path": "backend/services/resourceAuthorization.service.js",
+      "sha256": "304f484867158d55fb280ff81ff8291c9de5074dc4f583b2b65b0b08f2e797cb"
+    },
+    {
+      "path": "backend/workers/algorithmRuntime.js",
+      "sha256": "d9dff8df902fc99020b60fe0e4ec5d55f99355d9f755a32af5187a4b20f2a04b"
+    },
+    {
+      "path": "backend/workers/computationalLoop.js",
+      "sha256": "4fe8e6b56029a9a97c5289bea274d0b46394ac6ca024e3117da24c8b061a455c"
+    }
+  ],
+  "missing_snapshot_files": [],
+  "frontend_src_unchanged": true,
+  "frontend_src_files": 109,
+  "scientific_and_shared_files_unchanged": true,
+  "preserved_scientific_and_shared_files": [
+    {
+      "path": "backend/domain/analytics/financial.js",
+      "sha256": "2291492fe93f9c2e9ea2ca87064218a5c8a7f30087f2637d5e4e8319045c71f8"
+    },
+    {
+      "path": "backend/domain/analytics/multicriteria.js",
+      "sha256": "8653283786d0b36f8415cf9c3d200a281cbfa78a976d81e5fe487c293569ab58"
+    },
+    {
+      "path": "backend/domain/analytics/normalization.js",
+      "sha256": "3b1372454ec00118a1f1faab8d17788be552a1de3bd8399b1de730e45f69e19f"
+    },
+    {
+      "path": "backend/domain/analytics/risk.js",
+      "sha256": "0d94465f028b9ed28cc1f9f8534cb9bfd81ecbca947e54b0035d7a825289f722"
+    },
+    {
+      "path": "backend/domain/analytics/__tests__/financial.test.js",
+      "sha256": "195b251bad674924a1c719d7d1bf66d48943cd1fbe192501d65e4b68ed4c5068"
+    },
+    {
+      "path": "backend/domain/analytics/__tests__/multicriteria.test.js",
+      "sha256": "2cebb4970e18b13cca7f78257003443b236be227eea62e8c1b95c52b92296e4c"
+    },
+    {
+      "path": "backend/domain/analytics/__tests__/normalization.test.js",
+      "sha256": "a4e1777186450b78bc9998ef04be8ea989fc7e209c82417d49991fccdb0e15f9"
+    },
+    {
+      "path": "backend/domain/analytics/__tests__/risk.test.js",
+      "sha256": "d838f560bb59898b97633dcabe9eeb1ed0ea96eed0fe8656606b1a5dc06e7428"
+    },
+    {
+      "path": "shared/businessRules.v1.json",
+      "sha256": "c15dcc565086c385ca53a13ed6f512d19299987db4b6ea63167035644f249135"
+    },
+    {
+      "path": "shared/commercialPolicy.draft.v1.json",
+      "sha256": "c05293bd589acbb77403cb08154301cd1ef2e486fb8d0c4adcd50d9ef7440c67"
+    },
+    {
+      "path": "shared/comparison.mjs",
+      "sha256": "c14ea34fbd0bfd0988030f9edf7a77fa69106cf98359becb03af09c071220c85"
+    },
+    {
+      "path": "shared/comparison.v1.mjs",
+      "sha256": "ab29abdeee6be7c402186e113be7af3047bdfe3f96c0c2af436722990ef5f2a5"
+    },
+    {
+      "path": "shared/comparison.v2.mjs",
+      "sha256": "ba35c22147bf17199cd2d79b4994498d6d8ebc1e38dc6332272ddcddbf4286e4"
+    },
+    {
+      "path": "shared/decimal.mjs",
+      "sha256": "391cf002d8c301662ada54cf378c9eb171778bac460f8f79f310bb4152e23ac1"
+    },
+    {
+      "path": "shared/financial.v2.mjs",
+      "sha256": "04870b8c2feb98c5bd4d57e62ba14869e1c027f899347cb423a5f0aa8c2cabb1"
+    },
+    {
+      "path": "shared/modules.json",
+      "sha256": "27b8499dd7ec5d226711d02e253e13b65530a2efa56b162a7ee16965a5a60276"
+    },
+    {
+      "path": "shared/soiComparison.mjs",
+      "sha256": "a03041d5fc4dbf894a98692afd15a53dcca90e2729ccfc18d1aa13e3bc770e4e"
+    },
+    {
+      "path": "shared/spatialRules.v1.json",
+      "sha256": "5640ab7997cc224ec92b0979629893cd71933280c653a2c7f44cfd8b6d60e306"
+    },
+    {
+      "path": "bsie/benchmark.py",
+      "sha256": "5c366b2e41b4c39300d19eaeb67c6fdd8c479e6571c49c4bcf95bf77160693ed"
+    },
+    {
+      "path": "bsie/engine.py",
+      "sha256": "ecf239af7af2489193d858e25a6a9e4088b9c55bacefb3a4e8621bd4f285cafb"
+    },
+    {
+      "path": "bsie/requirements-test.txt",
+      "sha256": "9ae0ed81f2acd1f91ee4973c4332809d7e3a266c9e224c617791d89f4c63511d"
+    },
+    {
+      "path": "bsie/requirements.txt",
+      "sha256": "ea9c44d3a4a5df35cc43ea7a1b2824c1bc686105a488f4ff3f911af2f4f2195c"
+    },
+    {
+      "path": "bsie/temporal.py",
+      "sha256": "705a79fd15a6c9a9b551b8cb1e2d89edab56216af1fef86c8f9fe1c2684785b1"
+    },
+    {
+      "path": "bsie/test_advanced.py",
+      "sha256": "832a98191c887d1dc4515214854c8a691921d00804f5415b5942d07228985693"
+    },
+    {
+      "path": "bsie/test_engine.py",
+      "sha256": "46007e9e1cbee60ed43d4efb1b7c7171d517e5923ae06b41c4ef8181bc38833f"
+    },
+    {
+      "path": "bsie/test_temporal.py",
+      "sha256": "50d28046a7d070646f78cce44b34f385f547939977d38373707870419b9b7815"
+    },
+    {
+      "path": "sanitary/benchmark.py",
+      "sha256": "61eb61489eba4d5eba2d150d409c49e649eae0e5ff717d6e290a24eb3a7b716d"
+    },
+    {
+      "path": "sanitary/engine.py",
+      "sha256": "6fe0fb42c7dbad591606acb46e312d0dbb090067e574b0d36219acb4bf3b8546"
+    },
+    {
+      "path": "sanitary/predictive.py",
+      "sha256": "25f3d76465c29266bc4732997b7492d800764f7f3be12a1f8006784e2ad04748"
+    },
+    {
+      "path": "sanitary/requirements.txt",
+      "sha256": "cb313032c331d802fa36d8b35f7f7a578f9a4cfb92aa9b14b5110ad986f7e0f4"
+    },
+    {
+      "path": "sanitary/routing.py",
+      "sha256": "35d68becd01db45e7ae6adbcf7fcc4d3985b4bfce90daeb6b1c73ba89dabc714"
+    },
+    {
+      "path": "sanitary/test_engine.py",
+      "sha256": "cec971a9030540414b2c63ddd7b679ef2d66386f3f4a53f9dcb09599ab74f257"
+    },
+    {
+      "path": "probability/Backstage_Dataset_Probabilistico.csv",
+      "sha256": "b96d311f2b517b4eb53da444031783b6d9bb319a3d61174ae9d7a9dabc3f83e0"
+    },
+    {
+      "path": "probability/Backstage_Dataset_Probabilistico.xlsx",
+      "sha256": "b02184fcda20a13c3e7330c9736e46953fbe16c4bcc919dc3a410d9fb0d84cdf"
+    },
+    {
+      "path": "probability/README.md",
+      "sha256": "f464d25f48bc8ebe920d0df707928e76380edfe8b629601a31915d2713182dba"
+    },
+    {
+      "path": "probability/requirements.txt",
+      "sha256": "470cd15d6faa3da9dba1443ddbbfa9cc9108661a4bfaf94a0c7602adbe011578"
+    },
+    {
+      "path": "probability/run_probability_analysis.py",
+      "sha256": "0e456885424bdff7473a33f4ff7bd43eb8f622c636d3b1c1238d4ead3eca3cb2"
+    },
+    {
+      "path": "probability/statistical_engine.py",
+      "sha256": "dc9bd9357561d8a0873684f591fee999d355a068f916dce840f058e130830f03"
+    },
+    {
+      "path": "probability/test_statistical_engine.py",
+      "sha256": "af452ede65651a87b3481436e08d3160110e4f99b05937c9bb34988f7bff80f2"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/academic_summary.csv",
+      "sha256": "5f490cf12edb0315c40ba14113e223a96edbd735a69507d2de8b7b541ff733f4"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/all_distributions_pdf.png",
+      "sha256": "166e24f470fd5df398300fa155236eaccfb3d13f25b9f49ddb156e75c71da19d"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/analysis_summary.json",
+      "sha256": "77da324c44fbdb0803dc4f9315d77d19975e6cf279b3a3110cc9393d7c21e5b2"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/best_pdf_vs_hist.png",
+      "sha256": "819cc91e49cedb51f28895ba8866f8dab731593e10e1b5f00a25f563210bda65"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/bhattacharyya_ranking.png",
+      "sha256": "76e9040060817f1804db40799b5ed13cb4aa8e8ccd7a0eaf53361230840815ce"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/bhattacharyya_threshold.png",
+      "sha256": "8e7f9b0f80b7b66a9b1fcaefef72c7edaa6a75e0129905fcd4d5728e3b9ce924"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/cdf_survival.png",
+      "sha256": "9146c7fc6f9e2a0955ceff26a020d831f2b95b04a52b5edb4ea5b319967e6256"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/ecdf_vs_best_cdf.png",
+      "sha256": "290a7f378d3ff7e4969ca5146f7805b33ea979d584810f4cd9792fa945e29f63"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/histogram_unit.png",
+      "sha256": "ed6a8b38582e5887cee25a7615c1a22271fd20028c1e6641950d0922ce9646e2"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/ks_ranking.png",
+      "sha256": "14091c837478e206167ee1d3e4515313e140118fd753ca558158292423691a49"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/ks_threshold.png",
+      "sha256": "3ff15153a46c049c693c17540e49336ef797572f448f14b0a4e98bc406f99bed"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/metrics_table.png",
+      "sha256": "147db78eac6ac8c1fa9c07b53c721aec60ac888bc0baf422cc443a4460bc8d32"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/results.csv",
+      "sha256": "8899450de54f6232f810247a3827c30dcc01bd569d83684fa3b0d257cf220fbc"
+    },
+    {
+      "path": "probability/output/commercial_rent_cop_m2/top_pdfs_overlay.png",
+      "sha256": "2948d748a41ceed74dd7a86b32461d279154f504a996a19ea56aebda398b4be4"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/academic_summary.csv",
+      "sha256": "49cd6a4c96b962854ce4c932f3bf3a4b3f860773129819b78f9e0f1ccd3be500"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/all_distributions_pdf.png",
+      "sha256": "2a8f4735169c9b3387520d75aabc717767914d7454e1565db50c444a6211ba7d"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/analysis_summary.json",
+      "sha256": "3c9d718d28a0b8e95c02251231b76b8bd64107c865a2f6dd90b971b2a189daa5"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/best_pdf_vs_hist.png",
+      "sha256": "b5a1a90feb244e7687eca0d37e69bc4a98fec3705e98618737b23e2a44dfa621"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/bhattacharyya_ranking.png",
+      "sha256": "ac0e71fff53e9c637df1beb6956f07b743f6cccf87b09741a539f2bb21dfe330"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/bhattacharyya_threshold.png",
+      "sha256": "71391f2a0d4020ca22e5929f80c26d1337ec99217e4d22d24ddcc6b7674b9294"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/cdf_survival.png",
+      "sha256": "224657493635db6730e762408809cb6b11a72f5ddf40a8c67e0d158da3a5be72"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/ecdf_vs_best_cdf.png",
+      "sha256": "e87899df8d66d46c05ff773d4c06a39e89f2b01d8339479f94674a9d3924bdfd"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/histogram_unit.png",
+      "sha256": "0614f002beac57361342edb19729a9a07b8e8c7971b2b5a22bf56be308bb4d39"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/ks_ranking.png",
+      "sha256": "7a9671d1a8cc41f36672d70dc2ebaa183cd247a388a63cb7d2a8ad8da114aa1c"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/ks_threshold.png",
+      "sha256": "b68e21c152f70f8bda6319ec4e37d7d7517ca33046900c0f1fc345f04c8f56e5"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/metrics_table.png",
+      "sha256": "add3498c9005c2dd949cc8b698b981ac6059270e3faee81b3bfb084a1bf5ecfd"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/results.csv",
+      "sha256": "4e1c10a22f069ff0ec0dbf651eecb7a0ca5c2137216790bed054e523e87afe96"
+    },
+    {
+      "path": "probability/output/pedestrian_flow_day/top_pdfs_overlay.png",
+      "sha256": "08109bfbf9de649ef5dd123802d0068839aac6cdb6e1dcf979c68f17e566d802"
+    }
+  ],
+  "backend_dependencies_unchanged": true,
+  "frontend_change_scope": "server proxy forwards Idempotency-Key; views unchanged",
+  "production_changes": false
+}

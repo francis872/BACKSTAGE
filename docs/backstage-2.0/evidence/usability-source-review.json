@@ -1,0 +1,120 @@
+{
+  "checked_at": "2026-10-24T16:22:21.206Z",
+  "source_backup": {
+    "directory": ".vercel/backstage-usability-20261024T154150Z",
+    "files": 105,
+    "sha256": "36d05a22c6d32f773e32c2cda0123931dd92116feb86d875dda9806cd0aa3d34",
+    "readback_verified": true,
+    "atlas_data_included": false
+  },
+  "changed_or_added_ui_files": [
+    {
+      "file": "frontend/src/App.jsx",
+      "before_sha256": "1261836b8a212a6ed321903a2e6ee8446c0517289409c8c5ce293dbe955a7622",
+      "after_sha256": "97a089b8922e543e6b218f3a072a1ba60ee18c2340c31e3d5b59a40c423d914b",
+      "matches_preview_source": true
+    },
+    {
+      "file": "frontend/src/pages/MissionControl.jsx",
+      "before_sha256": "20fb2dd14735f81cbd2353ba7ce58b6f283746a2d02a23bf5ed502e2617ef0db",
+      "after_sha256": "e7812ac061f2df526bc494fafcef414e6d7293011046e672996a2724257c0a03",
+      "matches_preview_source": true
+    },
+    {
+      "file": "frontend/src/pages/AssetsWorkspace.jsx",
+      "before_sha256": "a7d6a89b81e92042ae8914588e60be2829f1a3df410970a81d43ac2a26b299c6",
+      "after_sha256": "8d9e98aea7a253bcb8c546a1b195a7616f240181ad11ab2b1ee02ac59702d73c",
+      "matches_preview_source": true
+    },
+    {
+      "file": "frontend/src/components/WorkspaceGuide.jsx",
+      "before_sha256": null,
+      "after_sha256": "f6db81e63442f06ef59e1f53174c1b0437fd6878447b67e080e74e5bb09632a4",
+      "matches_preview_source": true
+    },
+    {
+      "file": "frontend/src/components/QuickStart.jsx",
+      "before_sha256": null,
+      "after_sha256": "75821ab576b54dcf6de615b43643683fa2eb6d0015e6f5ca4922adbc03c2e9e3",
+      "matches_preview_source": true
+    },
+    {
+      "file": "frontend/src/lib/workspaceGuidance.mjs",
+      "before_sha256": null,
+      "after_sha256": "d5f6707f00ba4517a588379d76f4672f22d30e2a6cb0999b104369ce7a3ffa69",
+      "matches_preview_source": true
+    },
+    {
+      "file": "frontend/src/styles/usability.css",
+      "before_sha256": null,
+      "after_sha256": "9a1107ab7b7fe638eeb56a825b721d089d1df1eba145ac58a372daf043afca43",
+      "matches_preview_source": true
+    },
+    {
+      "file": "frontend/scripts/soi-browser-smoke.mjs",
+      "before_sha256": "d2c6c4dd3deb6bf1202939f36cb6c81832cbb6c6576d28fd0a125146cdf13be5",
+      "after_sha256": "c8095b96f2a6313c326c0b6fc7b695c817c624bc6586e2cfd680d69b0a77dbe6"
+    },
+    {
+      "file": "frontend/api/index.js",
+      "reason": "Reject malformed form JSON as 400 before upstream fetch; preserve valid bodies and rate headers",
+      "before_sha256": null,
+      "after_sha256": "814252f254a655dc18a50de9ede7e787af10570a63c595be555ddcf3853ce7c9",
+      "matches_preview_source": true
+    }
+  ],
+  "preserved_files": [
+    {
+      "file": "frontend/src/components/OrbitalEntry.jsx",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/components/OrbitalGlobe.jsx",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/styles/theme.css",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/lib/api.js",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/lib/auth.js",
+      "unchanged": true
+    },
+    {
+      "file": "frontend/src/pages/AdvancedComparator.jsx",
+      "unchanged": true
+    }
+  ],
+  "browser_checks": 76,
+  "viewport_cases": 42,
+  "browser_runtime_errors": 0,
+  "production_changes": false,
+  "staging_deployment": {
+    "id": "dpl_96mKM6xEKxmouQc5KYjRnZc1UqJe",
+    "target": "preview",
+    "ready": true,
+    "stable_alias": "backstage-staging-web.vercel.app"
+  },
+  "human_usability_test_completed": false,
+  "real_integration": {
+    "run_id": "atlas-core-20261024160943-a16ba1dd535d",
+    "api_interception": false,
+    "groups": 20,
+    "browser_api_responses": 186,
+    "runtime_errors": 0,
+    "temporary_tenant_writes": true,
+    "operational_documents_touched": false,
+    "cleanup_passed": true
+  },
+  "proxy_regression_checks": 4,
+  "local_ui_api_interception": true,
+  "local_browser_atlas_writes": false,
+  "atlas_schema_changes": false,
+  "rollback_verified": true,
+  "load_and_security_passed": true,
+  "production_unchanged": true
+}

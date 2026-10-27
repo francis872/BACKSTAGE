@@ -1,0 +1,62 @@
+{
+  "run_id": "atlas-core-20261025163259-9be27cdbd746",
+  "started_at": "2026-10-25T16:32:59.112Z",
+  "mode": "real_protected_staging_atlas_controlled_mail_transport",
+  "api_interception": false,
+  "real_email_delivery": false,
+  "production_changes": false,
+  "checks": [
+    {
+      "name": "staging_target_fingerprint_and_original_production_unchanged",
+      "passed": true
+    },
+    {
+      "name": "missing_email_provider_truthfully_reported_through_api_and_proxy",
+      "passed": true
+    },
+    {
+      "name": "known_and_unknown_recovery_unavailable_and_invalid_link_rejected",
+      "passed": true
+    },
+    {
+      "name": "real_browser_password_change_revokes_old_token_and_preserves_identity_and_permissions",
+      "passed": true
+    },
+    {
+      "name": "controlled_verification_token_is_hashed_single_use_and_purpose_bound_in_real_atlas",
+      "passed": true
+    },
+    {
+      "name": "concurrent_real_atlas_reset_consumes_once_and_revokes_previous_sessions",
+      "passed": true
+    },
+    {
+      "name": "single_session_revocation_preserves_other_access_and_revoke_all_closes_it",
+      "passed": true
+    }
+  ],
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "deployments": {
+    "api": {
+      "id": "dpl_EmktPTU3HNWNyQm8Yi6dNsBhmcKu",
+      "url": "backstage-staging-ij0kxyqt6-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_DkiDNfp1oc9zWXArMdnDfvDEBo6B",
+      "url": "backstage-staging-bzga57zdq-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "browser_runtime_errors": 0,
+  "status": "passed",
+  "cleanup": {
+    "passed": true,
+    "only_owned_test_records": true,
+    "global_security_traces_and_shared_counters_preserved": true,
+    "backup_sha256": "b6bc939d4dc5d80ca09939ffc9b47202bd80254f8faf918db6f8ef0528a3a32a"
+  },
+  "completed_at": "2026-10-25T16:33:24.358Z"
+}

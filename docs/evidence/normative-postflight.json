@@ -1,0 +1,224 @@
+{
+  "checked_at": "2026-10-27T01:40:21.872Z",
+  "status": "passed_with_explicit_scope_limits",
+  "scope": "native_colombian_normative_conditions_with_economic_integration_and_coproperty_scoped_human_review",
+  "baseline": {
+    "backend": {
+      "total": 441,
+      "passed": 440,
+      "skipped": 1,
+      "failed": 0
+    },
+    "frontend": {
+      "total": 38,
+      "passed": 38,
+      "skipped": 0,
+      "failed": 0
+    }
+  },
+  "regression": {
+    "backend": {
+      "total": 456,
+      "passed": 455,
+      "skipped": 1,
+      "failed": 0
+    },
+    "frontend": {
+      "total": 40,
+      "passed": 40,
+      "skipped": 0,
+      "failed": 0
+    },
+    "build_passed": true
+  },
+  "atlas_normative_checks": 8,
+  "atlas_economic_regression_checks": 8,
+  "browser_checks": 23,
+  "rule_count": 14,
+  "official_reference_entries": 16,
+  "automatic_legal_opinion": false,
+  "automatic_exhaustive_currentness_certification": false,
+  "real_legal_approvals_seeded": false,
+  "owned_temporary_database_removed": true,
+  "audit_chain_valid": true,
+  "existing_financial_core_and_operations_unchanged": true,
+  "preserved_economic_native_navigation_and_package_files": 9,
+  "scientific_and_shared_sources_unchanged": 24,
+  "primary_navigation_unchanged": true,
+  "webgl_rendering_verified": false,
+  "community_started": false,
+  "colab_started": false,
+  "new_dependencies": [],
+  "docker_used": false,
+  "remote_deployment": false,
+  "production_changes": false,
+  "sensitive_real_data_used": false,
+  "external_identity_dependencies": false,
+  "scoped_credential_scan_passed": true,
+  "local_document_links_checked": 97,
+  "production_readiness": "NO_GO",
+  "sources": [
+    {
+      "file": "shared/normativeCatalog.v1.mjs",
+      "sha256": "e76d0c9d81ac0e924d2030cec76e15c033bfacbbe127f9a93aeb3767887417d0"
+    },
+    {
+      "file": "shared/normativeDates.mjs",
+      "sha256": "6c8b9006e202f7d616afdc4044dc18023428268cfea1dfd453d0d17d63966b20"
+    },
+    {
+      "file": "shared/normative.v1.mjs",
+      "sha256": "6aad05332ce35785cf07eb8afbb0622537fcf95b90c3c0c8c94a5d185b287eeb"
+    },
+    {
+      "file": "backend/services/normativeIntelligence.service.js",
+      "sha256": "569489bb451cd54bba8576a0587094cf784bfde24d137fddfcae35abd3f368b9"
+    },
+    {
+      "file": "backend/routes/normativeIntelligence.routes.js",
+      "sha256": "6f2b19dda95100e7ce5220e9f4291f17050d30d77c86838474cbf27bf275d6bc"
+    },
+    {
+      "file": "backend/routes/assets.routes.js",
+      "sha256": "c09e7badb36a6a6e1a47f23ace441cd621aeb7a2ad270fd43fdbe5514b9aeea9"
+    },
+    {
+      "file": "backend/infrastructure/normativeOpenApi.js",
+      "sha256": "cc702a34130ce993d708e3154b3f223091dc9c12a0905634c03a888886df3372"
+    },
+    {
+      "file": "backend/infrastructure/coreOpenApi.js",
+      "sha256": "9cbf453a810678c0e7cd361e214fd1ced5f8ce19c6000fa23215c9874d363c24"
+    },
+    {
+      "file": "backend/infrastructure/mongoIndexRegistry.js",
+      "sha256": "b49e7e21a9d7e408788932bafac7b24919e2e26de2fefa8a5ffcf956bcbd9967"
+    },
+    {
+      "file": "backend/repositories/operationalEvents.repository.js",
+      "sha256": "90fe0f4a6bda788fafedbf11be26bb3ad0d718713cfab808bafcc36ace5e1433"
+    },
+    {
+      "file": "backend/domain/normative.test.js",
+      "sha256": "be81b00323f65ea64028047cda9d2ccc580dcd1c60ae91a510afdbc36cef225c"
+    },
+    {
+      "file": "backend/domain/normativeIntelligence.test.js",
+      "sha256": "9110cc4a91d17e393ac553c4c9d4273f59df6aec000ba9fcae9aabac14c63da0"
+    },
+    {
+      "file": "backend/domain/helpers/normativeFixture.js",
+      "sha256": "4908c997c5018b113c9ac4c61b179ddec1db8eec63c4c621a366cce75999b930"
+    },
+    {
+      "file": "frontend/src/components/NormativeIntelligencePanel.jsx",
+      "sha256": "70dbe27543ea17baef0f6b5cc9bb1974d55f7a8a71ef76634df6ad86b225d8ce"
+    },
+    {
+      "file": "frontend/src/components/NormativeIntelligencePanel.css",
+      "sha256": "a896a8625b989aa34040642e5a650228d7c64d45b0d12670de4055f00b98df25"
+    },
+    {
+      "file": "frontend/src/components/HorizontalPropertyLayer.jsx",
+      "sha256": "baa3e8d9ce9a727d116a76b555f92716762af6d2c6c342228a5d8a5950fa7ee0"
+    },
+    {
+      "file": "frontend/src/lib/normativeFacts.mjs",
+      "sha256": "9e7d0e59ae48f1d499eaa81c37ede8acf277f379ad9c81e1e26ae87d042a4dcd"
+    },
+    {
+      "file": "frontend/tests/normative.test.mjs",
+      "sha256": "c09db6bc8455420af8a6ffc63488326a2a801a5270cd8d556daed1f560417782"
+    },
+    {
+      "file": "frontend/scripts/normative-browser-scenarios.mjs",
+      "sha256": "eacefe91b985d264ebff5763765e823e91cd3228437f4c8c02fb1309b9ebdd9f"
+    },
+    {
+      "file": "frontend/scripts/horizontal-property-browser.mjs",
+      "sha256": "f9279e8525d4a6a326f4eafce225477292a219327ecb585f2313c859147522db"
+    },
+    {
+      "file": "scripts/normative-live-scenarios.js",
+      "sha256": "c6893d1d3aeb6d43d8e6259fcf15f8bd32bbbbc9877ac95d1a95efa6363979fe"
+    },
+    {
+      "file": "scripts/verify-horizontal-property.js",
+      "sha256": "95f1c60ced29fd2f94396f6be88b52f62285061a8c573a2bc44138a4afee4669"
+    },
+    {
+      "file": "scripts/run-normative-example.js",
+      "sha256": "cece5a4e66e16bbc40e309000e0b6065504964fc5f150e86c5398fe7c80f3113"
+    },
+    {
+      "file": "scripts/verify-normative-postflight.js",
+      "sha256": "3d70b6620e8676ca27e1243d0a7e75e2adabcf2229a8a71f5455489c1afb5bcb"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "docs/evidence/normative-intelligence-live.json",
+      "sha256": "6d35a2da73e9451e8a25059bd40740287ed20bab09a233771594a6ef70e86841"
+    },
+    {
+      "file": "docs/evidence/normative-data-audit.json",
+      "sha256": "5333a24d644329c99ff13f937f23da6addeda28999f4be281c043326c89917b0"
+    },
+    {
+      "file": "docs/evidence/normative-sources.json",
+      "sha256": "df4c2c550c3b2e7f04c67f422bc4a5d7d1d96e9658ba7e9aaf13313185c501fc"
+    },
+    {
+      "file": "docs/evidence/normative-baseline-backend.txt",
+      "sha256": "97cf3af8264ab1730c8dca60977b1165e17bb07ac7ffa3ddc7adf1823525c5a2"
+    },
+    {
+      "file": "docs/evidence/normative-baseline-frontend.txt",
+      "sha256": "f284421bfb837feea4a57e6e59b0fe63a42b8b132551b8d67adaf80ef229100e"
+    },
+    {
+      "file": "docs/evidence/normative-backend-tests.txt",
+      "sha256": "4d4100ff502eacc6ca15d069e090a81b0912339b39edb471254e7e89fa926f90"
+    },
+    {
+      "file": "docs/evidence/normative-frontend-tests.txt",
+      "sha256": "aee3c09412b864e8078ea6df526748718dff4414f6ea1ef97912d798a9755638"
+    },
+    {
+      "file": "docs/evidence/normative-build.txt",
+      "sha256": "774b74220c624bfd262701a60308df4c9b4b3733f9f8c01f72fc66eb66984112"
+    },
+    {
+      "file": "docs/examples/normative-conditions.json",
+      "sha256": "68edef6904ccc7c37a81eb33ac89465628aada6d1cfe9422766af38b26933b6d"
+    },
+    {
+      "file": "docs/examples/normative-conditions-result.json",
+      "sha256": "4a391029c57937f0537b0603a4660bb7ebc372e32c9567d49a0dbeed6f88c576"
+    },
+    {
+      "file": "docs/BACKSTAGE_NORMATIVE_INTELLIGENCE.md",
+      "sha256": "376f8e6f212fe94db2791361ba5757604a9f2a21f434ffd6b9edb0a938744d27"
+    },
+    {
+      "file": "docs/backstage-2.0/READINESS_REPORT.md",
+      "sha256": "73094dde8b04e26893bf256c44099a59e19f0a13908df4ecb619ede08f2eb11f"
+    },
+    {
+      "file": "docs/BACKSTAGE_UNIFIED_INCREMENTAL_PLAN.md",
+      "sha256": "dc679d6e8474c1e43ee2ed1c10c5da486b244ccaf4999b219e4b04cd820574a7"
+    },
+    {
+      "file": "docs/BACKSTAGE_IMPLEMENTATION_STATUS.md",
+      "sha256": "01b49a6ad0e0056284d5129972998c6f3e00a5db9679a5629d1535c53fde92c3"
+    },
+    {
+      "file": "docs/BACKSTAGE_ARCHITECTURE.md",
+      "sha256": "1d369a6f24df5f8af6c0a851494ca08db583761659beee0390a03e173779b957"
+    },
+    {
+      "file": "docs/evidence/normative-desktop.png",
+      "sha256": "4bafafe8b47e35a5bbd198ceeb21f820409467d335054cf4c5435ef92b7fa0f2"
+    }
+  ]
+}

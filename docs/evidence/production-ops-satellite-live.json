@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-10-25T22:57:42.955Z",
+  "scope": "public_upstream_catalog_contract_only",
+  "app_http_authorization_tested": false,
+  "atlas_writes": 0,
+  "imagery_downloaded": false,
+  "queries": [
+    {
+      "provider": "sentinel",
+      "collection": "sentinel-2-l2a",
+      "returned": 1,
+      "license": "proprietary",
+      "duration_ms": 802,
+      "scene_id": "S2C_18NWK_20260127_0_L2A",
+      "acquired_at": "2026-01-27T15:31:56.967000Z",
+      "normalized_response_sha256": "1576a3ecae58bb3e0c85d6e9ce6414103389ecff6b70a50a9e367566e9e7e4f2"
+    },
+    {
+      "provider": "landsat",
+      "collection": "landsat-c2-l2",
+      "returned": 1,
+      "license": "proprietary",
+      "duration_ms": 679,
+      "scene_id": "LC09_L2SP_008057_20260126_02_T1",
+      "acquired_at": "2026-01-26T15:13:01.732677Z",
+      "normalized_response_sha256": "b815e1d7997c2f708c77877d32f6511905346cced0b7806c753ac5f5c9b35189"
+    }
+  ],
+  "status": "passed"
+}

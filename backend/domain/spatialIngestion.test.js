@@ -69,3 +69,24 @@ test('aísla las fuentes por organización', async () => {
     organizationId: 2, worldId: '2:earth', sourceId: source._id, collection: pointCollection, minZoom: 12, maxZoom: 12,
   }), /organización activa/);
 });
+
+test('organizaciones pueden reutilizar IDs sin leer ni sobrescribir objetos ajenos', async () => {
+  const store = new MemorySpatialStore();
+  const pipeline = new SpatialIngestionPipeline(store);
+  const sharedSource = { id: 'shared-source', provider: 'Entidad', dataset: 'lugares', version: '1', license: 'ODC' };
+  const sourceA = await pipeline.registerSource({ ...sharedSource, organizationId: 'ORG_A' });
+  const sourceB = await pipeline.registerSource({ ...sharedSource, organizationId: 'ORG_B' });
+  const collectionA = structuredClone(pointCollection);
+  const collectionB = structuredClone(pointCollection);
+  collectionA.features[0].properties.name = 'ORG_A';
+  collectionB.features[0].properties.name = 'ORG_B';
+
+  await pipeline.ingestGeoJSON({ organizationId: 'ORG_A', worldId: 'ORG_A:earth', sourceId: sourceA._id, collection: collectionA, minZoom: 12, maxZoom: 12 });
+  await pipeline.ingestGeoJSON({ organizationId: 'ORG_B', worldId: 'ORG_B:earth', sourceId: sourceB._id, collection: collectionB, minZoom: 12, maxZoom: 12 });
+
+  assert.equal((await pipeline.search({ organizationId: 'ORG_A', worldId: 'ORG_A:earth', query: 'ORG_A' })).length, 1);
+  assert.equal((await pipeline.search({ organizationId: 'ORG_A', worldId: 'ORG_A:earth', query: 'ORG_B' })).length, 0);
+  assert.equal((await pipeline.search({ organizationId: 'ORG_B', worldId: 'ORG_B:earth', query: 'ORG_B' })).length, 1);
+  await pipeline.setSourceStatus({ organizationId: 'ORG_A', sourceId: sourceA._id, status: 'archived' });
+  assert.equal((await pipeline.search({ organizationId: 'ORG_B', worldId: 'ORG_B:earth', query: 'ORG_B' })).length, 1);
+});

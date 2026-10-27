@@ -1,0 +1,25 @@
+{
+  "checked_at": "2026-10-27T03:29:53.606Z",
+  "scope": "local_encrypted_key_recovery_synthetic_payload_only",
+  "runtime_keys_changed": false,
+  "real_documents_read": false,
+  "external_custody_verified": false,
+  "managed_kms_verified": false,
+  "checks": [
+    "local_production_and_preview_key_material_distinct",
+    "production_context_binding_and_roundtrip",
+    "production_future_key_rotation_preserves_historical_read",
+    "production_retiring_historical_key_denies_old_read",
+    "production_encrypted_local_key_backup_recovered",
+    "production_damaged_or_wrong_recovery_key_rejected",
+    "preview_context_binding_and_roundtrip",
+    "preview_future_key_rotation_preserves_historical_read",
+    "preview_retiring_historical_key_denies_old_read",
+    "preview_encrypted_local_key_backup_recovered",
+    "preview_damaged_or_wrong_recovery_key_rejected"
+  ],
+  "status": "passed_local_scope_only",
+  "historical_ciphertexts_overwritten": false,
+  "local_recovery_key_files_separate_from_ciphertext": true,
+  "external_key_custodian_and_second_operator_test": "pendiente"
+}

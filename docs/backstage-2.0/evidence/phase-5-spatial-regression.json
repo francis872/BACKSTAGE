@@ -1,0 +1,85 @@
+{
+  "started_at": "2026-10-24T03:14:13.541Z",
+  "scope": "local_regression_not_deployment_or_live_provider_verification",
+  "checks": [
+    {
+      "name": "frontend",
+      "passed": true,
+      "checked_at": "2026-10-24T03:14:31.676Z",
+      "duration_ms": 445,
+      "evidence": "phase-5-spatial-frontend-regression-current.txt",
+      "summary": [
+        "ℹ tests 26",
+        "ℹ pass 26",
+        "ℹ fail 0",
+        "ℹ skipped 0"
+      ],
+      "original_evidence": "docs/evidence/frontend-regression-current.txt"
+    },
+    {
+      "name": "bsie",
+      "passed": true,
+      "checked_at": "2026-10-24T03:14:40.518Z",
+      "duration_ms": 8842,
+      "evidence": "phase-5-spatial-bsie-scientific-tests.txt",
+      "summary": [
+        "Ran 27 tests in 5.554s",
+        "OK"
+      ],
+      "original_evidence": "docs/evidence/bsie-scientific-tests.txt"
+    },
+    {
+      "name": "sanitary",
+      "passed": true,
+      "checked_at": "2026-10-24T03:14:49.587Z",
+      "duration_ms": 9068,
+      "evidence": "phase-5-spatial-sanitary-scientific-tests.txt",
+      "summary": [
+        "Ran 11 tests in 5.322s",
+        "OK"
+      ],
+      "original_evidence": "docs/evidence/sanitary-scientific-tests.txt"
+    },
+    {
+      "name": "deployment",
+      "passed": true,
+      "checked_at": "2026-10-24T03:14:53.251Z",
+      "duration_ms": 3663,
+      "evidence": "phase-5-spatial-scientific-deployment-tests.txt",
+      "summary": [
+        "OK"
+      ],
+      "original_evidence": "docs/evidence/scientific-deployment-tests.txt"
+    },
+    {
+      "name": "probability",
+      "passed": true,
+      "checked_at": "2026-10-24T03:15:01.748Z",
+      "duration_ms": 8496,
+      "evidence": "phase-5-spatial-probability-tests-current.txt",
+      "summary": [
+        "Ran 6 tests in 4.195s",
+        "OK"
+      ],
+      "original_evidence": "docs/evidence/probability-tests-current.txt"
+    },
+    {
+      "name": "backend",
+      "passed": true,
+      "checked_at": "2026-10-24T03:27:11.288Z",
+      "duration_ms": 18457,
+      "evidence": "phase-5-spatial-backend-regression-current.txt",
+      "summary": [
+        "✔ ties are explicit, zero weight missing criteria are ignored and invalid constraints fail (9.336ms)",
+        "✔ scientific automation bypass is sent only to the self deployment (5.0341ms)",
+        "ℹ tests 313",
+        "ℹ pass 312",
+        "ℹ fail 0",
+        "ℹ skipped 1"
+      ],
+      "original_evidence": "docs/evidence/backend-regression-current.txt"
+    }
+  ],
+  "finished_at": "2026-10-24T03:27:11.291Z",
+  "passed": true
+}

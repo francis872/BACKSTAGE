@@ -1,0 +1,16 @@
+{
+  "version": "backstage-spatial-rules-1",
+  "rules": [
+    {"id":"TENANT","rule":"Toda referencia pertenece a la organización activa y la autorización usa su membresía vigente."},
+    {"id":"WRITE","rule":"Administrador y analista calculan/guardan; consulta lee y verifica; solo administrador aprueba optimización."},
+    {"id":"COORDINATES","rule":"WGS84 / OGC:CRS84, orden longitud-latitud en grados; sin reproyección implícita."},
+    {"id":"PROVENANCE","rule":"Una fuente declarada no se convierte en fuente certificada; planificación no representa GPS ni tráfico en vivo."},
+    {"id":"FLEET","rule":"Vehículos disponibles; capacidad kg positiva y no superior a la registrada; conversión desde otra unidad exige fuente."},
+    {"id":"MATRIX","rule":"Matriz distancia metros/duración segundos, diagonal cero y orden de nodos explícito; sin distancias viales inventadas."},
+    {"id":"CONSTRAINTS","rule":"Visitas obligatorias únicas, capacidad, servicio, ventanas y turnos; una carga por vehículo sin descarga intermedia."},
+    {"id":"OBJECTIVE","rule":"Pesos/escalas, penalización y objetivo declarados; costo requiere moneda y tarifas; emisiones requieren factor con fuente."},
+    {"id":"SEARCH","rule":"Una búsqueda acotada sin solución no demuestra inviabilidad; no se promete óptimo global ni rutas idénticas."},
+    {"id":"APPROVAL","rule":"Propuesta matemática requiere aprobación; recursos cambiados o evidencia alterada obligan a revisar/reoptimizar."},
+    {"id":"PROJECT","rule":"Vínculo, resultado y auditoría se confirman juntos en el proyecto de la misma organización."}
+  ]
+}

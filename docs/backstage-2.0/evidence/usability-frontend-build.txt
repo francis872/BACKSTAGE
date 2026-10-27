@@ -1,0 +1,32 @@
+
+> backstage-intelligence-frontend@3.1.0 build
+> vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 142 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                         1.27 kB │ gzip:   0.49 kB
+dist/assets/maplibre-gl-worker-Dlq9U_OS.js            510.33 kB
+dist/assets/SoiWorkspace-CoZEh6zp.css                   1.01 kB │ gzip:   0.42 kB
+dist/assets/SoiWorkspace-DY2DUBSM.css                   1.52 kB │ gzip:   0.58 kB
+dist/assets/CleanCom-Mqx3EQhh.css                       2.45 kB │ gzip:   0.87 kB
+dist/assets/NativeTerritorialExplorer-C3kfNSfG.css      2.79 kB │ gzip:   0.91 kB
+dist/assets/index-79UgjaCV.css                         75.87 kB │ gzip:  15.58 kB
+dist/assets/maplibre-gl-BUA_fIsx.css                   83.18 kB │ gzip:  10.53 kB
+dist/assets/SoiWorkspace-DLwRBKRB.js                    0.66 kB │ gzip:   0.44 kB
+dist/assets/CleanComMap-DaxZBeeq.js                     3.69 kB │ gzip:   1.70 kB
+dist/assets/CleanCom-C3TEbs9P.js                       13.73 kB │ gzip:   4.88 kB
+dist/assets/SoiRoutes-ZQhZvU55.js                      16.68 kB │ gzip:   6.16 kB
+dist/assets/NativeTerritorialExplorer-CiIftDkG.js      61.72 kB │ gzip:  18.08 kB
+dist/assets/SoiWorkspace-bEgxAH-4.js                   74.69 kB │ gzip:  21.85 kB
+dist/assets/index-DH-a4pSv.js                         482.48 kB │ gzip: 141.93 kB
+dist/assets/maplibre-gl-DgMcalTD.js                 1,032.55 kB │ gzip: 281.83 kB
+✓ built in 6.01s
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

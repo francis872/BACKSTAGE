@@ -1,0 +1,110 @@
+{
+  "checked_at": "2026-10-27T03:04:16.062Z",
+  "scope": "real_user_operation_preparation_not_production_activation",
+  "status": "waiting_for_external_provisioning",
+  "application_deployments_changed": false,
+  "operational_data_read_or_written": false,
+  "production_environment_configuration_changed": true,
+  "changes": [
+    {
+      "project": "backstage-api",
+      "target": "production",
+      "key": "HEBRA_ACTIVE_KEY_ID",
+      "value_disclosed": false,
+      "affects_future_deployments_only": true
+    },
+    {
+      "project": "backstage-api",
+      "target": "production",
+      "key": "HEBRA_ENCRYPTION_KEYS",
+      "value_disclosed": false,
+      "affects_future_deployments_only": true
+    },
+    {
+      "project": "backstage-api",
+      "target": "production",
+      "key": "AUTH_PUBLIC_APP_URL",
+      "value_disclosed": false,
+      "affects_future_deployments_only": true
+    }
+  ],
+  "projects": {
+    "api": {
+      "id": "prj_jjeZc5dTOxYm4yD5jgfGfdEAAB4O",
+      "name": "backstage-api",
+      "production_deployment_id": "dpl_FfGqHQQk5CEXGjcsje9yqaUSC1VE",
+      "vercel_protection": null,
+      "production_keys": [
+        "AUTH_PUBLIC_APP_URL",
+        "BACKSTAGE_DATA_STORE",
+        "BSIE_REQUEST_WORKER",
+        "DATABASE_URL",
+        "HEBRA_ACTIVE_KEY_ID",
+        "HEBRA_ENCRYPTION_KEYS",
+        "JWT_ISSUER",
+        "JWT_SECRET",
+        "MONGODB_SPATIAL_DB",
+        "MONGODB_URI",
+        "NODE_ENV",
+        "SOI_SCIENCE_RPC_SECRET",
+        "SOI_SCIENCE_RPC_URL",
+        "SPATIAL_STORE",
+        "VERCEL_SUPPORT_LARGE_FUNCTIONS"
+      ],
+      "domains": [
+        {
+          "name": "backstage-api.vercel.app",
+          "verified": true,
+          "redirect": null
+        }
+      ]
+    },
+    "web": {
+      "id": "prj_9IJyARVoFEpyYnhoXmnZ6G0uXtDQ",
+      "name": "backstage-web",
+      "production_deployment_id": "dpl_BCE7C3mvdoR4ftrRAahTiE78XHpo",
+      "vercel_protection": null,
+      "production_keys": [
+        "BACKEND_URL",
+        "VITE_SECURITY_WS_URL",
+        "VITE_WS_BASE_URL"
+      ],
+      "domains": [
+        {
+          "name": "backstage-web-seven.vercel.app",
+          "verified": true,
+          "redirect": null
+        }
+      ]
+    }
+  },
+  "prepared_sources": {
+    "api": {
+      "directory": ".vercel/soi-api-1793070238732",
+      "files": 317,
+      "manifest_sha256": "4fc48c9c80498d4366da523d3a23fb1c45fb1d9a20ca7c17c21dc3110883082e",
+      "accepted_runtime_matches": true,
+      "private_environment_files_included": false,
+      "deployed": false
+    },
+    "web": {
+      "directory": ".vercel/soi-web-1793070244927",
+      "files": 188,
+      "manifest_sha256": "ce4fbe874f59ebb5ff070c1d4e74ac714a0c07156295a922093842b34a6eb74f",
+      "accepted_runtime_matches": true,
+      "private_environment_files_included": false,
+      "deployed": false
+    }
+  },
+  "dependencies": {
+    "atlas_administration": "user_will_complete_existing_pending_connection",
+    "production_atlas_isolation_and_least_privilege": "not_verified",
+    "scheduled_backup_and_restore": "not_verified",
+    "mail_provider": "user_reports_none",
+    "mail_delivery": "not_verified",
+    "independent_monitor_and_admin_destination": "not_configured_or_verified",
+    "capacity_acceptance_and_production_rollback": "pending"
+  },
+  "production_readiness": "NO_GO",
+  "activation_performed": false
+}

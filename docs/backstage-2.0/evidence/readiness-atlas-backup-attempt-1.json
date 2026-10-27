@@ -1,0 +1,49 @@
+{
+  "run_id": "atlas-full-20261024035828-0f1b1b5f935f",
+  "started_at": "2026-10-24T03:58:28.917Z",
+  "scope": "all_accessible_user_databases_all_collections",
+  "system_databases_excluded": [
+    "admin",
+    "config",
+    "local"
+  ],
+  "cluster_configuration_and_atlas_users_included": false,
+  "managed_snapshot_or_pitr": false,
+  "source_writes": 0,
+  "restore_requested": true,
+  "checks": [
+    "all_user_databases_inventoried",
+    "shared_snapshot_time",
+    "unchanged_collection_and_index_metadata",
+    "encrypted_backup_readback",
+    "authenticated_encryption_tamper_rejected"
+  ],
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "snapshot_at_cluster_time": {
+    "$timestamp": {
+      "t": 1792814321,
+      "i": 13
+    }
+  },
+  "databases": 1,
+  "collections": 75,
+  "documents": 106,
+  "bson_document_bytes": 37011,
+  "indexes": 238,
+  "backup": {
+    "private_file": ".vercel/atlas-full-20261024035828-0f1b1b5f935f/data.bson.aes256gcm",
+    "sha256": "52fcb2c0c6d93ccf7f154faf005b805199fcf96e30b439fb1d6db70b609bc0e7",
+    "plaintext_sha256": "5661e80da7d45530d7594608aa551da47cd6a1d2fb3a23d16edb6d00b83606b1",
+    "key_storage": "separate_private_directory_not_packaged",
+    "encrypted": "AES-256-GCM",
+    "readback_verified": true,
+    "tamper_rejected": true
+  },
+  "status": "failed",
+  "failure": {
+    "name": "MongoServerError",
+    "code": 8000
+  },
+  "isolated_databases_needing_review": 1,
+  "completed_at": "2026-10-24T03:59:00.912Z"
+}

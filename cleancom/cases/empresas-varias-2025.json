@@ -1,0 +1,54 @@
+{
+  "id": "empresas-varias-2025",
+  "title": "Empresas Varias · estudio operativo 2025",
+  "provider": "Empresas Varias",
+  "declaredYear": 2025,
+  "license": null,
+  "layers": {
+    "tickets": "Tickets_Ruta",
+    "routes": "Zonas_Merge",
+    "installations": "Instalaciones"
+  },
+  "fields": {
+    "ticketDate": "Fecha",
+    "ticketId": "Nº_Ticket",
+    "vehicleId": "Vehículo",
+    "ticketRoute": "Ruta",
+    "serviceType": "Tipo_de_servicio",
+    "serviceState": "Estado_del_Servicio",
+    "territory": "Comuna",
+    "value": "Valor",
+    "routeCode": "COD_RUTA"
+  },
+  "verifiedUnits": {},
+  "previewFields": [
+    "COD_RUTA",
+    "DENO_RUTA",
+    "RECOLEC",
+    "BLOQUE_FRE",
+    "MACRORUTA",
+    "HORARIO_MA",
+    "ESTRATO"
+  ],
+  "categoricalFields": [
+    "COD_RUTA",
+    "RECOLEC",
+    "ESTRATO",
+    "Comuna",
+    "Tipo_de_servicio",
+    "Estado_del_Servicio",
+    "Lugar_de_Descarga"
+  ],
+  "uniqueFields": [
+    "Nº_Ticket",
+    "Vehículo",
+    "COD_RUTA",
+    "Ruta",
+    "COD_INSTALACION",
+    "COD_UNICO_DIRECCION"
+  ],
+  "access": {
+    "scope": "shared_authenticated",
+    "purpose": "development_reference"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "run_id": "atlas-core-20261025193157-62c96cf9cf48",
+  "started_at": "2026-10-25T19:31:57.118Z",
+  "mode": "real_protected_staging_atlas_separate_worker",
+  "api_interception": false,
+  "data_kind": "SIMULATED_OWNED_TEST_FIXTURES",
+  "production_changes": false,
+  "checks": [],
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "status": "failed",
+  "failure": {
+    "stage": "preflight",
+    "name": "TypeError",
+    "message": "fetch failed",
+    "cause": "UND_ERR_CONNECT_TIMEOUT"
+  },
+  "completed_at": "2026-10-25T19:32:10.666Z"
+}

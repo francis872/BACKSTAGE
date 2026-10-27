@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-10-25T23:17:30.862383+00:00",
+  "hosting_provider": "Vercel",
+  "account_plan": "hobby",
+  "plan_verified_via": "read_only_vercel_team_api",
+  "user_confirmed_no_additional_host": true,
+  "user_confirmed_no_custom_domain": true,
+  "existing_vercel_app_addresses_preserved": true,
+  "cron_minimum_interval": "once_per_day",
+  "cron_source": "https://vercel.com/docs/cron-jobs/usage-and-pricing",
+  "application_function_max_duration_config_seconds": 60,
+  "native_workflow_or_queue_integrated": false,
+  "external_docker_host_required": false,
+  "billing_changes": false,
+  "production_changes": false
+}

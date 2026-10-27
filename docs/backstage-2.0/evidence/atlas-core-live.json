@@ -1,0 +1,109 @@
+{
+  "run_id": "atlas-core-20261022230533-4c79375205d7",
+  "started_at": "2026-10-22T23:05:33.618Z",
+  "mode": "live_atlas_test_integration",
+  "authorization": "explicit_user_approval_after_test_environment_confirmation",
+  "checks": [
+    {
+      "name": "read_only_preflight",
+      "passed": true
+    },
+    {
+      "name": "three_invitation_indexes_ready",
+      "passed": true
+    },
+    {
+      "name": "accounts_persist_from_independent_connection",
+      "passed": true
+    },
+    {
+      "name": "concurrent_acceptance_exactly_one_membership",
+      "passed": true,
+      "statuses": [
+        200,
+        410
+      ]
+    },
+    {
+      "name": "concurrent_role_changes_preserve_active_admin",
+      "passed": true,
+      "statuses": [
+        200,
+        403
+      ]
+    },
+    {
+      "name": "asset_analysis_project_persist_and_retries_are_idempotent",
+      "passed": true
+    },
+    {
+      "name": "real_writes_and_audit_rolled_back_before_commit",
+      "passed": true
+    },
+    {
+      "name": "stale_tokens_and_native_sockets_obey_committed_revocation",
+      "passed": true
+    },
+    {
+      "name": "complete_audit_chain_from_independent_connection",
+      "passed": true,
+      "events": 10
+    },
+    {
+      "name": "private_BSON_backup_restored_and_services_revalidated",
+      "passed": true
+    }
+  ],
+  "indexes_applied": [
+    {
+      "name": "invitation_id_1",
+      "key": {
+        "invitation_id": 1
+      },
+      "unique": true
+    },
+    {
+      "name": "token_hash_1",
+      "key": {
+        "token_hash": 1
+      },
+      "unique": true
+    },
+    {
+      "name": "organization_id_1_created_at_-1",
+      "key": {
+        "organization_id": 1,
+        "created_at": -1
+      },
+      "unique": false
+    }
+  ],
+  "operational_documents_touched": false,
+  "shared_counters_advanced": true,
+  "deployed": false,
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "preflight": {
+    "readable": true,
+    "transactional_topology": true,
+    "required_schema": 2,
+    "existing_invitation_collection": false
+  },
+  "backup": {
+    "scope": "only_new_owned_test_records_and_their_indexes",
+    "path": ".vercel/atlas-core-20261022230533-4c79375205d7/owned-test-records.bson",
+    "sha256": "503f5f4340b2b6695e9dd35748859cca0e895d5c9459c107f2313dc3c94a1783",
+    "collections": 9,
+    "records": 22,
+    "restored_to_new_temporary_collections": true,
+    "digest_verified_from_independent_connection": true,
+    "full_database_or_point_in_time_backup_certified": false
+  },
+  "status": "passed",
+  "cleanup": {
+    "status": "passed",
+    "only_owned_test_data_removed": true,
+    "restored_temporary_collections_removed": 9,
+    "shared_counters_preserved": true
+  },
+  "finished_at": "2026-10-22T23:06:24.583Z"
+}

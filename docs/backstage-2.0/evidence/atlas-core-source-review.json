@@ -1,0 +1,31 @@
+{
+  "checked_at": "2026-10-22T23:10:44.558797+00:00",
+  "run_id": "atlas-core-20261022230533-4c79375205d7",
+  "application_sources_unchanged": true,
+  "application_sources_verified": 291,
+  "new_source_hashes": [
+    {
+      "path": "backend/scripts/verify-platform-core-atlas.js",
+      "sha256": "7092e5c3efe60df176167647a5f601b9c1242bea3169c31be77d3ee0b2ebf1ba"
+    },
+    {
+      "path": "backend/scripts/inspect-platform-core-validation.js",
+      "sha256": "9b6fcba6a48cccd01d2be567aca1b8809b483cd29e1505c9cb405b5b9c7e6108"
+    },
+    {
+      "path": "backend/domain/atlasValidationSafety.test.js",
+      "sha256": "1080f0f88ffd6b21c5a7a777f98723aec13cca16d0eabf8caa683f3fbbdc5768"
+    },
+    {
+      "path": "docs/backstage-2.0/ATLAS_VALIDATION_REPORT.md",
+      "sha256": "c0428fedda8405d97d05d83ad87f9985e40f7d03f1a5a98b2b04156723bcd07a"
+    }
+  ],
+  "live_checks_passed": 10,
+  "independent_postflight_passed": true,
+  "private_backup_hash_verified": true,
+  "operational_documents_touched": false,
+  "shared_counters_advanced_and_preserved": true,
+  "invitation_indexes_applied": 3,
+  "deployed": false
+}

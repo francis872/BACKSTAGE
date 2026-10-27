@@ -27,10 +27,12 @@ const setSourceStatus = asyncHandler(async (req, res) => {
 });
 const getStatus = asyncHandler(async (req, res) => res.json(service.getStatus()));
 const search = asyncHandler(async (req, res) => res.json(await service.search(req.organization.organization_id, req.query)));
+const geocode = asyncHandler(async (req, res) => res.json(await service.geocode(req.organization.organization_id, req.query)));
+const reverseGeocode = asyncHandler(async (req, res) => res.json(await service.reverseGeocode(req.organization.organization_id, req.query)));
 const nearby = asyncHandler(async (req, res) => res.json(await service.nearby(req.organization.organization_id, req.query)));
 const computeRoute = asyncHandler(async (req, res) => res.json(await service.computeRoute(req.organization.organization_id, req.body)));
 const evaluateRisk = asyncHandler(async (req, res) => res.json(service.evaluateTerritorialRisk(req.body)));
 const evaluateRiskScenario = asyncHandler(async (req, res) => res.json(service.evaluateTerritorialScenario(req.body)));
 const measureGeometry = asyncHandler(async (req, res) => res.json(service.measureTerritorialGeometry(req.body)));
 
-module.exports = { registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, setSourceStatus, getStatus, search, nearby, computeRoute, evaluateRisk, evaluateRiskScenario, measureGeometry };
+module.exports = { registerSource, ingestGeoJSON, ingestRemote, getTile, listSources, listJobs, setSourceStatus, getStatus, search, geocode, reverseGeocode, nearby, computeRoute, evaluateRisk, evaluateRiskScenario, measureGeometry };

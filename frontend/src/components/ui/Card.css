@@ -1,70 +1,10 @@
-/* Card Component Styles */
-
-.card {
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  transition: all var(--transition-base) var(--easing-ease-out);
-}
-
-/* Solid variant (default) */
-.card-solid {
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-light);
-  box-shadow: var(--shadow-sm);
-}
-
-/* Outlined variant */
-.card-outlined {
-  background-color: transparent;
-  border: 1px solid var(--color-border);
-}
-
-/* Interactive variant */
-.card-interactive {
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-light);
-  box-shadow: var(--shadow-xs);
-}
-
-/* Hoverable state */
-.card-hoverable {
-  cursor: pointer;
-}
-
-.card-hoverable:hover {
-  border-color: var(--color-accent-primary);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-/* Card sections */
-.card-header {
-  padding: var(--spacing-lg);
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.card-header:empty {
-  padding: 0;
-  border: none;
-}
-
-.card-body {
-  padding: var(--spacing-lg);
-}
-
-.card-footer {
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-top: 1px solid var(--color-border);
-  background-color: var(--color-bg-primary);
-  display: flex;
-  gap: var(--spacing-md);
-  justify-content: flex-end;
-}
-
-.card-footer:empty {
-  padding: 0;
-  border: none;
-}
+div.ui-card, section.ui-card, article.ui-card { min-width: 0; margin-block: 16px; border: 1px solid var(--line-strong); border-radius: var(--radius-lg); background: var(--surface-panel); color: var(--ink); }
+.ui-card.ui-card--outlined { background: transparent; border-color: var(--line); }
+.ui-card__header { padding: 16px 24px; border-bottom: 1px solid var(--line-strong); }
+.ui-card__header > :first-child { margin-top: 0; }
+.ui-card__header > :last-child { margin-bottom: 0; }
+.ui-card__body { padding: 24px; }
+.ui-card__footer { display: flex; flex-wrap: wrap; gap: 12px; padding: 16px 24px; border-top: 1px solid var(--line-strong); }
+.ui-card--hoverable { transition: border-color var(--motion-control) var(--ease-out); }
+.ui-card--hoverable:hover { border-color: var(--brand); }
+@media (max-width: 390px) { .ui-card__body, .ui-card__header, .ui-card__footer { padding-inline: 16px; } }

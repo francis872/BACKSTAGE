@@ -1,256 +1,58 @@
+> Estado vigente (27/10/2026, Bogotá): **NO_GO para activar la nueva versión con usuarios y datos reales**. La versión publicada en Vercel se conserva. La regresión local aprobó 470 pruebas backend (una omitida), 41 frontend y compilación; los ensayos de recuperación usan datos sintéticos y no certifican respaldos productivos. Faltan verificaciones administrativas de Atlas, correo, monitoreo independiente y custodia externa. Consulta la [matriz de preparación y evidencias](docs/BACKSTAGE_OPERATIONS_CLOSURE.md) y el [informe final](docs/evidence/operations-closure-postflight.json). Las notas siguientes son históricas y conservan el alcance de cada fecha.
+
+> Origin (24/10/2026, Bogotá): [staging protegido](https://backstage-staging-web.vercel.app) actualizado con explorador persistente, Feed, Cuenta/Organización y rutas vinculadas a proyectos en MongoDB Atlas. Once grupos de integración real y 21 comprobaciones de interfaz aprobados. Producción conserva su versión anterior. Mapbox activo en el backend de staging, con sugerencias y almacenamiento permanente verificados. [Estado y límites](docs/BACKSTAGE_IMPLEMENTATION_STATUS.md), [pruebas](docs/BACKSTAGE_TEST_REPORT.md).
+
+> Publicado el 24/10/2026, 13:33 Bogotá: [abrir BACKSTAGE](https://backstage-web-seven.vercel.app). API, Atlas, cálculos y acceso móvil/escritorio comprobados. Conserva la conexión Atlas anterior, compartida con pruebas; separar producción, monitoreo continuo y respaldos programados sigue pendiente. [Publicación y evidencia](docs/backstage-2.0/PRODUCTION_RELEASE.md). Los estados inferiores son históricos.
+
+> Estado vigente (24/10/2026, Bogotá): UI/UX simplificadas y publicadas en [staging protegido](https://backstage-staging-web.vercel.app). Inicio por tareas, ayuda contextual y lectura cómoda; 76 comprobaciones UI y 20 grupos reales aprobados. Carga, reversión, limpieza y respaldo completo actualizado con restauración aislada comprobados. Producción original intacta. [UI/UX](docs/backstage-2.0/USABILITY_REPORT.md), [preparación y pendientes reales](docs/backstage-2.0/READINESS_REPORT.md). Las notas inferiores son históricas.
+
+> Estado actualizado (24/10/2026, Bogotá): respaldo lógico completo de Atlas y restauración aislada comprobados (75 colecciones, 106 documentos, 238 índices); 325 pruebas backend y 26 frontend aprobadas. Reglas comerciales y alertas del administrador preparadas en nuevos Preview. Faltan aceptación integrada, carga, reversión remota y cobertura continua antes de producción. La revisión automática impidió iniciar la aceptación por falta de créditos del workspace. [Estado y continuación](docs/backstage-2.0/READINESS_REPORT.md). Las notas siguientes conservan su alcance histórico.
+
 # BACKSTAGE Intelligence
 
-Plataforma de Location Intelligence para convertir datos dispersos en recomendaciones de decisión, no solo en mapas.
+> Reglas de negocio, GIS y rutas (23/10/2026, Bogotá): [staging](https://backstage-staging-web.vercel.app). Catálogo versionado, configuración con revisión/auditoría, análisis GIS y evidencia logística vinculados a proyectos. Dieciocho grupos de integración real aprobados. MongoDB Atlas y motores/identidad existentes conservados; producción original intacta. [Informe vigente](docs/backstage-2.0/PHASE_5_SPATIAL_REPORT.md), [reglas](docs/backstage-2.0/BUSINESS_RULES.md).
 
-## Visión
+> Intelligence Core ampliado a finanzas y Monte Carlo (23/10/2026): [abrir staging](https://backstage-staging-web.vercel.app). Entradas, moneda, periodos, supuestos, modelo y semilla conservados; reproducción, descarga y vínculo con proyectos. Quince grupos de integración real aprobados, datos temporales retirados y producción original intacta. MongoDB Atlas e identidad de BACKSTAGE conservados. [Informe vigente](docs/backstage-2.0/PHASE_5_ENGINES_REPORT.md).
 
-BACKSTAGE responde preguntas de negocio como:
+> Intelligence Core aplicado al comparador y proyectos (23/10/2026): [abrir staging](https://backstage-staging-web.vercel.app). Decimales exactos, versión y huellas de análisis, comprobación y exportación; doce grupos de integración real aprobados y datos temporales retirados. MongoDB Atlas e identidad de BACKSTAGE conservados; producción sin cambios. [Informe y límites](docs/backstage-2.0/PHASE_5_REPORT.md).
 
-- ¿Cuál sucursal debería visitar un cliente?
-- ¿Dónde abrir la siguiente tienda?
-- ¿Qué zona está saturada?
-- ¿Qué restaurante tiene menor tiempo de espera?
-- ¿Dónde conviene invertir?
-- ¿Qué ubicación generará mayor retorno?
+> Atlas de pruebas validado (22/10/2026): tres índices de invitaciones aplicados; persistencia, concurrencia, revocación y auditoría comprobadas con MongoDB real. Respaldo/restauración de 22 documentos del ensayo y limpieza verificados. [Informe y límites](docs/backstage-2.0/ATLAS_VALIDATION_REPORT.md). Sin despliegue; el respaldo completo del entorno sigue pendiente de certificación.
 
-## Módulos principales
+> Recuperación local — Fase 4 completada (22/10/2026): invitaciones, roles, revocación y auditoría sobre MongoDB Atlas. [Informe y límites](docs/backstage-2.0/PHASE_4_REPORT.md). Pendiente la validación integrada en Atlas de pruebas; sin publicación ni aplicación de índices durante esta fase.
 
-- `BACKSTAGE Geo`: análisis geoespacial y territorial.
-- `BACKSTAGE AI`: modelos predictivos, optimización y recomendaciones.
-- `BACKSTAGE Risk`: evaluación de riesgos climáticos, financieros y territoriales.
-- `BACKSTAGE Urban`: planeación urbana, catastro, avalúos y desarrollo inmobiliario.
-- `BACKSTAGE Insights`: paneles ejecutivos, reportes e indicadores.
-- `EarthArt`: gemelo digital territorial — índice territorial por dimensión, detector de brechas y motor predictivo de "qué pasaría si".
+> Recuperación local — Fase 3 completada (22/10/2026): territorio → activo → análisis → proyecto → recuperar contexto. MongoDB Atlas, identidad y funciones de BACKSTAGE conservadas. [Informe, pruebas y límites](docs/backstage-2.0/PHASE_3_REPORT.md). Sin publicación ni escrituras en Atlas durante esta fase.
 
-## Estructura del proyecto
+BACKSTAGE es la plataforma empresarial de inteligencia territorial y operaciones. Conserva su centro de operaciones, explorador, activos, proyectos, AirHeart y comparadores. SOI (Operaciones de Inteligencia Sanitaria) es su módulo sanitario; CleanCom es un caso de referencia con acceso propio.
 
-- `backend/`: API y servicios de datos.
-- `frontend/`: interfaz de usuario y experiencia de recomendaciones.
-- `docs/`: visión, arquitectura y casos de uso.
-- `data/`: modelos de datos y ejemplos de integración.
-- `probability/`: motor probabilístico académico (ajuste de distribuciones, CDF/1-CDF, umbrales y ranking).
+La persistencia de la aplicación utiliza exclusivamente MongoDB Atlas: identidad, organizaciones, activos, operaciones, residuos, sensores, carbono, análisis y auditoría.
 
-## Arquitectura implementada (API por capas)
+Web publicada: https://backstage-web-seven.vercel.app
+API publicada: https://backstage-api.vercel.app
 
-El backend está organizado en:
+## Desarrollo
 
-- `routes/`: exposición de endpoints por dominio.
-- `controllers/`: validación HTTP y respuestas.
-- `services/`: reglas de negocio y acceso SQL.
-- `middleware/`: autenticación JWT, RBAC y error handler.
+Requiere Node.js 24, MongoDB Atlas con transacciones y Python para los motores científicos.
 
-Dominios activos:
+1. Configura `backend/.env` tomando `backend/.env.example`: `MONGODB_URI`, `MONGODB_DB` o `MONGODB_SPATIAL_DB`, `SPATIAL_STORE=atlas` y `JWT_SECRET`.
+2. Ejecuta `npm run setup`.
+3. Revisa `npm run mongo:plan --prefix backend` y aplica `npm run mongo:init --prefix backend` al entorno autorizado.
+4. Ejecuta `npm run setup:scientific` y `npm run dev`.
 
-- `/auth`, `/users`
-- `/locations`, `/insights`, `/real-estate`
-- `/risk-components`, `/risk-assessments`
-- `/recommendations`, `/integrations`, `/scoring`, `/territorial`
-- `/layers` (catálogo y features geoespaciales con `bbox`)
-- `/terrain` (superficies matemáticas, pendiente, orientación, curvatura y curvas de nivel)
-- `/spatial` (fuentes verificables, ingestión GeoJSON, trabajos y teselas XYZ)
-- `/analysis` (ejecución geoestratégica, comparador avanzado e informes imprimibles)
-- `/audit-logs` (auditoría de acciones mutables por organización)
+Los índices se inicializan sin crear usuarios ni datos operativos de ejemplo. El registro crea una cuenta y su organización. Si Atlas no está disponible, las operaciones persistentes fallan explícitamente.
 
-Nuevos endpoints de identidad:
+## Verificación
 
-- `POST /auth/register` (creación de usuario con password y rol inicial `viewer`)
-- `GET /auth/public-organizations` (organizaciones activas para registro)
+- `npm run test:backend`
+- `npm run test:frontend`
+- `npm run test:bsie`
+- `npm run test:sanitary`
+- `npm run build`
 
-## Flujo geoespacial y caso demo
+Consulta [MongoDB Atlas](docs/SOI_MONGODB.md), [contratos sanitarios](docs/SOI_SANITARY_API.md), [BSIE](docs/BSIE.md) y [despliegue](DEPLOYMENT_GUIDE.md).
 
-- Explorador territorial híbrido: MapLibre GL JS acelera la presentación WebGL mientras el núcleo matemático, las fuentes GeoJSON y los estilos pertenecen a BACKSTAGE.
-- Motor de terreno con mallas multirresolución, interpolación bilineal y Marching Squares.
-- Catálogo de capas administrable en backend (`layer_catalog`).
-- Escenario demo: **Expansión comercial Bogotá** con ranking multicriterio.
-- Persistencia de corridas de análisis en `analysis_runs` y `analysis_results`.
-- Recursos de intercambio GeoJSON y validación nativa en [geospatial/](./geospatial/README.md).
+Los proveedores de GPS y sensores requieren configuración y autorización; su ausencia se muestra como falta de datos.
 
-El endpoint `GET /terrain/surface` genera una superficie procedimental para probar el motor sin depender de imágenes. Su respuesta se identifica con `dataMode: "procedural"`: no representa elevación medida y no debe utilizarse para decisiones territoriales reales. `POST /terrain/analyze` procesa mallas de elevación verificadas que aporte un pipeline de datos.
+Recuperación arquitectónica: [informe de Fase 1](docs/backstage-2.0/PHASE_1_REPORT.md), [límites de módulos](docs/backstage-2.0/MODULE_BOUNDARIES.md) y [contratos generales](docs/backstage-2.0/CORE_API.md). La recuperación está verificada localmente; no se ha publicado este incremento.
 
-## Pipeline territorial
+Sistema de diseño consolidado: [contratos y cobertura](docs/backstage-2.0/DESIGN_SYSTEM.md), [resultado de Fase 2](docs/backstage-2.0/PHASE_2_REPORT.md).
 
-1. `POST /spatial/sources`: registra proveedor, dataset, versión, licencia, modo del dato y confianza.
-2. `POST /spatial/ingest/geojson`: valida e ingiere un `FeatureCollection`, lo divide en celdas XYZ multizoom y registra el trabajo.
-3. `GET /spatial/tiles/:z/:x/:y?worldId=earth`: entrega la tesela GeoJSON correspondiente a la organización activa.
-4. `GET /spatial/sources` y `GET /spatial/jobs`: exponen procedencia y trazabilidad.
-5. `PATCH /spatial/sources/:id/status`: archiva o reactiva el dataset y todos sus objetos sin borrado destructivo.
-6. `POST /spatial/ingest/remote`: descarga GeoJSON mediante HTTPS únicamente desde dominios autorizados de Datos Abiertos Colombia e IGAC.
-
-El modo `SPATIAL_STORE=memory` sirve para desarrollo y pierde su contenido al reiniciar. Para persistencia y consultas compartidas se utiliza `SPATIAL_STORE=atlas` con `MONGODB_URI`.
-
-El explorador incluye carga GeoJSON para `admin`/`analyst`, selección de niveles XYZ, catálogo de fuentes, estado del almacenamiento e historial resumido de trabajos.
-
-Las geometrías lineales y poligonales se simplifican al servir cada zoom mediante Douglas–Peucker, conservando el original almacenado. Las teselas resultantes usan una caché LRU temporal que se invalida al importar, archivar o reactivar datasets.
-
-### Búsqueda y navegación
-
-- `GET /spatial/search?q=...`: busca atributos de objetos territoriales activos.
-- `GET /spatial/nearby?lng=...&lat=...&radiusM=...`: ordena objetos por proximidad.
-- `POST /spatial/routes/compute`: calcula rutas A* o Dijkstra sobre las líneas viales importadas.
-
-El explorador permite navegar a un resultado, seleccionar origen y destino y dibujar la ruta calculada. No genera rutas si el grafo importado está vacío o desconectado.
-
-### Riesgo territorial explicable
-
-`POST /spatial/risk/evaluate` calcula índices de priorización para incendio forestal, inundación y deslizamiento. La respuesta conserva entradas, pesos, contribuciones, modo del dato, confianza y versión del modelo. Estos índices no son pronósticos ni reemplazan estudios técnicos de campo.
-
-`POST /spatial/risk/scenario` evalúa hasta 2.500 celdas y devuelve una colección GeoJSON con riesgo base, riesgo del escenario y diferencia por celda. El visor construye la malla sobre el terreno visible, deriva únicamente pendiente o elevación y exige que el usuario declare las demás variables; el mapa de calor sigue siendo un índice comparativo, no una observación ni un pronóstico.
-
-El dashboard de evaluaciones valida cuatro indicadores entre 0 y 1, calcula el puntaje mediante `arithmetic-mean-v1`, registra origen, confianza y notas, conserva el historial por ubicación y permite abrir directamente la ubicación evaluada en el mapa.
-
-EarthArt presenta índice territorial, brechas, riesgos y oportunidades como métricas independientes; conserva el historial de simulaciones, navega al mapa y permite convertir una brecha verificada en proyecto operativo. Todos sus recursos quedan aislados por organización.
-
-### Dibujo y medición
-
-`POST /spatial/measure` calcula coordenadas, distancia geodésica, perímetro y área esférica para puntos, líneas y polígonos GeoJSON. El explorador permite dibujar directamente sobre el mapa y exportar el resultado como GeoJSON sin incorporar una biblioteca de dibujo externa.
-
-### Hidrología y topografía
-
-- `POST /terrain/hydrology`: dirección D8, acumulación de flujo, cauces, valles, crestas y cuenca de aporte.
-- `POST /terrain/profile`: perfil interpolado entre dos coordenadas, distancia y rango de elevación.
-
-El explorador representa drenajes, valles y crestas sobre MapLibre y muestra un perfil topográfico. Los resultados heredan el modo y la calidad de la malla de elevación analizada.
-
-## Identidad, roles y permisos
-
-Autenticación por token JWT y autorización por rol:
-
-- `admin`: CRUD total + administración de usuarios y roles.
-- `analyst`: edición de módulos operativos (riesgo, territorial, recomendaciones operativas).
-- `viewer`: acceso de consulta/lectura.
-
-Separación multi-organización activa:
-
-- Cada sesión tiene `organization_id` activo.
-- Los módulos operativos (`locations`, `risk-assessments`, `recommendations`, `analysis`) filtran por organización.
-- Cambio de contexto con `POST /auth/switch-organization`.
-
-Usuarios de demo (seed):
-
-- `admin@backstage.local` / `BackstageAdmin123!`
-- `analyst@backstage.local` / `BackstageAnalyst123!`
-- `viewer@backstage.local` / `BackstageViewer123!`
-
-> Cambiar contraseñas y `JWT_SECRET` antes de uso productivo real.
-
-## Primeros pasos
-
-1. Navegar a `backend/` y ejecutar `npm install`.
-2. Navegar a `frontend/` y ejecutar `npm install`.
-3. Iniciar backend con `npm start` desde `backend/`.
-4. Iniciar frontend con `npm run dev` desde `frontend/`.
-
-## Ejecución con Docker Compose
-
-1. Construir y levantar servicios:
-   - `docker compose up --build`
-2. Backend disponible en `http://localhost:4000`.
-3. Frontend disponible en `http://localhost:3000`.
-4. La base de datos se ejecuta sobre PostgreSQL estándar; la geometría se conserva como GeoJSON y se procesa con el núcleo matemático de BACKSTAGE.
-
-## Ejecución local rápida
-
-El frontend consume `/api/*` y usa proxy:
-
-- local (`vite`): `/api` -> `http://localhost:4000`
-- producción (`frontend/api/index.js`): `/api` -> `BACKEND_URL` (backend desplegado)
-
-Variable opcional local:
-
-- `VITE_LOCAL_API_TARGET=http://localhost:4000`
-
-## Carga de datos y migraciones
-
-Desde `backend/`:
-
-- `npm run migrate:up` — ejecutar migraciones.
-- `npm run db:init` — cargar esquema y datos de ejemplo.
-
-## Propuesta de valor
-
-BACKSTAGE no compite con Google Maps en navegación. Usa datos de mapas junto con ERP, CRM, censos, POS y más para entregar decisiones optimizadas:
-
-- ¿Qué decisión me conviene tomar?
-- ¿Qué ubicación ofrece mayor retorno?
-- ¿Dónde es más seguro invertir?
-
-## Deploy en Vercel (frontend + backend)
-
-### Backend
-
-```bash
-cd backend
-vercel --prod
-```
-
-Variables backend mínimas:
-
-- `DATABASE_URL`
-- `JWT_SECRET`
-- `CORS_ORIGIN` (frontend URL, o `*` temporalmente)
-
-### Frontend
-
-```bash
-cd frontend
-vercel --prod
-```
-
-Variables frontend mínimas:
-
-- `BACKEND_URL` = URL de backend desplegado en Vercel
-- `VITE_SECURITY_WS_URL` = `wss://<backend>/ws/security` para stream de seguridad en vivo (si no está disponible, la UI usa sondeo periódico)
-
-## Git
-
-```bash
-git init
-git add .
-git commit -m "feat: backstage fullstack architecture + identity + design"
-git branch -M main
-git remote add origin https://github.com/TU_USUARIO/TU_REPO.git
-git push -u origin main
-```
-
-## Frontend de operación
-
-El panel incluye:
-
-- Login con rol y sesión.
-- Registro de usuario con contraseña y selección de organización.
-- CRUD de evaluaciones de riesgo.
-- Comparador avanzado de ubicaciones (matriz pairwise por dimensión).
-- Informe ejecutivo imprimible (`/analysis/:id/report`).
-- Administración de usuarios y roles (solo admin).
-- Auditoría de acciones (solo admin).
-- Módulo EarthArt territorial.
-- Vista de arquitectura operativa de plataforma.
-
-## Módulo probabilístico académico (PDF/CDF/colas)
-
-Incluye:
-
-- Cálculo explícito de histograma unitario `h(x)` y validación `∫h(x)dx ≈ 1`.
-- Ajuste de múltiples distribuciones `f1(x)...fn(x)` y validación `∫fi(x)dx ≈ 1`.
-- Métricas de ajuste: Bhattacharyya (implementación explícita por bins) y KS (implementación explícita + validación scipy).
-- `cdf(x)` y `survival_function(x)` (`sf`) para `P(X<=x)` y `P(X>x)`.
-- Evaluación de observaciones con percentil y clasificación de cola (`left_tail`, `central`, `right_tail`).
-- Umbrales experimentales configurables por cuantil sobre distancias KS/Bhattacharyya.
-
-Ejecución:
-
-```bash
-cd probability
-C:/Python314/python.exe -m pip install -r requirements.txt
-C:/Python314/python.exe run_probability_analysis.py --variable commercial_rent_cop_m2
-```
-
-Salida principal:
-
-- `results.csv`
-- `academic_summary.csv`
-- `cdf_survival.png`
-- `bhattacharyya_threshold.png`
-- `ks_threshold.png`
-
-Detalle completo en [probability/README.md](/C:/Users/Usuario/OneDrive/Escritorio/BACKSTAGE/probability/README.md).

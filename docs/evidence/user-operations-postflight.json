@@ -1,0 +1,78 @@
+{
+  "checked_at": "2026-10-27T03:08:08.257Z",
+  "status": "preparation_verified_activation_pending",
+  "checks": [
+    {
+      "name": "api_prepared_source_integrity_and_original_production_build_preserved",
+      "passed": true,
+      "files": 317
+    },
+    {
+      "name": "web_prepared_source_integrity_and_original_production_build_preserved",
+      "passed": true,
+      "files": 188
+    },
+    {
+      "name": "accepted_runtime_unchanged_and_production_key_distinct_from_preview",
+      "passed": true,
+      "accepted_source_files": 25,
+      "local_synthetic_key_roundtrip_verified": true,
+      "remote_production_document_encryption_certified": false
+    },
+    {
+      "name": "previous_public_application_health_and_session_requirement_verified",
+      "passed": true,
+      "new_version_activated": false
+    }
+  ],
+  "production_environment_variables_prepared": [
+    "HEBRA_ACTIVE_KEY_ID",
+    "HEBRA_ENCRYPTION_KEYS",
+    "AUTH_PUBLIC_APP_URL"
+  ],
+  "application_deployments_changed": false,
+  "operational_data_read_or_written": false,
+  "new_real_user_activation": false,
+  "production_readiness": "NO_GO",
+  "external_dependencies": {
+    "atlas_administration": "user_will_complete_existing_pending_connection",
+    "production_atlas_isolation_and_least_privilege": "not_verified",
+    "scheduled_backup_and_restore": "not_verified",
+    "mail_provider": "user_reports_none",
+    "mail_delivery": "not_verified",
+    "independent_monitor_and_admin_destination": "not_configured_or_verified",
+    "capacity_acceptance_and_production_rollback": "pending"
+  },
+  "scoped_secret_scan_passed": true,
+  "local_links_checked": 81,
+  "artifacts": [
+    {
+      "file": "scripts/prepare-user-operations.js",
+      "sha256": "a81a91e9b1129e6dcd29612b6b0c1b52120c7aaa844ab1428eb57f6dbcf63cb0"
+    },
+    {
+      "file": "scripts/verify-user-operations-preparation.js",
+      "sha256": "c7d81113b8fd17e36467c4c3da33c9a729c2da6c1d080144f06665f07cff6ccf"
+    },
+    {
+      "file": "docs/BACKSTAGE_REAL_USER_ACTIVATION.md",
+      "sha256": "71e3fc4d4ec2bdb7b4c2696968e1b6089922208216a4a24a9fc9258fcb2b34b9"
+    },
+    {
+      "file": "docs/backstage-2.0/READINESS_REPORT.md",
+      "sha256": "ad78f3458b95db16905c82dd3256485ea86c4a02e5d7baf93f4cb67220ff7a88"
+    },
+    {
+      "file": "docs/BACKSTAGE_PRODUCTION_GO_NO_GO.md",
+      "sha256": "4962a769196e4fc82401a2b9a77b30a14611ce4c00edeb77f95decfc1e0206d4"
+    },
+    {
+      "file": "docs/evidence/user-operations-preparation.json",
+      "sha256": "f1ae0d4c51da4a03f6f8bee65e1ffca829af10047cecb0b5cc8b5e85d37e954d"
+    },
+    {
+      "file": "docs/evidence/user-operations-current-public-access.json",
+      "sha256": "69d0da2f78f15fb70b34331451c3c1a06865a1428fa4f8f88c72b6e5e24cf9c1"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "started_at": "2026-10-27T02:35:05.319Z",
+  "updated_at": "2026-10-27T02:45:38.707Z",
+  "run_id": "bb2a195c-deaa-402c-ad8f-a7f0c84b1eae",
+  "scope": "dedicated_protected_vercel_preview",
+  "status": "deployed_and_verified",
+  "projects": {
+    "api": {
+      "id": "prj_b8QR9h6618xv5xhAdAWLGheZhJsO",
+      "name": "backstage-staging-api",
+      "deployment": {
+        "id": "dpl_3UCZHLatCJz2cnQ3EsA6gv9VNmnv",
+        "url": "backstage-staging-qfa549cd9-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "preview"
+      },
+      "alias": "backstage-staging-api.vercel.app",
+      "manifest_sha256": "9b306caa43843daa99ab176ba2d8b2551045006d3bba25312495c62bcac85807",
+      "protection": "vercel_auth_all_deployments"
+    },
+    "web": {
+      "id": "prj_Adl43dUBZ79gEmihyrCVCyYC80eA",
+      "name": "backstage-staging-web",
+      "deployment": {
+        "id": "dpl_6c168X4e52wSU4DdvmKCmSkjFt6K",
+        "url": "backstage-staging-2umpgob6o-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "preview"
+      },
+      "alias": "backstage-staging-web.vercel.app",
+      "manifest_sha256": "9d081e12553b8fbc645840338bb0c6c44f9a03bd05b4a7f0df654a53c32f668e",
+      "protection": "vercel_auth_all_deployments"
+    }
+  },
+  "checks": [
+    {
+      "name": "api_preview_configuration_ready",
+      "passed": true,
+      "keys": [
+        "MONGODB_URI",
+        "MONGODB_DB",
+        "MONGODB_SPATIAL_DB",
+        "BACKSTAGE_RUNTIME_ENV",
+        "HEBRA_ACTIVE_KEY_ID",
+        "HEBRA_ENCRYPTION_KEYS"
+      ]
+    },
+    {
+      "name": "authorized_test_atlas_additive_indexes_ready",
+      "passed": true,
+      "deleted_records": 0
+    },
+    {
+      "name": "preview_source_and_original_production_baseline_verified",
+      "passed": true
+    },
+    {
+      "name": "api_protected_preview_ready",
+      "passed": true,
+      "deployment_id": "dpl_3UCZHLatCJz2cnQ3EsA6gv9VNmnv",
+      "url": "https://backstage-staging-qfa549cd9-franciscogloopez-8505s-projects.vercel.app"
+    },
+    {
+      "name": "web_preview_configuration_ready",
+      "passed": true,
+      "keys": [
+        "BACKEND_URL",
+        "BACKEND_PROTECTION_BYPASS"
+      ]
+    },
+    {
+      "name": "web_protected_preview_ready",
+      "passed": true,
+      "deployment_id": "dpl_6c168X4e52wSU4DdvmKCmSkjFt6K",
+      "url": "https://backstage-staging-2umpgob6o-franciscogloopez-8505s-projects.vercel.app"
+    },
+    {
+      "name": "protected_staging_aliases_updated_production_unchanged",
+      "passed": true
+    }
+  ],
+  "production_changes": false,
+  "production_unchanged_verified": true,
+  "environment": "preview",
+  "source_acceptance": "community-postflight.json",
+  "production_readiness": "NO_GO"
+}

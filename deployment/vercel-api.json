@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "backend/api/index.js", "use": "@vercel/node", "config": { "includeFiles": ["backend/cleancom/data/**", "backend/workers/**", "shared/**", "bsie/engine.py", "bsie/temporal.py", "bsie/requirements.txt", "sanitary/routing.py", "sanitary/engine.py"], "maxDuration": 60 } },
+    { "src": "api/science.py", "use": "@vercel/python", "config": { "excludeFiles": ["backend/**", "shared/**", "node_modules/**", ".vercel/**"], "maxDuration": 60 } }
+  ],
+  "routes": [
+    { "src": "/internal/science", "dest": "/api/science.py" },
+    { "src": "/(.*)", "dest": "/backend/api/index.js" }
+  ]
+}

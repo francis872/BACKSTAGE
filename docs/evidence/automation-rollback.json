@@ -1,0 +1,29 @@
+{
+  "started_at": "2026-10-26T00:13:22.282Z",
+  "run_id": "auto-20261025234838-1315eafd",
+  "scope": "owned_automation_project_only",
+  "previous_deployment": "dpl_G4AxySzXUgmz2sxeKzxqrxpdUUSa",
+  "current_deployment": "dpl_EVu1bjPBUXERghUKamWFw3HjPkGp",
+  "production_changes": false,
+  "checks": [
+    {
+      "name": "explicitly_cleared_daemon_scaling_override",
+      "passed": true
+    },
+    {
+      "name": "previous_code_deployment_healthy_and_job_snapshots_unchanged",
+      "passed": true
+    },
+    {
+      "name": "current_code_restored_environment_key_names_and_two_requested_daemons_verified",
+      "passed": true
+    },
+    {
+      "name": "schedule_is_persisted_in_atlas_native_cron_not_used_or_assumed_rolled_back",
+      "passed": true
+    }
+  ],
+  "persisted_jobs_sha256": "1b45e1a265bc3eff81e7711e3d7bf125bb6a9ada67e360be23306440946c652b",
+  "status": "passed",
+  "completed_at": "2026-10-26T00:13:42.924Z"
+}

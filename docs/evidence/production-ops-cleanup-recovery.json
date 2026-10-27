@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-10-25T23:06:36.852Z",
+  "run_id": "atlas-core-20261025230157-5d71d12e049b",
+  "status": "passed",
+  "additional_owned_records_removed": 2,
+  "collections": [
+    "soi_operations",
+    "soi_configuration"
+  ],
+  "backup_sha256": "96b6c8376e65ebbeab17655d1a7eaa77ca122f664c07908902f66280c4ef5986",
+  "all_owned_collections_absent": true,
+  "production_changes": false
+}

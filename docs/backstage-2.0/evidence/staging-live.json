@@ -1,0 +1,89 @@
+{
+  "started_at": "2026-10-22T23:27:10.482Z",
+  "mode": "real_protected_hosting_browser_proxy_atlas",
+  "api_interception": false,
+  "checks": [
+    {
+      "name": "protected_preview_health_mongodb_and_request_id_through_proxy",
+      "passed": true
+    },
+    {
+      "name": "new_hosted_accounts_persist_from_independent_atlas_process",
+      "passed": true
+    },
+    {
+      "name": "orbital_entry_and_real_browser_login_verified_via_auth_me",
+      "passed": true
+    },
+    {
+      "name": "emulated_device_territory_to_real_browser_asset_persisted",
+      "passed": true,
+      "device_coordinates_emulated": true
+    },
+    {
+      "name": "browser_comparison_project_restore_idempotence_and_mobile_layout",
+      "passed": true
+    },
+    {
+      "name": "manual_invitation_real_browser_acceptance_and_organization_switch",
+      "passed": true
+    },
+    {
+      "name": "browser_role_downgrade_revocation_stale_token_denial_and_other_org_preserved",
+      "passed": true
+    },
+    {
+      "name": "hosting_http_polling_complete_audit_chain_and_credential_redaction",
+      "passed": true,
+      "native_websocket_supported": false,
+      "observed_polling": true,
+      "audit_events": 19
+    },
+    {
+      "name": "authenticated_node_to_protected_python_self_rpc_and_unsigned_denial",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "entry-1440.png",
+    "analysis-1440.png",
+    "project-390.png",
+    "project-1440.png",
+    "audit-390.png",
+    "audit-1440.png"
+  ],
+  "operational_documents_touched": false,
+  "run_id": "atlas-core-20261022232710-8a04a08843c3",
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "deployments": {
+    "api": {
+      "id": "dpl_2ShVnBmz4kbDzJLDBcnVpvmBWzDJ",
+      "url": "backstage-staging-47kqoxhnp-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_E6pWkSunwf4wgiskxt3PnimRmgdV",
+      "url": "backstage-staging-byowloyuj-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "project": {
+    "analysis_run_id": 4,
+    "comparison_id": 2
+  },
+  "browser_api_responses": 73,
+  "browser_runtime_errors": [],
+  "status": "passed",
+  "cleanup": {
+    "passed": true,
+    "only_owned_test_records": true,
+    "shared_counters_preserved": true,
+    "backup_path": ".vercel/staging-atlas-core-20261022232710-8a04a08843c3/owned-test-records.bson",
+    "backup_sha256": "89cd8db1cc7e8f907bcfc6f7922c05f5e626cca13a05d604d66afecf88ace4d7",
+    "global_security_request_traces_retained": true,
+    "global_hash_chain_preserved": true
+  },
+  "finished_at": "2026-10-22T23:28:01.710Z"
+}

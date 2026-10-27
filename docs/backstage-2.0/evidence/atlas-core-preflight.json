@@ -1,0 +1,25 @@
+{
+  "run_id": "atlas-core-20261022230437-c64dea786543",
+  "started_at": "2026-10-22T23:04:37.198Z",
+  "mode": "live_atlas_test_integration",
+  "authorization": "explicit_user_approval_after_test_environment_confirmation",
+  "checks": [
+    {
+      "name": "read_only_preflight",
+      "passed": true
+    }
+  ],
+  "indexes_applied": [],
+  "operational_documents_touched": false,
+  "shared_counters_advanced": false,
+  "deployed": false,
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "preflight": {
+    "readable": true,
+    "transactional_topology": true,
+    "required_schema": 2,
+    "existing_invitation_collection": false
+  },
+  "status": "preflight_passed_no_writes",
+  "finished_at": "2026-10-22T23:04:39.367Z"
+}

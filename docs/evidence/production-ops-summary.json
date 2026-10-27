@@ -1,0 +1,36 @@
+{
+  "checked_at": "2026-10-25T23:13:14.257Z",
+  "status": "implementation_verified_production_operations_pending",
+  "regression": {
+    "backend": {
+      "tests": 390,
+      "passed": 389,
+      "failed": 0,
+      "skipped": 1
+    },
+    "frontend": {
+      "tests": 33,
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "atlas_integration_groups": 16,
+  "atlas_integration_scope": "local_http_proxy_actual_test_atlas_separate_native_workers",
+  "production_changes": false,
+  "continuous_worker_deployed": false,
+  "production_atlas_provisioned": false,
+  "scheduled_production_backup_verified": false,
+  "mail_delivery_verified": false,
+  "gps_delivery_verified": false,
+  "satellite_scope": "real_scene_metadata_and_footprints_no_imagery_download",
+  "provider_access_pending": [
+    "atlas_administration_connection",
+    "mail_domain_and_secrets",
+    "authorized_gps_server_and_devices"
+  ],
+  "hosting_provider": "Vercel",
+  "vercel_plan": "hobby",
+  "custom_domain_configured": false,
+  "execution_decision_pending": "evaluate_durable_jobs_and_monitoring_on_existing_vercel_hobby_before_choosing_extra_host"
+}

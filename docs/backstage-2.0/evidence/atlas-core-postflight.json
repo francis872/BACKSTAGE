@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-22T23:07:57.124Z",
+  "run_id": "atlas-core-20261022230533-4c79375205d7",
+  "mode": "fresh_process_read_only_postflight",
+  "status": "passed",
+  "owned_test_records_remaining": 0,
+  "restored_temporary_collections_remaining": 0,
+  "invitation_indexes_verified": 3,
+  "private_backup_sha256_verified": true,
+  "writes": false
+}

@@ -1,0 +1,9 @@
+test_private_signature_expiry_and_engine_allowlist (deployment.test_science.RpcTests.test_private_signature_expiry_and_engine_allowlist) ... <frozen importlib._bootstrap>:491: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+<frozen importlib._bootstrap>:491: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+<frozen importlib._bootstrap>:491: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.388s
+
+OK

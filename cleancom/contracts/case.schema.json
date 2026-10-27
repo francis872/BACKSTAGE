@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "clean-com/case-v1",
+  "title": "Reusable waste collection study case",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "provider",
+    "declaredYear",
+    "layers",
+    "fields",
+    "access"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,79}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider": {
+      "type": "string",
+      "minLength": 1
+    },
+    "declaredYear": {
+      "type": "integer",
+      "minimum": 1900,
+      "maximum": 2200
+    },
+    "ownerOrganizationName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "license": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "layers": {
+      "type": "object",
+      "required": [
+        "tickets",
+        "routes"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "fields": {
+      "type": "object",
+      "required": [
+        "ticketDate",
+        "ticketRoute",
+        "routeCode",
+        "vehicleId",
+        "value"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "verifiedUnits": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "previewFields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "categoricalFields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "uniqueFields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "access": {
+      "type": "object",
+      "required": [
+        "scope"
+      ],
+      "properties": {
+        "scope": {
+          "enum": [
+            "organization",
+            "shared_authenticated"
+          ]
+        },
+        "purpose": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "access": {
+            "properties": {
+              "scope": {
+                "const": "organization"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "ownerOrganizationName"
+        ]
+      }
+    }
+  ]
+}

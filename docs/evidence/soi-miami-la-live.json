@@ -1,0 +1,35 @@
+{
+  "test": "live_miami_los_angeles",
+  "status": "passed",
+  "verifiedAt": "2026-10-20T15:42:46.242Z",
+  "requestedCoordinates": [
+    [
+      -80.1918,
+      25.7617
+    ],
+    [
+      -118.2437,
+      34.0522
+    ]
+  ],
+  "alternatives": 1,
+  "distanceM": 4399798.2,
+  "durationS": 172815.6,
+  "geometryType": "LineString",
+  "geometryPoints": 22105,
+  "geometrySha256": "1ccae854ccdd16f061994b674a5dc64827243c2bcdcff7c7353c09a2df0d92a4",
+  "maneuvers": 69,
+  "source": {
+    "name": "OSRM / OpenStreetMap",
+    "attribution": "© OpenStreetMap contributors",
+    "license": "ODbL-1.0",
+    "dataMode": "computed",
+    "profile": "driving",
+    "traffic": "not_live",
+    "observedAt": "2026-10-20T15:42:46.204Z"
+  },
+  "limitations": [
+    "No live traffic",
+    "Planning only; no physical GPS journey verified"
+  ]
+}

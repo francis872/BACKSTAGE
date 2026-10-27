@@ -1,53 +1,19 @@
-const { query } = require('../db');
-const { haversineDistance, pointInPolygon } = require('../spatial/core');
-
-async function findLocationById(locationId, organizationId) {
-  const result = await query(
-    `SELECT
-      location_id,
-      name,
-      city,
-      latitude::double precision AS latitude,
-      longitude::double precision AS longitude
-     FROM locations
-     WHERE location_id = $1
-       AND organization_id = $2`,
-    [locationId, organizationId]
-  );
-  if (
-    !result.rows[0] ||
-    result.rows[0].latitude == null || result.rows[0].longitude == null
-  ) {
-    return null;
-  }
-  return result.rows[0];
-}
-
-async function buildCandidateFromCoordinates({ name, city, lat, lng }) {
-  return {
-    location_id: null,
-    name: name || 'Candidato',
-    city: city || null,
-    latitude: Number(lat),
-    longitude: Number(lng),
-  };
-}
-
-async function computeCandidateMetrics({ city, latitude, longitude, ownBrandName = null }) {
-  const cityFilter = city || null;
-  const [competitors, stores, pois, risks, zones] = await Promise.all([
-    query('SELECT latitude, longitude FROM competitors WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND ($1::text IS NULL OR city = $1)', [cityFilter]),
-    query(`SELECT l.latitude, l.longitude FROM business_locations bl JOIN locations l ON l.location_id = bl.location_id
-      WHERE l.latitude IS NOT NULL AND l.longitude IS NOT NULL AND bl.is_active = true
-      AND ($1::text IS NULL OR l.city = $1) AND ($2::text IS NULL OR bl.brand_name ILIKE $2)`, [cityFilter, ownBrandName]),
-    query('SELECT latitude, longitude FROM points_of_interest WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND ($1::text IS NULL OR city = $1)', [cityFilter]),
-    query(`SELECT l.latitude, l.longitude, ra.flood_risk, ra.landslide_risk, ra.crime_risk, ra.climate_exposure
-      FROM risk_assessments ra JOIN locations l ON l.location_id = ra.location_id
-      WHERE l.latitude IS NOT NULL AND l.longitude IS NOT NULL AND ($1::text IS NULL OR l.city = $1)`, [cityFilter]),
-    query(`SELECT tz.geometry, COALESCE(di.value, tz.population_total::numeric) AS population
-      FROM territorial_zones tz LEFT JOIN demographic_indicators di ON di.zone_id = tz.zone_id AND di.indicator_name = 'population_total'
-      WHERE tz.geometry IS NOT NULL AND ($1::text IS NULL OR tz.city = $1) ORDER BY di.as_of_date DESC NULLS LAST`, [cityFilter]),
-  ]);
+const d=require('../infrastructure/atlasDocuments');
+const {haversineDistance,pointInPolygon}=require('../spatial/core');
+const filter=(run,org)=>({analysis_run_id:d.id(run),...(org!=null?d.org(org):{})});
+const patch=({analysisRunId,organizationId},metadata={},fields={},extra={})=>d.update('analysis_runs',filter(analysisRunId,organizationId),{...Object.fromEntries(Object.entries(metadata).map(([k,v])=>[`metadata.${k}`,v])),...fields},extra);
+const findLocationById=async(locationId,organizationId)=>{const row=await d.one('locations',{...d.org(organizationId),location_id:d.id(locationId)});return row?.latitude!=null&&row?.longitude!=null?row:null;};
+const buildCandidateFromCoordinates=async({name,city,lat,lng})=>({location_id:null,name:name||'Candidato',city:city||null,latitude:Number(lat),longitude:Number(lng)});
+async function computeCandidateMetrics({organizationId,city,latitude,longitude,ownBrandName=null}){
+ const scope=d.org(organizationId), cityFilter=city?{city}:{};
+ const coords={latitude:{$ne:null},longitude:{$ne:null}};
+ const [competitorRows,poiRows,locationRows,businesses,riskRows,zoneRows]=await Promise.all([
+  d.find('competitors',{...scope,...cityFilter,...coords}),d.find('points_of_interest',{...scope,...cityFilter,...coords}),d.find('locations',{...scope,...cityFilter,...coords}),d.find('business_locations',{...scope,is_active:true}),d.find('risk_assessments',scope,{assessed_at:-1,risk_id:-1}),d.find('territorial_zones',{...scope,...cityFilter,geometry:{$ne:null}})
+ ]);
+ const competitors={rows:competitorRows},pois={rows:poiRows};
+ const stores={rows:locationRows.filter(l=>businesses.some(b=>b.location_id===l.location_id&&(!ownBrandName||String(b.brand_name).toLowerCase()===String(ownBrandName).toLowerCase())))};
+ const seen=new Set();const risks={rows:riskRows.filter(r=>{if(seen.has(r.location_id))return false;seen.add(r.location_id);return true;}).flatMap(r=>{const l=locationRows.find(l=>l.location_id===r.location_id);return l?[{...l,...r}]:[];})};
+ const zones={rows:await Promise.all(zoneRows.map(async z=>{const i=await d.one('demographic_indicators',{...scope,zone_id:z.zone_id,indicator_name:'population_total'},{as_of_date:-1});return {...z,population:i?.value??z.population_total,zone_source:z.source_name,zone_updated_at:z.source_updated_at,indicator_source:i?.source_name,indicator_updated_at:i?.as_of_date,indicator_confidence_level:i?.confidence_level,indicator_data_mode:i?.data_mode};}))};
   const candidate = { lat: Number(latitude), lng: Number(longitude) };
   const distance = (row) => haversineDistance(candidate, { lat: Number(row.latitude), lng: Number(row.longitude) });
   const nearest = (rows) => rows.length ? Math.min(...rows.map(distance)) : null;
@@ -57,6 +23,18 @@ async function computeCandidateMetrics({ city, latitude, longitude, ownBrandName
     const ring = geometry?.type === 'Polygon' ? geometry.coordinates?.[0] : null;
     return ring ? pointInPolygon(candidate, ring) : false;
   });
+  const sources = [];
+  const addSources = (rows, dataset, updatedAtField = 'source_updated_at') => {
+    for (const row of rows) {
+      if (row.source_name) sources.push({ source: row.source_name, dataset, updated_at: row[updatedAtField] || null });
+    }
+  };
+  addSources(competitors.rows, 'competitors');
+  addSources(pois.rows, 'points_of_interest');
+  if (nearestRisk.assessed_at) sources.push({ source: 'MongoDB Atlas', dataset: 'risk_assessments', updated_at: nearestRisk.assessed_at });
+  if (zone?.zone_source) sources.push({ source: zone.zone_source, dataset: 'territorial_zones', updated_at: zone.zone_updated_at || null });
+  if (zone?.indicator_source) sources.push({ source: zone.indicator_source, dataset: 'demographic_indicators', updated_at: zone.indicator_updated_at || null });
+  const uniqueSources = [...new Map(sources.map((source) => [`${source.dataset}:${source.source}`, source])).values()];
   return {
     competitor_distance_m: nearest(competitors.rows),
     own_store_distance_m: nearest(stores.rows),
@@ -66,555 +44,66 @@ async function computeCandidateMetrics({ city, latitude, longitude, ownBrandName
     landslide_risk: nearestRisk.landslide_risk ?? null,
     crime_risk: nearestRisk.crime_risk ?? null,
     climate_exposure: nearestRisk.climate_exposure ?? null,
+    provenance: {
+      sources: uniqueSources,
+      source_count: uniqueSources.length,
+      confidence: null,
+      population_data_mode: zone?.indicator_data_mode || null,
+      population_confidence_level: zone?.indicator_confidence_level || null,
+      missing_inputs: [],
+    },
   };
 }
 
-async function createAnalysisRun({
-  projectName,
-  city,
-  objective,
-  criteriaWeights,
-  requestedByUserId,
-  organizationId,
-  metadata,
-}) {
-  const result = await query(
-    `INSERT INTO analysis_runs
-      (project_name, city, objective, criteria_weights, requested_by_user_id, organization_id, metadata, status)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, 'completed')
-     RETURNING analysis_run_id, created_at`,
-    [
-      projectName,
-      city || null,
-      objective || null,
-      criteriaWeights || {},
-      requestedByUserId || null,
-      organizationId || null,
-      metadata || {},
-    ]
-  );
-
-  return result.rows[0];
+const analysisRunRecord=({projectName,city,objective,criteriaWeights,requestedByUserId,organizationId,metadata})=>({...d.org(organizationId),project_name:projectName,city:city||null,objective:objective||null,criteria_weights:criteriaWeights||{},requested_by_user_id:requestedByUserId||null,metadata:metadata||{},status:'completed'});
+const createAnalysisRun=input=>d.insert('analysis_runs','analysis_run_id',analysisRunRecord(input));
+async function insertAnalysisResult({analysisRunId,rankPosition,candidateName,locationId,scoreTotal,scoreByDimension,metrics,explanation}){const run=d.required(await d.one('analysis_runs',filter(analysisRunId)));return d.insert('analysis_results','analysis_result_id',{...d.org(run.organization_id),analysis_run_id:d.id(analysisRunId),rank_position:rankPosition,candidate_name:candidateName,location_id:locationId||null,score_total:scoreTotal,score_by_dimension:scoreByDimension||{},metrics:metrics||{},explanation:explanation||{}});}
+const setAnalysisRecommendation=(id,text,payload)=>d.update('analysis_runs',filter(id),{recommendation_text:text,recommendation_payload:payload||{}});
+async function getAnalysisRunByIdForOrganization(id,org){const run=await d.one('analysis_runs',filter(id,org));if(!run)return null;return {...run,ranking:await d.find('analysis_results',filter(id,run.organization_id),{rank_position:1})};}
+const getAnalysisRunById=id=>getAnalysisRunByIdForOrganization(id,null);
+const listAnalysisRuns=({organizationId,limit=20})=>d.find('analysis_runs',d.org(organizationId),{created_at:-1},Math.min(Number(limit)||20,100));
+const saveProbabilityResult=input=>patch(input,{probability_result:input.probabilityResult||{},probability_completed_at:new Date(),probability_completed_by_user_id:input.userId||null});
+async function getProbabilityResult(input){const row=await d.one('analysis_runs',filter(input.analysisRunId,input.organizationId));return row?{analysis_run_id:row.analysis_run_id,probability_result:row.metadata?.probability_result||null,probability_completed_at:row.metadata?.probability_completed_at||null,probability_completed_by_user_id:row.metadata?.probability_completed_by_user_id||null}:null;}
+async function createOperationalProject(input,{database,session,nextId=d.nextId}={}){
+ const row={...analysisRunRecord({...input,metadata:{analysis_type:'operational_project',workflow_created_at:new Date().toISOString(),...input.metadata}}),status:'pending'};
+ if(!database)return d.withMongoTransaction((db,tx)=>createOperationalProject(input,{database:db,session:tx}));
+ const now=new Date();const document={...row,analysis_run_id:await nextId('analysis_runs',session),created_at:now,updated_at:now};
+ await database.collection('analysis_runs').insertOne(document,{session});
+ if(input.requestedByUserId)await require('../services/platformAudit.service').appendPlatformAudit({nextId,cleanDocument:d.cleanDocument},database,session,{organizationId:input.organizationId,userId:input.requestedByUserId},'project.created','analysis_runs',document.analysis_run_id,{comparison_snapshot_id:document.metadata.comparison_snapshot_id||null});
+ return d.cleanDocument(document);
 }
-
-async function insertAnalysisResult({
-  analysisRunId,
-  rankPosition,
-  candidateName,
-  locationId,
-  scoreTotal,
-  scoreByDimension,
-  metrics,
-  explanation,
-}) {
-  await query(
-    `INSERT INTO analysis_results
-      (analysis_run_id, rank_position, candidate_name, location_id, score_total, score_by_dimension, metrics, explanation)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-    [
-      analysisRunId,
-      rankPosition,
-      candidateName,
-      locationId || null,
-      scoreTotal,
-      scoreByDimension || {},
-      metrics || {},
-      explanation || {},
-    ]
-  );
-}
-
-async function setAnalysisRecommendation(analysisRunId, recommendationText, recommendationPayload) {
-  await query(
-    `UPDATE analysis_runs
-     SET recommendation_text = $1,
-         recommendation_payload = $2,
-         updated_at = now()
-     WHERE analysis_run_id = $3`,
-    [recommendationText, recommendationPayload || {}, analysisRunId]
-  );
-}
-
-async function getAnalysisRunById(analysisRunId) {
-  return getAnalysisRunByIdForOrganization(analysisRunId, null);
-}
-
-async function getAnalysisRunByIdForOrganization(analysisRunId, organizationId) {
-  const filterByOrg = organizationId != null;
-  const values = filterByOrg
-    ? [analysisRunId, organizationId]
-    : [analysisRunId];
-  const runResult = await query(
-    `SELECT
-      analysis_run_id, project_name, city, objective, criteria_weights,
-      recommendation_text, recommendation_payload, metadata, status, created_at, updated_at, organization_id
-     FROM analysis_runs
-     WHERE analysis_run_id = $1
-       ${filterByOrg ? 'AND organization_id = $2' : ''}`,
-    values
-  );
-  const run = runResult.rows[0];
-  if (!run) return null;
-
-  const results = await query(
-    `SELECT
-      rank_position, candidate_name, location_id, score_total,
-      score_by_dimension, metrics, explanation
-     FROM analysis_results
-     WHERE analysis_run_id = $1
-     ORDER BY rank_position ASC`,
-    [analysisRunId]
-  );
-
-  return { ...run, ranking: results.rows };
-}
-
-async function listAnalysisRuns({ organizationId, limit = 20 }) {
-  const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100);
-  const result = await query(
-    `SELECT
-       analysis_run_id,
-       project_name,
-       city,
-       objective,
-       recommendation_text,
-       status,
-       created_at,
-       updated_at
-     FROM analysis_runs
-     WHERE organization_id = $1
-     ORDER BY created_at DESC
-     LIMIT $2`,
-    [organizationId, safeLimit]
-  );
-  return result.rows;
-}
-
-
-
-async function saveProbabilityResult({ analysisRunId, organizationId, probabilityResult, userId }) {
-  const result = await query(
-    `UPDATE analysis_runs
-     SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object(
-       'probability_result', $1::jsonb,
-       'probability_completed_at', now(),
-       'probability_completed_by_user_id', $2
-     ),
-     updated_at = now()
-     WHERE analysis_run_id = $3
-       AND organization_id = $4
-     RETURNING analysis_run_id, metadata, updated_at`,
-    [JSON.stringify(probabilityResult || {}), userId || null, analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-async function getProbabilityResult({ analysisRunId, organizationId }) {
-  const result = await query(
-    `SELECT
-       analysis_run_id,
-       metadata->'probability_result' AS probability_result,
-       metadata->>'probability_completed_at' AS probability_completed_at,
-       metadata->>'probability_completed_by_user_id' AS probability_completed_by_user_id
-     FROM analysis_runs
-     WHERE analysis_run_id = $1
-       AND organization_id = $2`,
-    [analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-
-
-async function createOperationalProject({ projectName, city, objective, requestedByUserId, organizationId }) {
-  const result = await query(
-    `INSERT INTO analysis_runs
-       (project_name, city, objective, criteria_weights, requested_by_user_id, organization_id, metadata, status)
-     VALUES ($1, $2, $3, '{}'::jsonb, $4, $5, $6, 'pending')
-     RETURNING *`,
-    [projectName, city || null, objective || null, requestedByUserId || null, organizationId, {
-      analysis_type: 'operational_project',
-      workflow_created_at: new Date().toISOString(),
-    }]
-  );
-  return result.rows[0];
-}
-
-async function listProjectCandidates({ analysisRunId, organizationId }) {
-  const result = await query(
-    `SELECT
-       arc.analysis_run_candidate_id,
-       arc.analysis_run_id,
-       arc.location_id,
-       arc.selected_at,
-       l.name,
-       l.city,
-       l.address,
-       l.latitude,
-       l.longitude,
-       l.category
-     FROM analysis_run_candidates arc
-     JOIN analysis_runs ar ON ar.analysis_run_id = arc.analysis_run_id
-     JOIN locations l ON l.location_id = arc.location_id
-     WHERE arc.analysis_run_id = $1
-       AND ar.organization_id = $2
-     ORDER BY arc.selected_at ASC`,
-    [analysisRunId, organizationId]
-  );
-  return result.rows;
-}
-
-async function addProjectCandidate({ analysisRunId, locationId, organizationId, userId }) {
-  const result = await query(
-    `INSERT INTO analysis_run_candidates (analysis_run_id, location_id, selected_by_user_id)
-     SELECT ar.analysis_run_id, l.location_id, $4
-     FROM analysis_runs ar
-     JOIN locations l ON l.location_id = $2 AND l.organization_id = $3
-     WHERE ar.analysis_run_id = $1 AND ar.organization_id = $3
-     ON CONFLICT (analysis_run_id, location_id) DO UPDATE SET selected_at = analysis_run_candidates.selected_at
-     RETURNING *`,
-    [analysisRunId, locationId, organizationId, userId || null]
-  );
-  return result.rows[0] || null;
-}
-
-async function removeProjectCandidate({ analysisRunId, locationId, organizationId }) {
-  const result = await query(
-    `DELETE FROM analysis_run_candidates arc
-     USING analysis_runs ar
-     WHERE arc.analysis_run_id = ar.analysis_run_id
-       AND arc.analysis_run_id = $1
-       AND arc.location_id = $2
-       AND ar.organization_id = $3
-     RETURNING arc.*`,
-    [analysisRunId, locationId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-
-
-async function bumpDependencyVersion({ analysisRunId, organizationId, dependency }) {
-  const allowed = new Set(['candidates', 'comparison', 'probability', 'risk', 'recommendation']);
-  if (!allowed.has(dependency)) throw new Error('Dependencia operacional inválida.');
-  const key = `${dependency}_version`;
-  const result = await query(
-    `UPDATE analysis_runs
-     SET metadata = jsonb_set(
-       COALESCE(metadata, '{}'::jsonb),
-       ARRAY['dependency_versions', $1],
-       to_jsonb(COALESCE((metadata->'dependency_versions'->>$1)::int, 0) + 1),
-       true
-     ),
-     updated_at = now()
-     WHERE analysis_run_id = $2 AND organization_id = $3
-     RETURNING *`,
-    [key, analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-async function syncDependencyVersion({ analysisRunId, organizationId, dependency, sourceDependency }) {
-  const allowed = new Set(['comparison', 'probability', 'risk', 'recommendation']);
-  const sources = new Set(['candidates', 'comparison', 'probability', 'risk']);
-  if (!allowed.has(dependency) || !sources.has(sourceDependency)) throw new Error('Dependencia operacional inválida.');
-  const targetKey = `${dependency}_version`;
-  const sourceKey = `${sourceDependency}_version`;
-  const result = await query(
-    `UPDATE analysis_runs
-     SET metadata = jsonb_set(
-       COALESCE(metadata, '{}'::jsonb),
-       ARRAY['dependency_versions', $1],
-       to_jsonb(COALESCE((metadata->'dependency_versions'->>$2)::int, 0)),
-       true
-     ),
-     updated_at = now()
-     WHERE analysis_run_id = $3 AND organization_id = $4
-     RETURNING *`,
-    [targetKey, sourceKey, analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-async function resetWorkflowFromStage({ analysisRunId, organizationId, stage }) {
-  const removals = {
-    comparison: ['probability_completed_at','probability_completed_by_user_id','risk_reviewed_at','risk_reviewed_by_user_id','operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot'],
-    probability: ['probability_completed_at','probability_completed_by_user_id','risk_reviewed_at','risk_reviewed_by_user_id','operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot'],
-    risk: ['risk_reviewed_at','risk_reviewed_by_user_id','operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot'],
-    recommendation: ['operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot'],
-  };
-  const keys = removals[stage];
-  if (!keys) return null;
-  const expression = keys.map((_, i) => ` - ${i + 1}`).join('');
-  const result = await query(
-    `UPDATE analysis_runs SET metadata = COALESCE(metadata, '{}'::jsonb)${expression}, status = 'pending', updated_at = now()
-     WHERE analysis_run_id = ${keys.length + 1} AND organization_id = ${keys.length + 2}
-     RETURNING *`,
-    [...keys, analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-async function invalidateDownstreamWorkflow({ analysisRunId, organizationId, reason, source = 'upstream_change' }) {
-  const result = await query(
-    `UPDATE analysis_runs
-     SET metadata =
-       (COALESCE(metadata, '{}'::jsonb)
-         - 'probability_completed_at'
-         - 'probability_completed_by_user_id'
-         - 'risk_reviewed_at'
-         - 'risk_reviewed_by_user_id'
-         - 'operational_recommendation_generated_at'
-         - 'operational_recommendation_generated_by_user_id'
-         - 'operational_recommendation_count'
-         - 'operational_recommendation_reviewed_at'
-         - 'operational_recommendation_reviewed_by_user_id'
-         - 'operational_recommendation_decision'
-         - 'operational_recommendation_id'
-         - 'report_generated_at'
-         - 'report_generated_by_user_id'
-         - 'report_snapshot')
-       || jsonb_build_object(
-         'workflow_stale', true,
-         'workflow_stale_at', now(),
-         'workflow_stale_reason', $1,
-         'workflow_stale_source', $2
-       ),
-       status = 'pending',
-       updated_at = now()
-     WHERE analysis_run_id = $3 AND organization_id = $4
-     RETURNING *`,
-    [reason, source, analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-async function clearWorkflowStale({ analysisRunId, organizationId }) {
-  const result = await query(
-    `UPDATE analysis_runs
-     SET metadata = COALESCE(metadata, '{}'::jsonb)
-       - 'workflow_stale'
-       - 'workflow_stale_at'
-       - 'workflow_stale_reason'
-       - 'workflow_stale_source',
-       updated_at = now()
-     WHERE analysis_run_id = $1 AND organization_id = $2
-     RETURNING *`,
-    [analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-async function replaceAnalysisResults({ analysisRunId, ranked }) {
-  await query('DELETE FROM analysis_results WHERE analysis_run_id = $1', [analysisRunId]);
-  for (const candidate of ranked) {
-    await insertAnalysisResult({
-      analysisRunId,
-      rankPosition: candidate.rank_position,
-      candidateName: candidate.candidate_name,
-      locationId: candidate.location_id,
-      scoreTotal: candidate.score_total,
-      scoreByDimension: candidate.score_by_dimension,
-      metrics: candidate.metrics,
-      explanation: { criteria: candidate.explanation },
-    });
-  }
-}
-
-async function markComparisonCompleted({ analysisRunId, organizationId, criteriaWeights, metadata }) {
-  const result = await query(
-    `UPDATE analysis_runs
-     SET criteria_weights = $1,
-         metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb || jsonb_build_object('comparison_completed_at', now()),
-         status = 'completed',
-         updated_at = now()
-     WHERE analysis_run_id = $3 AND organization_id = $4
-     RETURNING *`,
-    [criteriaWeights || {}, JSON.stringify(metadata || {}), analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-async function getOperationalRisksByRun({ analysisRunId, organizationId }) {
-  const result = await query(
-    `WITH project_locations AS (
-       SELECT DISTINCT ar.location_id
-       FROM analysis_results ar
-       JOIN analysis_runs run ON run.analysis_run_id = ar.analysis_run_id
-       WHERE ar.analysis_run_id = $1
-         AND run.organization_id = $2
-         AND ar.location_id IS NOT NULL
-     ),
-     latest_risks AS (
-       SELECT DISTINCT ON (ra.location_id)
-         ra.risk_id,
-         ra.location_id,
-         ra.assessed_at,
-         ra.flood_risk,
-         ra.landslide_risk,
-         ra.crime_risk,
-         ra.climate_exposure,
-         ra.score,
-         ra.details
-       FROM risk_assessments ra
-       JOIN project_locations pl ON pl.location_id = ra.location_id
-       WHERE ra.organization_id = $2
-       ORDER BY ra.location_id, ra.assessed_at DESC, ra.risk_id DESC
-     )
-     SELECT
-       pl.location_id,
-       l.name AS location_name,
-       l.city,
-       lr.risk_id,
-       lr.assessed_at,
-       lr.flood_risk,
-       lr.landslide_risk,
-       lr.crime_risk,
-       lr.climate_exposure,
-       lr.score,
-       lr.details
-     FROM project_locations pl
-     JOIN locations l ON l.location_id = pl.location_id
-     LEFT JOIN latest_risks lr ON lr.location_id = pl.location_id
-     ORDER BY l.name ASC`,
-    [analysisRunId, organizationId]
-  );
-  return result.rows;
-}
-
-async function saveRiskReview({ analysisRunId, organizationId, userId, riskSummary }) {
-  const result = await query(
-    `UPDATE analysis_runs
-     SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object(
-       'risk_review', $1::jsonb,
-       'risk_reviewed_at', now(),
-       'risk_reviewed_by_user_id', $2
-     ),
-     updated_at = now()
-     WHERE analysis_run_id = $3
-       AND organization_id = $4
-     RETURNING analysis_run_id, metadata, updated_at`,
-    [JSON.stringify(riskSummary || {}), userId || null, analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-
-async function getLatestOperationalRecommendation({ analysisRunId, organizationId }) {
-  const result = await query(
-    `SELECT
-       recommendation_id,
-       location_id,
-       query_type,
-       result,
-       score,
-       title,
-       priority,
-       confidence,
-       expected_impact,
-       status,
-       reviewed_by_user_id,
-       review_notes,
-       reviewed_at
-     FROM recommendations
-     WHERE analysis_run_id = $1
-       AND organization_id = $2
-     ORDER BY requested_at DESC, recommendation_id DESC
-     LIMIT 1`,
-    [analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-async function markReportGenerated({ analysisRunId, organizationId, userId, snapshot }) {
-  const result = await query(
-    `UPDATE analysis_runs
-     SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object(
-       'report_generated_at', now(),
-       'report_generated_by_user_id', $1,
-       'report_snapshot', $2::jsonb
-     ),
-     updated_at = now()
-     WHERE analysis_run_id = $3
-       AND organization_id = $4
-     RETURNING analysis_run_id, metadata, updated_at`,
-    [userId || null, JSON.stringify(snapshot || {}), analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-
-async function getRecoveryState({ analysisRunId, organizationId, action }) {
-  const result = await query(
-    `SELECT metadata->'auto_recovery'->$3 AS recovery_state
-     FROM analysis_runs
-     WHERE analysis_run_id = $1 AND organization_id = $2`,
-    [analysisRunId, organizationId, action]
-  );
-  return result.rows[0]?.recovery_state || null;
-}
-
-async function recordRecoveryAttempt({ analysisRunId, organizationId, action, state }) {
-  const result = await query(
-    `UPDATE analysis_runs
-     SET metadata = jsonb_set(
-       COALESCE(metadata, '{}'::jsonb),
-       ARRAY['auto_recovery', $1],
-       $2::jsonb,
-       true
-     ),
-     updated_at = now()
-     WHERE analysis_run_id = $3 AND organization_id = $4
-     RETURNING *`,
-    [action, JSON.stringify(state || {}), analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-async function clearRecoveryState({ analysisRunId, organizationId, action }) {
-  const result = await query(
-    `UPDATE analysis_runs
-     SET metadata = jsonb_set(
-       COALESCE(metadata, '{}'::jsonb),
-       '{auto_recovery}',
-       COALESCE(metadata->'auto_recovery', '{}'::jsonb) - $1,
-       true
-     ),
-     updated_at = now()
-     WHERE analysis_run_id = $2 AND organization_id = $3
-     RETURNING *`,
-    [action, analysisRunId, organizationId]
-  );
-  return result.rows[0] || null;
-}
-
-async function listOperationalBoard({ organizationId, limit = 20 }) {
-  const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100);
-  const result = await query(
-    `SELECT
-       ar.analysis_run_id,
-       ar.project_name,
-       ar.city,
-       ar.objective,
-       ar.status,
-       ar.recommendation_text,
-       ar.metadata,
-       ar.created_at,
-       ar.updated_at,
-       COUNT(res.analysis_result_id)::int AS result_count,
-       COUNT(res.location_id)::int AS linked_locations,
-       (SELECT COUNT(*)::int FROM analysis_run_candidates arc WHERE arc.analysis_run_id = ar.analysis_run_id) AS candidate_count
-     FROM analysis_runs ar
-     LEFT JOIN analysis_results res ON res.analysis_run_id = ar.analysis_run_id
-     WHERE ar.organization_id = $1
-     GROUP BY ar.analysis_run_id
-     ORDER BY ar.updated_at DESC
-     LIMIT $2`,
-    [organizationId, safeLimit]
-  );
-  return result.rows;
-}
-
+async function listProjectCandidates({analysisRunId,organizationId}){if(!await d.one('analysis_runs',filter(analysisRunId,organizationId)))return [];const rows=await d.find('analysis_run_candidates',filter(analysisRunId,organizationId),{selected_at:1});return Promise.all(rows.map(async row=>({...await d.one('locations',{...d.org(organizationId),location_id:row.location_id}),...row})));}
+async function addProjectCandidate({analysisRunId,locationId,organizationId,userId}){if(!await d.one('analysis_runs',filter(analysisRunId,organizationId))||!await d.one('locations',{...d.org(organizationId),location_id:d.id(locationId)}))return null;const q={...filter(analysisRunId,organizationId),location_id:d.id(locationId)};const c=await d.collection('analysis_run_candidates');const value={...q,analysis_run_candidate_id:await d.nextId('analysis_run_candidates'),selected_by_user_id:userId||null,selected_at:new Date()};return d.cleanDocument(await c.findOneAndUpdate(q,{$setOnInsert:value},{upsert:true,returnDocument:'after',includeResultMetadata:false}));}
+const removeProjectCandidate=({analysisRunId,locationId,organizationId})=>d.remove('analysis_run_candidates',{...filter(analysisRunId,organizationId),location_id:d.id(locationId)});
+const dependencies=new Set(['candidates','comparison','probability','risk','recommendation']);
+const key=value=>{if(!dependencies.has(value))throw new Error('Dependencia operacional inválida.');return `metadata.dependency_versions.${value}_version`;};
+const bumpDependencyVersion=input=>patch(input,{}, {},{$inc:{[key(input.dependency)]:1}});
+async function syncDependencyVersion(input){const row=await d.one('analysis_runs',filter(input.analysisRunId,input.organizationId));if(!row)return null;return d.update('analysis_runs',filter(input.analysisRunId,input.organizationId),{[key(input.dependency)]:row.metadata?.dependency_versions?.[`${input.sourceDependency}_version`]||0});}
+const removals={
+ comparison:['probability_completed_at','probability_completed_by_user_id','risk_reviewed_at','risk_reviewed_by_user_id','operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot'],
+ probability:['probability_completed_at','probability_completed_by_user_id','risk_reviewed_at','risk_reviewed_by_user_id','operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot'],
+ risk:['risk_reviewed_at','risk_reviewed_by_user_id','operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot'],
+ recommendation:['operational_recommendation_generated_at','operational_recommendation_reviewed_at','operational_recommendation_decision','report_generated_at','report_snapshot']
+};
+const unset=keys=>({$unset:Object.fromEntries(keys.map(k=>[`metadata.${k}`,'']))});
+const resetWorkflowFromStage=input=>removals[input.stage]?patch(input,{}, {status:'pending'},unset(removals[input.stage])):null;
+const invalidateDownstreamWorkflow=input=>patch(input,{workflow_stale:true,workflow_stale_at:new Date(),workflow_stale_reason:input.reason,workflow_stale_source:input.source||'upstream_change'},{status:'pending'},unset([...removals.comparison,'operational_recommendation_generated_by_user_id','operational_recommendation_count','operational_recommendation_reviewed_by_user_id','operational_recommendation_id','report_generated_by_user_id']));
+const clearWorkflowStale=input=>patch(input,{}, {},unset(['workflow_stale','workflow_stale_at','workflow_stale_reason','workflow_stale_source']));
+async function replaceAnalysisResults({analysisRunId,ranked}){const run=d.required(await d.one('analysis_runs',filter(analysisRunId)));return d.withMongoTransaction(async(db,session)=>{const c=db.collection('analysis_results');await c.deleteMany(filter(analysisRunId,run.organization_id),{session});for(const r of ranked){await c.insertOne({...filter(analysisRunId,run.organization_id),analysis_result_id:await d.nextId('analysis_results',session),rank_position:r.rank_position,candidate_name:r.candidate_name,location_id:r.location_id||null,score_total:r.score_total,score_by_dimension:r.score_by_dimension||{},metrics:r.metrics||{},explanation:{criteria:r.explanation}},{session});}});}
+const markComparisonCompleted=input=>patch(input,{...input.metadata,comparison_completed_at:new Date()},{criteria_weights:input.criteriaWeights||{},status:'completed'});
+async function getOperationalRisksByRun({analysisRunId,organizationId}){const run=await getAnalysisRunByIdForOrganization(analysisRunId,organizationId);if(!run)return [];const ids=[...new Set(run.ranking.map(r=>r.location_id).filter(Boolean))];return Promise.all(ids.map(async location_id=>{const q={...d.org(organizationId),location_id};const l=await d.one('locations',q);const r=await d.one('risk_assessments',q,{assessed_at:-1,risk_id:-1});return {...r,location_id,location_name:l?.name,city:l?.city};}));}
+async function guardedPatch(input,metadata){return d.withMongoTransaction(async(database,session)=>{
+ await require('../services/businessRules.service').service.assertFreshnessIn(database,session,{organizationId:input.organizationId,userId:input.userId},input.analysisRunId);
+ return d.cleanDocument(await database.collection('analysis_runs').findOneAndUpdate(filter(input.analysisRunId,input.organizationId),{$set:{...Object.fromEntries(Object.entries(metadata).map(([k,v])=>[`metadata.${k}`,v])),updated_at:new Date()}},{session,returnDocument:'after',includeResultMetadata:false}));
+});}
+const saveRiskReview=input=>guardedPatch(input,{risk_review:input.riskSummary||{},risk_reviewed_at:new Date(),risk_reviewed_by_user_id:input.userId||null});
+const getLatestOperationalRecommendation=input=>d.one('recommendations',filter(input.analysisRunId,input.organizationId),{requested_at:-1,recommendation_id:-1});
+const markReportGenerated=input=>guardedPatch(input,{report_generated_at:new Date(),report_generated_by_user_id:input.userId||null,report_snapshot:input.snapshot||{}});
+async function getRecoveryState(input){const row=await d.one('analysis_runs',filter(input.analysisRunId,input.organizationId));return row?.metadata?.auto_recovery?.[input.action]||null;}
+const safeAction=action=>{if(typeof action!=='string'||!/^[a-z_]+$/.test(action))throw new Error('Acción inválida.');return action;};
+const recordRecoveryAttempt=input=>patch(input,{[`auto_recovery.${safeAction(input.action)}`]:input.state||{}});
+const clearRecoveryState=input=>patch(input,{}, {},unset([`auto_recovery.${safeAction(input.action)}`]));
+async function listOperationalBoard({organizationId,limit=20}){const runs=await d.find('analysis_runs',d.org(organizationId),{updated_at:-1},Math.min(Number(limit)||20,100));return Promise.all(runs.map(async run=>{const ranking=await d.find('analysis_results',filter(run.analysis_run_id,organizationId));return {...run,result_count:ranking.length,linked_locations:ranking.filter(r=>r.location_id!=null).length,candidate_count:await (await d.collection('analysis_run_candidates')).countDocuments(filter(run.analysis_run_id,organizationId))};}));}
 module.exports = {
   findLocationById,
   buildCandidateFromCoordinates,

@@ -1,0 +1,150 @@
+{
+  "checked_at": "2026-10-24T16:16:17.504Z",
+  "mode": "fresh_process_read_only_staging_postflight",
+  "checks": [
+    {
+      "type": "api",
+      "alias": "backstage-staging-api.vercel.app",
+      "deployment_id": "dpl_3BG4YRnq1uhMjBuYBKMMK1EQh8Yq",
+      "target": "preview",
+      "protected": true,
+      "health": "mongodb_ok",
+      "request_id_forwarded": true
+    },
+    {
+      "type": "web",
+      "alias": "backstage-staging-web.vercel.app",
+      "deployment_id": "dpl_96mKM6xEKxmouQc5KYjRnZc1UqJe",
+      "target": "preview",
+      "protected": true,
+      "health": "mongodb_ok",
+      "request_id_forwarded": true
+    }
+  ],
+  "retained_global_request_audit_traces": true,
+  "runs": [
+    {
+      "run_id": "atlas-core-20261022232556-22298721ed7e",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "f182b57bdf87db65b91d10e86d82a38b5d25eb2b7ffde6308b16289e08ee188d",
+      "global_request_trace_count": 3
+    },
+    {
+      "run_id": "atlas-core-20261022232710-8a04a08843c3",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "89cd8db1cc7e8f907bcfc6f7922c05f5e626cca13a05d604d66afecf88ace4d7",
+      "global_request_trace_count": 4
+    },
+    {
+      "run_id": "atlas-core-20261022235356-ce59c9b6cb57",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "f2d1861c7e9cd4e8e5080d6c05ceaf7fe1bc4d27cf5f9c94b339564e2c7a6736",
+      "global_request_trace_count": 4
+    },
+    {
+      "run_id": "atlas-core-20261023210146-484f9ecacde4",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "ba1915184b633488a8793b41a51bed1ed7478c9c4a720bf8b40d1f903aab6130",
+      "global_request_trace_count": 3
+    },
+    {
+      "run_id": "atlas-core-20261023210314-4a4f4fdac016",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "3af3b870ca0d49150044fec3300e2b68e6c82d6a480f20d60dde8f3b82ff3012",
+      "global_request_trace_count": 4
+    },
+    {
+      "run_id": "atlas-core-20261023210500-962d05889c34",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "9d065167b484c48a4097afd958919e090763e0d150741946d4ceb998d8fee61f",
+      "global_request_trace_count": 4
+    },
+    {
+      "run_id": "atlas-core-20261023210654-b78c59b183c1",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "95d5e8584fd252f0178839783a40fd565a071e70e6a16aca3c80f7dfd56970bf",
+      "global_request_trace_count": 4
+    },
+    {
+      "run_id": "atlas-core-20261024025245-4804ed2b16a2",
+      "stopped_before_registration": true,
+      "no_test_tenant_created": true
+    },
+    {
+      "run_id": "atlas-core-20261024025312-510138327c4c",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "2de2e627d37a4cc5215f8011db9dbaaa03c634d743336c529ab0f312b7da7e4a",
+      "global_request_trace_count": 3
+    },
+    {
+      "run_id": "atlas-core-20261024025409-538dd7acbf0e",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "d60405b92f69a996f73f6b73790b2d04014b6b1b3b6ac20d322220033cb3d366",
+      "global_request_trace_count": 4
+    },
+    {
+      "run_id": "atlas-core-20261024031902-edc5924f6e81",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "e9f8124b692cf56d4ebf6b30e260d250cc9fb3951dfc2a9bcc1cd274b9312842",
+      "global_request_trace_count": 3
+    },
+    {
+      "run_id": "atlas-core-20261024032135-123f6963e71a",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "a84014cc0bb27ae5e69a58b86e86329c0710743d5efb6af974b6c1f6303bc5a7",
+      "global_request_trace_count": 3
+    },
+    {
+      "run_id": "atlas-core-20261024032809-611f255428ad",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "3795559cec18174789dc123f63cbc0d52b07bc63ee37102689c5618e48972ffa",
+      "global_request_trace_count": 3
+    },
+    {
+      "run_id": "atlas-core-20261024033020-dca8c3257a1d",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "2c1e4e8320925cb4a092161dccec2319044e7715395a1f6b864b35f98a16639b",
+      "global_request_trace_count": 4
+    },
+    {
+      "run_id": "atlas-core-20261024160044-eb96f9b1d2f4",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "4e9e1fb5669f1bd83baca410f953d2677566d492c1053e26ef49b9da72689152",
+      "global_request_trace_count": 4
+    },
+    {
+      "run_id": "atlas-core-20261024160943-a16ba1dd535d",
+      "owned_tenant_rows_remaining": 0,
+      "additional_registered_collections_checked": 58,
+      "backup_sha256": "995ec29aeff7e3c30f4e8d64353bb5567c4fb4ffc33c63bfd087b1863fc69801",
+      "global_request_trace_count": 4
+    }
+  ],
+  "load_runs": [
+    {
+      "run_id": "readiness-load-20261024160319-106f69bef3ca",
+      "owned_tenant_rows_remaining": 0,
+      "owned_technical_buckets_remaining": 0
+    },
+    {
+      "run_id": "readiness-load-20261024160825-8dd85fe13979",
+      "owned_tenant_rows_remaining": 0,
+      "owned_technical_buckets_remaining": 0
+    }
+  ],
+  "status": "passed"
+}

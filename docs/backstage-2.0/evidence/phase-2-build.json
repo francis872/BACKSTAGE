@@ -1,0 +1,102 @@
+{
+  "recorded_at": "2026-10-22T21:57:53.155834+00:00",
+  "mode": "local_compilation_not_deployment",
+  "observed_modules_transformed": 126,
+  "passed": true,
+  "index_sha256": "df9b7fc140cd4b57cb74f950625276f0e056f84d82b3312927797c2fb27eea39",
+  "assets": [
+    {
+      "file": "CleanCom-CfDT6hUt.js",
+      "bytes": 13829,
+      "gzip_bytes": 4915,
+      "sha256": "db673532f00a393ea08f8550a64721ade23758a25db3ba5e9e9dbeb8f952c6f3"
+    },
+    {
+      "file": "CleanCom-Mqx3EQhh.css",
+      "bytes": 2449,
+      "gzip_bytes": 872,
+      "sha256": "df253b6a80a9c14c1e0a752921579900d4d77988f622df66ab02aebf4100a40d"
+    },
+    {
+      "file": "CleanComMap-BQZWEwTf.js",
+      "bytes": 3698,
+      "gzip_bytes": 1695,
+      "sha256": "9731862c0c78385aa954a0d9a9da8362d126aceebade79311db5f2b41e318166"
+    },
+    {
+      "file": "index-CM5KH65C.css",
+      "bytes": 70335,
+      "gzip_bytes": 14459,
+      "sha256": "b61cee74ada99d25582227d5a76ca24ec6c4d77c648a8983a3030ca5d01d91a0"
+    },
+    {
+      "file": "index-D8Y2JFh0.js",
+      "bytes": 430346,
+      "gzip_bytes": 125233,
+      "sha256": "de621f06a356e5ae83bbe6d2118378d42074d97613b71a5628c4c0e22308bd57"
+    },
+    {
+      "file": "maplibre-gl-BUA_fIsx.css",
+      "bytes": 83175,
+      "gzip_bytes": 10518,
+      "sha256": "0918db69a46fa6366e205aab1c66117a9ace59d6e46b3e0eab58b70775e0a86f"
+    },
+    {
+      "file": "maplibre-gl-DgMcalTD.js",
+      "bytes": 1032833,
+      "gzip_bytes": 281099,
+      "sha256": "2be091f9026fbc8138a61a6a9cd179c85e92789c66e746c38bb6805305ad0e11"
+    },
+    {
+      "file": "maplibre-gl-worker-Dlq9U_OS.js",
+      "bytes": 510607,
+      "gzip_bytes": 148106,
+      "sha256": "a10b4e5caf14cb87827f5306d6c0d78de7987a8efa931c91013be1298a3e10ac"
+    },
+    {
+      "file": "NativeTerritorialExplorer-C3kfNSfG.css",
+      "bytes": 2794,
+      "gzip_bytes": 905,
+      "sha256": "908be5262306a6aa43e67399be757a8962b994fa6f71ab7ff1115de45ff4569f"
+    },
+    {
+      "file": "NativeTerritorialExplorer-CrBUpl_5.js",
+      "bytes": 61869,
+      "gzip_bytes": 18093,
+      "sha256": "f7125a023bb06e99e2f4f031c4a470582181bc9269bbe39fbc617b2d1a9ef213"
+    },
+    {
+      "file": "SoiRoutes-CxwjIHlM.js",
+      "bytes": 16765,
+      "gzip_bytes": 6160,
+      "sha256": "07480bd9f4cbff2555387d18058841806f3330f315a2cba7b7e47f25a1614b02"
+    },
+    {
+      "file": "SoiWorkspace-9FeS5PKN.js",
+      "bytes": 72730,
+      "gzip_bytes": 21090,
+      "sha256": "fb6148e53f8d47d518419e2c8ef9388438d47d4dbcfe9541c99a8a8df51f8735"
+    },
+    {
+      "file": "SoiWorkspace-CoZEh6zp.css",
+      "bytes": 1009,
+      "gzip_bytes": 423,
+      "sha256": "87c42de6eb500b71722f77e1f6048bcc61e147ce19440e5d635c400fd69205d1"
+    },
+    {
+      "file": "SoiWorkspace-DY2DUBSM.css",
+      "bytes": 1520,
+      "gzip_bytes": 585,
+      "sha256": "45ece97d2e9367f155683196d8b2904f062ba4835a954335029df27f6e30df59"
+    },
+    {
+      "file": "SoiWorkspace-ib8sUJVa.js",
+      "bytes": 661,
+      "gzip_bytes": 442,
+      "sha256": "86a8f51764e87d172a014e65b00473f198c8c1758bd45f8534d01113d3c1d014"
+    }
+  ],
+  "limitations": [
+    "Bundle size is not LCP or INP; MapLibre size warning remains"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-10-25T19:18:40.588Z",
+  "scope": "phase2_owned_test_records_only",
+  "runs": [
+    {
+      "run_id": "atlas-core-20261025180806-04f6abb988d2",
+      "records_removed": 3,
+      "remaining": 0,
+      "ownership_verified_against_original_BSON": true,
+      "backup_sha256": "143d7ecc2e7e29629132e507a47a9397ee879077c61258b27005668ac46c273e"
+    },
+    {
+      "run_id": "atlas-core-20261025183947-0c6348798ac8",
+      "records_removed": 0,
+      "remaining": 0,
+      "ownership_verified_against_original_BSON": true
+    },
+    {
+      "run_id": "atlas-core-20261025191012-a6624b7a20f0",
+      "records_removed": 3,
+      "remaining": 0,
+      "ownership_verified_against_original_BSON": true,
+      "backup_sha256": "c4064f537cb4c1ff11877eb2f719b082de163d5d4dcd43844fe38756f4c2ac0d"
+    }
+  ],
+  "status": "passed"
+}

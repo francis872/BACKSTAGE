@@ -1,0 +1,53 @@
+{
+  "environment": "Windows-10-10.0.19045-SP0",
+  "python": "3.14.2 (tags/v3.14.2:df79316, Dec  5 2025, 17:18:21) [MSC v.1944 64 bit (AMD64)]",
+  "dataset": "synthetic regular point grids, not operational data",
+  "method": "KNN union k=4 row-standardized; Moran random labeling 199 permutations",
+  "measurement": "separate process per size; time excludes Python import/startup and HTTP; peak RSS includes native dependencies",
+  "results": [
+    {
+      "n": 25,
+      "permutations": 199,
+      "prepare_ms": 74.60220000939444,
+      "weights_ms": 2.771100029349327,
+      "statistic_ms": 2.653000003192574,
+      "total_compute_ms": 80.02630004193634,
+      "peak_process_rss_bytes": 113565696,
+      "nonzero_weights": 106,
+      "result_bytes": 1207
+    },
+    {
+      "n": 100,
+      "permutations": 199,
+      "prepare_ms": 80.47079999232665,
+      "weights_ms": 7.622000004630536,
+      "statistic_ms": 2.8870999813079834,
+      "total_compute_ms": 90.97989997826517,
+      "peak_process_rss_bytes": 113696768,
+      "nonzero_weights": 468,
+      "result_bytes": 2107
+    },
+    {
+      "n": 400,
+      "permutations": 199,
+      "prepare_ms": 140.76540002133697,
+      "weights_ms": 98.1368999928236,
+      "statistic_ms": 5.522099963854998,
+      "total_compute_ms": 244.42439997801557,
+      "peak_process_rss_bytes": 116600832,
+      "nonzero_weights": 1688,
+      "result_bytes": 6012
+    },
+    {
+      "n": 1000,
+      "permutations": 199,
+      "prepare_ms": 296.4256000122987,
+      "weights_ms": 770.8163000061177,
+      "statistic_ms": 14.743099978659302,
+      "total_compute_ms": 1081.9849999970756,
+      "peak_process_rss_bytes": 131522560,
+      "nonzero_weights": 4126,
+      "result_bytes": 13813
+    }
+  ]
+}

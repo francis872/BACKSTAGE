@@ -1,0 +1,40 @@
+{
+  "started_at": "2026-10-26T00:10:09.388Z",
+  "run_id": "auto-20261025234838-1315eafd",
+  "scope": "bounded_owned_staging_capacity_not_production_sla",
+  "local_worker_started": false,
+  "production_changes": false,
+  "concurrent_creation": {
+    "requests": 4,
+    "created": 3,
+    "rejected_by_pending_budget": 1
+  },
+  "organization_isolation": {
+    "cross_organization_read": 404,
+    "spoofed_membership": 403,
+    "foreign_jobs_executed": 0,
+    "foreign_jobs_observed_queued": 3,
+    "observation_ms": 7251
+  },
+  "http_reads": {
+    "requests": 20,
+    "concurrency": 4,
+    "succeeded": 20,
+    "p50_ms": 162.05849999999919,
+    "p95_ms": 1579.059800000001,
+    "maximum_ms": 1580.0721999999987
+  },
+  "deployed_resource_sample": {
+    "scope": "node_process_including_worker_threads_excluding_python_child",
+    "cpu_user_us": 80610,
+    "cpu_system_us": 15369,
+    "rss_before_bytes": 91787264,
+    "rss_after_bytes": 99926016,
+    "rss_peak_sampled_bytes": 99926016,
+    "sampling_interval_ms": 250,
+    "absolute_peak": false
+  },
+  "status": "passed",
+  "owned_load_jobs_cancelled": 3,
+  "completed_at": "2026-10-26T00:10:38.208Z"
+}

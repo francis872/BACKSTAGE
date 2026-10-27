@@ -1,0 +1,155 @@
+{
+  "checked_at": "2026-10-22T21:55:15.512990+00:00",
+  "method": "Pillow RGB difference; diagnostic only, not an automatic historical pixel acceptance gate",
+  "reference": "phase-1-ui",
+  "current": "phase-2-ui",
+  "comparisons": [
+    {
+      "image": "assets-1024.png",
+      "width": 1024,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 9.793,
+      "fraction_pixels_changed_over_16": 0.1463
+    },
+    {
+      "image": "assets-1280.png",
+      "width": 1280,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 5.904,
+      "fraction_pixels_changed_over_16": 0.1312
+    },
+    {
+      "image": "assets-1440.png",
+      "width": 1440,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 5.672,
+      "fraction_pixels_changed_over_16": 0.1329
+    },
+    {
+      "image": "assets-1920.png",
+      "width": 1920,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 5.242,
+      "fraction_pixels_changed_over_16": 0.1373
+    },
+    {
+      "image": "assets-360.png",
+      "width": 360,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 7.257,
+      "fraction_pixels_changed_over_16": 0.115
+    },
+    {
+      "image": "assets-390.png",
+      "width": 390,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 7.339,
+      "fraction_pixels_changed_over_16": 0.1306
+    },
+    {
+      "image": "assets-768.png",
+      "width": 768,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 16.769,
+      "fraction_pixels_changed_over_16": 0.2148
+    },
+    {
+      "image": "command-1024.png",
+      "width": 1024,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 0.0,
+      "fraction_pixels_changed_over_16": 0.0
+    },
+    {
+      "image": "command-1280.png",
+      "width": 1280,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 0.0,
+      "fraction_pixels_changed_over_16": 0.0
+    },
+    {
+      "image": "command-1440.png",
+      "width": 1440,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 0.0,
+      "fraction_pixels_changed_over_16": 0.0
+    },
+    {
+      "image": "command-1920.png",
+      "width": 1920,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 0.0,
+      "fraction_pixels_changed_over_16": 0.0
+    },
+    {
+      "image": "command-360.png",
+      "width": 360,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 0.0,
+      "fraction_pixels_changed_over_16": 0.0
+    },
+    {
+      "image": "command-390.png",
+      "width": 390,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 0.0,
+      "fraction_pixels_changed_over_16": 0.0
+    },
+    {
+      "image": "command-768.png",
+      "width": 768,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 0.0,
+      "fraction_pixels_changed_over_16": 0.0
+    },
+    {
+      "image": "comparison-1024.png",
+      "width": 1024,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 6.221,
+      "fraction_pixels_changed_over_16": 0.0626
+    },
+    {
+      "image": "comparison-1280.png",
+      "width": 1280,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 5.819,
+      "fraction_pixels_changed_over_16": 0.0606
+    },
+    {
+      "image": "comparison-1440.png",
+      "width": 1440,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 5.729,
+      "fraction_pixels_changed_over_16": 0.0609
+    },
+    {
+      "image": "comparison-1920.png",
+      "width": 1920,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 5.551,
+      "fraction_pixels_changed_over_16": 0.0616
+    },
+    {
+      "image": "comparison-360.png",
+      "width": 360,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 8.314,
+      "fraction_pixels_changed_over_16": 0.0762
+    },
+    {
+      "image": "comparison-390.png",
+      "width": 390,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 10.467,
+      "fraction_pixels_changed_over_16": 0.0922
+    },
+    {
+      "image": "comparison-768.png",
+      "width": 768,
+      "height": 960,
+      "mean_absolute_channel_difference_0_255": 4.312,
+      "fraction_pixels_changed_over_16": 0.0421
+    }
+  ]
+}

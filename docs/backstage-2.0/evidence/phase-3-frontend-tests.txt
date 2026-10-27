@@ -1,0 +1,46 @@
+
+> backstage-intelligence-frontend@3.1.0 test
+> node --test tests/*.test.mjs
+
+(node:17404) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Usuario/OneDrive/Escritorio/backstage_v310/BACKSTAGE-3.1.0/frontend/src/lib/territory.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ map retains composite identity and real line/polygon geometry; camera centers are not point observations (3.606ms)
+✔ candidate selection keeps sanitary and general identities separate and never converts missing coordinates to zero (0.7545ms)
+✔ context distinguishes assets at the same point and clears asset identity when selecting a new territory (0.8925ms)
+✔ shared controls retain readable contrast in normal, hover, pressed and semantic states (5.522ms)
+✔ legacy aliases preserve BACKSTAGE active identity instead of restoring the unused cyan theme (0.9852ms)
+✔ global pages and industry module pages are separate, unique and retain deep links (5.316ms)
+✔ neutral views consume platform contracts while historical comparison algorithm imports remain compatible (44.6926ms)
+✔ protected requests preserve Headers, application token and selected organization (56.6251ms)
+✔ concurrent unauthorized requests clear one session and emit one recovery event (1.2973ms)
+✔ late failure from a previous token cannot log out a new session (0.9779ms)
+✔ login rejection, permission denial and temporary service failure do not expire an existing session (1.9625ms)
+✔ access is stored only after the backend verifies the exact user and organization (4.1419ms)
+✔ progress follows road segments and recognizes a deviation (1.9859ms)
+✔ GPS rejects stale positions and invalid accuracy (0.5883ms)
+✔ los selectores de mapa de módulos distintos no compiten y conservan el borrador (1.9799ms)
+✔ cambiar de territorio descarta proyectos y coordenadas del objetivo anterior (0.8479ms)
+✔ mantiene el borrador y permite abrir un proyecto nuevo en un territorio nuevo (0.5631ms)
+✔ no hereda contexto de otra organización (0.6221ms)
+✔ la asociación territorial excluye registros sin ubicación y homónimos extranjeros (0.966ms)
+✔ acepta cero geográfico pero rechaza null, texto vacío y pares inválidos (1.5405ms)
+(node:22308) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Usuario/OneDrive/Escritorio/backstage_v310/BACKSTAGE-3.1.0/frontend/src/lib/territory.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\frontend\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ context persists composite identities and zero coordinates within the active user and tenant (4.7714ms)
+✔ unowned legacy context is ignored, and logout removes browser workspace references (0.4809ms)
+✔ recovering a project uses its canonical territory, assets and comparison without inheriting another project (1.4093ms)
+✔ selecting a new territory invalidates stale project and analysis references (0.5315ms)
+✔ starting an analysis without an existing territory retains its declared draft name (0.7043ms)
+✔ reopening the same canonical project restores its reference after a territory change (0.6699ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 269.5105

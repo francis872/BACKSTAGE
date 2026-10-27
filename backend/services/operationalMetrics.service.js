@@ -1,4 +1,4 @@
-const { query } = require('../db');
+const { getMongoDatabase } = require('../infrastructure/platformMongo');
 const analysisService = require('./analysis.service');
 
 const runtime = {
@@ -33,18 +33,18 @@ function recordRecovery(kind) {
   if (kind === 'lock') runtime.recovery_locks += 1;
 }
 
-async function postgresHealth() {
+async function mongoHealth() {
   const started = Date.now();
   try {
-    await query('SELECT 1');
+    await (await getMongoDatabase()).command({ ping: 1 });
     return { status: 'healthy', latency_ms: Date.now() - started };
   } catch (error) {
-    return { status: 'down', latency_ms: Date.now() - started, error: error.message };
+    return { status: 'down', latency_ms: Date.now() - started, error: 'MongoDB Atlas no disponible' };
   }
 }
 
 async function health() {
-  const database = await postgresHealth();
+  const database = await mongoHealth();
   const recoveryTotal = runtime.recovery_successes + runtime.recovery_failures;
   const recoveryRate = recoveryTotal
     ? Number(((runtime.recovery_successes / recoveryTotal) * 100).toFixed(1))
@@ -53,7 +53,7 @@ async function health() {
   return {
     status: database.status === 'healthy' && runtime.supervisor_errors === 0 ? 'healthy' : 'degraded',
     components: {
-      postgres: database,
+      mongodb: database,
       supervisor: {
         status: runtime.supervisor_last_completed_at ? 'healthy' : 'starting',
         cycles: runtime.supervisor_cycles,
@@ -71,11 +71,11 @@ async function health() {
         success_rate_pct: recoveryRate,
       },
       realtime: {
-        status: 'healthy',
-        transport: 'websocket',
+        status: process.env.VERCEL ? 'http_polling_available' : 'not_probed',
+        transport: process.env.VERCEL ? 'http_polling' : 'websocket',
       },
       event_engine: {
-        status: 'healthy',
+        status: 'not_probed',
       },
     },
   };
@@ -96,7 +96,7 @@ async function metrics(organizationId) {
     stale_projects: staleProjects,
     critical_projects: criticalProjects,
     average_project_health: avgHealth,
-    supervisor: { ...runtime },
+    supervisor: { ...runtime, scope: 'current_process_only', durable_scheduler_verified: false },
   };
 }
 

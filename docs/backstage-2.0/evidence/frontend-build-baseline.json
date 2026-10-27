@@ -1,0 +1,14 @@
+{
+  "command": "npm run build -- --outDir ../.vercel/backstage-recovery-20261022T004525Z/frontend-build",
+  "passed": true,
+  "built_modules": 105,
+  "build_seconds_reported_by_vite": 7.46,
+  "directory": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\backstage_v310\\BACKSTAGE-3.1.0\\.vercel\\backstage-recovery-20261022T004525Z\\frontend-build",
+  "index_sha256": "72927407ed0f6056e57abefd45ce6bd0229cade6a60af5077cbb8d65331b30ca",
+  "warnings": [
+    "Vite CJS API deprecated",
+    "chunks exceed 500 kB"
+  ],
+  "core_web_vitals_measured": false,
+  "visual_breakpoint_audit_executed": false
+}

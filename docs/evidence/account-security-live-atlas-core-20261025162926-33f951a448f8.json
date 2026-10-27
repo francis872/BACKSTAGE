@@ -1,0 +1,51 @@
+{
+  "run_id": "atlas-core-20261025162926-33f951a448f8",
+  "started_at": "2026-10-25T16:29:26.465Z",
+  "mode": "real_protected_staging_atlas_controlled_mail_transport",
+  "api_interception": false,
+  "real_email_delivery": false,
+  "production_changes": false,
+  "checks": [
+    {
+      "name": "staging_target_fingerprint_and_original_production_unchanged",
+      "passed": true
+    },
+    {
+      "name": "missing_email_provider_truthfully_reported_through_api_and_proxy",
+      "passed": true
+    },
+    {
+      "name": "known_and_unknown_recovery_unavailable_and_invalid_link_rejected",
+      "passed": true
+    }
+  ],
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "deployments": {
+    "api": {
+      "id": "dpl_EmktPTU3HNWNyQm8Yi6dNsBhmcKu",
+      "url": "backstage-staging-ij0kxyqt6-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_4bJiWVQgr2ue98xxZEXxrKSFN3Yq",
+      "url": "backstage-staging-kcocv9ira-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "status": "failed",
+  "failure": {
+    "stage": "browser_change",
+    "name": "Error",
+    "message": "Browser timeout: !!localStorage.getItem('backstage_token') && !!document.querySelector('.identity-role')",
+    "cause": null
+  },
+  "cleanup": {
+    "passed": true,
+    "only_owned_test_records": true,
+    "global_security_traces_and_shared_counters_preserved": true,
+    "backup_sha256": "eb363f03770e1167cce63c0073983d22f6ec27d3d50df39f933048abb8db133e"
+  },
+  "completed_at": "2026-10-25T16:30:28.419Z"
+}

@@ -1,0 +1,362 @@
+{
+  "checked_at": "2026-10-27T03:38:01.196Z",
+  "scope": "read_only_no_real_user_documents",
+  "vercel_changes": false,
+  "atlas_source_writes": false,
+  "vercel": {
+    "production_api": {
+      "project_id": "prj_jjeZc5dTOxYm4yD5jgfGfdEAAB4O",
+      "project_name": "backstage-api",
+      "production_target": "dpl_FfGqHQQk5CEXGjcsje9yqaUSC1VE",
+      "protection": null,
+      "domains": [
+        {
+          "name": "backstage-api.vercel.app",
+          "deployment_id": "dpl_FfGqHQQk5CEXGjcsje9yqaUSC1VE",
+          "redirect": null
+        }
+      ],
+      "environment_keys": [
+        {
+          "key": "AUTH_PUBLIC_APP_URL",
+          "type": "encrypted",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "BACKSTAGE_DATA_STORE",
+          "type": "encrypted",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "BSIE_REQUEST_WORKER",
+          "type": "encrypted",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "DATABASE_URL",
+          "type": "sensitive",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "HEBRA_ACTIVE_KEY_ID",
+          "type": "encrypted",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "HEBRA_ENCRYPTION_KEYS",
+          "type": "sensitive",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "JWT_ISSUER",
+          "type": "sensitive",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "JWT_SECRET",
+          "type": "sensitive",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "MONGODB_SPATIAL_DB",
+          "type": "encrypted",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "MONGODB_URI",
+          "type": "sensitive",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "NODE_ENV",
+          "type": "sensitive",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "SOI_SCIENCE_RPC_SECRET",
+          "type": "sensitive",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "SOI_SCIENCE_RPC_URL",
+          "type": "encrypted",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "SPATIAL_STORE",
+          "type": "sensitive",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "VERCEL_SUPPORT_LARGE_FUNCTIONS",
+          "type": "encrypted",
+          "target": [
+            "production"
+          ]
+        }
+      ]
+    },
+    "production_web": {
+      "project_id": "prj_9IJyARVoFEpyYnhoXmnZ6G0uXtDQ",
+      "project_name": "backstage-web",
+      "production_target": "dpl_BCE7C3mvdoR4ftrRAahTiE78XHpo",
+      "protection": null,
+      "domains": [
+        {
+          "name": "backstage-web-seven.vercel.app",
+          "deployment_id": "dpl_BCE7C3mvdoR4ftrRAahTiE78XHpo",
+          "redirect": null
+        }
+      ],
+      "environment_keys": [
+        {
+          "key": "BACKEND_URL",
+          "type": "encrypted",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "VITE_SECURITY_WS_URL",
+          "type": "encrypted",
+          "target": [
+            "production"
+          ]
+        },
+        {
+          "key": "VITE_WS_BASE_URL",
+          "type": "encrypted",
+          "target": [
+            "production"
+          ]
+        }
+      ]
+    },
+    "preview_api": {
+      "project_id": "prj_b8QR9h6618xv5xhAdAWLGheZhJsO",
+      "project_name": "backstage-staging-api",
+      "production_target": "dpl_7krqxsyTUpmJeWT7AvKYyBKrLM8K",
+      "protection": "all",
+      "domains": [
+        {
+          "name": "backstage-staging-api.vercel.app",
+          "deployment_id": "dpl_3UCZHLatCJz2cnQ3EsA6gv9VNmnv",
+          "redirect": null
+        }
+      ],
+      "environment_keys": [
+        {
+          "key": "BACKSTAGE_DATA_STORE",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "BACKSTAGE_RUNTIME_ENV",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "BSIE_REQUEST_WORKER",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "HEBRA_ACTIVE_KEY_ID",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "HEBRA_ENCRYPTION_KEYS",
+          "type": "sensitive",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "JWT_ISSUER",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "JWT_SECRET",
+          "type": "sensitive",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "MAPBOX_ACCESS_TOKEN",
+          "type": "sensitive",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "MAPBOX_GEOCODING_PERMANENT",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "MONGODB_DB",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "MONGODB_DNS_SERVERS",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "MONGODB_SPATIAL_DB",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "MONGODB_URI",
+          "type": "sensitive",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "NODE_ENV",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "SOI_SCIENCE_RPC_SECRET",
+          "type": "sensitive",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "SOI_SCIENCE_RPC_URL",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "SPATIAL_STORE",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "VERCEL_SUPPORT_LARGE_FUNCTIONS",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        }
+      ]
+    },
+    "preview_web": {
+      "project_id": "prj_Adl43dUBZ79gEmihyrCVCyYC80eA",
+      "project_name": "backstage-staging-web",
+      "production_target": "dpl_84mL7n9tzpACuuaY94U9cLopoHRa",
+      "protection": "all",
+      "domains": [
+        {
+          "name": "backstage-staging-web.vercel.app",
+          "deployment_id": "dpl_6c168X4e52wSU4DdvmKCmSkjFt6K",
+          "redirect": null
+        }
+      ],
+      "environment_keys": [
+        {
+          "key": "BACKEND_PROTECTION_BYPASS",
+          "type": "sensitive",
+          "target": [
+            "preview"
+          ]
+        },
+        {
+          "key": "BACKEND_URL",
+          "type": "encrypted",
+          "target": [
+            "preview"
+          ]
+        }
+      ]
+    }
+  },
+  "all_deployments_aliases_protection_and_environment_names_unchanged": true,
+  "test_atlas": {
+    "connected": true,
+    "production_isolation_verified": false,
+    "control_plane_access_verified": false,
+    "network_access_list_verified": false,
+    "managed_backup_policy_verified": false,
+    "effective_database_grants": {
+      "verified": true,
+      "role_names": [
+        "atlasAdmin"
+      ],
+      "privilege_entries": 37,
+      "overbroad_or_cross_database_access_observed": true,
+      "least_privilege_verified": false,
+      "control_plane_roles_inferred": false
+    }
+  },
+  "cached_production_reference": {
+    "historical_only": true,
+    "currentness_verified": false,
+    "usable": false
+  },
+  "production_atlas": {
+    "status": "bloqueado",
+    "reason": "No connected Atlas administrative account; data credentials do not verify project roles, network or managed backup policies"
+  },
+  "status": "verified_read_only_inventory_with_external_gaps"
+}

@@ -1,0 +1,94 @@
+{
+  "started_at": "2026-10-24T18:26:52.665Z",
+  "authorization": "User: despliega el programa",
+  "projects": {
+    "api": {
+      "id": "prj_jjeZc5dTOxYm4yD5jgfGfdEAAB4O",
+      "name": "backstage-api",
+      "domain": "backstage-api.vercel.app",
+      "previous": {
+        "id": "dpl_93uunWbhwbeQdh3WtqkLxwmrdEjF",
+        "url": "backstage-1hobsk9pw-franciscogloopez-8505s-projects.vercel.app"
+      },
+      "protection": null,
+      "configured_keys": [
+        "BACKSTAGE_DATA_STORE",
+        "BSIE_REQUEST_WORKER",
+        "DATABASE_URL",
+        "JWT_ISSUER",
+        "JWT_SECRET",
+        "MONGODB_SPATIAL_DB",
+        "MONGODB_URI",
+        "NODE_ENV",
+        "SOI_SCIENCE_RPC_SECRET",
+        "SOI_SCIENCE_RPC_URL",
+        "SPATIAL_STORE",
+        "VERCEL_SUPPORT_LARGE_FUNCTIONS"
+      ],
+      "domains": [
+        "backstage-api.vercel.app"
+      ],
+      "updated_verification_tools": [
+        "backend/scripts/inspect-staging.js",
+        "backend/scripts/verify-staging.js"
+      ],
+      "source": ".vercel/soi-api-1792866498081",
+      "manifest_sha256": "9c16763fa3ec87389416f1840a05fbf051c0309e1302af7fc14c0913b12a47c6",
+      "files": 243,
+      "accepted_runtime_files_unchanged": true,
+      "deployment": {
+        "id": "dpl_FfGqHQQk5CEXGjcsje9yqaUSC1VE",
+        "url": "backstage-g5ybf1315-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "production"
+      }
+    },
+    "web": {
+      "id": "prj_9IJyARVoFEpyYnhoXmnZ6G0uXtDQ",
+      "name": "backstage-web",
+      "domain": "backstage-web-seven.vercel.app",
+      "previous": {
+        "id": "dpl_5sviMLHKHcFxekswJNmqtWZecp9E",
+        "url": "backstage-637qxqj0n-franciscogloopez-8505s-projects.vercel.app"
+      },
+      "protection": null,
+      "configured_keys": [
+        "BACKEND_URL",
+        "VITE_SECURITY_WS_URL",
+        "VITE_WS_BASE_URL"
+      ],
+      "domains": [
+        "backstage-web-seven.vercel.app"
+      ],
+      "updated_verification_tools": [],
+      "source": ".vercel/soi-web-1792866569285",
+      "manifest_sha256": "f197aa60428a0433351c4fc538681bcfa25d3ae740ac8c0e66473fc59b0a4023",
+      "files": 154,
+      "accepted_runtime_files_unchanged": true,
+      "backend_url": "https://backstage-g5ybf1315-franciscogloopez-8505s-projects.vercel.app",
+      "retired_render_websocket_overrides": "empty_at_build_time_same_origin_http_polling_fallback",
+      "deployment": {
+        "id": "dpl_BCE7C3mvdoR4ftrRAahTiE78XHpo",
+        "url": "backstage-h99ytmh78-franciscogloopez-8505s-projects.vercel.app",
+        "readyState": "READY",
+        "target": "production"
+      }
+    }
+  },
+  "checks": [],
+  "environment_variables_changed": false,
+  "database_migrations": false,
+  "atlas_preflight": {
+    "checked_at": "2026-10-24T18:28:46.324Z",
+    "passed": true,
+    "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+    "schema_version": 2,
+    "collections": 75,
+    "source_writes": 0,
+    "store": "mongodb_atlas",
+    "existing_credentials_preserved": true
+  },
+  "backup_run_id": "atlas-full-20261024182953-8eb7e9315a77",
+  "promoted_at": "2026-10-24T18:33:08.945Z",
+  "status": "published_and_verified"
+}

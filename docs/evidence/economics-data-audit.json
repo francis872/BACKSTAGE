@@ -1,0 +1,27 @@
+{
+  "audited_at": "2026-10-26T22:17:31.065Z",
+  "scope": "authorized_test_database_metadata_only",
+  "collections": {
+    "locations": {
+      "exists": true,
+      "count": 0
+    },
+    "operational_events": {
+      "exists": true,
+      "count": 1
+    },
+    "soi_audit_events": {
+      "exists": true,
+      "count": 184
+    },
+    "identity_memberships": {
+      "exists": true,
+      "count": 1
+    }
+  },
+  "financial_versions": 0,
+  "sensitive_rows_read": false,
+  "mutations": false,
+  "production_changes": false,
+  "validation_policy": "fresh_owned_synthetic_namespace_only"
+}

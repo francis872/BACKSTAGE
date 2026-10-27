@@ -1,0 +1,15 @@
+{
+  "deployment": "https://backstage-1hobsk9pw-franciscogloopez-8505s-projects.vercel.app",
+  "checked_at": "2026-10-21T23:49:36.370Z",
+  "mode": "read_only_cloud_scientific_fixtures",
+  "checks": [
+    "node_health_mongodb_primary",
+    "python_rejects_unsigned_requests",
+    "remote_bsie_validation",
+    "remote_spreg_diagnostics",
+    "remote_ortools_cvrp_independent_validation",
+    "remote_temporal_backtest_and_simulated_provenance"
+  ],
+  "operational_records_written": false,
+  "passed": true
+}

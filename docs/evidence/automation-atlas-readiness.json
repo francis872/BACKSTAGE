@@ -1,0 +1,24 @@
+{
+  "checked_at": "2026-10-26T00:01:00.582Z",
+  "mode": "read_only_atlas_operational_audit",
+  "run_id": "auto-20261025234838-1315eafd",
+  "production_changes": false,
+  "cluster_tier_verified": false,
+  "network_access_list_verified": false,
+  "managed_backup_policy_verified": false,
+  "atlas_admin_connection_confirmed": false,
+  "application_data_namespace_isolated": true,
+  "separate_cluster_verified": false,
+  "transport_tls": true,
+  "broad_database_role_detected": true,
+  "database_roles_readable": true,
+  "least_privilege_verified": false,
+  "mongodb_server_version": "8.0.34",
+  "collections": 11,
+  "indexes": 29,
+  "original_production_aliases": {
+    "api": "dpl_FfGqHQQk5CEXGjcsje9yqaUSC1VE",
+    "web": "dpl_BCE7C3mvdoR4ftrRAahTiE78XHpo"
+  },
+  "status": "audited_with_production_blockers"
+}

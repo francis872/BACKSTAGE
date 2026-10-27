@@ -1,43 +1,7 @@
-const { query } = require('./db');
-
-async function registerIntegrationSource(name, type, config = {}) {
-  const result = await query(
-    `INSERT INTO integration_sources (name, type, config)
-     VALUES ($1, $2, $3)
-     ON CONFLICT (name) DO UPDATE SET config = EXCLUDED.config, enabled = TRUE
-     RETURNING *`,
-    [name, type, config]
-  );
-  return result.rows[0];
-}
-
-async function recordIntegrationEvent(sourceId, externalId, payload) {
-  const result = await query(
-    `INSERT INTO integration_events (source_id, external_id, payload, status)
-     VALUES ($1, $2, $3, 'pending') RETURNING *`,
-    [sourceId, externalId, payload]
-  );
-  return result.rows[0];
-}
-
-async function markEventProcessed(eventId, status = 'processed') {
-  await query(
-    `UPDATE integration_events SET processed_at = now(), status = $2 WHERE event_id = $1`,
-    [eventId, status]
-  );
-}
-
-async function getPendingEvents(limit = 100) {
-  const result = await query(
-    `SELECT * FROM integration_events WHERE status = 'pending' ORDER BY received_at ASC LIMIT $1`,
-    [limit]
-  );
-  return result.rows;
-}
-
-module.exports = {
-  registerIntegrationSource,
-  recordIntegrationEvent,
-  markEventProcessed,
-  getPendingEvents,
-};
+// Compatibility facade. All persistence and parent/tenant checks live in the service/repository.
+const service=require('./services/integrations.service');
+const registerIntegrationSource=(name,type,config,org,userId)=>service.registerSource(name,type,config,org,userId);
+const recordIntegrationEvent=(sourceId,externalId,payload,org,userId)=>service.recordEvent(sourceId,externalId,payload,org,userId);
+const getPendingEvents=(limit,org,userId)=>service.listPending(limit,org,userId);
+const markEventProcessed=(id,status,org,userId)=>{if(status!=='processed')throw new (require('./utils/ApiError'))(409,'Transición de evento no permitida.');return service.completeEvent(id,org,userId);};
+module.exports={registerIntegrationSource,recordIntegrationEvent,getPendingEvents,markEventProcessed};

@@ -1,92 +1,103 @@
-const { URL } = require('url');
+const { URL } = require('node:url');
 const WebSocket = require('ws');
 const { verifyToken } = require('../auth');
+const organizationService = require('../services/organization.service');
 const { subscribeSecurityEvents } = require('./securityEvents');
 const { subscribeOperationalEvents } = require('./operationalEvents');
 
-function createPayload(event) {
-  return JSON.stringify({
-    event: 'audit-log-appended',
-    data: event,
-  });
-}
+function attachSecurityWebSocketServer(server, {
+  memberships = organizationService,
+  verify = verifyToken,
+  revalidateIntervalMs = 15000,
+  authorizationTimeoutMs = 5000,
+} = {}) {
+  const wss = new WebSocket.Server({ noServer: true, clientTracking: true });
+  const credentials = new WeakMap();
+  const queues = new WeakMap();
+  let disposed = false;
 
-function attachSecurityWebSocketServer(server) {
-  const wss = new WebSocket.Server({
-    noServer: true,
-    clientTracking: true,
-  });
-
-  const unsubscribe = subscribeSecurityEvents((event) => {
-    const payload = createPayload(event);
-    for (const client of wss.clients) {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(payload);
-      }
-    }
-  });
-
-  const unsubscribeOperational = subscribeOperationalEvents((event) => {
-    const payload = JSON.stringify({ event: 'operational-event', data: event });
-    for (const client of wss.clients) {
-      if (
-        client.readyState === WebSocket.OPEN &&
-        client.channel === 'operations' &&
-        Number(client.organizationId) === Number(event.organization_id)
-      ) {
-        client.send(payload);
-      }
-    }
-  });
-
-  server.on('upgrade', (request, socket, head) => {
-    let parsedUrl;
+  async function authorized(token, channel, organizationId) {
+    const claims = verify(token);
+    if (!Number.isSafeInteger(Number(claims.sub)) || Number(claims.sub) <= 0
+      || !Number.isSafeInteger(Number(organizationId)) || Number(organizationId) <= 0) throw new Error('Unauthorized');
+    let timeout;
     try {
-      parsedUrl = new URL(request.url, 'http://localhost');
-    } catch (error) {
-      socket.destroy();
-      return;
-    }
+      const current = await Promise.race([
+        memberships.getUserMemberships(Number(claims.sub), {session_version:claims.sv??0,session_id:claims.jti||null}),
+        new Promise((_, reject) => { timeout = setTimeout(() => reject(new Error('Unavailable')), authorizationTimeoutMs); }),
+      ]);
+      // A lookup can outlive the token's validity. Verify again before accepting it.
+      verify(token);
+      const membership = memberships.resolveMembership(current, Number(organizationId));
+      if (!(channel === 'security' ? ['admin'] : ['admin', 'analyst', 'viewer']).includes(membership.role)) throw new Error('Forbidden');
+      return membership;
+    } finally { clearTimeout(timeout); }
+  }
 
-    const isSecurityChannel = parsedUrl.pathname === '/ws/security';
-    const isOperationsChannel = parsedUrl.pathname === '/ws/operations';
-    if (!isSecurityChannel && !isOperationsChannel) {
-      socket.destroy();
-      return;
-    }
+  function enqueue(client, event, channel, send = true) {
+    const previous = queues.get(client) || Promise.resolve();
+    const work = previous.then(async () => {
+      if (client.readyState !== WebSocket.OPEN) return;
+      const credential = credentials.get(client);
+      if (!credential) return client.close(1008, 'Access revoked');
+      await authorized(credential.token, client.channel, client.organizationId);
+      if (send && client.readyState === WebSocket.OPEN && client.channel === channel
+        && Number(client.organizationId) === Number(event.organization_id)) {
+        client.send(JSON.stringify({ event: channel === 'security' ? 'audit-log-appended' : 'operational-event', data: event }));
+      }
+    }).catch(() => { if (client.readyState === WebSocket.OPEN) client.close(1008, 'Access revoked'); });
+    queues.set(client, work);
+  }
 
-    const token = parsedUrl.searchParams.get('token');
-    if (!token) {
-      socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
-      socket.destroy();
-      return;
+  function publish(event, channel) {
+    if (!Number.isSafeInteger(Number(event.organization_id)) || Number(event.organization_id) <= 0) return;
+    for (const client of wss.clients) {
+      if (client.channel === channel && Number(client.organizationId) === Number(event.organization_id)) enqueue(client, event, channel);
     }
+  }
+  const unsubscribeSecurity = subscribeSecurityEvents(event => publish(event, 'security'));
+  const unsubscribeOperations = subscribeOperationalEvents(event => publish(event, 'operations'));
+  const timer = setInterval(() => {
+    for (const client of wss.clients) enqueue(client, null, null, false);
+  }, Math.max(10, revalidateIntervalMs));
+  timer.unref?.();
 
-    let tokenPayload;
+  const upgrade = async (request, socket, head) => {
+    // Consume socket errors while asynchronous authorization is pending.
+    const socketError = () => {};
+    socket.on('error', socketError);
     try {
-      tokenPayload = verifyToken(token);
-    } catch (error) {
-      socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
-      socket.destroy();
-      return;
-    }
-
-    wss.handleUpgrade(request, socket, head, (ws) => {
-      ws.channel = isOperationsChannel ? 'operations' : 'security';
-      ws.organizationId = tokenPayload.organization_id || null;
-      ws.send(JSON.stringify({
-        event: isOperationsChannel ? 'operations-channel-ready' : 'security-channel-ready',
-        data: { path: isOperationsChannel ? '/ws/operations' : '/ws/security' },
-      }));
-      wss.emit('connection', ws, request);
-    });
-  });
-
-  server.on('close', () => {
-    unsubscribe();
-    unsubscribeOperational();
+      const url = new URL(request.url, 'http://localhost');
+      const channel = url.pathname === '/ws/security' ? 'security' : url.pathname === '/ws/operations' ? 'operations' : null;
+      if (!channel) return socket.destroy();
+      const header = request.headers.authorization;
+      const token = typeof header === 'string' && /^Bearer \S+$/i.test(header) ? header.slice(7) : url.searchParams.get('token');
+      if (!token) throw new Error('Unauthorized');
+      const claims = verify(token);
+      await authorized(token, channel, claims.organization_id);
+      if (socket.destroyed || disposed) return socket.destroy();
+      wss.handleUpgrade(request, socket, head, client => {
+        client.channel = channel;
+        client.organizationId = Number(claims.organization_id);
+        credentials.set(client, { token });
+        client.send(JSON.stringify({ event: channel === 'security' ? 'security-channel-ready' : 'operations-channel-ready', data: { path: url.pathname } }));
+        wss.emit('connection', client, request);
+      });
+    } catch {
+      if (!socket.destroyed) socket.end('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n');
+    } finally { socket.removeListener('error', socketError); }
+  };
+  server.on('upgrade', upgrade);
+  function dispose() {
+    if (disposed) return;
+    disposed = true;
+    clearInterval(timer);
+    unsubscribeSecurity(); unsubscribeOperations();
+    server.removeListener('upgrade', upgrade);
+    for (const client of wss.clients) client.terminate();
     wss.close();
-  });
+  }
+  server.once('close', dispose);
+  return { close: dispose };
 }
-
 module.exports = { attachSecurityWebSocketServer };

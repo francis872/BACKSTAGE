@@ -1,0 +1,1115 @@
+{
+  "nature": "SYNTHETIC_REFERENCE_NOT_ACTUAL_LEGAL_APPROVAL",
+  "verified": true,
+  "input_sha256": "78c004e0c4890e2e6d7dd06834fe90a7b5d86c90b93af62c9e963f53f2890839",
+  "result_sha256": "3a8e489439cfe727b47c494d45d62959453d4ecd4e022ee65f63d6f9b5d2e00c",
+  "result": {
+    "version": "backstage-normative-1",
+    "catalog_version": "co-ph-2026-10-26.1",
+    "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+    "evaluated_at": "2026-10-26T12:00:00.000Z",
+    "as_of": "2026-10-26",
+    "jurisdiction": "CO",
+    "scope": "selected_coproperty_and_reviewed_conditions",
+    "overall": "NO_CUMPLE",
+    "counts": {
+      "CUMPLE": 6,
+      "NO_CUMPLE": 1,
+      "REQUIERE_REVISION": 7
+    },
+    "results": [
+      {
+        "rule_id": "budget_authority",
+        "rule_version": 1,
+        "title": "Presupuesto y decisión del órgano competente",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-38",
+            "version": 1,
+            "article": "38",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-L675-2001-25",
+            "version": 1,
+            "article": "25",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2021-01-14",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": {
+          "rule_id": "budget_authority",
+          "rule_version": 1,
+          "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+          "decision": "approved",
+          "source_check": "confirmed_current",
+          "valid_from": "2026-10-26",
+          "valid_until": "2026-10-26",
+          "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+          "reviewed_by": 1,
+          "reviewed_at": "2026-10-26T11:00:00.000Z"
+        },
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {
+          "regime_verified": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "housing_category": {
+            "value": "standard",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "private_unit_count": {
+            "value": 2,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "use": {
+            "value": "residential",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "regulation_reviewed": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "budget_organ": {
+            "value": "assembly",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "budget_decision_recorded": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          }
+        },
+        "operations": [
+          {
+            "operation": "consume_verified_economic_result",
+            "scenario_id": 10,
+            "input_sha256": "83bc232cf65548bbb3e56b6251e7d50237b58ae27dc3275176f54712c13d79e7",
+            "result_sha256": "c982367bbbcb13b32d0e1108edbb45a9a1b82354ab872e990fac4f1387332775"
+          }
+        ],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "CUMPLE",
+        "justification": "Consta presupuesto y decisión documentada de asamblea.",
+        "applicability": "applicable"
+      },
+      {
+        "rule_id": "ordinary_fees",
+        "rule_version": 1,
+        "title": "Criterio de cuotas ordinarias",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-25",
+            "version": 1,
+            "article": "25",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2021-01-14",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-L675-2001-29",
+            "version": 1,
+            "article": "29",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-L675-2001-31",
+            "version": 1,
+            "article": "31",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": {
+          "rule_id": "ordinary_fees",
+          "rule_version": 1,
+          "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+          "decision": "approved",
+          "source_check": "confirmed_current",
+          "valid_from": "2026-10-26",
+          "valid_until": "2026-10-26",
+          "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+          "reviewed_by": 1,
+          "reviewed_at": "2026-10-26T11:00:00.000Z"
+        },
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {
+          "regime_verified": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "housing_category": {
+            "value": "standard",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "private_unit_count": {
+            "value": 2,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "use": {
+            "value": "residential",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "regulation_reviewed": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "elevator_exception_resolved": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "allocation_matches_regulation": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          }
+        },
+        "operations": [
+          {
+            "operation": "consume_verified_economic_result",
+            "scenario_id": 10,
+            "input_sha256": "83bc232cf65548bbb3e56b6251e7d50237b58ae27dc3275176f54712c13d79e7",
+            "result_sha256": "c982367bbbcb13b32d0e1108edbb45a9a1b82354ab872e990fac4f1387332775"
+          }
+        ],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "CUMPLE",
+        "justification": "El criterio de la propuesta fue contrastado con el reglamento revisado.",
+        "applicability": "applicable"
+      },
+      {
+        "rule_id": "extraordinary_fees",
+        "rule_version": 1,
+        "title": "Condiciones de cuotas extraordinarias",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-35",
+            "version": 1,
+            "article": "35",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-L675-2001-46",
+            "version": 1,
+            "article": "46",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": null,
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {},
+        "operations": [],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "REQUIERE_REVISION",
+        "applicability": "undetermined",
+        "justification": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "coefficients",
+        "rule_version": 1,
+        "title": "Coeficientes y reglamento aplicable",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-25",
+            "version": 1,
+            "article": "25",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2021-01-14",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": {
+          "rule_id": "coefficients",
+          "rule_version": 1,
+          "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+          "decision": "approved",
+          "source_check": "confirmed_current",
+          "valid_from": "2026-10-26",
+          "valid_until": "2026-10-26",
+          "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+          "reviewed_by": 1,
+          "reviewed_at": "2026-10-26T11:00:00.000Z"
+        },
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {
+          "regime_verified": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "housing_category": {
+            "value": "standard",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "private_unit_count": {
+            "value": 2,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "use": {
+            "value": "residential",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "regulation_reviewed": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "coefficients_match_regulation": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          }
+        },
+        "operations": [
+          {
+            "operation": "consume_verified_economic_result",
+            "scenario_id": 10,
+            "input_sha256": "83bc232cf65548bbb3e56b6251e7d50237b58ae27dc3275176f54712c13d79e7",
+            "result_sha256": "c982367bbbcb13b32d0e1108edbb45a9a1b82354ab872e990fac4f1387332775"
+          }
+        ],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "CUMPLE",
+        "justification": "Los coeficientes usados fueron contrastados con el reglamento.",
+        "applicability": "applicable"
+      },
+      {
+        "rule_id": "reserve",
+        "rule_version": 1,
+        "title": "Constitución y recaudo del fondo",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-35",
+            "version": 1,
+            "article": "35",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-L2079-2021",
+            "version": 1,
+            "article": "43–46",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_2079_2021.htm",
+            "valid_from": "2021-01-14",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": {
+          "rule_id": "reserve",
+          "rule_version": 1,
+          "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+          "decision": "approved",
+          "source_check": "confirmed_current",
+          "valid_from": "2026-10-26",
+          "valid_until": "2026-10-26",
+          "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+          "reviewed_by": 1,
+          "reviewed_at": "2026-10-26T11:00:00.000Z"
+        },
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {
+          "regime_verified": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "housing_category": {
+            "value": "standard",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "private_unit_count": {
+            "value": 2,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "use": {
+            "value": "residential",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "regulation_reviewed": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "annual_common_budget_id": {
+            "value": "30",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "annual_budget_basis_verified": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "fund_suspended": {
+            "value": false,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "fund_collection_minor": {
+            "value": "999",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          }
+        },
+        "operations": [
+          {
+            "operation": "consume_verified_economic_result",
+            "scenario_id": 10,
+            "input_sha256": "83bc232cf65548bbb3e56b6251e7d50237b58ae27dc3275176f54712c13d79e7",
+            "result_sha256": "c982367bbbcb13b32d0e1108edbb45a9a1b82354ab872e990fac4f1387332775"
+          },
+          {
+            "operation": "100 * surcharge >= annual_common_budget",
+            "left": "99900",
+            "right": "100000"
+          }
+        ],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "NO_CUMPLE",
+        "justification": "El recargo acreditado es inferior al mínimo sobre la base anual revisada.",
+        "applicability": "applicable"
+      },
+      {
+        "rule_id": "notice",
+        "rule_version": 1,
+        "title": "Convocatoria y comunicación",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-39",
+            "version": 1,
+            "article": "39",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": {
+          "rule_id": "notice",
+          "rule_version": 1,
+          "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+          "decision": "approved",
+          "source_check": "confirmed_current",
+          "valid_from": "2026-10-26",
+          "valid_until": "2026-10-26",
+          "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+          "reviewed_by": 1,
+          "reviewed_at": "2026-10-26T11:00:00.000Z"
+        },
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {
+          "regime_verified": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "housing_category": {
+            "value": "standard",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "private_unit_count": {
+            "value": 2,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "use": {
+            "value": "residential",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "regulation_reviewed": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "meeting_kind": {
+            "value": "ordinary",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "meeting_date": {
+            "value": "2026-10-26",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "notice_all_owners": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "convener": {
+            "value": "administrator",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "notice_date": {
+            "value": "2026-10-11",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          }
+        },
+        "operations": [
+          {
+            "operation": "calendar_date_difference >= 15",
+            "days": 15,
+            "threshold": 15
+          }
+        ],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "CUMPLE",
+        "justification": "Se acredita antelación calendario y comunicación de la convocatoria ordinaria.",
+        "applicability": "applicable"
+      },
+      {
+        "rule_id": "quorum",
+        "rule_version": 1,
+        "title": "Quórum presencial de decisiones económicas",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-45",
+            "version": 1,
+            "article": "45",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-C522-2002",
+            "version": 1,
+            "article": "Decisión y Auto 180/03",
+            "url": "https://www.corteconstitucional.gov.co/relatoria/2002/c-522-02.htm",
+            "valid_from": "2002-07-10",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": {
+          "rule_id": "quorum",
+          "rule_version": 1,
+          "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+          "decision": "approved",
+          "source_check": "confirmed_current",
+          "valid_from": "2026-10-26",
+          "valid_until": "2026-10-26",
+          "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+          "reviewed_by": 1,
+          "reviewed_at": "2026-10-26T11:00:00.000Z"
+        },
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {
+          "regime_verified": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "housing_category": {
+            "value": "standard",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "private_unit_count": {
+            "value": 2,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "use": {
+            "value": "residential",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "regulation_reviewed": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "meeting_kind": {
+            "value": "ordinary",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "meeting_date": {
+            "value": "2026-10-26",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "decision_kind": {
+            "value": "annual_budget",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "coefficients_match_regulation": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "attendance_verified": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "regulation_higher_quorum": {
+            "value": false,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "present_owner_count": {
+            "value": 2,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "present_coefficient_units": {
+            "value": 800000,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          }
+        },
+        "operations": [
+          {
+            "operation": "owners >= 2 and coefficient_units > 500000",
+            "count": 2,
+            "present": 800000
+          }
+        ],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "CUMPLE",
+        "justification": "El quórum general evaluado supera la mitad con pluralidad de propietarios.",
+        "applicability": "applicable"
+      },
+      {
+        "rule_id": "majority",
+        "rule_version": 1,
+        "title": "Mayoría de la decisión",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-45",
+            "version": 1,
+            "article": "45",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-L675-2001-46",
+            "version": 1,
+            "article": "46",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-C522-2002",
+            "version": 1,
+            "article": "Decisión y Auto 180/03",
+            "url": "https://www.corteconstitucional.gov.co/relatoria/2002/c-522-02.htm",
+            "valid_from": "2002-07-10",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": {
+          "rule_id": "majority",
+          "rule_version": 1,
+          "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+          "decision": "approved",
+          "source_check": "confirmed_current",
+          "valid_from": "2026-10-26",
+          "valid_until": "2026-10-26",
+          "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+          "reviewed_by": 1,
+          "reviewed_at": "2026-10-26T11:00:00.000Z"
+        },
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {
+          "regime_verified": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "housing_category": {
+            "value": "standard",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "private_unit_count": {
+            "value": 2,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "use": {
+            "value": "residential",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "regulation_reviewed": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "meeting_kind": {
+            "value": "ordinary",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "meeting_date": {
+            "value": "2026-10-26",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "coefficients_match_regulation": {
+            "value": true,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "regulation_higher_majority": {
+            "value": false,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "decision_kind": {
+            "value": "annual_budget",
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "present_coefficient_units": {
+            "value": 800000,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          },
+          "favorable_coefficient_units": {
+            "value": 400001,
+            "document_id": 1,
+            "document_revision": 2,
+            "locator": "Synthetic document, paragraph 1"
+          }
+        },
+        "operations": [
+          {
+            "operation": "2 * favorable > represented",
+            "favorable": 400001,
+            "represented": 800000,
+            "total": 1000000
+          }
+        ],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "CUMPLE",
+        "justification": "Se supera la mitad de coeficientes representados en el supuesto general.",
+        "applicability": "applicable"
+      },
+      {
+        "rule_id": "decision_record",
+        "rule_version": 1,
+        "title": "Decisión, aprobación y orden del día",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-38",
+            "version": 1,
+            "article": "38",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-L675-2001-39",
+            "version": 1,
+            "article": "39",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": null,
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {},
+        "operations": [],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "REQUIERE_REVISION",
+        "applicability": "undetermined",
+        "justification": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "administrator",
+        "rule_version": 1,
+        "title": "Competencia para designar administración",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-50",
+            "version": 1,
+            "article": "50",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-L675-2001-36",
+            "version": 1,
+            "article": "36",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": null,
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {},
+        "operations": [],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "REQUIERE_REVISION",
+        "applicability": "undetermined",
+        "justification": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "minutes",
+        "rule_version": 1,
+        "title": "Requisitos documentales del acta",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-47",
+            "version": 1,
+            "article": "47",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-L675-2001-51",
+            "version": 1,
+            "article": "51",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": null,
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {},
+        "operations": [],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "REQUIERE_REVISION",
+        "applicability": "undetermined",
+        "justification": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "minutes_publication",
+        "rule_version": 1,
+        "title": "Disponibilidad del acta y término hábil",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-47",
+            "version": 1,
+            "article": "47",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": null,
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {},
+        "operations": [],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "REQUIERE_REVISION",
+        "applicability": "undetermined",
+        "justification": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "fund_use",
+        "rule_version": 1,
+        "title": "Autorización para usar el fondo",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-35",
+            "version": 1,
+            "article": "35",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-L675-2001-38",
+            "version": 1,
+            "article": "38",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": null,
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {},
+        "operations": [],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "REQUIERE_REVISION",
+        "applicability": "undetermined",
+        "justification": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "fee_increase",
+        "rule_version": 1,
+        "title": "Fundamento del incremento de cuotas",
+        "normative_versions": [
+          {
+            "id": "CO-L675-2001-38",
+            "version": 1,
+            "article": "38",
+            "url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+            "valid_from": "2001-08-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          },
+          {
+            "id": "CO-CIRCULAR-028-2026",
+            "version": 1,
+            "article": "Fijación e incremento de cuotas",
+            "url": "https://www.minvivienda.gov.co/normativa/circular-externa-028-2026",
+            "valid_from": "2026-03-04",
+            "valid_until": null,
+            "verified_on": "2026-10-26"
+          }
+        ],
+        "interpretation": null,
+        "evaluated_at": "2026-10-26T12:00:00.000Z",
+        "as_of": "2026-10-26",
+        "scope": "bounded_condition_not_comprehensive_legal_opinion",
+        "data_used": {},
+        "operations": [],
+        "limitations": [
+          "Condición acotada; no concepto jurídico definitivo ni certificación integral.",
+          "Se basa en evidencia y hechos revisados, sin autenticar externamente su veracidad."
+        ],
+        "status": "REQUIERE_REVISION",
+        "applicability": "undetermined",
+        "justification": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      }
+    ],
+    "alerts": [
+      {
+        "rule_id": "extraordinary_fees",
+        "status": "REQUIERE_REVISION",
+        "message": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "reserve",
+        "status": "NO_CUMPLE",
+        "message": "El recargo acreditado es inferior al mínimo sobre la base anual revisada."
+      },
+      {
+        "rule_id": "decision_record",
+        "status": "REQUIERE_REVISION",
+        "message": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "administrator",
+        "status": "REQUIERE_REVISION",
+        "message": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "minutes",
+        "status": "REQUIERE_REVISION",
+        "message": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "minutes_publication",
+        "status": "REQUIERE_REVISION",
+        "message": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "fund_use",
+        "status": "REQUIERE_REVISION",
+        "message": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      },
+      {
+        "rule_id": "fee_increase",
+        "status": "REQUIERE_REVISION",
+        "message": "Falta interpretación y vigencia aprobadas por un revisor autorizado para esta copropiedad."
+      }
+    ],
+    "legal_opinion": false,
+    "financial_formulas_duplicated": false,
+    "limitations": [
+      "El estado agregado se refiere solo a las condiciones evaluadas.",
+      "No es autorización para cobrar, sancionar ni adoptar decisiones.",
+      "Las interpretaciones y fuentes deben revisarse ante cambios normativos."
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+.ui-state { padding: 24px; margin-block: 16px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface-base); overflow-wrap: anywhere; }
+.ui-state h3 { margin: 0 0 8px; color: var(--ink); font-size: 16px; line-height: 1.5; }
+.ui-state p { margin: 0; color: var(--ink-secondary); font-size: 14px; line-height: 1.6; }
+.ui-state--error { border-left: 3px solid var(--status-error); }
+.ui-state__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+.ui-loading { display: flex; align-items: center; gap: 10px; margin-block: 16px; color: var(--ink-secondary); font-size: 14px; }

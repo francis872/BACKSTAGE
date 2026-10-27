@@ -1,0 +1,227 @@
+{
+  "checked_at": "2026-10-22T21:57:53.155834+00:00",
+  "snapshot": "backstage-phase-2-20261022T015737Z",
+  "archive_sha256": "eba199cb5be5e087a74a41a567832244d09231110114920919c8a6fe1b578dda",
+  "restore_verified": true,
+  "baseline_ui_files": 123,
+  "preserved": [
+    "frontend/index.html",
+    "frontend/package-lock.json",
+    "frontend/public/probability/output/commercial_rent_cop_m2/academic_summary.csv",
+    "frontend/public/probability/output/commercial_rent_cop_m2/all_distributions_pdf.png",
+    "frontend/public/probability/output/commercial_rent_cop_m2/analysis_summary.json",
+    "frontend/public/probability/output/commercial_rent_cop_m2/best_pdf_vs_hist.png",
+    "frontend/public/probability/output/commercial_rent_cop_m2/bhattacharyya_ranking.png",
+    "frontend/public/probability/output/commercial_rent_cop_m2/bhattacharyya_threshold.png",
+    "frontend/public/probability/output/commercial_rent_cop_m2/cdf_survival.png",
+    "frontend/public/probability/output/commercial_rent_cop_m2/ecdf_vs_best_cdf.png",
+    "frontend/public/probability/output/commercial_rent_cop_m2/histogram_unit.png",
+    "frontend/public/probability/output/commercial_rent_cop_m2/ks_ranking.png",
+    "frontend/public/probability/output/commercial_rent_cop_m2/ks_threshold.png",
+    "frontend/public/probability/output/commercial_rent_cop_m2/metrics_table.png",
+    "frontend/public/probability/output/commercial_rent_cop_m2/results.csv",
+    "frontend/public/probability/output/commercial_rent_cop_m2/top_pdfs_overlay.png",
+    "frontend/public/probability/output/pedestrian_flow_day/academic_summary.csv",
+    "frontend/public/probability/output/pedestrian_flow_day/all_distributions_pdf.png",
+    "frontend/public/probability/output/pedestrian_flow_day/analysis_summary.json",
+    "frontend/public/probability/output/pedestrian_flow_day/best_pdf_vs_hist.png",
+    "frontend/public/probability/output/pedestrian_flow_day/bhattacharyya_ranking.png",
+    "frontend/public/probability/output/pedestrian_flow_day/bhattacharyya_threshold.png",
+    "frontend/public/probability/output/pedestrian_flow_day/cdf_survival.png",
+    "frontend/public/probability/output/pedestrian_flow_day/ecdf_vs_best_cdf.png",
+    "frontend/public/probability/output/pedestrian_flow_day/histogram_unit.png",
+    "frontend/public/probability/output/pedestrian_flow_day/ks_ranking.png",
+    "frontend/public/probability/output/pedestrian_flow_day/ks_threshold.png",
+    "frontend/public/probability/output/pedestrian_flow_day/metrics_table.png",
+    "frontend/public/probability/output/pedestrian_flow_day/results.csv",
+    "frontend/public/probability/output/pedestrian_flow_day/top_pdfs_overlay.png",
+    "frontend/public/robots.txt",
+    "frontend/public/sitemap.xml",
+    "frontend/scripts/deploy.mjs",
+    "frontend/src/components/AccessFrame.jsx",
+    "frontend/src/components/AnalysisCommandBar.css",
+    "frontend/src/components/AnalysisCommandBar.jsx",
+    "frontend/src/components/BsiePanel.jsx",
+    "frontend/src/components/CleanComMap.jsx",
+    "frontend/src/components/LiveTerritoryOverview.jsx",
+    "frontend/src/components/MapDrawingTools.jsx",
+    "frontend/src/components/MeasurementTimeline.jsx",
+    "frontend/src/components/OrbitalEntry.jsx",
+    "frontend/src/components/OrbitalGlobe.jsx",
+    "frontend/src/components/RiskScenarioMap.jsx",
+    "frontend/src/components/SanitaryAnalysisForms.jsx",
+    "frontend/src/components/SanitaryWorkspace.css",
+    "frontend/src/components/SanitaryWorkspace.jsx",
+    "frontend/src/components/SoiFleet.jsx",
+    "frontend/src/components/SpatialDataImporter.jsx",
+    "frontend/src/components/SpatialDatasetAdmin.jsx",
+    "frontend/src/components/SpatialSearch.jsx",
+    "frontend/src/components/TerrainHydrologyAnalyzer.jsx",
+    "frontend/src/components/TerritorialRiskAnalyzer.jsx",
+    "frontend/src/components/TerritoryLive.css",
+    "frontend/src/components/TerritoryLiveBar.jsx",
+    "frontend/src/components/ui/Alert.css",
+    "frontend/src/components/ui/Alert.jsx",
+    "frontend/src/components/ui/Badge.css",
+    "frontend/src/components/ui/Badge.jsx",
+    "frontend/src/components/ui/index.js",
+    "frontend/src/components/ui/Select.css",
+    "frontend/src/components/ui/Select.jsx",
+    "frontend/src/lib/api.js",
+    "frontend/src/lib/assetGeometry.mjs",
+    "frontend/src/lib/auth.js",
+    "frontend/src/lib/comparisonCandidates.mjs",
+    "frontend/src/lib/navigationRegistry.mjs",
+    "frontend/src/lib/operationalContext.js",
+    "frontend/src/lib/operationalRealtime.js",
+    "frontend/src/lib/soi.js",
+    "frontend/src/lib/soiNavigation.mjs",
+    "frontend/src/lib/territory.js",
+    "frontend/src/lib/useLiveResource.js",
+    "frontend/src/modules/moduleRegistry.jsx",
+    "frontend/src/pages/AuditLogsAdmin.jsx",
+    "frontend/src/pages/CleanCom.css",
+    "frontend/src/pages/CleanCom.jsx",
+    "frontend/src/pages/EarthArt.jsx",
+    "frontend/src/pages/GeoInsights.jsx",
+    "frontend/src/pages/LayerCatalogAdmin.jsx",
+    "frontend/src/pages/MissionControl.css",
+    "frontend/src/pages/MissionControl.jsx",
+    "frontend/src/pages/NativeTerritorialExplorer.css",
+    "frontend/src/pages/NativeTerritorialExplorer.jsx",
+    "frontend/src/pages/PlatformArchitecture.jsx",
+    "frontend/src/pages/ProbabilityEngine.jsx",
+    "frontend/src/pages/RealEstatePortfolio.jsx",
+    "frontend/src/pages/Recommendations.jsx",
+    "frontend/src/pages/Reports.jsx",
+    "frontend/src/pages/RetailZones.jsx",
+    "frontend/src/pages/RiskAssessments.jsx",
+    "frontend/src/pages/RiskComponents.jsx",
+    "frontend/src/pages/SoiRoutes.jsx",
+    "frontend/src/pages/SoiWorkspace.css",
+    "frontend/src/pages/SoiWorkspace.jsx",
+    "frontend/src/pages/UsersAdmin.jsx",
+    "frontend/src/styles/auth.css",
+    "frontend/src/styles/dashboard.css",
+    "frontend/src/styles/immersive.css",
+    "frontend/tests/assetGeometry.test.mjs",
+    "frontend/tests/platformNavigation.test.mjs",
+    "frontend/tests/session.test.mjs",
+    "frontend/tests/soiNavigation.test.mjs",
+    "frontend/tests/territory.test.mjs",
+    "frontend/vite.config.js"
+  ],
+  "modified": [
+    {
+      "path": "frontend/package.json",
+      "before_sha256": "4717185a7a2cf19f61437ea7ae3f5037bbecb0b6154c9cd9484cd2e0d1c720d6",
+      "after_sha256": "dd6342b9419725e4521d2ae923fdcb52ba65c52a2e7ce8e2bbcd60699bc71d8d"
+    },
+    {
+      "path": "frontend/scripts/soi-browser-smoke.mjs",
+      "before_sha256": "87db86b4cde4d9fb71fe5277b506baccd74128e51c1459546badc50f2d30961d",
+      "after_sha256": "f2e13a455ca3d92e34f927c5230ccf973a8799bbd5a6090b26ac37d861892367"
+    },
+    {
+      "path": "frontend/src/App.css",
+      "before_sha256": "7f39343de2a2c1a938612658a619b5ace313d111d21f552036df4f6961a3cc0d",
+      "after_sha256": "859e8730651fea8209ff051a81de4edb7a8094f35386095f147c974660bc2d06"
+    },
+    {
+      "path": "frontend/src/App.jsx",
+      "before_sha256": "28101c6acd41c11f9305875262fe8ef1fb475394a79987118cdcd560df391ed6",
+      "after_sha256": "6922df098d21031216fd820354b338aba06a8b25ccde7fa5479185a98c4056df"
+    },
+    {
+      "path": "frontend/src/components/ui/Button.css",
+      "before_sha256": "eaea9794c8907ec2c44115e8d4068767fa21d89293b2e1a22015e6ee6d7be06a",
+      "after_sha256": "976f4109ca2f5120ca7a3246447d3b91a916d0c274c9b94ddf2cb604f4533045"
+    },
+    {
+      "path": "frontend/src/components/ui/Button.jsx",
+      "before_sha256": "f3e1ddd1a9f791048da0467b6e931f49ea6bd76162043b2ddf03c6a0083dd5d7",
+      "after_sha256": "c9a761762b4e03607ba1221addef984f994df5cccfcac3ce611240c7ab8c82fb"
+    },
+    {
+      "path": "frontend/src/components/ui/Card.css",
+      "before_sha256": "67e97bf39077ad20452535c8b9f1e3bfb2d06ade40c931c4c6e79b37ff8ac441",
+      "after_sha256": "a18300b8064ef74a6f2b31c23d7aa3ee9ebdf4d3caf1a72f8a44797b06bb40dc"
+    },
+    {
+      "path": "frontend/src/components/ui/Card.jsx",
+      "before_sha256": "80eee13378939ff226cdde5e8e6faf7053a7e92de89ea08635aa03f110de0445",
+      "after_sha256": "a5ce9d0445c24449e9dbdc11ad18c87535539e81261715792dd6dff570945f96"
+    },
+    {
+      "path": "frontend/src/components/ui/Input.css",
+      "before_sha256": "fa10a53790ad2cdb8f6d3889e3de74e21c2b6ff0cbe1ca3cba164f8be6d934ce",
+      "after_sha256": "cb7e0dbd3bb076a9e9b3cbb0e023c3f4442cf2f87b742ace094d1f1091f358bb"
+    },
+    {
+      "path": "frontend/src/components/ui/Input.jsx",
+      "before_sha256": "1813546a9152b6e8c53fc28f47418d3f1183086c439f6823df583e23730f98b5",
+      "after_sha256": "ac07d9fedf95d6755cce2f6773026046acd8ca3054dc2d8405915a72cc204206"
+    },
+    {
+      "path": "frontend/src/components/ui/Modal.css",
+      "before_sha256": "a38d6ca6243101547d8f307d7176a826e4fe57fbcb40ee10b18f3c0ad4918b32",
+      "after_sha256": "6c773d7b444ee27f20b40e0b615a5406b272de5f5671ee1388e609461234d12a"
+    },
+    {
+      "path": "frontend/src/components/ui/Modal.jsx",
+      "before_sha256": "5503bcdba2ab2e3cb66a499e589c8fc9f3c9ca41d00dacd79e521cf88459449a",
+      "after_sha256": "4426429194a5556df65e422e861312bdf93c4106eccc2ab8d54784dd7436db5c"
+    },
+    {
+      "path": "frontend/src/index.css",
+      "before_sha256": "50951185c84581890c2984b42be6829d45418e45b952f56380f003cc2e19f6df",
+      "after_sha256": "f89c5471b682b9016eb5727acb8214c2159296249a7b30403ce043415f99d2db"
+    },
+    {
+      "path": "frontend/src/main.jsx",
+      "before_sha256": "35b4f072e629db34acbd5a89a7e57eb41fe9981d09f9efb60c88d2394cf9351c",
+      "after_sha256": "5041514bdbde60003abef288684e2c615164309ef57c52ce948d5be0632c1ec7"
+    },
+    {
+      "path": "frontend/src/pages/AdvancedComparator.jsx",
+      "before_sha256": "efff7481da3431285bfabf62534678ed722c8588289f197d4e942c63a4b3b3d5",
+      "after_sha256": "d1423e327ec91e4edfa2a57374961e2ff9a0ad0d4aea56fc35a55a2fdadac38a"
+    },
+    {
+      "path": "frontend/src/pages/AssetsWorkspace.jsx",
+      "before_sha256": "5b4966c26a1d68677570cf987b1514235149a7c65ba77bf23e4f772ff8ee44fa",
+      "after_sha256": "9f65a9d3f8a47ebacb7415482a6a67dd7bb9c99006cb986ac9083758f8490458"
+    },
+    {
+      "path": "frontend/src/pages/LegacyAdvancedComparator.jsx",
+      "before_sha256": "ae696505e22d10e4e8f49b752f7ef95b0fe2693d44a17462ca411f72e82f66ff",
+      "after_sha256": "7fe2cb29b2725c1d4f7821afd839ac526e5d7e63e465c66c2caf5a5805940beb"
+    },
+    {
+      "path": "frontend/src/styles/theme.css",
+      "before_sha256": "e277677834a0cb6fea392663743ec903b896fb71c3f090dd8d42a7e23b300e4d",
+      "after_sha256": "032232a6b5ee57b6a1ce770e3b1c7760370141d48932481bc4527b0d2aafa3fb"
+    }
+  ],
+  "added": [
+    "frontend/src/components/ui/DataTable.css",
+    "frontend/src/components/ui/DataTable.jsx",
+    "frontend/src/components/ui/EmptyState.jsx",
+    "frontend/src/components/ui/LoadingState.jsx",
+    "frontend/src/components/ui/States.css",
+    "frontend/src/lib/useMobileNavigation.js",
+    "frontend/tests/designContrast.test.mjs"
+  ],
+  "missing": [],
+  "backend_and_shared_unchanged_count": 234,
+  "additional_reviewed_paths": [
+    ".github/workflows/ci-vercel.yml",
+    "scripts/verify-prepared-backstage.js",
+    "docs/backstage-2.0/DESIGN_SYSTEM.md",
+    "docs/backstage-2.0/PHASE_2_REPORT.md",
+    "docs/backstage-2.0/IMPLEMENTATION_ROADMAP.md",
+    "docs/backstage-2.0/CHANGELOG.md",
+    "PROJECT_STATUS.md",
+    "README.md"
+  ]
+}

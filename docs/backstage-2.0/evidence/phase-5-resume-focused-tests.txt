@@ -1,0 +1,21 @@
+✔ known monetary cents beyond binary integer precision remain distinct and produce 100/50/0 (12.8542ms)
+✔ decimal parser rejects silent coercion, excessive precision, nonfinite values and ambiguous units (1.6692ms)
+✔ exact ratios match independent weighted case and preserve affine invariance (15.4284ms)
+✔ restrictions compare exact cents, missing zero-weight data stays inactive and ties are explicit (3.0872ms)
+✔ rounding is explicit and the total is rounded after exact aggregation (2.4483ms)
+✔ save stores server-owned contract, exact decimal strings, unit/source and uncertainty without fabricated verification (30.2051ms)
+✔ canonical JSON ignores object key order and rejects undefined, NaN and infinity (1.9635ms)
+✔ tampering of input, result, units, engine or manifest fails verification and prevents a new project (43.6767ms)
+✔ legacy snapshots replay with the frozen original engine without adding historical hashes (28.9869ms)
+✔ unknown engine versions are preserved for reading and explicitly refuse replay/project creation (5.5797ms)
+✔ projects reference immutable snapshot hashes, stay idempotent and cannot cross organizations (13.4758ms)
+✔ snapshot and audit are rolled back together if contract save cannot commit (3.4165ms)
+✔ HTTP verification/export apply current role and tenant; read-only viewer may verify but cannot save (1260.7431ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2830.4126

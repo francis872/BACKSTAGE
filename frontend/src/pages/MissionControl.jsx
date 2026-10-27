@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { connectOperationalRealtime } from '../lib/operationalRealtime';
+import { getSessionUser } from '../lib/auth';
+import { useLiveRefresh } from '../lib/useLiveResource';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   FiActivity,
   FiAlertTriangle,
@@ -16,13 +17,15 @@ import {
   FiUser,
 } from 'react-icons/fi';
 import { apiRequest } from '../lib/api';
+import AnalysisCommandBar from '../components/AnalysisCommandBar';
+import QuickStart from '../components/QuickStart';
 import './MissionControl.css';
 
 const FLOWS = [
-  ['territorial-explorer', 'Explorador territorial', 'Inspecciona territorio, capas y ubicaciones antes de evaluar.', FiMap],
-  ['portfolio-comparator', 'Comparador inteligente', 'Contrasta candidatos con el motor geoestratégico.', FiColumns],
-  ['probability-engine', 'Motor probabilístico', 'Revisa distribuciones, ajuste y resultados probabilísticos.', FiBarChart2],
-  ['reports', 'Informes ejecutivos', 'Consulta resultados y recomendaciones trazables.', FiFileText],
+  ['territorial-explorer', 'Explorador territorial', 'Consulta el territorio y las capas disponibles.', FiMap],
+  ['earthart', 'AirHeart', 'Abre el perfil territorial y su evidencia disponible.', FiMapPin],
+  ['portfolio-assets', 'Activos', 'Consulta los activos de tu organización.', FiLayers],
+  ['portfolio-comparator', 'Comparador', 'Contrasta candidatos con datos disponibles.', FiColumns],
 ];
 
 const dateTime = (value) => {
@@ -47,7 +50,10 @@ const actionName = (action) => {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 };
 
-function MissionControl({ onNavigate }) {
+function MissionControl({ onNavigate, operationalContext, diagnosticsOnly = false }) {
+  const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
+  const isAdmin = getSessionUser()?.role === 'admin';
+  const loadingRef = useRef(false);
   const [summary, setSummary] = useState(null);
   const [runs, setRuns] = useState([]);
   const [operationalProjects, setOperationalProjects] = useState([]);
@@ -58,13 +64,15 @@ function MissionControl({ onNavigate }) {
   const [message, setMessage] = useState('');
   const [creatingProject, setCreatingProject] = useState(false);
   const [operationalEvents, setOperationalEvents] = useState([]);
-  const [realtimeStatus, setRealtimeStatus] = useState('connecting');
+  const [realtimeStatus] = useState('polling');
   const [commandingProject, setCommandingProject] = useState(null);
   const [technicalHealth, setTechnicalHealth] = useState(null);
   const [operationalMetrics, setOperationalMetrics] = useState(null);
   const [commandExecutions, setCommandExecutions] = useState([]);
 
   const load = useCallback(async (manual = false) => {
+    if (loadingRef.current) return;
+    loadingRef.current = true;
     manual ? setRefreshing(true) : setLoading(true);
     setMessage('');
 
@@ -73,12 +81,12 @@ function MissionControl({ onNavigate }) {
         apiRequest('/insights/summary'),
         apiRequest('/analysis?limit=8'),
         apiRequest('/analysis/operations?limit=8'),
-        apiRequest('/audit-logs?limit=6'),
-        apiRequest('/audit-logs/chain-status'),
+        Promise.resolve({ ok: false }),
+        isAdmin && diagnosticsOpen ? apiRequest('/audit-logs/chain-status') : Promise.resolve({ ok: false }),
         apiRequest('/operational-events?limit=20'),
-        apiRequest('/operations/health'),
-        apiRequest('/operations/metrics'),
-        apiRequest('/operations/executions?limit=12'),
+        isAdmin && diagnosticsOpen ? apiRequest('/operations/health') : Promise.resolve({ ok: false }),
+        isAdmin && diagnosticsOpen ? apiRequest('/operations/metrics') : Promise.resolve({ ok: false }),
+        isAdmin && diagnosticsOpen ? apiRequest('/operations/executions?limit=12') : Promise.resolve({ ok: false }),
       ]);
 
       if (summaryResult.status !== 'fulfilled' || !summaryResult.value.ok) {
@@ -128,28 +136,26 @@ function MissionControl({ onNavigate }) {
 
       if (eventsResult.status === 'fulfilled' && eventsResult.value.ok) {
         const eventData = await eventsResult.value.json();
-        setOperationalEvents(Array.isArray(eventData) ? eventData : []);
+        const events = Array.isArray(eventData) ? eventData : [];
+        setOperationalEvents(events);
+        setAuditRows(events.slice(0, 6).map((event) => ({ audit_log_id: event.operational_event_id, action: event.title || event.event_type, actor_email: event.project_name || 'Actividad del proyecto', target_type: event.message || '', created_at: event.created_at })));
       } else {
         setOperationalEvents([]);
       }
     } catch (error) {
       setMessage(error.message || 'No fue posible cargar el Centro de Operaciones.');
     } finally {
+      loadingRef.current = false;
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [diagnosticsOpen, isAdmin]);
 
   useEffect(() => {
     load();
   }, [load]);
 
-  useEffect(() => connectOperationalRealtime({
-    onStatus: setRealtimeStatus,
-    onEvent: () => load(false),
-  }), [load]);
-
-
+  useLiveRefresh(() => load(true));
 
   const executeCommand = async (project, command) => {
     setCommandingProject(project.analysis_run_id);
@@ -225,24 +231,6 @@ function MissionControl({ onNavigate }) {
       });
     }
 
-    if (+summary.layers_active === 0) {
-      result.push({
-        level: 'critical',
-        title: 'No hay capas activas',
-        detail: 'El catálogo no reporta capas activas disponibles.',
-        target: 'admin-layer-catalog',
-      });
-    }
-
-    if (chainStatus && chainStatus.chain_enabled && chainStatus.valid === false) {
-      result.push({
-        level: 'critical',
-        title: 'Integridad de auditoría comprometida',
-        detail: 'La cadena hash de auditoría reporta una inconsistencia.',
-        target: 'admin-audit-logs',
-      });
-    }
-
     operationalEvents
       .filter((event) => event.severity === 'warning' || event.severity === 'critical')
       .slice(0, 6)
@@ -279,44 +267,9 @@ function MissionControl({ onNavigate }) {
         ? 'Íntegra'
         : 'Inconsistente';
 
-  return (
-    <section className="mission-control">
-      <header className="mission-hero">
-        <div>
-          <p className="hero-label">OPERACIÓN / CENTRO DE OPERACIONES</p>
-          <h1>Centro de Operaciones</h1>
-          <p className="hero-desc">
-            Supervisa datos, análisis, actividad y decisiones de BACKSTAGE desde un único punto operativo.
-          </p>
-        </div>
-        <div className="hero-actions">
-          <span className={'system-status ' + (summary?.operational_status === 'operational' ? 'ok' : 'warn')}>
-            <FiActivity />
-            {loading ? 'Consultando' : summary?.operational_status === 'operational' ? 'Operación estable' : 'Requiere atención'}
-          </span>
-          <span className={'realtime-status ' + realtimeStatus}>
-            {realtimeStatus === 'connected' ? '● Tiempo real' : '○ Reconectando'}
-          </span>
-          <button className="refresh-btn" onClick={() => load(true)} disabled={refreshing}>
-            <FiRefreshCw />
-            {refreshing ? 'Actualizando…' : 'Actualizar'}
-          </button>
-        </div>
-      </header>
-
-      <div className="kpi-grid">
-        {kpis.map(([label, value, meta, Icon]) => (
-          <article className="kpi-card" key={label}>
-            <Icon className="kpi-icon" />
-            <div>
-              <span>{label}</span>
-              <strong>{loading ? '—' : value}</strong>
-              <small>{meta}</small>
-            </div>
-          </article>
-        ))}
-      </div>
-
+  const diagnostics = (isAdmin && <details className="platform-diagnostics" onToggle={(event) => setDiagnosticsOpen(event.currentTarget.open)}>
+        <summary>Diagnóstico interno de plataforma</summary>
+        {diagnosticsOpen && <div>
       <section className="operations-overview">
         <div className="section-head">
           <div>
@@ -363,13 +316,119 @@ function MissionControl({ onNavigate }) {
             <strong className={'health-text-value ' + technicalHealth.status}>{technicalHealth.status}</strong>
           </div>
           <div className="health-grid">
-            <article><FiActivity /><span>PostgreSQL</span><strong>{technicalHealth.components?.postgres?.status || 'unknown'}</strong><small>{technicalHealth.components?.postgres?.latency_ms ?? '—'} ms</small></article>
+            <article><FiActivity /><span>MongoDB Atlas</span><strong>{technicalHealth.components?.mongodb?.status || 'unknown'}</strong><small>{technicalHealth.components?.mongodb?.latency_ms ?? '—'} ms</small></article>
             <article><FiRefreshCw /><span>Supervisor</span><strong>{technicalHealth.components?.supervisor?.status || 'unknown'}</strong><small>{technicalHealth.components?.supervisor?.cycles ?? 0} ciclos · {technicalHealth.components?.supervisor?.errors ?? 0} errores</small></article>
             <article><FiShield /><span>Auto-Recovery</span><strong>{technicalHealth.components?.auto_recovery?.status || 'unknown'}</strong><small>{technicalHealth.components?.auto_recovery?.success_rate_pct ?? '—'}% éxito · {technicalHealth.components?.auto_recovery?.locks ?? 0} locks</small></article>
             <article><FiBarChart2 /><span>Operación</span><strong>{operationalMetrics?.average_project_health ?? '—'}%</strong><small>{operationalMetrics?.sla_breaches ?? 0} SLA · {operationalMetrics?.stale_projects ?? 0} stale · {operationalMetrics?.critical_projects ?? 0} críticos</small></article>
           </div>
         </section>
       )}
+
+      <section className="panel">
+        <div className="section-head">
+          <div>
+            <p className="section-kicker">COMMAND AUDIT</p>
+            <h2>Historial de comandos</h2>
+          </div>
+          <small>Acciones manuales y automáticas con correlación completa.</small>
+        </div>
+        {commandExecutions.length ? (
+          <div className="table-wrap">
+            <table>
+              <thead><tr><th>Comando</th><th>Origen</th><th>Proyecto</th><th>Estado</th><th>Duración</th><th>Correlación</th><th>Inicio</th></tr></thead>
+              <tbody>
+                {commandExecutions.map((execution) => (
+                  <tr key={execution.command_execution_id}>
+                    <td><strong>{actionName(execution.command)}</strong><small>{execution.stage || '—'}</small></td>
+                    <td>{execution.source}</td>
+                    <td>#{execution.analysis_run_id || '—'}</td>
+                    <td><span className={'run-status ' + execution.status}>{execution.status}</span>{execution.error_message && <small>{execution.error_message}</small>}</td>
+                    <td>{execution.duration_ms == null ? 'En curso' : execution.duration_ms + ' ms'}</td>
+                    <td><code>{String(execution.correlation_id).slice(0, 8)}</code></td>
+                    <td>{dateTime(execution.started_at)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : <p className="state">Aún no hay comandos auditados.</p>}
+      </section>
+        </div>}
+      </details>);
+  if (diagnosticsOnly) return <section><h3>Diagnóstico interno</h3><p>Información técnica disponible para administradores de la organización.</p>{diagnostics}{message && <p role="status">{message}</p>}</section>;
+
+  return (
+    <section className="mission-control">
+      <QuickStart onNavigate={onNavigate}/>
+      <header className="mission-hero">
+        <div>
+          <p className="hero-label">OPERACIÓN / CENTRO DE OPERACIONES</p>
+          <h1>Centro de Operaciones</h1>
+          <p className="hero-desc">
+            Supervisa datos, análisis, actividad y decisiones de BACKSTAGE desde un único punto operativo.
+          </p>
+        </div>
+        <div className="hero-actions">
+          <span className={'system-status ' + (summary?.operational_status === 'operational' ? 'ok' : 'warn')}>
+            <FiActivity />
+            {loading ? 'Consultando' : summary?.operational_status === 'operational' ? 'Operación estable' : 'Requiere atención'}
+          </span>
+          <span className={'realtime-status ' + realtimeStatus}>
+            {realtimeStatus === 'polling' ? 'Actualización automática · 30 s' : 'Tiempo real'}
+          </span>
+          <button className="refresh-btn" onClick={() => load(true)} disabled={refreshing}>
+            <FiRefreshCw />
+            {refreshing ? 'Actualizando…' : 'Actualizar'}
+          </button>
+        </div>
+      </header>
+
+      <AnalysisCommandBar
+        onOpenTerritory={(candidate, center, plan) => {
+        const territory = {
+          ...candidate,
+          name: candidate.name || candidate.properties?.name || candidate.matchedQuery,
+          city: candidate.city || candidate.properties?.city || candidate.matchedQuery,
+          region: candidate.region || candidate.properties?.region || null,
+          country: candidate.country || candidate.properties?.country || null,
+          coordinates: center,
+          source: candidate.source || candidate.provider || candidate.provenance?.source || null,
+        };
+        onNavigate('territorial-explorer', {
+          territory,
+          intent_type: plan?.intentType,
+          selectedLocation: territory,
+          city: territory.city,
+          longitude: center[0],
+          latitude: center[1],
+        });
+        }}
+        onOpenComparison={(plan, candidates) => onNavigate('portfolio-comparator', {
+          intent_type: plan.intentType,
+          territories: plan.territories || plan.territoryQueries || [],
+          candidates,
+          project_name: 'Comparar territorios',
+          city: null,
+          comparison_plan: {
+            status: plan.status,
+            data_status: plan.data_status,
+            missing_inputs: plan.missing_inputs || [],
+          },
+        })}
+      />
+
+      <div className="kpi-grid">
+        {kpis.map(([label, value, meta, Icon]) => (
+          <article className="kpi-card" key={label}>
+            <Icon className="kpi-icon" />
+            <div>
+              <span>{label}</span>
+              <strong>{loading ? '—' : value}</strong>
+              <small>{meta}</small>
+            </div>
+          </article>
+        ))}
+      </div>
 
       <div className="operations-layout">
         <section className="panel">
@@ -440,10 +499,6 @@ function MissionControl({ onNavigate }) {
             <p className="state">No hay actividad reciente disponible.</p>
           )}
 
-          <button className="panel-action" onClick={() => onNavigate('admin-audit-logs')}>
-            Abrir auditoría completa →
-          </button>
-
           {operationalEvents.length > 0 && (
             <div className="operational-event-feed">
               <p className="section-kicker">EVENTOS DEL WORKFLOW</p>
@@ -490,9 +545,9 @@ function MissionControl({ onNavigate }) {
                 <div>
                   <div className="project-control-badges">
                     <span className={'workflow-state ' + project.workflow.state}>{project.workflow.label}</span>
-                    <span className={'priority-badge ' + project.priority}>{project.priority}</span>
-                    <span className="health-badge">Health {project.health}%</span>
-                    {project.sla?.breached && <span className="sla-badge">SLA vencido · {project.sla.age_hours}h</span>}
+                    <span className={'priority-badge ' + project.priority}>Prioridad {({critical:'crítica',high:'alta',normal:'normal'})[project.priority]||project.priority}</span>
+                    <span className="health-badge">Salud del proyecto {project.health}%</span>
+                    {project.sla?.breached && <span className="sla-badge">Plazo vencido · {project.sla.age_hours} h</span>}
                   </div>
                   <strong>{project.project_name || 'Proyecto sin nombre'}</strong>
                   <p>{project.city || 'Sin ciudad'} · {project.candidate_count || 0} candidatos · {project.result_count || 0} resultados</p>
@@ -525,7 +580,7 @@ function MissionControl({ onNavigate }) {
                 <div className="workflow-project-action">
                   <small>{project.blocked_reason || project.recommendation_text || 'Aún no existe recomendación para este proyecto.'}</small>
                   {project.workflow.state === 'stale' && (
-                    <strong className="stale-warning">Resultados STALE: las etapas dependientes deben recalcularse.</strong>
+                    <strong className="stale-warning">Estos resultados necesitan actualizarse. Vuelve a calcular las etapas que dependen de ellos.</strong>
                   )}
                   <button onClick={() => onNavigate(project.workflow.target, project)}>
                     {project.workflow.next_action} →
@@ -553,35 +608,7 @@ function MissionControl({ onNavigate }) {
         )}
       </section>
 
-      <section className="panel">
-        <div className="section-head">
-          <div>
-            <p className="section-kicker">COMMAND AUDIT</p>
-            <h2>Historial de comandos</h2>
-          </div>
-          <small>Acciones manuales y automáticas con correlación completa.</small>
-        </div>
-        {commandExecutions.length ? (
-          <div className="table-wrap">
-            <table>
-              <thead><tr><th>Comando</th><th>Origen</th><th>Proyecto</th><th>Estado</th><th>Duración</th><th>Correlación</th><th>Inicio</th></tr></thead>
-              <tbody>
-                {commandExecutions.map((execution) => (
-                  <tr key={execution.command_execution_id}>
-                    <td><strong>{actionName(execution.command)}</strong><small>{execution.stage || '—'}</small></td>
-                    <td>{execution.source}</td>
-                    <td>#{execution.analysis_run_id || '—'}</td>
-                    <td><span className={'run-status ' + execution.status}>{execution.status}</span>{execution.error_message && <small>{execution.error_message}</small>}</td>
-                    <td>{execution.duration_ms == null ? 'En curso' : execution.duration_ms + ' ms'}</td>
-                    <td><code>{String(execution.correlation_id).slice(0, 8)}</code></td>
-                    <td>{dateTime(execution.started_at)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : <p className="state">Aún no hay comandos auditados.</p>}
-      </section>
+
 
       <section className="panel">
         <div className="section-head">

@@ -1,0 +1,191 @@
+{
+  "started_at": "2026-10-27T02:11:27.121Z",
+  "run_id": "475643d3-7592-406a-bb35-0f0c5ead328f",
+  "scope": "fresh_owned_atlas_test_database_and_local_http",
+  "production_changes": false,
+  "remote_deployment": false,
+  "docker_used": false,
+  "checks": [
+    {
+      "name": "owned_namespace_and_additive_indexes_created_without_touching_source",
+      "passed": true
+    },
+    {
+      "name": "actual_http_creation_idempotency_and_zero_coordinates",
+      "passed": true
+    },
+    {
+      "name": "actual_atlas_tenant_isolation_and_viewer_denial",
+      "passed": true
+    },
+    {
+      "name": "actual_concurrent_transactions_prevent_over_allocation_without_inventing_child_geometry",
+      "passed": true
+    },
+    {
+      "name": "generic_asset_mutation_cannot_bypass_layer_rules",
+      "passed": true
+    },
+    {
+      "name": "real_revision_conflict_and_archive_parent_guard",
+      "passed": true
+    },
+    {
+      "name": "built_browser_journey_persists_real_atlas_entities",
+      "passed": true
+    },
+    {
+      "name": "canonical_audit_chain_valid_after_http_and_browser_mutations",
+      "passed": true
+    }
+  ],
+  "operations_checks": [],
+  "encryption_keys_ephemeral": true,
+  "retained_operations_acceptance": "unified-operations-live.json",
+  "economics": {
+    "checks": [
+      "real_atlas_bookkeeping_expenses_budget_approval_and_tenant_isolation",
+      "real_cash_aging_forecast_optimizer_and_conservative_quota_calculation",
+      "real_idempotency_and_exact_frozen_snapshot_reproduction",
+      "real_versioned_revision_and_internal_planning_approval_preserve_history",
+      "real_infeasibility_certificate_blocks_approval",
+      "real_stale_coefficients_and_incomplete_allocation_rules_are_rejected",
+      "real_reversal_changes_current_balance_without_rewriting_historical_scenarios",
+      "real_financial_evidence_is_encrypted_and_general_alert_routes_cannot_access_it"
+    ],
+    "engine": "backstage-economics-1",
+    "synthetic_only": true,
+    "cash_minor": "4000",
+    "outstanding_minor": "4001",
+    "optimized_allocations": [
+      "5000",
+      "4001"
+    ],
+    "fee_total_minor": "10001",
+    "forecast_history_nature": "SIMULATED",
+    "root_id": 4
+  },
+  "normative": {
+    "checks": [
+      "official_dictionary_versions_modifications_repeal_and_guidance_are_distinguished",
+      "real_native_reviewer_mandate_role_tenant_and_coproperty_isolation",
+      "real_encrypted_document_review_versions_idempotency_and_inert_user_content",
+      "real_three_state_evaluation_consumes_reproduced_economics_and_exact_legal_conditions",
+      "real_human_disagreement_and_new_interpretation_preserve_historical_results",
+      "real_document_discrepancy_and_stale_financial_basis_never_imply_compliance",
+      "real_document_financial_scope_prevents_cross_scenario_approval_reuse",
+      "real_erasure_tamper_rejection_alert_exclusion_and_permission_revocation"
+    ],
+    "synthetic_only": true,
+    "legal_opinion": false,
+    "source_reviews_nature": "SYNTHETIC_ACCEPTANCE_ONLY",
+    "root_id": 7,
+    "economic_scenario_id": 36,
+    "reviewed_document_id": 38,
+    "rule_count": 14,
+    "counts": {
+      "CUMPLE": 6,
+      "NO_CUMPLE": 1,
+      "REQUIERE_REVISION": 7
+    },
+    "engine": "backstage-normative-1",
+    "manifest": {
+      "engine_version": "backstage-normative-1",
+      "engine_source_sha256": "23f0620fc7d598e3e84aa1a89c56492abbeac20c36669fee1630ceec9709f11d",
+      "input_sha256": "cbb82f95c458308ae6fc12cdbd545186b0bca0e17a813301f2bf3159f56c9a97",
+      "result_sha256": "85a26ef8a3da8123fdff7c31d42dd96af285657763e75d774c44389e9f290541",
+      "policy": "bounded_reviewed_conditions_not_legal_opinion",
+      "runtime": "v24.13.0"
+    }
+  },
+  "community": {
+    "checks": [
+      {
+        "name": "real_canonical_document_reuse_bidirectional_encrypted_idempotent_versions",
+        "passed": true
+      },
+      {
+        "name": "real_native_permissions_tenant_object_filters_and_non_ph_asset_support",
+        "passed": true
+      },
+      {
+        "name": "real_unicode_text_candidates_human_curation_history_and_exact_reproduction",
+        "passed": true
+      },
+      {
+        "name": "real_two_admin_document_release_minimal_projection_and_explicit_revocation",
+        "passed": true
+      },
+      {
+        "name": "real_source_revision_withdrawal_and_all_version_content_erasure",
+        "passed": true
+      },
+      {
+        "name": "real_cipher_tamper_rejection_private_alert_exclusion_and_document_type_guards",
+        "passed": true
+      },
+      {
+        "name": "real_current_recipient_role_revocation_and_rejection_without_body_release",
+        "passed": true
+      },
+      {
+        "name": "real_both_organizations_have_verifiable_audit_chains",
+        "passed": true
+      }
+    ],
+    "root_id": 11,
+    "target_id": 12,
+    "synthetic_only": true,
+    "canonical_document_body_store": "normative.record.version",
+    "secondary_document_body_store": false,
+    "engine": "community-text-rules-1",
+    "manifest": {
+      "engine_source_sha256": "b44a53c584ab16581432dd9b57451b76fea3215e9666e2a10f29055ceb37f5a7",
+      "result_sha256": "45d3c4cda0f81ecea2880b889a740924cdbd41994176e029c1d80873da9dfea4",
+      "source_content_sha256": "b7bdeef0745350601c7e85a08ca7f3691381783d7aa864a9cea1464f660436f5"
+    },
+    "production_changes": false
+  },
+  "browser": {
+    "mode": "built_ui_local_ph_api_real_isolated_atlas",
+    "checks": [
+      "real_ui_creates_coproperty_in_atlas",
+      "real_ui_creates_hierarchy_and_exact_declared_coefficient",
+      "real_ui_revision_update_preserves_hierarchy",
+      "reload_recovers_layer_and_unlocated_entity_without_invented_coordinates",
+      "actual_ui_pqrs_create_and_response_transitions",
+      "actual_ui_erases_all_personal_payload_versions",
+      "no_horizontal_overflow_320",
+      "no_horizontal_overflow_390",
+      "no_horizontal_overflow_1440",
+      "real_ui_archives_leaf_preserving_its_record",
+      "actual_ui_lists_canonical_normative_documents_without_copy_or_new_navigation",
+      "actual_ui_uploads_text_file_encrypts_it_and_preserves_spanish_candidates",
+      "actual_ui_versions_human_curation_and_reproduces_deterministic_evidence",
+      "actual_ui_searches_private_object_library",
+      "actual_ui_amends_canonical_document_and_exposes_immutable_versions",
+      "actual_ui_proposes_explicit_version_pinned_share_and_revokes_it",
+      "community_panel_has_no_horizontal_overflow_at_320_and_1440",
+      "actual_ui_does_not_cache_private_community_text_in_local_storage",
+      "actual_ui_erases_document_family_and_clears_private_state",
+      "current_viewer_role_removes_write_actions",
+      "current_viewer_role_removes_private_community_panel",
+      "actual_ui_mfa_enrollment_rotates_session_and_displays_one_time_recovery_codes",
+      "actual_ui_password_login_requires_second_factor_and_consumes_recovery_code"
+    ],
+    "runtime_errors": [],
+    "ambient_api_responses_isolated": true,
+    "login_journey_verified": true,
+    "webgl_rendering_verified": false,
+    "external_map_requests_blocked": true,
+    "new_browser_installation": false
+  },
+  "audit_chain_valid": true,
+  "retained_before_cleanup": {
+    "assets": 15,
+    "audit_events": 197
+  },
+  "status": "passed",
+  "owned_temporary_database_removed": true,
+  "completed_at": "2026-10-27T02:19:52.148Z"
+}

@@ -1,0 +1,55 @@
+{
+  "checked_at": "2026-10-23T21:04:27.684Z",
+  "baseline_snapshot": ".vercel/backstage-phase-5-20261022T233931Z",
+  "baseline_archive_sha256": "055eacdf5447dcd1433da8652b31467d339668b6274e33148eff8d3cefd583f6",
+  "legacy_engine_byte_identical_to_baseline": true,
+  "mongo_schema_and_indexes_unchanged": true,
+  "orbital_entry_shell_and_tokens_unchanged": true,
+  "application_files": [
+    {
+      "path": "shared/comparison.mjs",
+      "sha256": "c14ea34fbd0bfd0988030f9edf7a77fa69106cf98359becb03af09c071220c85"
+    },
+    {
+      "path": "shared/comparison.v1.mjs",
+      "sha256": "ab29abdeee6be7c402186e113be7af3047bdfe3f96c0c2af436722990ef5f2a5"
+    },
+    {
+      "path": "shared/comparison.v2.mjs",
+      "sha256": "ba35c22147bf17199cd2d79b4994498d6d8ebc1e38dc6332272ddcddbf4286e4"
+    },
+    {
+      "path": "shared/decimal.mjs",
+      "sha256": "391cf002d8c301662ada54cf378c9eb171778bac460f8f79f310bb4152e23ac1"
+    },
+    {
+      "path": "backend/services/comparisons.service.js",
+      "sha256": "534e9e84dfea689b6b76c1fa8e8313041710c09c0d40f871984166b33b804061"
+    },
+    {
+      "path": "backend/services/intelligenceContract.service.js",
+      "sha256": "01320af37a7b6ef0df84eefe39f1fd8d0959a9752b038143f2c0ae9772be152e"
+    },
+    {
+      "path": "backend/routes/comparisons.routes.js",
+      "sha256": "4c076aab7b857a9a7d9b99b69ec963be86a265bc4fbceb74865ed3d775ff8a1d"
+    },
+    {
+      "path": "frontend/src/pages/AdvancedComparator.jsx",
+      "sha256": "a770822811b9bbdc6eb8c5b7c0882467d6f779ee94281e3ab1b730717fb12bbb"
+    },
+    {
+      "path": "frontend/src/pages/RetailZones.jsx",
+      "sha256": "6bd4de1658fe185688beaa4ecc385676aa9e5de05cafe01417edba239c8828ff"
+    }
+  ],
+  "final_guard": "legacy_replay_requires_ready_result",
+  "resumed_contract_tests_passed": 13,
+  "validation_run_id": "atlas-core-20261023210654-b78c59b183c1",
+  "final_preview_ids": {
+    "api": "dpl_EXcJoTYMZMvGXHQMTCvH3niPkYbv",
+    "web": "dpl_H32TCaeVvcTepGsqEsSjFfzssFra"
+  },
+  "final_checks": 12,
+  "independent_cleanup_confirmed": true
+}

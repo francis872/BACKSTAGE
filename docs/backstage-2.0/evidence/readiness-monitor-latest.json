@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-10-24T16:19:27.837Z",
+  "samples": [
+    {
+      "component": "api",
+      "healthy": true,
+      "status": "healthy",
+      "latency_ms": 702,
+      "latency_warning": false,
+      "http_status": 200,
+      "protection_verified": true
+    },
+    {
+      "component": "web",
+      "healthy": true,
+      "status": "healthy",
+      "latency_ms": 534,
+      "latency_warning": false,
+      "http_status": 200,
+      "protection_verified": true
+    }
+  ],
+  "open_incidents": 0,
+  "scope": "protected_staging_only",
+  "external_alert_delivery": false,
+  "requires_local_computer_and_signed_in_user": true
+}

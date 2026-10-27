@@ -1,0 +1,44 @@
+{
+  "started_at": "2026-10-26T00:01:36.670Z",
+  "run_id": "auto-20261025234838-1315eafd",
+  "scope": "owned_automation_staging_database_only",
+  "source_writes": 0,
+  "production_changes": false,
+  "managed_backup_or_pitr": false,
+  "scheduled_production_backup": false,
+  "checks": [],
+  "snapshot_at_cluster_time": {
+    "$timestamp": {
+      "t": 1792972900,
+      "i": 36
+    }
+  },
+  "backup": {
+    "encrypted": "AES-256-GCM",
+    "sha256": "adf0f98ef364df2c3c633440001748f40756e4159e505c94e10bfdacc9e00958",
+    "readback_verified": true,
+    "tamper_rejected": true,
+    "key_separate": true,
+    "external_custody_verified": false
+  },
+  "restore": {
+    "passed": true,
+    "collections": 11,
+    "documents": 82,
+    "non_default_indexes": 18,
+    "ttl_suspended_during_verification": 1,
+    "restore_and_validation_ms": 8565,
+    "source_overwritten": false,
+    "owned_temporary_database_removed": true
+  },
+  "rpo": {
+    "measured_seconds": null,
+    "note": "No production backup schedule configured; snapshot time is recorded, not an achieved RPO."
+  },
+  "rto": {
+    "measured_restore_validation_ms": 8565,
+    "scope": "small_owned_staging_dataset_not_full_production_recovery"
+  },
+  "status": "passed",
+  "completed_at": "2026-10-26T00:01:49.207Z"
+}

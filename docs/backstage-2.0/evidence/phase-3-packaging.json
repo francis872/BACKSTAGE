@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-10-22T22:23:35.432Z",
+  "mode": "prepared_sources_only_no_deployment",
+  "checks": [
+    {
+      "type": "api",
+      "source": "soi-api-1792707554708",
+      "files_verified": 219,
+      "passed": true
+    },
+    {
+      "type": "web",
+      "source": "soi-web-1792707815130",
+      "files_verified": 136,
+      "passed": true
+    }
+  ]
+}

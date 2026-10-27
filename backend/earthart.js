@@ -1,5 +1,5 @@
 // EarthArt: motor de inteligencia territorial (índice territorial, detector de brechas y simulaciones).
-const { query } = require('./db');
+const d = require('./infrastructure/atlasDocuments');
 const { haversineDistance } = require('./spatial/core');
 
 const DIMENSIONS = ['education', 'health', 'infrastructure', 'economy', 'environment', 'security', 'connectivity', 'housing', 'services'];
@@ -10,14 +10,8 @@ function clamp(value, min, max) {
 }
 
 async function loadLatestDimensionScores(unitId) {
-  const result = await query(
-    `SELECT DISTINCT ON (dimension) dimension, score, measured_at, details
-     FROM territorial_dimension_scores
-     WHERE unit_id = $1
-     ORDER BY dimension, measured_at DESC, score_id DESC`,
-    [unitId]
-  );
-  return result.rows;
+  const rows=await d.find('territorial_dimension_scores',{unit_id:d.id(unitId)},{measured_at:-1,score_id:-1});
+  const seen=new Set();return rows.filter(row=>{if(seen.has(row.dimension))return false;seen.add(row.dimension);return true;});
 }
 
 async function computeTerritorialIndex(unitId) {
@@ -33,54 +27,23 @@ async function computeTerritorialIndex(unitId) {
     ? clamp(Math.round((knownScores.reduce((sum, value) => sum + value, 0) / knownScores.length) * 100) / 100, 0, 100)
     : null;
 
-  const insertResult = await query(
-    `INSERT INTO territorial_index_snapshots (unit_id, composite_score, breakdown)
-     VALUES ($1, $2, $3) RETURNING *`,
-    [unitId, compositeScore, breakdown]
-  );
+  const unit=d.required(await loadUnit(unitId));
+  const snapshot=await d.insert('territorial_index_snapshots','snapshot_id',{...d.org(unit.organization_id),unit_id:d.id(unitId),composite_score:compositeScore,breakdown,computed_at:new Date()});
 
   return {
-    snapshot: insertResult.rows[0],
+    snapshot,
     breakdown,
     weightPerDimension: DIMENSION_WEIGHT,
   };
 }
 
-async function getLatestIndexSnapshot(unitId) {
-  const result = await query(
-    `SELECT * FROM territorial_index_snapshots WHERE unit_id = $1 ORDER BY computed_at DESC LIMIT 1`,
-    [unitId]
-  );
-  return result.rows[0] || null;
-}
-
-async function loadUnit(unitId, organizationId) {
-  const result = organizationId
-    ? await query('SELECT * FROM territorial_units WHERE unit_id = $1 AND organization_id = $2', [unitId, organizationId])
-    : await query('SELECT * FROM territorial_units WHERE unit_id = $1', [unitId]);
-  return result.rows[0] || null;
-}
-
-async function loadNearestFacilityDistance(unitId, facilityType, organizationId) {
-  const unitResult = await query(
-    'SELECT latitude, longitude FROM territorial_units WHERE unit_id = $1',
-    [unitId]
-  );
-  const unit = unitResult.rows[0];
-  if (!unit || unit.latitude == null || unit.longitude == null) return null;
-  const result = await query(
-    `SELECT name, capacity, latitude, longitude
-     FROM territorial_facilities f
-     JOIN territorial_units u ON u.unit_id = f.unit_id
-     WHERE f.facility_type = $1 AND f.latitude IS NOT NULL AND f.longitude IS NOT NULL
-       AND ($2::integer IS NULL OR u.organization_id = $2)`,
-    [facilityType, organizationId || null]
-  );
-  const origin = { lat: Number(unit.latitude), lng: Number(unit.longitude) };
-  return result.rows.map((row) => ({
-    ...row,
-    distance_m: haversineDistance(origin, { lat: Number(row.latitude), lng: Number(row.longitude) }),
-  })).sort((a, b) => a.distance_m - b.distance_m)[0] || null;
+const getLatestIndexSnapshot=unitId=>d.one('territorial_index_snapshots',{unit_id:d.id(unitId)},{computed_at:-1});
+const loadUnit=(unitId,org)=>d.one('territorial_units',{unit_id:d.id(unitId),...(org?d.org(org):{})});
+async function loadNearestFacilityDistance(unitId,facilityType,organizationId){
+ const unit=await loadUnit(unitId,organizationId);if(!unit||unit.latitude==null||unit.longitude==null)return null;
+ const rows=await d.find('territorial_facilities',{...d.org(unit.organization_id),facility_type:facilityType,latitude:{$ne:null},longitude:{$ne:null}});
+ const origin={lat:Number(unit.latitude),lng:Number(unit.longitude)};
+ return rows.map(row=>({...row,distance_m:haversineDistance(origin,{lat:Number(row.latitude),lng:Number(row.longitude)})})).sort((a,b)=>a.distance_m-b.distance_m)[0]||null;
 }
 
 // Reglas heurísticas de detección de brechas territoriales (población vs. infraestructura disponible).
@@ -133,12 +96,7 @@ async function detectGaps(unitId, organizationId) {
 
   const stored = [];
   for (const gap of detected) {
-    const insertResult = await query(
-      `INSERT INTO territorial_gaps (unit_id, gap_type, severity, message, metric)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [unitId, gap.gap_type, gap.severity, gap.message, gap.metric]
-    );
-    stored.push(insertResult.rows[0]);
+    stored.push(await d.insert('territorial_gaps','gap_id',{...d.org(unit.organization_id),unit_id:d.id(unitId),...gap,resolved:false,detected_at:new Date()}));
   }
 
   return stored;
@@ -199,13 +157,7 @@ async function simulateInfrastructure(unitId, params, organizationId) {
     best_alternative_index: bestIndex,
   };
 
-  const insertResult = await query(
-    `INSERT INTO territorial_simulations (unit_id, scenario_type, parameters, result, recommendation)
-     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-    [unitId, params.scenario_type || 'new_facility', params, result, recommendation]
-  );
-
-  return insertResult.rows[0];
+  return d.insert('territorial_simulations','simulation_id',{...d.org(unit.organization_id),unit_id:d.id(unitId),scenario_type:params.scenario_type||'new_facility',parameters:params,result,recommendation,data_type:'SIMULATED'});
 }
 
 module.exports = {

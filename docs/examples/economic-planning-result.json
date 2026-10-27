@@ -1,0 +1,743 @@
+{
+  "nature": "SYNTHETIC_EXAMPLE_NOT_OPERATIONAL_DATA",
+  "verified": true,
+  "result": {
+    "version": "backstage-economics-1",
+    "policy": {
+      "money": "canonical_integer_minor_unit_strings_BigInt",
+      "rounding": "half_away_from_zero_for_forecast;Hamilton_largest_remainder_for_fees",
+      "calendar": "UTC_months",
+      "journal_time": "verified_recording_time_not_bank_statement",
+      "max_periods": 36,
+      "max_events": 5000,
+      "max_entities": 500
+    },
+    "currency": "COP",
+    "scale": 2,
+    "captured_at": "2026-10-26T12:00:00.000Z",
+    "history": [
+      {
+        "month": "2026-01",
+        "complete": true,
+        "receipts_minor": "0",
+        "expenses_minor": "0",
+        "billed_minor": "10001",
+        "net_minor": "0",
+        "cash_minor": "0",
+        "deficit": false,
+        "outstanding_minor": "10001",
+        "overdue_minor": "0",
+        "overdue_share": {
+          "numerator": "0",
+          "denominator": "10001",
+          "decimal": "0.00000000"
+        },
+        "expense_budget_minor": null,
+        "budget_variance_minor": null,
+        "budget_scope": "no_exact_month_approved_budget"
+      },
+      {
+        "month": "2026-02",
+        "complete": true,
+        "receipts_minor": "6000",
+        "expenses_minor": "2000",
+        "billed_minor": "0",
+        "net_minor": "4000",
+        "cash_minor": "4000",
+        "deficit": false,
+        "outstanding_minor": "4001",
+        "overdue_minor": "4001",
+        "overdue_share": {
+          "numerator": "4001",
+          "denominator": "4001",
+          "decimal": "1.00000000"
+        },
+        "expense_budget_minor": "10001",
+        "budget_variance_minor": "8001",
+        "budget_scope": "approved_budget_within_same_calendar_month"
+      },
+      {
+        "month": "2026-03",
+        "complete": true,
+        "receipts_minor": "0",
+        "expenses_minor": "0",
+        "billed_minor": "0",
+        "net_minor": "0",
+        "cash_minor": "4000",
+        "deficit": false,
+        "outstanding_minor": "4001",
+        "overdue_minor": "4001",
+        "overdue_share": {
+          "numerator": "4001",
+          "denominator": "4001",
+          "decimal": "1.00000000"
+        },
+        "expense_budget_minor": null,
+        "budget_variance_minor": null,
+        "budget_scope": "no_exact_month_approved_budget"
+      },
+      {
+        "month": "2026-04",
+        "complete": true,
+        "receipts_minor": "0",
+        "expenses_minor": "0",
+        "billed_minor": "0",
+        "net_minor": "0",
+        "cash_minor": "4000",
+        "deficit": false,
+        "outstanding_minor": "4001",
+        "overdue_minor": "4001",
+        "overdue_share": {
+          "numerator": "4001",
+          "denominator": "4001",
+          "decimal": "1.00000000"
+        },
+        "expense_budget_minor": null,
+        "budget_variance_minor": null,
+        "budget_scope": "no_exact_month_approved_budget"
+      },
+      {
+        "month": "2026-05",
+        "complete": true,
+        "receipts_minor": "0",
+        "expenses_minor": "0",
+        "billed_minor": "0",
+        "net_minor": "0",
+        "cash_minor": "4000",
+        "deficit": false,
+        "outstanding_minor": "4001",
+        "overdue_minor": "4001",
+        "overdue_share": {
+          "numerator": "4001",
+          "denominator": "4001",
+          "decimal": "1.00000000"
+        },
+        "expense_budget_minor": null,
+        "budget_variance_minor": null,
+        "budget_scope": "no_exact_month_approved_budget"
+      },
+      {
+        "month": "2026-06",
+        "complete": true,
+        "receipts_minor": "0",
+        "expenses_minor": "0",
+        "billed_minor": "0",
+        "net_minor": "0",
+        "cash_minor": "4000",
+        "deficit": false,
+        "outstanding_minor": "4001",
+        "overdue_minor": "4001",
+        "overdue_share": {
+          "numerator": "4001",
+          "denominator": "4001",
+          "decimal": "1.00000000"
+        },
+        "expense_budget_minor": null,
+        "budget_variance_minor": null,
+        "budget_scope": "no_exact_month_approved_budget"
+      },
+      {
+        "month": "2026-07",
+        "complete": true,
+        "receipts_minor": "0",
+        "expenses_minor": "0",
+        "billed_minor": "0",
+        "net_minor": "0",
+        "cash_minor": "4000",
+        "deficit": false,
+        "outstanding_minor": "4001",
+        "overdue_minor": "4001",
+        "overdue_share": {
+          "numerator": "4001",
+          "denominator": "4001",
+          "decimal": "1.00000000"
+        },
+        "expense_budget_minor": null,
+        "budget_variance_minor": null,
+        "budget_scope": "no_exact_month_approved_budget"
+      },
+      {
+        "month": "2026-08",
+        "complete": true,
+        "receipts_minor": "0",
+        "expenses_minor": "0",
+        "billed_minor": "0",
+        "net_minor": "0",
+        "cash_minor": "4000",
+        "deficit": false,
+        "outstanding_minor": "4001",
+        "overdue_minor": "4001",
+        "overdue_share": {
+          "numerator": "4001",
+          "denominator": "4001",
+          "decimal": "1.00000000"
+        },
+        "expense_budget_minor": null,
+        "budget_variance_minor": null,
+        "budget_scope": "no_exact_month_approved_budget"
+      },
+      {
+        "month": "2026-09",
+        "complete": true,
+        "receipts_minor": "0",
+        "expenses_minor": "0",
+        "billed_minor": "0",
+        "net_minor": "0",
+        "cash_minor": "4000",
+        "deficit": false,
+        "outstanding_minor": "4001",
+        "overdue_minor": "4001",
+        "overdue_share": {
+          "numerator": "4001",
+          "denominator": "4001",
+          "decimal": "1.00000000"
+        },
+        "expense_budget_minor": null,
+        "budget_variance_minor": null,
+        "budget_scope": "no_exact_month_approved_budget"
+      },
+      {
+        "month": "2026-10",
+        "complete": false,
+        "receipts_minor": "0",
+        "expenses_minor": "0",
+        "billed_minor": "0",
+        "net_minor": "0",
+        "cash_minor": "4000",
+        "deficit": false,
+        "outstanding_minor": "4001",
+        "overdue_minor": "4001",
+        "overdue_share": {
+          "numerator": "4001",
+          "denominator": "4001",
+          "decimal": "1.00000000"
+        },
+        "expense_budget_minor": null,
+        "budget_variance_minor": null,
+        "budget_scope": "no_exact_month_approved_budget"
+      }
+    ],
+    "current": {
+      "cash_estimate_minor": "4000",
+      "opening_source_ref": "Synthetic zero opening",
+      "opening_as_of": "2026-01-01T00:00:00.000Z",
+      "receivables": {
+        "outstanding_minor": "4001",
+        "current_minor": "0",
+        "overdue_minor": "4001",
+        "overdue_share": {
+          "numerator": "4001",
+          "denominator": "4001",
+          "decimal": "1.00000000"
+        },
+        "aging": {
+          "current": "0",
+          "days_1_30": "0",
+          "days_31_60": "0",
+          "days_61_90": "0",
+          "over_90": "4001"
+        },
+        "concentration_hhi": {
+          "numerator": "16008001",
+          "denominator": "16008001",
+          "decimal": "1.00000000"
+        },
+        "entities": [
+          {
+            "entity_id": "1",
+            "outstanding_minor": "4001",
+            "overdue_minor": "4001"
+          },
+          {
+            "entity_id": "2",
+            "outstanding_minor": "0",
+            "overdue_minor": "0"
+          },
+          {
+            "entity_id": "9",
+            "outstanding_minor": "0",
+            "overdue_minor": "0"
+          }
+        ],
+        "charged_entities": 1,
+        "overdue_entities": 1
+      }
+    },
+    "forecast": {
+      "status": "estimated_conditionally",
+      "model": "recursive_trailing_mean_nonnegative",
+      "window": 3,
+      "history_source": {
+        "nature": "SIMULATED",
+        "reference": "Synthetic independent monthly series, not bank history"
+      },
+      "training_end": "2026-09",
+      "first_forecast_month": "2026-11",
+      "partial_month_gap": {
+        "assumed_net_minor": "0",
+        "nature": "unmodeled_remaining_current_month_not_observed_zero"
+      },
+      "backtest": {
+        "receipts_minor": {
+          "samples": 6,
+          "mae_minor": "200",
+          "naive_mae_minor": "100",
+          "errors_minor": [
+            "200",
+            "200",
+            "200",
+            "200",
+            "200",
+            "200"
+          ],
+          "radius": "200",
+          "validation": "rolling_origin_one_step_training_only_past_values"
+        },
+        "expenses_minor": {
+          "samples": 6,
+          "mae_minor": "40",
+          "naive_mae_minor": "20",
+          "errors_minor": [
+            "40",
+            "40",
+            "40",
+            "40",
+            "40",
+            "40"
+          ],
+          "radius": "40",
+          "validation": "rolling_origin_one_step_training_only_past_values"
+        },
+        "billed_minor": {
+          "samples": 6,
+          "mae_minor": "100",
+          "naive_mae_minor": "50",
+          "errors_minor": [
+            "100",
+            "100",
+            "100",
+            "100",
+            "100",
+            "100"
+          ],
+          "radius": "100",
+          "validation": "rolling_origin_one_step_training_only_past_values"
+        }
+      },
+      "uncertainty": {
+        "kind": "empirical_error_sensitivity",
+        "quantile": "0.9",
+        "formal_coverage_guarantee": false,
+        "assumptions": "Past errors may not describe future errors; temporal dependence, shocks and incomplete records can invalidate the band."
+      },
+      "scenarios": [
+        {
+          "id": "base",
+          "assumptions": {
+            "id": "base",
+            "billing_factor": "1",
+            "collection_factor": "1",
+            "expense_factor": "1"
+          },
+          "periods": [
+            {
+              "month": "2026-11",
+              "billed_minor": "10367",
+              "planned_receipts_minor": "8733",
+              "receipts_minor": "8733",
+              "expenses_minor": "7147",
+              "net_minor": "1586",
+              "cash_minor": "5586",
+              "receivables_open_minor": "4001",
+              "receivables_close_minor": "5635",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "5346",
+                "cash_upper_minor": "5826",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "5335",
+                "receivables_upper_minor": "5935"
+              }
+            },
+            {
+              "month": "2026-12",
+              "billed_minor": "10372",
+              "planned_receipts_minor": "8744",
+              "receipts_minor": "8744",
+              "expenses_minor": "7149",
+              "net_minor": "1595",
+              "cash_minor": "7181",
+              "receivables_open_minor": "5635",
+              "receivables_close_minor": "7263",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "6701",
+                "cash_upper_minor": "7661",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "6663",
+                "receivables_upper_minor": "7863"
+              }
+            },
+            {
+              "month": "2027-01",
+              "billed_minor": "10363",
+              "planned_receipts_minor": "8726",
+              "receipts_minor": "8726",
+              "expenses_minor": "7145",
+              "net_minor": "1581",
+              "cash_minor": "8762",
+              "receivables_open_minor": "7263",
+              "receivables_close_minor": "8900",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "8042",
+                "cash_upper_minor": "9482",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "8000",
+                "receivables_upper_minor": "9800"
+              }
+            }
+          ]
+        },
+        {
+          "id": "optimistic",
+          "assumptions": {
+            "id": "optimistic",
+            "billing_factor": "1",
+            "collection_factor": "1.1",
+            "expense_factor": "0.9",
+            "source_ref": "Synthetic sensitivity assumption"
+          },
+          "periods": [
+            {
+              "month": "2026-11",
+              "billed_minor": "10367",
+              "planned_receipts_minor": "9606",
+              "receipts_minor": "9606",
+              "expenses_minor": "6432",
+              "net_minor": "3174",
+              "cash_minor": "7174",
+              "receivables_open_minor": "4001",
+              "receivables_close_minor": "4762",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "6918",
+                "cash_upper_minor": "7430",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "4442",
+                "receivables_upper_minor": "5082"
+              }
+            },
+            {
+              "month": "2026-12",
+              "billed_minor": "10372",
+              "planned_receipts_minor": "9618",
+              "receipts_minor": "9618",
+              "expenses_minor": "6434",
+              "net_minor": "3184",
+              "cash_minor": "10358",
+              "receivables_open_minor": "4762",
+              "receivables_close_minor": "5516",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "9846",
+                "cash_upper_minor": "10870",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "4876",
+                "receivables_upper_minor": "6156"
+              }
+            },
+            {
+              "month": "2027-01",
+              "billed_minor": "10363",
+              "planned_receipts_minor": "9599",
+              "receipts_minor": "9599",
+              "expenses_minor": "6431",
+              "net_minor": "3168",
+              "cash_minor": "13526",
+              "receivables_open_minor": "5516",
+              "receivables_close_minor": "6280",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "12758",
+                "cash_upper_minor": "14294",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "5320",
+                "receivables_upper_minor": "7240"
+              }
+            }
+          ]
+        },
+        {
+          "id": "pessimistic",
+          "assumptions": {
+            "id": "pessimistic",
+            "billing_factor": "1",
+            "collection_factor": "0.9",
+            "expense_factor": "1.1",
+            "source_ref": "Synthetic sensitivity assumption"
+          },
+          "periods": [
+            {
+              "month": "2026-11",
+              "billed_minor": "10367",
+              "planned_receipts_minor": "7860",
+              "receipts_minor": "7860",
+              "expenses_minor": "7862",
+              "net_minor": "-2",
+              "cash_minor": "3998",
+              "receivables_open_minor": "4001",
+              "receivables_close_minor": "6508",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "3774",
+                "cash_upper_minor": "4222",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "6228",
+                "receivables_upper_minor": "6788"
+              }
+            },
+            {
+              "month": "2026-12",
+              "billed_minor": "10372",
+              "planned_receipts_minor": "7870",
+              "receipts_minor": "7870",
+              "expenses_minor": "7864",
+              "net_minor": "6",
+              "cash_minor": "4004",
+              "receivables_open_minor": "6508",
+              "receivables_close_minor": "9010",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "3556",
+                "cash_upper_minor": "4452",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "8450",
+                "receivables_upper_minor": "9570"
+              }
+            },
+            {
+              "month": "2027-01",
+              "billed_minor": "10363",
+              "planned_receipts_minor": "7853",
+              "receipts_minor": "7853",
+              "expenses_minor": "7860",
+              "net_minor": "-7",
+              "cash_minor": "3997",
+              "receivables_open_minor": "9010",
+              "receivables_close_minor": "11520",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "3325",
+                "cash_upper_minor": "4669",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "10680",
+                "receivables_upper_minor": "12360"
+              }
+            }
+          ]
+        },
+        {
+          "id": "custom_maintenance",
+          "assumptions": {
+            "id": "custom_maintenance",
+            "billing_factor": "1",
+            "collection_factor": "1",
+            "expense_factor": "1.2",
+            "source_ref": "Synthetic maintenance stress assumption"
+          },
+          "periods": [
+            {
+              "month": "2026-11",
+              "billed_minor": "10367",
+              "planned_receipts_minor": "8733",
+              "receipts_minor": "8733",
+              "expenses_minor": "8576",
+              "net_minor": "157",
+              "cash_minor": "4157",
+              "receivables_open_minor": "4001",
+              "receivables_close_minor": "5635",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "3909",
+                "cash_upper_minor": "4405",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "5335",
+                "receivables_upper_minor": "5935"
+              }
+            },
+            {
+              "month": "2026-12",
+              "billed_minor": "10372",
+              "planned_receipts_minor": "8744",
+              "receipts_minor": "8744",
+              "expenses_minor": "8579",
+              "net_minor": "165",
+              "cash_minor": "4322",
+              "receivables_open_minor": "5635",
+              "receivables_close_minor": "7263",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "3826",
+                "cash_upper_minor": "4818",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "6663",
+                "receivables_upper_minor": "7863"
+              }
+            },
+            {
+              "month": "2027-01",
+              "billed_minor": "10363",
+              "planned_receipts_minor": "8726",
+              "receipts_minor": "8726",
+              "expenses_minor": "8574",
+              "net_minor": "152",
+              "cash_minor": "4474",
+              "receivables_open_minor": "7263",
+              "receivables_close_minor": "8900",
+              "collection_capped_minor": "0",
+              "deficit": false,
+              "interval": {
+                "cash_lower_minor": "3730",
+                "cash_upper_minor": "5218",
+                "interpretation": "empirical_backtest_error_sensitivity_band_not_guaranteed_coverage",
+                "receivables_lower_minor": "8000",
+                "receivables_upper_minor": "9800"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "optimization": {
+      "status": "optimal",
+      "method": "bounded_linear_resource_allocation_greedy_exact",
+      "currency": "COP",
+      "available_minor": "10001",
+      "reserve_minor": "1000",
+      "allocated_minor": "9001",
+      "unallocated_minor": "0",
+      "objective": {
+        "numerator": "14001",
+        "denominator": "1",
+        "decimal": "14001.00000000"
+      },
+      "allocations": [
+        {
+          "id": "Operations",
+          "allocated_minor": "5000",
+          "min_minor": "3000",
+          "max_minor": "5000",
+          "priority": "2",
+          "source_ref": "Synthetic operating bounds",
+          "normative_reference": null
+        },
+        {
+          "id": "Maintenance",
+          "allocated_minor": "4001",
+          "min_minor": "2000",
+          "max_minor": "6000",
+          "priority": "1",
+          "source_ref": "Synthetic maintenance bounds",
+          "normative_reference": null
+        }
+      ],
+      "constraints_verified": true,
+      "normative_compliance": "requires_human_review",
+      "proof": "Lower bounds fixed first; each remaining monetary unit is assigned to the highest marginal priority with remaining capacity. An exchange cannot increase the objective.",
+      "limitations": "Single divisible resource, linear nonnegative marginal priorities and independent bounds; no binary project choices or coupled resource constraints."
+    },
+    "fees": {
+      "status": "calculated_proposal",
+      "issues": [],
+      "components": [
+        {
+          "id": "Common",
+          "budget_id": "30",
+          "amount_minor": "10001",
+          "kind": "common",
+          "basis": "coefficient",
+          "rule_reference": "Synthetic internal coefficient rule",
+          "normative_reference": "Synthetic human review reference, no legal certification",
+          "budget_revision": 2,
+          "budget_source": "Synthetic approved minutes",
+          "eligible_entity_ids": [
+            "1",
+            "2"
+          ],
+          "allocations": [
+            {
+              "entity_id": "1",
+              "amount_minor": "3334",
+              "exact_share": {
+                "numerator": "3333663333",
+                "denominator": "1000000"
+              },
+              "installments_minor": [
+                "1112",
+                "1111",
+                "1111"
+              ]
+            },
+            {
+              "entity_id": "2",
+              "amount_minor": "6667",
+              "exact_share": {
+                "numerator": "6667336667",
+                "denominator": "1000000"
+              },
+              "installments_minor": [
+                "2223",
+                "2222",
+                "2222"
+              ]
+            }
+          ],
+          "formula": "component_amount * applicable_weight / sum(applicable_weights)",
+          "rounding": "Hamilton largest remainder; ties by entity identifier; installments use the same conservation rule"
+        }
+      ],
+      "installments": 3,
+      "total_minor": "10001",
+      "legal_validity": "not_certified",
+      "rule_review": "human_review_required",
+      "creates_charges": false
+    },
+    "alerts": [
+      {
+        "type": "observed_overdue_balance_increase",
+        "month": "2026-02",
+        "change_minor": "4001",
+        "coverage": "recorded_ledger_only"
+      }
+    ],
+    "recommendations": [
+      {
+        "trigger": "observed_overdue_balance_increase",
+        "recommendation": "Revisar saldos, antigüedad y calidad de registros antes de tomar medidas de cobro.",
+        "evidence": {
+          "type": "observed_overdue_balance_increase",
+          "month": "2026-02",
+          "change_minor": "4001",
+          "coverage": "recorded_ledger_only"
+        }
+      }
+    ],
+    "limitations": [
+      "Registro administrativo manual, no conciliación bancaria.",
+      "Los escenarios son condicionales y las bandas no garantizan cobertura.",
+      "Ningún cálculo crea cobros ni certifica cumplimiento normativo."
+    ]
+  }
+}

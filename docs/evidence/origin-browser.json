@@ -1,0 +1,38 @@
+{
+  "checked_at": "2026-10-25T16:20:51.233Z",
+  "mode": "isolated_browser_api_fixtures_webgl_explicitly_disabled",
+  "checks": [
+    "four_primary_destinations",
+    "webgl_disabled_failure_is_local_and_navigation_survives",
+    "geographic_selection_preserves_structured_source_without_crash",
+    "project_creation_reuses_selected_territory",
+    "capability_switch_retains_map_host_and_project",
+    "both_comparison_initializations_survive_provider_metadata",
+    "route_stops_are_visual_with_coordinates_progressively_disclosed",
+    "sanitary_capability_remains_available",
+    "account_profile_persists_without_operational_controls",
+    "account_readability_preference_survives_reload",
+    "organization_is_distinct_from_territory_and_account",
+    "internal_diagnostics_live_inside_organization",
+    "feed_post_and_refresh_use_api_contract",
+    "project_survives_account_organization_and_feed",
+    "provider_unavailable_explains_retry_without_replacing_territory_or_project",
+    "reload_restores_project_view_and_layer_preferences",
+    "responsive_no_horizontal_overflow_320",
+    "responsive_no_horizontal_overflow_390",
+    "responsive_no_horizontal_overflow_768",
+    "responsive_no_horizontal_overflow_1440",
+    "responsive_no_horizontal_overflow_1920"
+  ],
+  "screenshots": [
+    "explorer-desktop.png",
+    "explorer-320.png",
+    "explorer-390.png",
+    "explorer-768.png",
+    "explorer-1440.png",
+    "explorer-1920.png"
+  ],
+  "runtime_errors": [],
+  "geographic_coordinates": "synthetic [0,0], not Quibdó acceptance",
+  "live_provider_or_cartographic_rendering_certified": false
+}

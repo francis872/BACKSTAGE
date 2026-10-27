@@ -1,0 +1,22 @@
+{
+  "mode": "applied",
+  "target": "confirmed_atlas_test",
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "migration": "core.phase2.1",
+  "indexes": [
+    {
+      "collection": "analytics_jobs",
+      "name": "bco_queue_v1"
+    },
+    {
+      "collection": "analytics_jobs",
+      "name": "bco_retention_v1"
+    },
+    {
+      "collection": "operational_events",
+      "name": "bco_outbox_v1"
+    }
+  ],
+  "destructive": false,
+  "existing_schema_version_preserved": 2
+}

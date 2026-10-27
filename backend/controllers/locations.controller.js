@@ -22,17 +22,17 @@ const findNearby = asyncHandler(async (req, res) => {
 });
 
 const createLocation = asyncHandler(async (req, res) => {
-  const row = await locationsService.createLocation(req.body || {}, req.organization.organization_id);
+  const row = await locationsService.createLocation(req.body || {}, req.organization.organization_id, {actor:req.user.user_id});
   res.status(201).json(row);
 });
 
 const updateLocation = asyncHandler(async (req, res) => {
-  const row = await locationsService.updateLocation(req.params.id, req.body || {}, req.organization.organization_id);
+  const row = await locationsService.updateLocation(req.params.id, req.body || {}, req.organization.organization_id, req.user.user_id);
   res.json(row);
 });
 
 const deleteLocation = asyncHandler(async (req, res) => {
-  const row = await locationsService.deleteLocation(req.params.id, req.organization.organization_id);
+  const row = await locationsService.deleteLocation(req.params.id, req.organization.organization_id, req.user.user_id);
   res.json({ message: 'Ubicación eliminada correctamente.', deleted: row });
 });
 

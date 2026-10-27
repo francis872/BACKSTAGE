@@ -1,0 +1,21 @@
+✔ protected requests preserve Headers, application token and selected organization (78.6197ms)
+✔ concurrent unauthorized requests clear one session and emit one recovery event (1.8176ms)
+✔ late failure from a previous token cannot log out a new session (1.4749ms)
+✔ login rejection, permission denial and temporary service failure do not expire an existing session (2.133ms)
+✔ access is stored only after the backend verifies the exact user and organization (4.9409ms)
+✔ progress follows road segments and recognizes a deviation (13.8838ms)
+✔ GPS rejects stale positions and invalid accuracy (0.6743ms)
+✔ los selectores de mapa de módulos distintos no compiten y conservan el borrador (2.0586ms)
+✔ cambiar de territorio descarta proyectos y coordenadas del objetivo anterior (0.6574ms)
+✔ mantiene el borrador y permite abrir un proyecto nuevo en un territorio nuevo (0.518ms)
+✔ no hereda contexto de otra organización (0.503ms)
+✔ la asociación territorial excluye registros sin ubicación y homónimos extranjeros (0.8405ms)
+✔ acepta cero geográfico pero rechaza null, texto vacío y pares inválidos (1.4026ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 243.3833

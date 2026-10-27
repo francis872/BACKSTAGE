@@ -1,0 +1,40 @@
+# Run from repository root after installing secrets on the authorized host.
+# This file creates no public ports and contains no credentials.
+services:
+  worker:
+    build:
+      context: ..
+      dockerfile: deployment/worker.Dockerfile
+    image: backstage-computational-worker:production-candidate
+    restart: unless-stopped
+    env_file: ${BACKSTAGE_WORKER_ENV_FILE:?Set an absolute path to the worker secret file}
+    command: ["node", "backend/scripts/computational-worker.js"]
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    mem_limit: 1536m
+    cpus: 1.0
+    stop_grace_period: 150s
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+  monitor:
+    image: backstage-computational-worker:production-candidate
+    restart: unless-stopped
+    env_file: ${BACKSTAGE_MONITOR_ENV_FILE:?Set an absolute path to the monitor secret file}
+    command: ["node", "backend/scripts/hosted-monitor.js"]
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    mem_limit: 256m
+    cpus: 0.25
+    stop_grace_period: 45s
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}

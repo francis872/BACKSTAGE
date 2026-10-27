@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { apiRequest } from '../lib/api';
+import MonteCarloPanel from '../components/MonteCarloPanel';
 
 const DATASETS = [
   { key: 'pedestrian_flow_day', label: 'Flujo peatonal diario' },
@@ -84,7 +85,19 @@ function ProbabilityEngine({ onNavigate, operationalContext }) {
         body: JSON.stringify({
           dataset_key: selectedDataset,
           dataset_label: selectedDatasetLabel,
+          algorithm_version: summary.algorithm_version || null,
+          data_mode: summary.data_mode || null,
+          sample_size: summary.data_quality?.sample_size ?? null,
+          data_quality: summary.data_quality || null,
+          confidence_score: summary.confidence_score ?? null,
+          confidence_method: summary.confidence_method || null,
+          source_count: summary.source_count ?? null,
+          missing_inputs: summary.missing_inputs || [],
+          provenance: summary.provenance || null,
           selected_distribution: summary.selected_distribution,
+          selected_distribution_parameters: summary.selected_distribution_parameters || null,
+          thresholds: summary.thresholds || null,
+          tail_thresholds: summary.tail_thresholds || null,
           observation_evaluation: summary.observation_evaluation || {},
           integral_validation: summary.integral_validation || {},
           heuristic_note: summary.heuristic_note || null,
@@ -106,6 +119,7 @@ function ProbabilityEngine({ onNavigate, operationalContext }) {
     () => DATASETS.find((item) => item.key === selectedDataset)?.label || selectedDataset,
     [selectedDataset]
   );
+  const canPersistProbability = ['measured', 'derived', 'declared'].includes(summary?.data_mode);
 
   return (
     <section className="stacked-sections">
@@ -121,6 +135,8 @@ function ProbabilityEngine({ onNavigate, operationalContext }) {
           <button type="button" onClick={() => onNavigate('reports')}>Abrir informe ejecutivo</button>
         </div>
       </article>
+
+      <MonteCarloPanel key={operationalContext?.analysis_run_id || 'organization'} projectId={operationalContext?.analysis_run_id} />
 
       {operationalContext?.analysis_run_id && (
         <article className="form-section">
@@ -152,6 +168,14 @@ function ProbabilityEngine({ onNavigate, operationalContext }) {
       {summary && (
         <article className="form-section">
           <h3>Resultado seleccionado para {selectedDatasetLabel}</h3>
+          {summary.data_mode === 'procedural' ? (
+            <p className="message" role="alert">Datos sintéticos: no representan mediciones territoriales ni deben usarse para decisiones reales.</p>
+          ) : summary.data_mode === 'insufficient_data' || !summary.data_mode ? (
+            <p className="message" role="alert">No hay procedencia suficiente para interpretar este resultado como dato real.</p>
+          ) : null}
+          <p className="auth-hint">
+            {summary.algorithm_version || 'Versión no declarada'} · {summary.data_quality?.sample_size ?? '—'} observaciones · {summary.source_count ?? '—'} fuentes · Confianza no calculada
+          </p>
           <div className="metric-grid">
             <article className="metric-card">
               <span>Distribución seleccionada</span>
@@ -179,10 +203,11 @@ function ProbabilityEngine({ onNavigate, operationalContext }) {
             </article>
           </div>
           <p className="auth-hint">{summary.heuristic_note}</p>
+          <p className="auth-hint">Este resumen importado no incluye la muestra original. Conservarlo en un proyecto no verifica ni repite el ajuste de distribución.</p>
           {operationalContext?.analysis_run_id ? (
             <div className="form-actions">
-              <button type="button" onClick={persistProbabilityResult} disabled={saving}>
-                {saving ? 'Registrando…' : savedForProject ? 'Resultado registrado' : 'Confirmar resultado en proyecto'}
+              <button type="button" onClick={persistProbabilityResult} disabled={saving || !canPersistProbability}>
+                {saving ? 'Registrando…' : savedForProject ? 'Resultado registrado' : canPersistProbability ? 'Confirmar resultado en proyecto' : 'Datos sintéticos · no se puede registrar'}
               </button>
               {savedForProject && (
                 <button type="button" className="secondary" onClick={() => onNavigate('mission-control')}>

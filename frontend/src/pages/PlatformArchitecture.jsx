@@ -13,7 +13,7 @@ function PlatformArchitecture() {
           <ul>
             <li><strong>Routes</strong>: orquestan endpoints REST por dominio.</li>
             <li><strong>Controllers</strong>: validan payload y status HTTP.</li>
-            <li><strong>Services</strong>: lógica de negocio y acceso SQL.</li>
+            <li><strong>Services</strong>: lógica de negocio y acceso a MongoDB Atlas.</li>
             <li><strong>Middleware</strong>: autenticación, RBAC y manejo de errores.</li>
           </ul>
         </article>

@@ -1,0 +1,44 @@
+{
+  "checked_at": "2026-10-27T03:33:02.746Z",
+  "status": "one_cycle_completed_with_explicit_gaps",
+  "scope": "local_read_only_observer_not_independent_host_acceptance",
+  "samples": [
+    {
+      "component": "api",
+      "healthy": false,
+      "status": "unavailable"
+    },
+    {
+      "component": "web",
+      "healthy": true,
+      "status": "healthy"
+    },
+    {
+      "component": "http_errors",
+      "healthy": false,
+      "status": "metrics_missing_or_stale"
+    },
+    {
+      "component": "latency",
+      "healthy": false,
+      "status": "metrics_missing_or_stale"
+    },
+    {
+      "component": "critical_operations",
+      "healthy": false,
+      "status": "metrics_missing_or_stale"
+    },
+    {
+      "component": "audit_integrity",
+      "healthy": false,
+      "status": "audit_evidence_missing_or_stale"
+    }
+  ],
+  "pending_admin_alerts": 0,
+  "independent_host_verified": false,
+  "scheduled_monitor_verified": false,
+  "external_alerts_sent": 0,
+  "administrator_receipt_verified": false,
+  "raw_log_identifiers_retained": false,
+  "sla_approved": false
+}

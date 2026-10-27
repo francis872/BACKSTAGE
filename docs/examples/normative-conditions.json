@@ -1,0 +1,1905 @@
+{
+  "nature": "SYNTHETIC_REFERENCE_NOT_ACTUAL_LEGAL_APPROVAL",
+  "snapshot": {
+    "captured_at": "2026-10-26T12:00:00.000Z",
+    "location_id": 9,
+    "organization_id": 10,
+    "catalog": {
+      "version": "co-ph-2026-10-26.1",
+      "jurisdiction": "CO",
+      "verified_on": "2026-10-26",
+      "verification_scope": "official_references_observed_not_exhaustive_legal_currentness",
+      "sources": [
+        {
+          "id": "CO-L675-2001-25",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "25",
+          "reference": "Ley 675 de 2001, artículo 25",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [
+            {
+              "instrument": "CO-L2079-2021",
+              "article": "43",
+              "source_url": "https://normas.cra.gov.co/gestor/docs/ley_2079_2021.htm",
+              "effective_from": "2021-01-14"
+            }
+          ],
+          "repeals": [],
+          "dependencies": [
+            "CO-L2079-2021",
+            "CO-C522-2002"
+          ],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Coeficientes y criterios del reglamento."
+          ],
+          "exceptions": [
+            "Módulos de contribución.",
+            "Asamblea potestativa en VIS/VIP de hasta cinco unidades."
+          ]
+        },
+        {
+          "id": "CO-L675-2001-29",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "29",
+          "reference": "Ley 675 de 2001, artículo 29",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [
+            {
+              "instrument": "CO-L2079-2021",
+              "article": "44",
+              "source_url": "https://normas.cra.gov.co/gestor/docs/ley_2079_2021.htm",
+              "effective_from": "2021-01-14"
+            }
+          ],
+          "repeals": [],
+          "dependencies": [],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Participación en expensas según reglas aplicables."
+          ],
+          "exceptions": [
+            "Supuesto de ascensores del parágrafo tercero.",
+            "VIS/VIP de hasta cinco unidades."
+          ]
+        },
+        {
+          "id": "CO-L675-2001-31",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "31",
+          "reference": "Ley 675 de 2001, artículo 31",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [],
+          "repeals": [],
+          "dependencies": [],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Sectores y módulos según reglamento en usos comerciales o mixtos."
+          ],
+          "exceptions": []
+        },
+        {
+          "id": "CO-L675-2001-35",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "35",
+          "reference": "Ley 675 de 2001, artículo 35",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [
+            {
+              "instrument": "CO-L2079-2021",
+              "article": "45",
+              "source_url": "https://normas.cra.gov.co/gestor/docs/ley_2079_2021.htm",
+              "effective_from": "2021-01-14"
+            }
+          ],
+          "repeals": [],
+          "dependencies": [
+            "CO-L2079-2021"
+          ],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Fondo de imprevistos y autorización de uso."
+          ],
+          "exceptions": [
+            "Suspensión de cobro con decisión y suficiencia del fondo.",
+            "Creación potestativa en VIS/VIP de hasta cinco unidades."
+          ]
+        },
+        {
+          "id": "CO-L675-2001-36",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "36",
+          "reference": "Ley 675 de 2001, artículo 36",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [
+            {
+              "instrument": "CO-L2079-2021",
+              "article": "46",
+              "source_url": "https://normas.cra.gov.co/gestor/docs/ley_2079_2021.htm",
+              "effective_from": "2021-01-14"
+            }
+          ],
+          "repeals": [],
+          "dependencies": [
+            "CO-L2079-2021"
+          ],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [],
+          "exceptions": [
+            "Administración simplificada en VIS/VIP de hasta cinco unidades."
+          ]
+        },
+        {
+          "id": "CO-L675-2001-38",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "38",
+          "reference": "Ley 675 de 2001, artículo 38",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [],
+          "repeals": [],
+          "dependencies": [
+            "CO-L675-2001-25"
+          ],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Competencia de la asamblea para presupuesto y cuotas."
+          ],
+          "exceptions": []
+        },
+        {
+          "id": "CO-L675-2001-39",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "39",
+          "reference": "Ley 675 de 2001, artículo 39",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [],
+          "repeals": [],
+          "dependencies": [],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Convocatoria, antelación y comunicación."
+          ],
+          "exceptions": [
+            "Reuniones especiales requieren reglas propias."
+          ]
+        },
+        {
+          "id": "CO-L675-2001-45",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "45",
+          "reference": "Ley 675 de 2001, artículo 45",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [],
+          "repeals": [],
+          "dependencies": [
+            "CO-L675-2001-46",
+            "CO-C522-2002"
+          ],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Quórum y mayoría según tipo de decisión."
+          ],
+          "exceptions": [
+            "Reglamento con exigencias superiores admisibles.",
+            "Segunda convocatoria.",
+            "Mayorías calificadas."
+          ]
+        },
+        {
+          "id": "CO-L675-2001-46",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "46",
+          "reference": "Ley 675 de 2001, artículo 46",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [],
+          "repeals": [],
+          "dependencies": [],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Mayoría calificada en los supuestos enumerados."
+          ],
+          "exceptions": [
+            "Restricciones a reuniones no presenciales y segunda convocatoria."
+          ]
+        },
+        {
+          "id": "CO-L675-2001-47",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "47",
+          "reference": "Ley 675 de 2001, artículo 47",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [],
+          "repeals": [],
+          "dependencies": [],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Contenido, firmas y disponibilidad de actas."
+          ],
+          "exceptions": []
+        },
+        {
+          "id": "CO-L675-2001-50",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "50",
+          "reference": "Ley 675 de 2001, artículo 50",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [],
+          "repeals": [],
+          "dependencies": [
+            "CO-L675-2001-36"
+          ],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Designación del administrador por órgano competente."
+          ],
+          "exceptions": []
+        },
+        {
+          "id": "CO-L675-2001-51",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "51",
+          "reference": "Ley 675 de 2001, artículo 51",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [],
+          "repeals": [],
+          "dependencies": [],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Presupuesto y documentación administrativa."
+          ],
+          "exceptions": []
+        },
+        {
+          "id": "CO-L675-2001-49-inc2-historico",
+          "version": 1,
+          "instrument": "CO-L675-2001",
+          "disposition_type": "statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "675",
+          "year": 2001,
+          "article": "49, inciso segundo histórico",
+          "reference": "Ley 675 de 2001, artículo 49-inc2-historico",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+          "publication_date": "2001-08-04",
+          "publication_reference": "Diario Oficial 44.509",
+          "valid_from": "2001-08-04",
+          "valid_until": "2014-01-01",
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "copropiedades sujetas al régimen PH"
+          ],
+          "verification": {
+            "status": "repeal_observed_in_official_compilation",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false,
+          "modifications": [],
+          "repeals": [
+            {
+              "instrument": "CO-L1564-2012",
+              "article": "626(c)",
+              "effective_from": "2014-01-01",
+              "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm"
+            }
+          ],
+          "dependencies": [],
+          "conditions": [
+            "Verificar régimen, reglamento y supuesto concreto."
+          ],
+          "obligations": [
+            "Referencia histórica; no ejecutar plazos derogados."
+          ],
+          "exceptions": []
+        },
+        {
+          "id": "CO-L2079-2021",
+          "version": 1,
+          "instrument": "CO-L2079-2021",
+          "disposition_type": "amending_statute",
+          "authority": "Congreso de la República de Colombia",
+          "number": "2079",
+          "year": 2021,
+          "article": "43–46",
+          "reference": "Ley 2079 de 2021, modificaciones PH",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_2079_2021.htm",
+          "publication_date": "2021-01-14",
+          "publication_reference": "Diario Oficial 51.557",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "Copropiedades, con supuestos específicos VIS/VIP."
+          ],
+          "conditions": [
+            "Categoría y número de unidades acreditados."
+          ],
+          "obligations": [
+            "Aplicar excepciones y cambios PH."
+          ],
+          "exceptions": [],
+          "modifications": [],
+          "repeals": [],
+          "dependencies": [],
+          "verification": {
+            "status": "official_compilation_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false
+        },
+        {
+          "id": "CO-C522-2002",
+          "version": 1,
+          "instrument": "CO-C522-2002",
+          "disposition_type": "constitutional_judgment",
+          "authority": "Corte Constitucional",
+          "number": "C-522",
+          "year": 2002,
+          "article": "Decisión y Auto 180/03",
+          "reference": "Sentencia C-522/02, con corrección del Auto 180/03",
+          "source_url": "https://www.corteconstitucional.gov.co/relatoria/2002/c-522-02.htm",
+          "publication_date": null,
+          "decision_date": "2002-07-10",
+          "valid_from": "2002-07-10",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "Copropiedades y operadores jurídicos."
+          ],
+          "conditions": [
+            "Distinguir destino y naturaleza económica de la decisión."
+          ],
+          "obligations": [
+            "Revisar el condicionamiento del voto por coeficiente."
+          ],
+          "exceptions": [
+            "Decisiones no económicas en vivienda."
+          ],
+          "modifications": [
+            {
+              "reference": "Auto 180/03: corrección de párrafo, no parágrafo",
+              "date": "2003-11-19"
+            }
+          ],
+          "repeals": [],
+          "dependencies": [
+            "CO-L675-2001-25",
+            "CO-L675-2001-45"
+          ],
+          "verification": {
+            "status": "official_judgment_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false
+        },
+        {
+          "id": "CO-CIRCULAR-028-2026",
+          "version": 1,
+          "instrument": "CO-CIRCULAR-028-2026",
+          "disposition_type": "administrative_guidance",
+          "authority": "Ministerio del Trabajo y Ministerio de Vivienda, Ciudad y Territorio",
+          "number": "028",
+          "year": 2026,
+          "article": "Fijación e incremento de cuotas",
+          "reference": "Circular Externa conjunta 028 de 2026; orientación informativa",
+          "source_url": "https://www.minvivienda.gov.co/normativa/circular-externa-028-2026",
+          "corroborating_url": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?dt=S&i=194105",
+          "publication_date": null,
+          "issued_on": "2026-03-04",
+          "valid_from": "2026-03-04",
+          "valid_until": null,
+          "territorial_scope": {
+            "level": "national",
+            "country": "CO"
+          },
+          "obligated_subjects": [
+            "Referencia para administradores y copropietarios."
+          ],
+          "conditions": [
+            "No tratar una circular informativa como ley nueva."
+          ],
+          "obligations": [
+            "Contrastar el fundamento documental del incremento."
+          ],
+          "exceptions": [
+            "Fórmula expresa del reglamento debe revisarse."
+          ],
+          "modifications": [],
+          "repeals": [],
+          "dependencies": [
+            "CO-L675-2001-38"
+          ],
+          "verification": {
+            "status": "official_guidance_observed",
+            "verified_on": "2026-10-26",
+            "exhaustive_currentness_certified": false
+          },
+          "official_text_stored": false
+        }
+      ],
+      "rules": [
+        {
+          "id": "budget_authority",
+          "version": 1,
+          "title": "Presupuesto y decisión del órgano competente",
+          "source_ids": [
+            "CO-L675-2001-38",
+            "CO-L675-2001-25"
+          ],
+          "facts": [
+            "budget_organ",
+            "budget_decision_recorded"
+          ],
+          "formal": "documented_budget_approval",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "ordinary_fees",
+          "version": 1,
+          "title": "Criterio de cuotas ordinarias",
+          "source_ids": [
+            "CO-L675-2001-25",
+            "CO-L675-2001-29",
+            "CO-L675-2001-31"
+          ],
+          "facts": [
+            "allocation_matches_regulation",
+            "elevator_exception_resolved",
+            "sector_rules_resolved"
+          ],
+          "formal": "economic_fee_proposal_and_reviewed_allocation",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "extraordinary_fees",
+          "version": 1,
+          "title": "Condiciones de cuotas extraordinarias",
+          "source_ids": [
+            "CO-L675-2001-35",
+            "CO-L675-2001-46"
+          ],
+          "facts": [
+            "extraordinary_annual_minor",
+            "necessary_monthly_minor",
+            "fund_insufficient"
+          ],
+          "formal": "extraordinary_threshold_and_fund",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "coefficients",
+          "version": 1,
+          "title": "Coeficientes y reglamento aplicable",
+          "source_ids": [
+            "CO-L675-2001-25"
+          ],
+          "facts": [
+            "coefficients_match_regulation"
+          ],
+          "formal": "complete_coefficient_scope_from_economic_result",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "reserve",
+          "version": 1,
+          "title": "Constitución y recaudo del fondo",
+          "source_ids": [
+            "CO-L675-2001-35",
+            "CO-L2079-2021"
+          ],
+          "facts": [
+            "annual_common_budget_id",
+            "annual_budget_basis_verified",
+            "fund_collection_minor",
+            "fund_suspended",
+            "fund_available_minor",
+            "ordinary_annual_minor",
+            "fund_suspension_approved"
+          ],
+          "formal": "minimum_1_percent_or_reviewed_suspension_at_50_percent",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "notice",
+          "version": 1,
+          "title": "Convocatoria y comunicación",
+          "source_ids": [
+            "CO-L675-2001-39"
+          ],
+          "facts": [
+            "meeting_kind",
+            "meeting_date",
+            "notice_date",
+            "notice_all_owners",
+            "notice_agenda",
+            "convener",
+            "convener_owner_count",
+            "convener_coefficient_units"
+          ],
+          "formal": "ordinary_15_calendar_days_and_communication",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "quorum",
+          "version": 1,
+          "title": "Quórum presencial de decisiones económicas",
+          "source_ids": [
+            "CO-L675-2001-45",
+            "CO-C522-2002"
+          ],
+          "facts": [
+            "meeting_kind",
+            "decision_kind",
+            "attendance_verified",
+            "present_owner_count",
+            "present_coefficient_units",
+            "regulation_higher_quorum"
+          ],
+          "formal": "plural_owners_and_strictly_over_50_percent",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "majority",
+          "version": 1,
+          "title": "Mayoría de la decisión",
+          "source_ids": [
+            "CO-L675-2001-45",
+            "CO-L675-2001-46",
+            "CO-C522-2002"
+          ],
+          "facts": [
+            "meeting_kind",
+            "decision_kind",
+            "present_coefficient_units",
+            "favorable_coefficient_units",
+            "regulation_higher_majority",
+            "extraordinary_annual_minor",
+            "necessary_monthly_minor"
+          ],
+          "formal": "ordinary_strict_majority_or_70_percent_total_when_required",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "decision_record",
+          "version": 1,
+          "title": "Decisión, aprobación y orden del día",
+          "source_ids": [
+            "CO-L675-2001-38",
+            "CO-L675-2001-39"
+          ],
+          "facts": [
+            "meeting_kind",
+            "decision_recorded",
+            "decision_on_agenda"
+          ],
+          "formal": "decision_document_and_covered_agenda",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "administrator",
+          "version": 1,
+          "title": "Competencia para designar administración",
+          "source_ids": [
+            "CO-L675-2001-50",
+            "CO-L675-2001-36"
+          ],
+          "facts": [
+            "board_exists",
+            "administrator_appointing_organ"
+          ],
+          "formal": "board_if_existing_otherwise_assembly",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "minutes",
+          "version": 1,
+          "title": "Requisitos documentales del acta",
+          "source_ids": [
+            "CO-L675-2001-47",
+            "CO-L675-2001-51"
+          ],
+          "facts": [
+            "minutes_signed_president",
+            "minutes_signed_secretary",
+            "minutes_attendees",
+            "minutes_votes",
+            "minutes_notice_agenda"
+          ],
+          "formal": "reviewed_presence_of_required_minutes_fields",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "minutes_publication",
+          "version": 1,
+          "title": "Disponibilidad del acta y término hábil",
+          "source_ids": [
+            "CO-L675-2001-47"
+          ],
+          "facts": [
+            "minutes_publication_reviewed"
+          ],
+          "formal": "manual_calendar_and_publication_review_no_invented_holidays",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "fund_use",
+          "version": 1,
+          "title": "Autorización para usar el fondo",
+          "source_ids": [
+            "CO-L675-2001-35",
+            "CO-L675-2001-38"
+          ],
+          "facts": [
+            "fund_use_authorized_by_assembly",
+            "fund_use_matches_regulation"
+          ],
+          "formal": "prior_assembly_authority_and_internal_rule",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2021-01-14",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        },
+        {
+          "id": "fee_increase",
+          "version": 1,
+          "title": "Fundamento del incremento de cuotas",
+          "source_ids": [
+            "CO-L675-2001-38",
+            "CO-CIRCULAR-028-2026"
+          ],
+          "facts": [
+            "fee_increase_basis",
+            "regulation_formula_verified"
+          ],
+          "formal": "approved_budget_or_reviewed_internal_formula_not_automatic_index",
+          "interpretation_status": "requires_scoped_human_approval",
+          "valid_from": "2026-03-04",
+          "valid_until": null,
+          "scope": "bounded_condition_not_comprehensive_legal_opinion"
+        }
+      ],
+      "facts": {
+        "regime_verified": {
+          "type": "boolean",
+          "label": "La sujeción al régimen PH fue comprobada"
+        },
+        "use": {
+          "type": "choice",
+          "label": "Uso de la copropiedad",
+          "values": [
+            "residential",
+            "commercial",
+            "mixed"
+          ]
+        },
+        "housing_category": {
+          "type": "choice",
+          "label": "Categoría de vivienda",
+          "values": [
+            "standard",
+            "VIS",
+            "VIP"
+          ]
+        },
+        "private_unit_count": {
+          "type": "integer",
+          "label": "Número de unidades privadas acreditadas",
+          "max": 500
+        },
+        "regulation_reviewed": {
+          "type": "boolean",
+          "label": "Reglamento y excepciones revisados"
+        },
+        "budget_organ": {
+          "type": "choice",
+          "label": "Órgano que aprobó presupuesto",
+          "values": [
+            "assembly",
+            "board",
+            "administrator",
+            "joint_owners"
+          ]
+        },
+        "budget_decision_recorded": {
+          "type": "boolean",
+          "label": "Decisión presupuestaria documentada"
+        },
+        "allocation_matches_regulation": {
+          "type": "boolean",
+          "label": "Criterio de reparto contrastado con el reglamento"
+        },
+        "elevator_exception_resolved": {
+          "type": "boolean",
+          "label": "Excepción de ascensores revisada"
+        },
+        "sector_rules_resolved": {
+          "type": "boolean",
+          "label": "Sectores y módulos de contribución revisados"
+        },
+        "coefficients_match_regulation": {
+          "type": "boolean",
+          "label": "Coeficientes contrastados con el reglamento"
+        },
+        "annual_common_budget_id": {
+          "type": "identifier",
+          "label": "ID del presupuesto anual de gastos comunes"
+        },
+        "annual_budget_basis_verified": {
+          "type": "boolean",
+          "label": "Base anual de gastos comunes verificada"
+        },
+        "fund_collection_minor": {
+          "type": "money",
+          "label": "Recargo del fondo, en unidades mínimas"
+        },
+        "fund_available_minor": {
+          "type": "money",
+          "label": "Saldo disponible del fondo, en unidades mínimas"
+        },
+        "ordinary_annual_minor": {
+          "type": "money",
+          "label": "Presupuesto ordinario anual, en unidades mínimas"
+        },
+        "fund_suspended": {
+          "type": "boolean",
+          "label": "Se suspendió el cobro del fondo"
+        },
+        "fund_suspension_approved": {
+          "type": "boolean",
+          "label": "Suspensión aprobada por asamblea"
+        },
+        "fund_insufficient": {
+          "type": "boolean",
+          "label": "Insuficiencia del fondo acreditada"
+        },
+        "extraordinary_annual_minor": {
+          "type": "money",
+          "label": "Expensas extraordinarias totales de la vigencia"
+        },
+        "necessary_monthly_minor": {
+          "type": "money",
+          "label": "Expensas necesarias mensuales"
+        },
+        "meeting_kind": {
+          "type": "choice",
+          "label": "Tipo de reunión",
+          "values": [
+            "ordinary",
+            "extraordinary",
+            "second_call",
+            "universal",
+            "non_presential",
+            "written",
+            "own_right"
+          ]
+        },
+        "meeting_date": {
+          "type": "date",
+          "label": "Fecha civil de reunión en Colombia"
+        },
+        "notice_date": {
+          "type": "date",
+          "label": "Fecha civil de convocatoria"
+        },
+        "notice_all_owners": {
+          "type": "boolean",
+          "label": "Comunicación a todos los propietarios acreditada"
+        },
+        "notice_agenda": {
+          "type": "boolean",
+          "label": "Orden del día en convocatoria"
+        },
+        "convener": {
+          "type": "choice",
+          "label": "Convocante",
+          "values": [
+            "administrator",
+            "board",
+            "fiscal_reviewer",
+            "owners",
+            "other"
+          ]
+        },
+        "convener_owner_count": {
+          "type": "integer",
+          "label": "Propietarios convocantes",
+          "max": 500
+        },
+        "convener_coefficient_units": {
+          "type": "integer",
+          "label": "Coeficientes de convocantes",
+          "max": 1000000,
+          "helper": "100% = 1000000; 50% = 500000."
+        },
+        "decision_kind": {
+          "type": "choice",
+          "label": "Naturaleza de la decisión",
+          "values": [
+            "annual_budget",
+            "ordinary_fees",
+            "extraordinary_fees",
+            "common_destination",
+            "nonnecessary_expense",
+            "regulation_change",
+            "other_qualified",
+            "non_economic",
+            "administrator_appointment",
+            "reserve_use"
+          ]
+        },
+        "attendance_verified": {
+          "type": "boolean",
+          "label": "Asistencia y representación verificadas"
+        },
+        "present_owner_count": {
+          "type": "integer",
+          "label": "Propietarios presentes o representados",
+          "max": 500
+        },
+        "present_coefficient_units": {
+          "type": "integer",
+          "label": "Coeficientes presentes",
+          "max": 1000000,
+          "helper": "100% = 1000000; 50% = 500000."
+        },
+        "favorable_coefficient_units": {
+          "type": "integer",
+          "label": "Coeficientes favorables",
+          "max": 1000000,
+          "helper": "100% = 1000000; 50% = 500000."
+        },
+        "regulation_higher_quorum": {
+          "type": "boolean",
+          "label": "El reglamento exige quórum superior"
+        },
+        "regulation_higher_majority": {
+          "type": "boolean",
+          "label": "El reglamento exige mayoría superior"
+        },
+        "decision_recorded": {
+          "type": "boolean",
+          "label": "Decisión documentada"
+        },
+        "decision_on_agenda": {
+          "type": "boolean",
+          "label": "Decisión incluida en orden del día"
+        },
+        "board_exists": {
+          "type": "boolean",
+          "label": "Existe consejo de administración"
+        },
+        "administrator_appointing_organ": {
+          "type": "choice",
+          "label": "Órgano que designa administrador",
+          "values": [
+            "assembly",
+            "board",
+            "administrator",
+            "joint_owners"
+          ]
+        },
+        "minutes_signed_president": {
+          "type": "boolean",
+          "label": "Acta firmada por presidente"
+        },
+        "minutes_signed_secretary": {
+          "type": "boolean",
+          "label": "Acta firmada por secretario"
+        },
+        "minutes_attendees": {
+          "type": "boolean",
+          "label": "Acta identifica asistentes y representación"
+        },
+        "minutes_votes": {
+          "type": "boolean",
+          "label": "Acta contiene votos de cada decisión"
+        },
+        "minutes_notice_agenda": {
+          "type": "boolean",
+          "label": "Acta registra clase, convocatoria y orden del día"
+        },
+        "minutes_publication_reviewed": {
+          "type": "boolean",
+          "label": "Publicación y calendario hábil revisados"
+        },
+        "fund_use_authorized_by_assembly": {
+          "type": "boolean",
+          "label": "Uso del fondo autorizado previamente por asamblea"
+        },
+        "fund_use_matches_regulation": {
+          "type": "boolean",
+          "label": "Uso del fondo conforme al reglamento"
+        },
+        "fee_increase_basis": {
+          "type": "choice",
+          "label": "Fundamento del incremento",
+          "values": [
+            "approved_budget",
+            "regulation_formula",
+            "automatic_smmlv",
+            "automatic_ipc"
+          ]
+        },
+        "regulation_formula_verified": {
+          "type": "boolean",
+          "label": "Fórmula expresa del reglamento verificada"
+        }
+      },
+      "source_failures": [
+        {
+          "source": "SUIN-Juriscol",
+          "reason": "fetch_timeout"
+        },
+        {
+          "source": "Secretaría del Senado",
+          "reason": "fetch_timeout"
+        },
+        {
+          "source": "Función Pública",
+          "reason": "fetch_gateway_error"
+        },
+        {
+          "source": "Cancillería",
+          "reason": "fetch_forbidden"
+        }
+      ],
+      "limitations": [
+        "No acredita vigencia exhaustiva ni cubre todas las disposiciones territoriales.",
+        "Cada interpretación requiere aprobación humana acotada al objeto y vigencia.",
+        "Documentos aportados no adquieren naturaleza de ley."
+      ]
+    },
+    "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+    "private_unit_count": 2,
+    "coefficient_basis_complete": true,
+    "documents": [
+      {
+        "document_id": 1,
+        "revision": 2,
+        "current": true,
+        "erased": false,
+        "classification": "organization_evidence",
+        "content_sha256": "71ff3893f2d0a825ed8c98cd2b27940b793d42e4a7b709db702114e16cafd5fe",
+        "commitment": "synthetic-reference-not-an-encrypted-packet",
+        "review": {
+          "decision": "accepted_for_facts",
+          "disputed": false,
+          "reviewed_by": 1,
+          "reviewed_at": "2026-10-26T11:00:00.000Z",
+          "content_sha256": "71ff3893f2d0a825ed8c98cd2b27940b793d42e4a7b709db702114e16cafd5fe",
+          "economic_scope": {
+            "scenario_id": 10,
+            "input_sha256": "83bc232cf65548bbb3e56b6251e7d50237b58ae27dc3275176f54712c13d79e7",
+            "result_sha256": "c982367bbbcb13b32d0e1108edbb45a9a1b82354ab872e990fac4f1387332775"
+          }
+        }
+      }
+    ],
+    "interpretations": [
+      {
+        "rule_id": "budget_authority",
+        "rule_version": 1,
+        "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+        "decision": "approved",
+        "source_check": "confirmed_current",
+        "valid_from": "2026-10-26",
+        "valid_until": "2026-10-26",
+        "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+        "reviewed_by": 1,
+        "reviewed_at": "2026-10-26T11:00:00.000Z"
+      },
+      {
+        "rule_id": "ordinary_fees",
+        "rule_version": 1,
+        "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+        "decision": "approved",
+        "source_check": "confirmed_current",
+        "valid_from": "2026-10-26",
+        "valid_until": "2026-10-26",
+        "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+        "reviewed_by": 1,
+        "reviewed_at": "2026-10-26T11:00:00.000Z"
+      },
+      {
+        "rule_id": "coefficients",
+        "rule_version": 1,
+        "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+        "decision": "approved",
+        "source_check": "confirmed_current",
+        "valid_from": "2026-10-26",
+        "valid_until": "2026-10-26",
+        "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+        "reviewed_by": 1,
+        "reviewed_at": "2026-10-26T11:00:00.000Z"
+      },
+      {
+        "rule_id": "reserve",
+        "rule_version": 1,
+        "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+        "decision": "approved",
+        "source_check": "confirmed_current",
+        "valid_from": "2026-10-26",
+        "valid_until": "2026-10-26",
+        "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+        "reviewed_by": 1,
+        "reviewed_at": "2026-10-26T11:00:00.000Z"
+      },
+      {
+        "rule_id": "notice",
+        "rule_version": 1,
+        "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+        "decision": "approved",
+        "source_check": "confirmed_current",
+        "valid_from": "2026-10-26",
+        "valid_until": "2026-10-26",
+        "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+        "reviewed_by": 1,
+        "reviewed_at": "2026-10-26T11:00:00.000Z"
+      },
+      {
+        "rule_id": "quorum",
+        "rule_version": 1,
+        "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+        "decision": "approved",
+        "source_check": "confirmed_current",
+        "valid_from": "2026-10-26",
+        "valid_until": "2026-10-26",
+        "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+        "reviewed_by": 1,
+        "reviewed_at": "2026-10-26T11:00:00.000Z"
+      },
+      {
+        "rule_id": "majority",
+        "rule_version": 1,
+        "catalog_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+        "decision": "approved",
+        "source_check": "confirmed_current",
+        "valid_from": "2026-10-26",
+        "valid_until": "2026-10-26",
+        "reference": "SYNTHETIC REVIEW ONLY; no actual professional approval",
+        "reviewed_by": 1,
+        "reviewed_at": "2026-10-26T11:00:00.000Z"
+      }
+    ],
+    "economic": {
+      "scenario_id": 10,
+      "verified": true,
+      "current_basis_matches": true,
+      "snapshot": {
+        "captured_at": "2026-10-26T12:00:00.000Z",
+        "currency": "COP",
+        "scale": 2,
+        "coefficient_scope_complete": true,
+        "entities": [
+          {
+            "id": "1",
+            "kind": "private_unit",
+            "ancestry_ids": [
+              "9"
+            ],
+            "coefficient_units": 333333,
+            "archived": false
+          },
+          {
+            "id": "2",
+            "kind": "private_unit",
+            "ancestry_ids": [
+              "9"
+            ],
+            "coefficient_units": 666667,
+            "archived": false
+          },
+          {
+            "id": "9",
+            "kind": "coproperty",
+            "ancestry_ids": [],
+            "archived": false
+          }
+        ],
+        "events": [],
+        "budgets": [
+          {
+            "id": "30",
+            "revision": 2,
+            "entity_id": "9",
+            "status": "approved",
+            "amount_minor": "100000",
+            "currency": "COP",
+            "scale": 2,
+            "starts_at": "2026-01-01T00:00:00.000Z",
+            "ends_at": "2027-01-01T00:00:00.000Z",
+            "source_ref": "Synthetic annual budget"
+          }
+        ]
+      },
+      "result": {
+        "version": "backstage-economics-1",
+        "policy": {
+          "money": "canonical_integer_minor_unit_strings_BigInt",
+          "rounding": "half_away_from_zero_for_forecast;Hamilton_largest_remainder_for_fees",
+          "calendar": "UTC_months",
+          "journal_time": "verified_recording_time_not_bank_statement",
+          "max_periods": 36,
+          "max_events": 5000,
+          "max_entities": 500
+        },
+        "currency": "COP",
+        "scale": 2,
+        "captured_at": "2026-10-26T12:00:00.000Z",
+        "history": [
+          {
+            "month": "2026-01",
+            "complete": true,
+            "receipts_minor": "0",
+            "expenses_minor": "0",
+            "billed_minor": "0",
+            "net_minor": "0",
+            "cash_minor": "0",
+            "deficit": false,
+            "outstanding_minor": "0",
+            "overdue_minor": "0",
+            "overdue_share": null,
+            "expense_budget_minor": null,
+            "budget_variance_minor": null,
+            "budget_scope": "no_exact_month_approved_budget"
+          },
+          {
+            "month": "2026-02",
+            "complete": true,
+            "receipts_minor": "0",
+            "expenses_minor": "0",
+            "billed_minor": "0",
+            "net_minor": "0",
+            "cash_minor": "0",
+            "deficit": false,
+            "outstanding_minor": "0",
+            "overdue_minor": "0",
+            "overdue_share": null,
+            "expense_budget_minor": null,
+            "budget_variance_minor": null,
+            "budget_scope": "no_exact_month_approved_budget"
+          },
+          {
+            "month": "2026-03",
+            "complete": true,
+            "receipts_minor": "0",
+            "expenses_minor": "0",
+            "billed_minor": "0",
+            "net_minor": "0",
+            "cash_minor": "0",
+            "deficit": false,
+            "outstanding_minor": "0",
+            "overdue_minor": "0",
+            "overdue_share": null,
+            "expense_budget_minor": null,
+            "budget_variance_minor": null,
+            "budget_scope": "no_exact_month_approved_budget"
+          },
+          {
+            "month": "2026-04",
+            "complete": true,
+            "receipts_minor": "0",
+            "expenses_minor": "0",
+            "billed_minor": "0",
+            "net_minor": "0",
+            "cash_minor": "0",
+            "deficit": false,
+            "outstanding_minor": "0",
+            "overdue_minor": "0",
+            "overdue_share": null,
+            "expense_budget_minor": null,
+            "budget_variance_minor": null,
+            "budget_scope": "no_exact_month_approved_budget"
+          },
+          {
+            "month": "2026-05",
+            "complete": true,
+            "receipts_minor": "0",
+            "expenses_minor": "0",
+            "billed_minor": "0",
+            "net_minor": "0",
+            "cash_minor": "0",
+            "deficit": false,
+            "outstanding_minor": "0",
+            "overdue_minor": "0",
+            "overdue_share": null,
+            "expense_budget_minor": null,
+            "budget_variance_minor": null,
+            "budget_scope": "no_exact_month_approved_budget"
+          },
+          {
+            "month": "2026-06",
+            "complete": true,
+            "receipts_minor": "0",
+            "expenses_minor": "0",
+            "billed_minor": "0",
+            "net_minor": "0",
+            "cash_minor": "0",
+            "deficit": false,
+            "outstanding_minor": "0",
+            "overdue_minor": "0",
+            "overdue_share": null,
+            "expense_budget_minor": null,
+            "budget_variance_minor": null,
+            "budget_scope": "no_exact_month_approved_budget"
+          },
+          {
+            "month": "2026-07",
+            "complete": true,
+            "receipts_minor": "0",
+            "expenses_minor": "0",
+            "billed_minor": "0",
+            "net_minor": "0",
+            "cash_minor": "0",
+            "deficit": false,
+            "outstanding_minor": "0",
+            "overdue_minor": "0",
+            "overdue_share": null,
+            "expense_budget_minor": null,
+            "budget_variance_minor": null,
+            "budget_scope": "no_exact_month_approved_budget"
+          },
+          {
+            "month": "2026-08",
+            "complete": true,
+            "receipts_minor": "0",
+            "expenses_minor": "0",
+            "billed_minor": "0",
+            "net_minor": "0",
+            "cash_minor": "0",
+            "deficit": false,
+            "outstanding_minor": "0",
+            "overdue_minor": "0",
+            "overdue_share": null,
+            "expense_budget_minor": null,
+            "budget_variance_minor": null,
+            "budget_scope": "no_exact_month_approved_budget"
+          },
+          {
+            "month": "2026-09",
+            "complete": true,
+            "receipts_minor": "0",
+            "expenses_minor": "0",
+            "billed_minor": "0",
+            "net_minor": "0",
+            "cash_minor": "0",
+            "deficit": false,
+            "outstanding_minor": "0",
+            "overdue_minor": "0",
+            "overdue_share": null,
+            "expense_budget_minor": null,
+            "budget_variance_minor": null,
+            "budget_scope": "no_exact_month_approved_budget"
+          },
+          {
+            "month": "2026-10",
+            "complete": false,
+            "receipts_minor": "0",
+            "expenses_minor": "0",
+            "billed_minor": "0",
+            "net_minor": "0",
+            "cash_minor": "0",
+            "deficit": false,
+            "outstanding_minor": "0",
+            "overdue_minor": "0",
+            "overdue_share": null,
+            "expense_budget_minor": null,
+            "budget_variance_minor": null,
+            "budget_scope": "no_exact_month_approved_budget"
+          }
+        ],
+        "current": {
+          "cash_estimate_minor": "0",
+          "opening_source_ref": "Synthetic opening",
+          "opening_as_of": "2026-01-01T00:00:00.000Z",
+          "receivables": {
+            "outstanding_minor": "0",
+            "current_minor": "0",
+            "overdue_minor": "0",
+            "overdue_share": null,
+            "aging": {
+              "current": "0",
+              "days_1_30": "0",
+              "days_31_60": "0",
+              "days_61_90": "0",
+              "over_90": "0"
+            },
+            "concentration_hhi": null,
+            "entities": [
+              {
+                "entity_id": "1",
+                "outstanding_minor": "0",
+                "overdue_minor": "0"
+              },
+              {
+                "entity_id": "2",
+                "outstanding_minor": "0",
+                "overdue_minor": "0"
+              },
+              {
+                "entity_id": "9",
+                "outstanding_minor": "0",
+                "overdue_minor": "0"
+              }
+            ],
+            "charged_entities": 0,
+            "overdue_entities": 0
+          }
+        },
+        "forecast": {
+          "status": "requires_history_review",
+          "reason": "confirm_recorded_history_coverage_or_supply_identified_series",
+          "scenarios": []
+        },
+        "optimization": {
+          "status": "not_requested"
+        },
+        "fees": {
+          "status": "calculated_proposal",
+          "issues": [],
+          "components": [
+            {
+              "id": "Common",
+              "budget_id": "30",
+              "amount_minor": "100000",
+              "kind": "common",
+              "basis": "coefficient",
+              "rule_reference": "Synthetic internal rule",
+              "normative_reference": "Synthetic review, not a legal opinion",
+              "budget_revision": 2,
+              "budget_source": "Synthetic annual budget",
+              "eligible_entity_ids": [
+                "1",
+                "2"
+              ],
+              "allocations": [
+                {
+                  "entity_id": "1",
+                  "amount_minor": "33333",
+                  "exact_share": {
+                    "numerator": "333333",
+                    "denominator": "10"
+                  },
+                  "installments_minor": [
+                    "33333"
+                  ]
+                },
+                {
+                  "entity_id": "2",
+                  "amount_minor": "66667",
+                  "exact_share": {
+                    "numerator": "666667",
+                    "denominator": "10"
+                  },
+                  "installments_minor": [
+                    "66667"
+                  ]
+                }
+              ],
+              "formula": "component_amount * applicable_weight / sum(applicable_weights)",
+              "rounding": "Hamilton largest remainder; ties by entity identifier; installments use the same conservation rule"
+            }
+          ],
+          "installments": 1,
+          "total_minor": "100000",
+          "legal_validity": "not_certified",
+          "rule_review": "human_review_required",
+          "creates_charges": false
+        },
+        "alerts": [],
+        "recommendations": [],
+        "limitations": [
+          "Registro administrativo manual, no conciliación bancaria.",
+          "Los escenarios son condicionales y las bandas no garantizan cobertura.",
+          "Ningún cálculo crea cobros ni certifica cumplimiento normativo."
+        ]
+      },
+      "input_sha256": "83bc232cf65548bbb3e56b6251e7d50237b58ae27dc3275176f54712c13d79e7",
+      "result_sha256": "c982367bbbcb13b32d0e1108edbb45a9a1b82354ab872e990fac4f1387332775"
+    }
+  },
+  "assumptions": {
+    "title": "Ejemplo normativo sintético, sin aprobación jurídica real",
+    "as_of": "2026-10-26",
+    "economic_scenario_id": 10,
+    "facts": {
+      "regime_verified": {
+        "value": true,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "use": {
+        "value": "residential",
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "housing_category": {
+        "value": "standard",
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "private_unit_count": {
+        "value": 2,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "regulation_reviewed": {
+        "value": true,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "budget_organ": {
+        "value": "assembly",
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "budget_decision_recorded": {
+        "value": true,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "allocation_matches_regulation": {
+        "value": true,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "elevator_exception_resolved": {
+        "value": true,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "sector_rules_resolved": {
+        "value": true,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "coefficients_match_regulation": {
+        "value": true,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "annual_common_budget_id": {
+        "value": "30",
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "annual_budget_basis_verified": {
+        "value": true,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "fund_collection_minor": {
+        "value": "999",
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "fund_suspended": {
+        "value": false,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "meeting_kind": {
+        "value": "ordinary",
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "meeting_date": {
+        "value": "2026-10-26",
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "notice_date": {
+        "value": "2026-10-11",
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "notice_all_owners": {
+        "value": true,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "convener": {
+        "value": "administrator",
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "decision_kind": {
+        "value": "annual_budget",
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "attendance_verified": {
+        "value": true,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "present_owner_count": {
+        "value": 2,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "present_coefficient_units": {
+        "value": 800000,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "favorable_coefficient_units": {
+        "value": 400001,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "regulation_higher_quorum": {
+        "value": false,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      },
+      "regulation_higher_majority": {
+        "value": false,
+        "document_id": 1,
+        "document_revision": 2,
+        "locator": "Synthetic document, paragraph 1"
+      }
+    }
+  }
+}

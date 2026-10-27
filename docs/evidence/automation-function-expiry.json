@@ -1,0 +1,24 @@
+{
+  "started_at": "2026-10-26T00:00:11.121Z",
+  "run_id": "auto-20261025234838-1315eafd",
+  "deployment_id": "dpl_CX7jMFc7p7aqmZoZCNoic9BBojox",
+  "mode": "actual_owned_vercel_function_timeout_and_cloud_recovery",
+  "local_worker_started": false,
+  "production_changes": false,
+  "function_http_status": 504,
+  "function_error_code": "FUNCTION_INVOCATION_TIMEOUT",
+  "observed_request_ms": 30706,
+  "job_id": 5,
+  "recovery": {
+    "status": "COMPLETED",
+    "attempts": 2,
+    "sources": [
+      "vercel_function_timeout_probe",
+      "vercel_daemon"
+    ],
+    "completion_facts": 1,
+    "known_risk": 0.125
+  },
+  "status": "passed",
+  "completed_at": "2026-10-26T00:01:10.814Z"
+}

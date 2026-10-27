@@ -1,0 +1,73 @@
+{
+  "started_at": "2026-10-27T02:43:20.795Z",
+  "run_id": "atlas-core-20261027024320-e5851ac15ca2",
+  "scope": "real_protected_vercel_preview_and_authorized_atlas_test",
+  "api_interception": false,
+  "production_changes": false,
+  "sensitive_real_data_used": false,
+  "checks": [
+    {
+      "name": "both_immutable_preview_builds_are_protected_healthy_and_require_application_sessions",
+      "passed": true
+    },
+    {
+      "name": "real_remote_registration_creates_two_owned_synthetic_organizations",
+      "passed": true
+    },
+    {
+      "name": "real_remote_proxy_native_document_encryption_idempotency_tenant_isolation_and_mfa_availability",
+      "passed": true
+    },
+    {
+      "name": "real_remote_unicode_curation_history_reproduction_normative_and_economic_adapters",
+      "passed": true
+    },
+    {
+      "name": "real_remote_two_organization_document_acceptance_and_source_revocation",
+      "passed": true
+    },
+    {
+      "name": "separate_atlas_connection_confirms_remote_encrypted_persistence",
+      "passed": true
+    },
+    {
+      "name": "real_hosted_browser_login_contextual_document_read_and_reproduction_without_api_interception",
+      "passed": true,
+      "browser_api_responses": 32,
+      "runtime_errors": 0
+    },
+    {
+      "name": "hosted_community_panel_has_no_horizontal_overflow_at_390_and_1440",
+      "passed": true
+    },
+    {
+      "name": "real_remote_content_erasure_and_both_organization_audit_chains",
+      "passed": true
+    }
+  ],
+  "deployments": {
+    "api": {
+      "id": "dpl_3UCZHLatCJz2cnQ3EsA6gv9VNmnv",
+      "url": "backstage-staging-qfa549cd9-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_6c168X4e52wSU4DdvmKCmSkjFt6K",
+      "url": "backstage-staging-2umpgob6o-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "browser_runtime_errors": [],
+  "webgl_rendering_certified": false,
+  "production_unchanged_verified": true,
+  "status": "passed",
+  "cleanup": {
+    "passed": true,
+    "only_owned_synthetic_records_removed": true,
+    "shared_counters_and_global_security_traces_preserved": true,
+    "private_backup_sha256": "34c2842b3e31ac69a297eead02557b2aece07db0ad90921d14ae641dd74a7108"
+  },
+  "completed_at": "2026-10-27T02:43:57.478Z"
+}

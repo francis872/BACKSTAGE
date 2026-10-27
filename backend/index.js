@@ -1,14 +1,15 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
+const { getMongoDatabase } = require('./infrastructure/platformMongo');
 const errorHandler = require('./middleware/errorHandler');
 const auditLogger = require('./middleware/auditLogger');
 const { platformSecurity } = require('./middleware/platformSecurity');
+const { requestTelemetry, readinessResponse } = require('./middleware/requestTelemetry');
 const { attachSecurityWebSocketServer } = require('./realtime/wsServer');
 const { startOperationalSupervisor, stopOperationalSupervisor } = require('./services/operationalSupervisor.service');
-const { pool } = require('./db');
-const { getMongoHealthState } = require('./spatial/store');
-const { assertPostgres17 } = require('./utils/postgresVersion');
 
 const authRoutes = require('./routes/auth.routes');
 const locationsRoutes = require('./routes/locations.routes');
@@ -30,67 +31,122 @@ const auditLogsRoutes = require('./routes/auditLogs.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const terrainRoutes = require('./routes/terrain.routes');
 const spatialIngestionRoutes = require('./routes/spatialIngestion.routes');
+const cleanComRoutes = require('./routes/cleanCom.routes');
+const soiRoutes = require('./routes/soi.routes');
+const soiGeoRoutes = require('./routes/soiGeo.routes');
+const soiTripsRoutes = require('./routes/soiTrips.routes');
+const soiFleetRoutes = require('./routes/soiFleet.routes');
+const bsieRoutes = require('./routes/bsie.routes');
+const soiSanitaryRoutes = require('./routes/soiSanitary.routes');
 const { getExampleRecommendation } = require('./controllers/recommendations.controller');
 
 const app = express();
 const port = process.env.PORT || 4000;
-const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:3001'];
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map((origin) => origin.trim()).filter(Boolean)
+  || ['http://localhost:5173', 'http://127.0.0.1:5173'];
 const allowsAllOrigins = allowedOrigins.includes('*');
 
 app.disable('x-powered-by');
 app.use(platformSecurity);
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowsAllOrigins || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
+app.use(requestTelemetry());
+app.use(cors((req, callback) => {
+  const origin = req.get('origin');
+  const host = req.get('x-forwarded-host') || req.get('host');
+  const sameOrigin = Boolean(origin && host && origin.replace(/^https?:\/\//, '') === host);
+  const allowed = !origin || sameOrigin || allowsAllOrigins || allowedOrigins.includes(origin);
+  callback(allowed ? null : new Error('Not allowed by CORS'), { origin: allowed, credentials: true });
 }));
 
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '5mb' }));
 app.use(auditLogger);
+// Processed Clean Com artifacts are delivered only through authenticated APIs.
+app.use('/cleancom', (req, res) => res.status(404).json({ error: 'Archivo interno no disponible.' }));
 
-app.get('/health', async (req, res) => {
-  const defaultProvider = process.env.NODE_ENV === 'production' ? 'atlas' : 'memory';
-  const provider = String(process.env.SPATIAL_STORE || defaultProvider).toLowerCase();
+// Serve static files from frontend/dist
+const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+}
 
-  let postgres = 'unavailable';
-  let postgresVersion = null;
-  if (process.env.DATABASE_URL) {
-    try {
-      const version = await pool.query('SHOW server_version_num');
-      const versionNum = version.rows[0]?.server_version_num;
-      postgresVersion = Math.floor(Number(versionNum) / 10000);
-      assertPostgres17(versionNum);
-      postgres = 'healthy';
-    } catch (error) {
-      postgres = 'unavailable';
-    }
+app.get('/health', (req, res) => readinessResponse(req, res, getMongoDatabase));
+app.use('/auth', authRoutes);
+app.use('/feed', require('./routes/feed.routes'));
+
+app.use('/locations', locationsRoutes);
+app.use('/assets', require('./routes/assets.routes'));
+app.use('/comparisons', require('./routes/comparisons.routes'));
+app.use('/geography', require('./routes/geography.routes'));
+app.use('/insights', insightsRoutes);
+app.use('/real-estate', realEstateRoutes);
+app.use('/retail-zones', retailZonesRoutes);
+app.use('/risk-components', riskComponentsRoutes);
+app.use('/risk-assessments', riskAssessmentsRoutes);
+app.use('/recommendations', recommendationsRoutes);
+app.use('/integrations', integrationsRoutes);
+app.use('/scoring', scoringRoutes);
+app.use('/territorial', territorialRoutes);
+app.use('/users', usersRoutes);
+app.use('/layers', layersRoutes);
+app.use('/analysis', analysisRoutes);
+app.use('/operational-events', operationalEventsRoutes);
+app.use('/operations', operationsRoutes);
+app.use('/analytics', analyticsRoutes);
+app.use('/computational', require('./routes/computational.routes').createComputationalRouter());
+app.use('/terrain', terrainRoutes);
+app.use('/spatial', spatialIngestionRoutes);
+app.use('/soi/geo', soiGeoRoutes);
+app.use('/soi/trips', soiTripsRoutes);
+app.use('/soi/fleet', soiFleetRoutes);
+app.use('/soi/bsie', bsieRoutes);
+app.use('/soi/sanitary', soiSanitaryRoutes);
+app.use('/soi', soiRoutes);
+app.use('/soi/historical', cleanComRoutes);
+app.use('/clean-com', cleanComRoutes);
+app.use('/audit-logs', auditLogsRoutes);
+
+// SPA fallback: serve index.html for non-API routes
+app.get('*', (req, res, next) => {
+  // Skip if route starts with /api or already matched
+  if (req.path.startsWith('/api')) {
+    return next();
   }
-
-  let mongodb = 'disconnected';
-  if (provider === 'atlas') {
-    const mongoState = await getMongoHealthState(process.env);
-    mongodb = mongoState.status === 'healthy' ? 'healthy' : 'unavailable';
+  
+  const indexPath = path.join(__dirname, '..', 'frontend', 'dist', 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
   }
-
-  const status = postgres === 'healthy' && (mongodb === 'healthy' || mongodb === 'disconnected') ? 'ok'
-    : postgres === 'healthy' || mongodb === 'healthy' ? 'degraded' : 'unavailable';
-
-  res.status(postgres === 'healthy' ? 200 : 503).json({
-    status,
-    postgres,
-    postgresVersion,
-    mongodb,
-    spatialStore: provider,
+  
+  // Fallback API info if no frontend
+  res.json({
     service: 'BACKSTAGE Intelligence Backend',
+    version: '3.1.0',
+    endpoints: {
+      auth: '/auth',
+      locations: '/locations',
+      insights: '/insights',
+      realEstate: '/real-estate',
+      retailZones: '/retail-zones',
+      riskComponents: '/risk-components',
+      riskAssessments: '/risk-assessments',
+      recommendations: '/recommendations',
+      integrations: '/integrations',
+      scoring: '/scoring',
+      territorial: '/territorial',
+      users: '/users',
+      layers: '/layers',
+      analysis: '/analysis',
+      analytics: '/analytics',
+      computational: '/computational',
+      coreOpenApi: '/operations/openapi',
+      terrain: '/terrain',
+      spatial: '/spatial',
+      auditLogs: '/audit-logs',
+      securityEventsSocket: '/ws/security?token=<JWT>'
+    }
   });
 });
 
-// API info endpoint
+// API info endpoint (legacy)
 app.get('/', (req, res) => {
   res.json({
     service: 'BACKSTAGE Intelligence Backend',
@@ -111,6 +167,8 @@ app.get('/', (req, res) => {
       layers: '/layers',
       analysis: '/analysis',
       analytics: '/analytics',
+      computational: '/computational',
+      coreOpenApi: '/operations/openapi',
       terrain: '/terrain',
       spatial: '/spatial',
       auditLogs: '/audit-logs',
@@ -119,33 +177,19 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use('/auth', authRoutes);
-app.use('/locations', locationsRoutes);
-app.use('/insights', insightsRoutes);
-app.use('/real-estate', realEstateRoutes);
-app.use('/retail-zones', retailZonesRoutes);
-app.use('/risk-components', riskComponentsRoutes);
-app.use('/risk-assessments', riskAssessmentsRoutes);
-app.use('/recommendations', recommendationsRoutes);
-app.use('/integrations', integrationsRoutes);
-app.use('/scoring', scoringRoutes);
-app.use('/territorial', territorialRoutes);
-app.use('/users', usersRoutes);
-app.use('/layers', layersRoutes);
-app.use('/analysis', analysisRoutes);
-app.use('/operational-events', operationalEventsRoutes);
-app.use('/operations', operationsRoutes);
-app.use('/analytics', analyticsRoutes);
-app.use('/terrain', terrainRoutes);
-app.use('/spatial', spatialIngestionRoutes);
-app.use('/audit-logs', auditLogsRoutes);
-
 // Backward compatibility with existing frontend route.
 app.get('/recommendation/example', getExampleRecommendation);
 
 app.use(errorHandler);
 
 if (require.main === module) {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET es obligatorio para iniciar el backend.');
+  }
+  if (process.env.NODE_ENV === 'production' && process.env.JWT_SECRET.length < 32) {
+    throw new Error('JWT_SECRET debe tener al menos 32 caracteres en producción.');
+  }
+
   const server = http.createServer(app);
   attachSecurityWebSocketServer(server);
   server.listen(port, () => {

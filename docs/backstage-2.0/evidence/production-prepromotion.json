@@ -1,0 +1,83 @@
+{
+  "started_at": "2026-10-24T18:32:24.472Z",
+  "mode": "unpromoted_production_builds",
+  "deployments": {
+    "api": "dpl_FfGqHQQk5CEXGjcsje9yqaUSC1VE",
+    "web": "dpl_BCE7C3mvdoR4ftrRAahTiE78XHpo"
+  },
+  "operational_records_written": false,
+  "checks": [
+    {
+      "name": "api_build_and_domain_target",
+      "passed": true
+    },
+    {
+      "name": "api_atlas_health_and_request_id",
+      "passed": true
+    },
+    {
+      "name": "web_build_and_domain_target",
+      "passed": true
+    },
+    {
+      "name": "web_atlas_health_and_request_id",
+      "passed": true
+    },
+    {
+      "name": "anonymous_denied_/api/auth/me",
+      "passed": true
+    },
+    {
+      "name": "anonymous_denied_/api/locations",
+      "passed": true
+    },
+    {
+      "name": "anonymous_denied_/api/operations/business-rules",
+      "passed": true
+    },
+    {
+      "name": "anonymous_denied_/api/operations/monitor",
+      "passed": true
+    },
+    {
+      "name": "spa_login_and_assets_no_retired_render_endpoint",
+      "passed": true,
+      "assets": [
+        {
+          "path": "/assets/index-Dh7mAY8_.js",
+          "bytes": 483463,
+          "sha256": "1b15f9446dda3331e32bb3f45741ca29ce71b4daad41585f7e512a733cdde09e"
+        },
+        {
+          "path": "/assets/index-79UgjaCV.css",
+          "bytes": 75873,
+          "sha256": "58280d8d5b9196a9e09eac7d325e418521262768ffcfd32c4840b0e098bfcc72"
+        }
+      ]
+    },
+    {
+      "name": "python_rejects_unsigned_requests",
+      "passed": true
+    },
+    {
+      "name": "synthetic_bsie_validation",
+      "passed": true
+    },
+    {
+      "name": "synthetic_spreg_diagnostics",
+      "passed": true
+    },
+    {
+      "name": "synthetic_ortools_independent_validation",
+      "passed": true
+    },
+    {
+      "name": "fresh_encrypted_backup_matches_unchanged_production_atlas",
+      "passed": true,
+      "run_id": "atlas-full-20261024182953-8eb7e9315a77",
+      "sha256": "03a644f59eb04abc63ce862f934e6e06e35c36d14018e53f8911ebc73457c849"
+    }
+  ],
+  "passed": true,
+  "completed_at": "2026-10-24T18:32:31.747Z"
+}

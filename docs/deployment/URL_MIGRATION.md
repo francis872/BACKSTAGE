@@ -1,5 +1,7 @@
 # Cambio de identidad pública de URL — BACKSTAGE Intelligence
 
+> ADR histórico. Describe una migración anterior de alias; no define el host ni la topología de BACKSTAGE 3.1.0. El runtime actual es un único proyecto Vercel documentado en `DEPLOYMENT_GUIDE.md`.
+
 ## Estado: Completado
 
 ## Contexto (ADR)
@@ -48,9 +50,7 @@ como trabajo futuro (ver sección "Pendiente").
 - Backend redesplegado a producción para aplicar la variable.
 
 ### Documentación
-- Reemplazadas las referencias a `frontend-seven-black-14.vercel.app` por
-  `backstage-intelligence.vercel.app` en `PROJECT_STATUS.md`,
-  `DEPLOYMENT_GUIDE.md`, `RAILWAY_DEPLOYMENT.md` y `RENDER_DEPLOY.md`.
+- Reemplazadas referencias al alias legado en las guías vigentes de aquella migración.
 - **No se eliminó** `frontend-seven-black-14.vercel.app`: sigue siendo un
   alias válido del mismo deployment (mismo contenido, mismo backend), por
   lo que actúa como redirección/legado sin enlaces rotos, cumpliendo el
@@ -85,9 +85,4 @@ Ejecutado en esta sesión, con navegador real contra producción:
      final.
   Sin esta decisión de negocio (nombre de dominio, registrador, presupuesto),
   no se ejecuta una compra o cambio DNS de forma autónoma.
-- **WebSockets en producción**: el backend actual corre como función
-  serverless de Vercel, que no soporta conexiones WebSocket persistentes.
-  El panel de auditoría en vivo seguirá funcionando en modo *polling* en
-  producción hasta que el backend (o un servicio dedicado) se despliegue en
-  un runtime con soporte de procesos persistentes (Railway, Fly.io, un VPS,
-  etc.). Esto es una limitación de infraestructura, no del código.
+- **WebSockets**: Vercel Functions no mantienen conexiones persistentes. La UI actual utiliza sondeo periódico; esta nota es histórica y no propone un segundo runtime productivo.

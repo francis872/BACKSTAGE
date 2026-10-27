@@ -1,0 +1,10 @@
+{
+  "created_at": "2026-10-25T23:10:04.114Z",
+  "status": "source_prepared_not_built_or_deployed",
+  "source_files": 247,
+  "archive_sha256": "23c51e0a18166b136bded603a0fd2794a2c2c11a694e4f945e38fdfaf5a43c9b",
+  "isolated_module_catalog_loading_passed": true,
+  "secrets_included": false,
+  "docker_image_built": false,
+  "continuous_worker_deployed": false
+}

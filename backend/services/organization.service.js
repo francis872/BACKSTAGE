@@ -1,33 +1,22 @@
-const { query } = require('../db');
+const crypto = require('node:crypto');
 const ApiError = require('../utils/ApiError');
+const mongoIdentity = require('./mongoIdentity.service');
 
-async function getUserMemberships(userId) {
-  const result = await query(
-    `SELECT
-       ur.organization_id,
-       o.slug AS organization_slug,
-       o.name AS organization_name,
-       r.name AS role
-     FROM user_roles ur
-     JOIN organizations o ON o.organization_id = ur.organization_id
-     JOIN roles r ON r.role_id = ur.role_id
-     WHERE ur.user_id = $1
-       AND o.status = 'active'
-     ORDER BY o.name ASC, r.name ASC`,
-    [userId]
-  );
-  return result.rows;
+function organizationSlugFromName(value) {
+  const base = String(value || '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 48)
+    .replace(/-+$/g, '');
+  if (!base) throw new ApiError(400, 'El nombre del workspace debe incluir letras o números.');
+  return `${base}-${crypto.randomBytes(4).toString('hex')}`;
 }
 
-async function listActiveOrganizations() {
-  const result = await query(
-    `SELECT organization_id, slug AS organization_slug, name AS organization_name
-     FROM organizations
-     WHERE status = 'active'
-     ORDER BY name ASC`
-  );
-  return result.rows;
-}
+const getUserMemberships = (...args) => mongoIdentity.service.getUserMemberships(...args);
+const listActiveOrganizations = (...args) => mongoIdentity.service.listActiveOrganizations(...args);
 
 function resolveMembership(memberships, requestedOrganizationId) {
   if (!Array.isArray(memberships) || memberships.length === 0) {
@@ -51,6 +40,7 @@ function resolveMembership(memberships, requestedOrganizationId) {
 }
 
 module.exports = {
+  organizationSlugFromName,
   getUserMemberships,
   listActiveOrganizations,
   resolveMembership,

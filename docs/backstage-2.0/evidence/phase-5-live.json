@@ -1,0 +1,104 @@
+{
+  "started_at": "2026-10-23T21:06:54.356Z",
+  "mode": "real_protected_hosting_browser_proxy_atlas",
+  "api_interception": false,
+  "checks": [
+    {
+      "name": "protected_preview_health_mongodb_and_request_id_through_proxy",
+      "passed": true
+    },
+    {
+      "name": "new_hosted_accounts_persist_from_independent_atlas_process",
+      "passed": true
+    },
+    {
+      "name": "orbital_entry_and_real_browser_login_verified_via_auth_me",
+      "passed": true
+    },
+    {
+      "name": "emulated_device_territory_to_real_browser_asset_persisted",
+      "passed": true,
+      "device_coordinates_emulated": true
+    },
+    {
+      "name": "decimal_cents_atlas_browser_replay_export_and_incompatible_unit_rejection",
+      "passed": true
+    },
+    {
+      "name": "browser_comparison_project_restore_idempotence_and_mobile_layout",
+      "passed": true
+    },
+    {
+      "name": "historical_engine_browser_result_and_replay_preserved_without_backfill",
+      "passed": true
+    },
+    {
+      "name": "invalid_historical_inputs_are_not_certified_and_cannot_create_project",
+      "passed": true
+    },
+    {
+      "name": "manual_invitation_real_browser_acceptance_and_organization_switch",
+      "passed": true
+    },
+    {
+      "name": "browser_role_downgrade_revocation_stale_token_denial_and_other_org_preserved",
+      "passed": true
+    },
+    {
+      "name": "hosting_http_polling_complete_audit_chain_and_credential_redaction",
+      "passed": true,
+      "native_websocket_supported": false,
+      "observed_polling": true,
+      "audit_events": 21
+    },
+    {
+      "name": "authenticated_node_to_protected_python_self_rpc_and_unsigned_denial",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "entry-1440.png",
+    "reproducibility-390.png",
+    "reproducibility-1440.png",
+    "analysis-1440.png",
+    "project-390.png",
+    "project-1440.png",
+    "legacy-result-1440.png",
+    "audit-390.png",
+    "audit-1440.png"
+  ],
+  "operational_documents_touched": false,
+  "run_id": "atlas-core-20261023210654-b78c59b183c1",
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "deployments": {
+    "api": {
+      "id": "dpl_EXcJoTYMZMvGXHQMTCvH3niPkYbv",
+      "url": "backstage-staging-8hmovgldg-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_H32TCaeVvcTepGsqEsSjFfzssFra",
+      "url": "backstage-staging-okv6qi7oc-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "project": {
+    "analysis_run_id": 8,
+    "comparison_id": 11
+  },
+  "browser_api_responses": 76,
+  "browser_runtime_errors": [],
+  "status": "passed",
+  "cleanup": {
+    "passed": true,
+    "only_owned_test_records": true,
+    "shared_counters_preserved": true,
+    "global_security_request_traces_retained": true,
+    "global_hash_chain_preserved": true,
+    "backup_path": ".vercel/staging-atlas-core-20261023210654-b78c59b183c1/owned-test-records.bson",
+    "backup_sha256": "95d5e8584fd252f0178839783a40fd565a071e70e6a16aca3c80f7dfd56970bf"
+  },
+  "finished_at": "2026-10-23T21:07:57.195Z"
+}

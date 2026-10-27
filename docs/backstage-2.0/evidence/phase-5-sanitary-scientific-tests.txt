@@ -1,0 +1,16 @@
+test_anomaly_reference_is_separate_from_evaluation (sanitary.test_engine.PredictiveTests.test_anomaly_reference_is_separate_from_evaluation) ... ok
+test_constant_history_does_not_claim_skill_or_publish_unvalidated_forecast (sanitary.test_engine.PredictiveTests.test_constant_history_does_not_claim_skill_or_publish_unvalidated_forecast) ... ok
+test_forecast_uses_chronological_folds_and_demonstrates_skill (sanitary.test_engine.PredictiveTests.test_forecast_uses_chronological_folds_and_demonstrates_skill) ... ok
+test_irregular_history_and_insufficient_data_rejected (sanitary.test_engine.PredictiveTests.test_irregular_history_and_insufficient_data_rejected) ... ok
+test_stale_history_and_simulated_sources_do_not_publish_current_real_forecasts (sanitary.test_engine.PredictiveTests.test_stale_history_and_simulated_sources_do_not_publish_current_real_forecasts) ... ok
+test_cvrp_capacity_and_infeasibility (sanitary.test_engine.RoutingTests.test_cvrp_capacity_and_infeasibility) ... ok
+test_matrix_must_declare_matching_node_order (sanitary.test_engine.RoutingTests.test_matrix_must_declare_matching_node_order) ... ok
+test_multidepot_and_reject_fabricated_matrices (sanitary.test_engine.RoutingTests.test_multidepot_and_reject_fabricated_matrices) ... ok
+test_normalized_cost_carbon_and_time_objective (sanitary.test_engine.RoutingTests.test_normalized_cost_carbon_and_time_objective) ... ok
+test_optional_penalty_and_time_windows (sanitary.test_engine.RoutingTests.test_optional_penalty_and_time_windows) ... ok
+test_small_optimum_checked_by_exhaustive_enumeration (sanitary.test_engine.RoutingTests.test_small_optimum_checked_by_exhaustive_enumeration) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 5.306s
+
+OK

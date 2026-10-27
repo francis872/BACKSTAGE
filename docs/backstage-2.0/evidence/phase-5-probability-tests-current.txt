@@ -1,0 +1,13 @@
+test_bhattacharyya_distance_is_zero_for_matching_binned_density (test_statistical_engine.StatisticalEngineTests.test_bhattacharyya_distance_is_zero_for_matching_binned_density) ... ok
+test_cdf_and_survival_are_complements_at_the_median (test_statistical_engine.StatisticalEngineTests.test_cdf_and_survival_are_complements_at_the_median) ... ok
+test_ecdf_sorts_observations_and_uses_empirical_ranks (test_statistical_engine.StatisticalEngineTests.test_ecdf_sorts_observations_and_uses_empirical_ranks) ... ok
+test_explicit_kolmogorov_smirnov_distance_has_known_uniform_case (test_statistical_engine.StatisticalEngineTests.test_explicit_kolmogorov_smirnov_distance_has_known_uniform_case) ... ok
+test_full_analysis_executes_against_bundled_dataset (test_statistical_engine.StatisticalEngineTests.test_full_analysis_executes_against_bundled_dataset) ... C:\Users\Usuario\AppData\Roaming\Python\Python314\site-packages\scipy\stats\_continuous_distns.py:806: RuntimeWarning: invalid value encountered in sqrt
+  sk = 2*(b-a)*np.sqrt(a + b + 1) / (a + b + 2) / np.sqrt(a*b)
+ok
+test_histogram_density_integrates_to_one (test_statistical_engine.StatisticalEngineTests.test_histogram_density_integrates_to_one) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 4.276s
+
+OK

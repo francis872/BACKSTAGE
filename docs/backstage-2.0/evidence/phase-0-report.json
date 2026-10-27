@@ -1,0 +1,30 @@
+{
+  "phase": 0,
+  "status": "audit_complete_pending_phase_1_approval",
+  "branch": "recovery/backstage-2-audit-20261021",
+  "base_commit": "ce18b6d7b79867d940e1689d61755446acbf974c",
+  "source_backup_verified": true,
+  "source_snapshot_directory": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\backstage_v310\\BACKSTAGE-3.1.0\\.vercel\\backstage-recovery-20261022T004525Z",
+  "source_archive_sha256": "9a075d16b6e4adf02f4ee06debdccae7e43f596982f694ffd559c93de02c5aee",
+  "preserved_source_files_checked": 451,
+  "application_source_modified": false,
+  "database_written": false,
+  "database_backup_verified": false,
+  "production_deployed": false,
+  "documents": [
+    "RECOVERY_AUDIT.md",
+    "ARCHITECTURE_BASELINE.md",
+    "MODULE_INVENTORY.md",
+    "REGRESSION_RISKS.md",
+    "IMPLEMENTATION_ROADMAP.md"
+  ],
+  "baseline_tests_passed": 307,
+  "optional_external_tests_skipped": 1,
+  "security_gap_confirmed_by_isolated_probe": "SEC-01",
+  "open_security_findings": [
+    "SEC-01",
+    "SEC-02"
+  ],
+  "phase_1_approved": false,
+  "created_at": "2026-10-22T01:06:50.244686+00:00"
+}

@@ -1,0 +1,85 @@
+{
+  "started_at": "2026-10-24T02:47:43.918Z",
+  "scope": "local_regression_not_deployment_or_live_provider_verification",
+  "checks": [
+    {
+      "name": "frontend",
+      "passed": true,
+      "checked_at": "2026-10-24T02:48:01.366Z",
+      "duration_ms": 473,
+      "evidence": "phase-5-engines-frontend-regression-current.txt",
+      "summary": [
+        "ℹ tests 26",
+        "ℹ pass 26",
+        "ℹ fail 0",
+        "ℹ skipped 0"
+      ],
+      "original_evidence": "docs/evidence/frontend-regression-current.txt"
+    },
+    {
+      "name": "bsie",
+      "passed": true,
+      "checked_at": "2026-10-24T02:48:13.259Z",
+      "duration_ms": 11893,
+      "evidence": "phase-5-engines-bsie-scientific-tests.txt",
+      "summary": [
+        "Ran 27 tests in 8.916s",
+        "OK"
+      ],
+      "original_evidence": "docs/evidence/bsie-scientific-tests.txt"
+    },
+    {
+      "name": "sanitary",
+      "passed": true,
+      "checked_at": "2026-10-24T02:48:22.503Z",
+      "duration_ms": 9243,
+      "evidence": "phase-5-engines-sanitary-scientific-tests.txt",
+      "summary": [
+        "Ran 11 tests in 5.347s",
+        "OK"
+      ],
+      "original_evidence": "docs/evidence/sanitary-scientific-tests.txt"
+    },
+    {
+      "name": "deployment",
+      "passed": true,
+      "checked_at": "2026-10-24T02:48:26.206Z",
+      "duration_ms": 3702,
+      "evidence": "phase-5-engines-scientific-deployment-tests.txt",
+      "summary": [
+        "OK"
+      ],
+      "original_evidence": "docs/evidence/scientific-deployment-tests.txt"
+    },
+    {
+      "name": "probability",
+      "passed": true,
+      "checked_at": "2026-10-24T02:48:36.279Z",
+      "duration_ms": 10072,
+      "evidence": "phase-5-engines-probability-tests-current.txt",
+      "summary": [
+        "Ran 6 tests in 4.661s",
+        "OK"
+      ],
+      "original_evidence": "docs/evidence/probability-tests-current.txt"
+    },
+    {
+      "name": "backend",
+      "passed": true,
+      "checked_at": "2026-10-24T02:50:03.252Z",
+      "duration_ms": 10050,
+      "evidence": "phase-5-engines-backend-regression-current.txt",
+      "summary": [
+        "✔ ties are explicit, zero weight missing criteria are ignored and invalid constraints fail (6.644ms)",
+        "✔ scientific automation bypass is sent only to the self deployment (5.7511ms)",
+        "ℹ tests 300",
+        "ℹ pass 299",
+        "ℹ fail 0",
+        "ℹ skipped 1"
+      ],
+      "original_evidence": "docs/evidence/backend-regression-current.txt"
+    }
+  ],
+  "finished_at": "2026-10-24T02:50:03.254Z",
+  "passed": true
+}

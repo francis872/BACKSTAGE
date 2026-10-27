@@ -1,0 +1,50 @@
+{
+  "nature": "SYNTHETIC_EXAMPLE_NOT_OPERATIONAL_DATA",
+  "snapshot": {
+    "captured_at": "2026-10-26T12:00:00.000Z",
+    "currency": "COP",
+    "scale": 2,
+    "coefficient_scope_complete": true,
+    "entities": [
+      {"id":"1","kind":"private_unit","ancestry_ids":["9"],"coefficient_units":333333,"archived":false,"geometry":{"type":"Point","coordinates":[-74,4]}},
+      {"id":"2","kind":"private_unit","ancestry_ids":["9"],"coefficient_units":666667,"archived":false,"geometry":null},
+      {"id":"9","kind":"coproperty","ancestry_ids":[],"archived":false,"geometry":null}
+    ],
+    "events": [
+      {"id":"synthetic-charge","sequence":1,"record_id":"10","entity_id":"1","kind":"charge","amount_minor":"10001","at":"2026-01-01T00:00:00.000Z","due_at":"2026-02-01T00:00:00.000Z"},
+      {"id":"synthetic-receipt","sequence":2,"record_id":"11","entity_id":"1","kind":"receipt","charge_id":"10","amount_minor":"6000","at":"2026-02-01T00:00:00.000Z"},
+      {"id":"synthetic-expense","sequence":3,"record_id":"12","entity_id":"9","kind":"expense","amount_minor":"2000","at":"2026-02-02T00:00:00.000Z"}
+    ],
+    "budgets": [{"id":"30","revision":2,"entity_id":"9","amount_minor":"10001","currency":"COP","scale":2,"status":"approved","starts_at":"2026-02-01T00:00:00.000Z","ends_at":"2026-02-28T00:00:00.000Z","source_ref":"Synthetic approved minutes"}]
+  },
+  "assumptions": {
+    "title":"Ejemplo sintético de planificación",
+    "currency":"COP","scale":2,"from":"2026-01","to":"2026-10",
+    "opening_cash_minor":"0","opening_source_ref":"Synthetic zero opening",
+    "forecast": {
+      "window":3,"horizon":3,
+      "supplied_history":{"nature":"SIMULATED","source_ref":"Synthetic independent monthly series, not bank history","rows":[
+        {"month":"2026-01","receipts_minor":"8000","expenses_minor":"7000","billed_minor":"10000"},
+        {"month":"2026-02","receipts_minor":"8100","expenses_minor":"7020","billed_minor":"10050"},
+        {"month":"2026-03","receipts_minor":"8200","expenses_minor":"7040","billed_minor":"10100"},
+        {"month":"2026-04","receipts_minor":"8300","expenses_minor":"7060","billed_minor":"10150"},
+        {"month":"2026-05","receipts_minor":"8400","expenses_minor":"7080","billed_minor":"10200"},
+        {"month":"2026-06","receipts_minor":"8500","expenses_minor":"7100","billed_minor":"10250"},
+        {"month":"2026-07","receipts_minor":"8600","expenses_minor":"7120","billed_minor":"10300"},
+        {"month":"2026-08","receipts_minor":"8700","expenses_minor":"7140","billed_minor":"10350"},
+        {"month":"2026-09","receipts_minor":"8800","expenses_minor":"7160","billed_minor":"10400"}
+      ]},
+      "variants":[
+        {"id":"optimistic","billing_factor":"1","collection_factor":"1.1","expense_factor":"0.9","source_ref":"Synthetic sensitivity assumption"},
+        {"id":"pessimistic","billing_factor":"1","collection_factor":"0.9","expense_factor":"1.1","source_ref":"Synthetic sensitivity assumption"},
+        {"id":"custom_maintenance","billing_factor":"1","collection_factor":"1","expense_factor":"1.2","source_ref":"Synthetic maintenance stress assumption"}
+      ]
+    },
+    "optimization":{"budget_ids":["30"],"reserve_minor":"1000","items":[
+      {"id":"Operations","min_minor":"3000","max_minor":"5000","priority":"2","source_ref":"Synthetic operating bounds"},
+      {"id":"Maintenance","min_minor":"2000","max_minor":"6000","priority":"1","source_ref":"Synthetic maintenance bounds"}
+    ]},
+    "fees":{"installments":3,"components":[{"id":"Common","budget_id":"30","amount_minor":"10001","kind":"common","basis":"coefficient","rule_reference":"Synthetic internal coefficient rule","normative_reference":"Synthetic human review reference, no legal certification"}]}
+  },
+  "expected":{"cash_minor":"4000","outstanding_minor":"4001","allocations_minor":["5000","4001"],"reserve_minor":"1000","fee_total_minor":"10001","fee_by_entity_minor":["3334","6667"],"forecast_scenarios":4}
+}

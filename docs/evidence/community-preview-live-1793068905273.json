@@ -1,0 +1,49 @@
+{
+  "started_at": "2026-10-27T02:39:43.719Z",
+  "run_id": "atlas-core-20261027023943-29d75c401de3",
+  "scope": "real_protected_vercel_preview_and_authorized_atlas_test",
+  "api_interception": false,
+  "production_changes": false,
+  "sensitive_real_data_used": false,
+  "checks": [
+    {
+      "name": "both_immutable_preview_builds_are_protected_healthy_and_require_application_sessions",
+      "passed": true
+    },
+    {
+      "name": "real_remote_registration_creates_two_owned_synthetic_organizations",
+      "passed": true
+    },
+    {
+      "name": "real_remote_proxy_native_document_encryption_idempotency_tenant_isolation_and_mfa_availability",
+      "passed": true
+    }
+  ],
+  "deployments": {
+    "api": {
+      "id": "dpl_3UCZHLatCJz2cnQ3EsA6gv9VNmnv",
+      "url": "backstage-staging-qfa549cd9-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_6c168X4e52wSU4DdvmKCmSkjFt6K",
+      "url": "backstage-staging-2umpgob6o-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "status": "failed",
+  "failure": {
+    "name": "AssertionError",
+    "code": "ERR_ASSERTION",
+    "message": "Expected values to be strictly equal:"
+  },
+  "cleanup": {
+    "passed": true,
+    "only_owned_synthetic_records_removed": true,
+    "shared_counters_and_global_security_traces_preserved": true,
+    "private_backup_sha256": "487f7d2391763d8085b27f741bf4319f28f9b1731adbe9f0cdb86bf4c6bede56"
+  },
+  "completed_at": "2026-10-27T02:40:06.050Z"
+}

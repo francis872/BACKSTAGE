@@ -1,0 +1,85 @@
+{
+  "run_id": "atlas-core-20261025180806-04f6abb988d2",
+  "started_at": "2026-10-25T18:08:06.550Z",
+  "mode": "real_local_http_proxy_atlas_separate_worker",
+  "api_interception": false,
+  "data_kind": "SIMULATED_OWNED_TEST_FIXTURES",
+  "production_changes": false,
+  "checks": [
+    {
+      "name": "authorized_test_target_http_authentication_and_original_production_unchanged",
+      "passed": true
+    },
+    {
+      "name": "closed_catalog_preserves_available_engines_and_reports_missing_algorithms",
+      "passed": true
+    },
+    {
+      "name": "concurrent_http_idempotency_and_cross_tenant_denial",
+      "passed": true
+    },
+    {
+      "name": "real_optimistic_revision_conflict",
+      "passed": true
+    },
+    {
+      "name": "separate_process_workers_claim_once_execute_real_js_python_and_honor_dependencies",
+      "passed": true,
+      "workers": [
+        {
+          "exit_code": 0,
+          "finished_attempts": 1,
+          "duration_ms": 18050.102100000004
+        },
+        {
+          "exit_code": 0,
+          "finished_attempts": 0,
+          "duration_ms": 7888.2166
+        }
+      ],
+      "known_risk": 0.125,
+      "known_complete_graph_moran": -0.3333333333333333
+    },
+    {
+      "name": "project_link_geojson_and_historical_hashes_without_legacy_access_bypass",
+      "passed": true
+    },
+    {
+      "name": "explicit_repeat_preserves_original_and_cancellation_is_state_checked",
+      "passed": true
+    },
+    {
+      "name": "real_defense_evaluation_requires_another_admin_without_applying_sensitive_changes",
+      "passed": true
+    },
+    {
+      "name": "source_crud_event_idempotency_parent_integrity_and_foreign_source_rejected",
+      "passed": true
+    },
+    {
+      "name": "bounded_real_http_reads_under_concurrency",
+      "passed": true,
+      "requests": 20,
+      "concurrency": 4,
+      "p95_ms": 1741.4906999999948,
+      "scope": "owned_fixture_reads_not_production_capacity"
+    },
+    {
+      "name": "real_canonical_audit_chain_and_payload_minimization",
+      "passed": true
+    }
+  ],
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "status": "passed",
+  "cleanup": {
+    "passed": true,
+    "only_proved_owned_records": true,
+    "shared_counters_global_leases_and_security_traces_preserved": true,
+    "backup_sha256": "3c67314425960da4973d22ae55d73a0ac39b2644a8ff107ac13554cd8d175fe8",
+    "initial_verification_omitted_analytics_jobs": true,
+    "recovery_report": "phase2-cleanup-recovery.json",
+    "recovery_verified_at": "2026-10-25T19:18:40.588Z",
+    "recovered_records_removed": 3
+  },
+  "completed_at": "2026-10-25T18:10:14.061Z"
+}

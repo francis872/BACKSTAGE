@@ -1,0 +1,2 @@
+-r ../bsie/requirements.txt
+ortools==9.15.6755

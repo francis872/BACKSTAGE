@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-10-24T04:07:08.206Z",
+  "status": 0,
+  "vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "advisories": []
+}

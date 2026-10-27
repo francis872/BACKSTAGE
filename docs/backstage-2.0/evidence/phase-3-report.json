@@ -1,0 +1,153 @@
+{
+  "checked_at": "2026-10-22T22:24:27.481707+00:00",
+  "phase": 3,
+  "scope": "approved_territory_asset_comparison_project_recovery_local",
+  "status": "completed_with_documented_external_verification_limits",
+  "backend": {
+    "passed": 263,
+    "failed": 0,
+    "external_skipped": 1
+  },
+  "frontend": {
+    "passed": 26,
+    "failed": 0
+  },
+  "browser": {
+    "existing_flows": 26,
+    "design_checks": 20,
+    "workflow_checks": 11,
+    "runtime_errors": 0,
+    "screenshots": 44
+  },
+  "build": {
+    "passed": true,
+    "modules": 127,
+    "existing_warnings": [
+      "vite_cjs",
+      "large_maplibre_chunk"
+    ]
+  },
+  "packaging": [
+    {
+      "type": "api",
+      "source": "soi-api-1792707554708",
+      "files_verified": 219,
+      "passed": true
+    },
+    {
+      "type": "web",
+      "source": "soi-web-1792707815130",
+      "files_verified": 136,
+      "passed": true
+    }
+  ],
+  "changed_or_new_source_hashes": [
+    {
+      "path": ".github/workflows/ci-vercel.yml",
+      "sha256": "ccc9e9571b51370daedfb0010dfc0eef85e7bfeb94e584db45dd0dae2c258892"
+    },
+    {
+      "path": "PROJECT_STATUS.md",
+      "sha256": "2f8774f8fdcef1d5bb1d7a2b1d794d520c9e4e256b7702fcbbbf7b8bbbdc79e3"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ce7237b8984f14ff2d53586ac1e6105f63b2af69f63bd8cd9d9692782e96744d"
+    },
+    {
+      "path": "backend/domain/workspaceContext.js",
+      "sha256": "66251eac36971b917aaff74fb164ff5fe03c1ea0de4f1b4b4f26385dccada4b4"
+    },
+    {
+      "path": "backend/domain/workspaceFlow.test.js",
+      "sha256": "a190fb0cc32028d3c66ebf3378c7ef431a38e5705801209980c83aaf2c0d6282"
+    },
+    {
+      "path": "backend/repositories/analysis.repository.js",
+      "sha256": "b39f2b3d77d8c60170681349f8a9cf1895098c36fec0c697b173dd726fe81671"
+    },
+    {
+      "path": "backend/routes/comparisons.routes.js",
+      "sha256": "162f7ab15aa8bf39810f29f49c94db1e807d93525859ff3c966145af219b60d2"
+    },
+    {
+      "path": "backend/services/comparisons.service.js",
+      "sha256": "4421ab949dbdf184a4e468db212f4d1f1fe24c137561b64877a47807a5fb5ba1"
+    },
+    {
+      "path": "docs/backstage-2.0/CHANGELOG.md",
+      "sha256": "75f335d8de62aaa2639087b98b0a2535cdbfc76ed0ed029324182474ebc43b5a"
+    },
+    {
+      "path": "docs/backstage-2.0/CORE_API.md",
+      "sha256": "00cd03f07ba1cb9e7276b4a4057107267047b144e68bd01ee1984a43415c7185"
+    },
+    {
+      "path": "docs/backstage-2.0/GLOBAL_WORKSPACES.md",
+      "sha256": "2c8cb4b36fbce7af953748055bc55e0d85dc5ff52bbace6c419944fe275c4804"
+    },
+    {
+      "path": "docs/backstage-2.0/IMPLEMENTATION_ROADMAP.md",
+      "sha256": "fa86badc722ec60134191d67fd626870f122e5dfe6838d1dd44cd5806dd77571"
+    },
+    {
+      "path": "docs/backstage-2.0/PHASE_3_REPORT.md",
+      "sha256": "50ee01ef0348b7612159b50c7ab2408b21c5a06ba4968f78c5fb9db2b2d7eecf"
+    },
+    {
+      "path": "docs/backstage-2.0/ROLLBACK.md",
+      "sha256": "4cee4230d9438e0a6f849d0c6bffb2cfb31524b8726d42400bdc8e9175e645d1"
+    },
+    {
+      "path": "frontend/package.json",
+      "sha256": "68fc9d7b439b9589c2245c863ea4bb2bd3220718b7a25593e9c660dbcaaf0e3d"
+    },
+    {
+      "path": "frontend/scripts/soi-browser-smoke.mjs",
+      "sha256": "0bea761119d896875ddbffc0811f07a5e9133f172e9efcd33ab15438cb68430e"
+    },
+    {
+      "path": "frontend/src/App.jsx",
+      "sha256": "1738e08931d7d02b81f323b6a8c6e2bcccf0fdf0397910a153263c71f40025b9"
+    },
+    {
+      "path": "frontend/src/lib/operationalContext.js",
+      "sha256": "60d75bcc850c1fa8f086dfa66ef7c103f4041bb47102673a1cfbbd043ba8a329"
+    },
+    {
+      "path": "frontend/src/lib/projectContext.mjs",
+      "sha256": "8ba1f930ee72763104ab04928a32f921f5e1c130cb51380825601d6fd11dadbe"
+    },
+    {
+      "path": "frontend/src/lib/territory.js",
+      "sha256": "71610e3f938ead96d9be077ce6ee98fe65a04331ce561791e6f550c12c4bb51a"
+    },
+    {
+      "path": "frontend/src/pages/AdvancedComparator.jsx",
+      "sha256": "1b2295c0e93674a0636cfd339ae31f0455f539bb43c74481d0ac6a53b6efa3d6"
+    },
+    {
+      "path": "frontend/src/pages/AssetsWorkspace.jsx",
+      "sha256": "a7d6a89b81e92042ae8914588e60be2829f1a3df410970a81d43ac2a26b299c6"
+    },
+    {
+      "path": "frontend/src/pages/RetailZones.jsx",
+      "sha256": "d159e59c39788b975bd956a3001efc874fe7d54d8ea6d90487781a822d24cb81"
+    },
+    {
+      "path": "frontend/tests/workspaceContext.test.mjs",
+      "sha256": "59e700b3e87d7f5119168fd8515a5c0db5f0eef0cd07203fe4288492dea1d75a"
+    },
+    {
+      "path": "scripts/verify-prepared-backstage.js",
+      "sha256": "8c99e571db7b751561797c7f6f202408054c9a5f8127f78fe63dbfc51d3ad048"
+    }
+  ],
+  "atlas_writes": false,
+  "deployed": false,
+  "limits": [
+    "API and MongoDB fixture tests do not certify Atlas persistence or concurrent transaction retries",
+    "external cartography/GPS/sensors not certified",
+    "project starts pending; downstream workflow and durable creation event not completed by this link"
+  ]
+}

@@ -1,0 +1,2208 @@
+{
+  "generated_at": "2026-10-22T00:56:03.646964+00:00",
+  "branch": "recovery/backstage-2-audit-20261021",
+  "base_commit": "ce18b6d7b79867d940e1689d61755446acbf974c",
+  "shallow_repository": "false",
+  "available_commit_count": 390,
+  "status_counts": {
+    "modified": 86,
+    "deleted": 31,
+    "untracked": 172
+  },
+  "status": [
+    "M .env.example",
+    " M .github/workflows/ci-vercel.yml",
+    " M .gitignore",
+    " M DEPLOYMENT_GUIDE.md",
+    " M PROJECT_STATUS.md",
+    " M QUICK_DEPLOY.md",
+    " M README.md",
+    " M backend/.env.example",
+    " M backend/.gitignore",
+    " M backend/README.md",
+    " M backend/auth.js",
+    " D backend/backend-seed-auth.sql",
+    " M backend/controllers/auth.controller.js",
+    " M backend/controllers/integrations.controller.js",
+    " M backend/controllers/realEstate.controller.js",
+    " M backend/controllers/retailZones.controller.js",
+    " M backend/controllers/scoring.controller.js",
+    " D backend/db.js",
+    " M backend/domain/applicationStartup.test.js",
+    " M backend/domain/authOnboarding.test.js",
+    " D backend/domain/databaseTransaction.test.js",
+    " D backend/domain/ensureDatabase.test.js",
+    " M backend/domain/mathematicalApiIntegration.test.js",
+    " M backend/domain/organizationService.test.js",
+    " D backend/domain/postgresVersion.test.js",
+    " M backend/domain/territorialComparisonIntegration.test.js",
+    " M backend/earthart.js",
+    " D backend/ensure-database.js",
+    " M backend/index.js",
+    " M backend/ingestion.js",
+    " D backend/init-db.js",
+    " M backend/middleware/auditLogger.js",
+    " M backend/middleware/platformSecurity.js",
+    " D backend/migrations/1680000000000_create_initial_schema.js",
+    " D backend/migrations/1680000001000_add_retail_intelligence_schema.js",
+    " D backend/migrations/1680000002000_add_spatial_and_risk_intelligence.js",
+    " D backend/migrations/1680000003000_enable_postgis.js",
+    " D backend/migrations/1680000004000_add_spatial_geometry_columns.js",
+    " D backend/migrations/1680000005000_add_security_and_integration_schema.js",
+    " D backend/migrations/1680000006000_add_real_estate_intelligence.js",
+    " D backend/migrations/1680000007000_add_earthart_territorial_schema.js",
+    " D backend/migrations/1680000008000_add_geostrategic_mvp_schema.js",
+    " D backend/migrations/1680000009000_add_multiorg_and_audit_logs.js",
+    " D backend/migrations/1680000010000_add_audit_hash_chain.js",
+    " D backend/migrations/1680000011000_add_analytics_core.js",
+    " D backend/migrations/1680000012000_add_recommendation_workflow.js",
+    " D backend/migrations/1680000013000_add_operational_project_candidates.js",
+    " D backend/migrations/1680000014000_add_operational_events.js",
+    " D backend/migrations/1680000015000_add_operational_event_lifecycle.js",
+    " D backend/migrations/1680000016000_add_command_executions.js",
+    " D backend/migrations/1680000017000_add_earthart_organization_scope.js",
+    " D backend/migrations/1680000018000_seed_system_roles.js",
+    " M backend/package-lock.json",
+    " M backend/package.json",
+    " M backend/repositories/analysis.repository.js",
+    " M backend/repositories/analyticsJobs.repository.js",
+    " M backend/repositories/commandExecutions.repository.js",
+    " M backend/repositories/layers.repository.js",
+    " M backend/repositories/operationalEvents.repository.js",
+    " M backend/routes/auditLogs.routes.js",
+    " M backend/routes/integrations.routes.js",
+    " M backend/routes/realEstate.routes.js",
+    " M backend/routes/retailZones.routes.js",
+    " M backend/routes/spatialIngestion.routes.js",
+    " M backend/routes/users.routes.js",
+    " D backend/sample-data.sql",
+    " D backend/schema-full.sql",
+    " D backend/schema.sql",
+    " M backend/scoring.js",
+    " M backend/services/analysis.service.js",
+    " M backend/services/analysisOrchestrator.service.js",
+    " M backend/services/auditLogs.service.js",
+    " M backend/services/dataResolver.service.js",
+    " M backend/services/insights.service.js",
+    " M backend/services/integrations.service.js",
+    " M backend/services/locations.service.js",
+    " M backend/services/operationalMetrics.service.js",
+    " M backend/services/organization.service.js",
+    " M backend/services/realEstate.service.js",
+    " M backend/services/recommendations.service.js",
+    " M backend/services/retailZones.service.js",
+    " M backend/services/riskAssessments.service.js",
+    " M backend/services/riskComponents.service.js",
+    " M backend/services/scoring.service.js",
+    " M backend/services/spatialIngestion.service.js",
+    " M backend/services/territorial.service.js",
+    " M backend/services/territoryResolver.service.js",
+    " M backend/services/users.service.js",
+    " M backend/spatial/store.js",
+    " D backend/utils/postgresVersion.js",
+    " M backend/vercel.json",
+    " M docs/analytics/ARCHITECTURE.md",
+    " M frontend/.gitignore",
+    " M frontend/api/index.js",
+    " M frontend/package.json",
+    " M frontend/src/App.jsx",
+    " M frontend/src/components/AnalysisCommandBar.jsx",
+    " M frontend/src/components/SpatialSearch.jsx",
+    " M frontend/src/index.css",
+    " M frontend/src/lib/api.js",
+    " M frontend/src/lib/auth.js",
+    " M frontend/src/lib/operationalContext.js",
+    " M frontend/src/pages/AdvancedComparator.jsx",
+    " M frontend/src/pages/EarthArt.jsx",
+    " M frontend/src/pages/MissionControl.jsx",
+    " M frontend/src/pages/NativeTerritorialExplorer.css",
+    " M frontend/src/pages/NativeTerritorialExplorer.jsx",
+    " M frontend/src/pages/PlatformArchitecture.jsx",
+    " M frontend/src/pages/RealEstatePortfolio.jsx",
+    " M frontend/src/pages/RetailZones.jsx",
+    " M frontend/src/pages/UsersAdmin.jsx",
+    " M geospatial/README.md",
+    " D geospatial/sql/validation.sql",
+    " M package.json",
+    " M probability/__pycache__/statistical_engine.cpython-314.pyc",
+    " M scripts/dev.js",
+    " M scripts/setup.js",
+    "?? Microsoft/Windows/PowerShell/ModuleAnalysisCache",
+    "?? backend/.vercelignore",
+    "?? backend/cleancom/data/catalog.json",
+    "?? backend/cleancom/repository.js",
+    "?? backend/cleancom/service.js",
+    "?? backend/controllers/cleanCom.controller.js",
+    "?? backend/controllers/territoryLive.controller.js",
+    "?? backend/domain/assetMetadata.test.js",
+    "?? backend/domain/authProxy.test.js",
+    "?? backend/domain/bsie.test.js",
+    "?? backend/domain/cleanCom.test.js",
+    "?? backend/domain/helpers/fakeIdentityMongo.js",
+    "?? backend/domain/helpers/soiMongoMemoryFixture.js",
+    "?? backend/domain/mongoDns.test.js",
+    "?? backend/domain/mongoIdentity.test.js",
+    "?? backend/domain/publicMapEvidence.test.js",
+    "?? backend/domain/scientificRpc.test.js",
+    "?? backend/domain/soiComparison.test.js",
+    "?? backend/domain/soiCore.test.js",
+    "?? backend/domain/soiFleet.mongo.test.js",
+    "?? backend/domain/soiHttp.test.js",
+    "?? backend/domain/soiMongoCore.test.js",
+    "?? backend/domain/soiSanitary.test.js",
+    "?? backend/domain/soiSanitaryAnalytics.test.js",
+    "?? backend/domain/soiTrips.mongo.test.js",
+    "?? backend/domain/soiTrips.test.js",
+    "?? backend/domain/territoryLive.test.js",
+    "?? backend/infrastructure/atlasDocuments.js",
+    "?? backend/infrastructure/mongoDns.js",
+    "?? backend/infrastructure/soiMongo.js",
+    "?? backend/middleware/soiOrganizationContext.js",
+    "?? backend/routes/bsie.routes.js",
+    "?? backend/routes/cleanCom.routes.js",
+    "?? backend/routes/soi.routes.js",
+    "?? backend/routes/soiFleet.routes.js",
+    "?? backend/routes/soiGeo.routes.js",
+    "?? backend/routes/soiGeo.routes.test.js",
+    "?? backend/routes/soiSanitary.routes.js",
+    "?? backend/routes/soiTrips.routes.js",
+    "?? backend/scripts/bind-cleancom-cases.js",
+    "?? backend/scripts/bsie-worker.js",
+    "?? backend/scripts/check-live-sources.js",
+    "?? backend/scripts/diagnose-soi-mongo.js",
+    "?? backend/scripts/initialize-soi-mongo.js",
+    "?? backend/scripts/inspect-soi-mongo.js",
+    "?? backend/scripts/soi-gps-retention.js",
+    "?? backend/scripts/verify-soi-atlas-only.js",
+    "?? backend/scripts/verify-soi-dem.js",
+    "?? backend/scripts/verify-soi-miami-la.js",
+    "?? backend/scripts/verify-soi-mongo-live.js",
+    "?? backend/scripts/verify-soi-sanitary-live.js",
+    "?? backend/services/bsie.service.js",
+    "?? backend/services/mongoIdentity.service.js",
+    "?? backend/services/publicMapEvidence.service.js",
+    "?? backend/services/scientificRpc.service.js",
+    "?? backend/services/soi.service.js",
+    "?? backend/services/soiFleet.service.js",
+    "?? backend/services/soiGeo.service.js",
+    "?? backend/services/soiGeo.service.test.js",
+    "?? backend/services/soiMongo.service.js",
+    "?? backend/services/soiMongoAudit.service.js",
+    "?? backend/services/soiSanitary.service.js",
+    "?? backend/services/soiSanitaryAnalytics.service.js",
+    "?? backend/services/soiSanitaryIntegrations.service.js",
+    "?? backend/services/soiTrips.service.js",
+    "?? backend/services/soiValidation.js",
+    "?? backend/services/territoryIntent.service.js",
+    "?? backend/services/territoryLive.service.js",
+    "?? backend/services/territoryResolver.mongo.test.js",
+    "?? backend/services/tripValidation.js",
+    "?? backend/soi/openapi.js",
+    "?? backend/soi/sanitary.contract.js",
+    "?? bsie/benchmark.py",
+    "?? bsie/engine.py",
+    "?? bsie/requirements-test.txt",
+    "?? bsie/requirements.txt",
+    "?? bsie/temporal.py",
+    "?? bsie/test_advanced.py",
+    "?? bsie/test_engine.py",
+    "?? bsie/test_temporal.py",
+    "?? cleancom/README.md",
+    "?? cleancom/cases/empresas-varias-2025.json",
+    "?? cleancom/contracts/case.schema.json",
+    "?? cleancom/process.py",
+    "?? cleancom/processor/__init__.py",
+    "?? cleancom/processor/audit.py",
+    "?? cleancom/processor/reader.py",
+    "?? cleancom/requirements.txt",
+    "?? cleancom/test_processor.py",
+    "?? deployment/science.py",
+    "?? deployment/test_science.py",
+    "?? deployment/vercel-api.json",
+    "?? docs/BSIE.md",
+    "?? docs/CLEAN_COM_AUDIT.md",
+    "?? docs/LIVE_TERRITORY.md",
+    "?? docs/SOI_COMPARATOR.md",
+    "?? docs/SOI_CORE.md",
+    "?? docs/SOI_GEO.md",
+    "?? docs/SOI_MONGODB.md",
+    "?? docs/SOI_MONGODB_IDENTITY.md",
+    "?? docs/SOI_MONGO_GPS_FLEET.md",
+    "?? docs/SOI_PROGRESS.md",
+    "?? docs/SOI_SANITARY_API.md",
+    "?? docs/SOI_SANITARY_PROGRESS.md",
+    "?? docs/evidence/backend-regression-before-offline-isolation.txt",
+    "?? docs/evidence/backend-regression-current.txt",
+    "?? docs/evidence/bsie-benchmark.json",
+    "?? docs/evidence/bsie-scientific-tests.txt",
+    "?? docs/evidence/frontend-regression-current.txt",
+    "?? docs/evidence/probability-tests-current.txt",
+    "?? docs/evidence/sanitary-benchmark.json",
+    "?? docs/evidence/sanitary-scientific-tests.txt",
+    "?? docs/evidence/scientific-deployment-tests.txt",
+    "?? docs/evidence/soi-atlas-only-live.json",
+    "?? docs/evidence/soi-browser-smoke.json",
+    "?? docs/evidence/soi-cloud-live.json",
+    "?? docs/evidence/soi-cloud-science.json",
+    "?? docs/evidence/soi-cloud-ui.json",
+    "?? docs/evidence/soi-dem-live.json",
+    "?? docs/evidence/soi-deployment.json",
+    "?? docs/evidence/soi-miami-la-live.json",
+    "?? docs/evidence/soi-mongo-index-plan.json",
+    "?? docs/evidence/soi-mongo-live.json",
+    "?? docs/evidence/soi-public-release.json",
+    "?? docs/evidence/soi-release-checks.json",
+    "?? frontend/.vercelignore",
+    "?? frontend/scripts/soi-browser-smoke.mjs",
+    "?? frontend/src/components/AccessFrame.jsx",
+    "?? frontend/src/components/BsiePanel.jsx",
+    "?? frontend/src/components/CleanComMap.jsx",
+    "?? frontend/src/components/LiveTerritoryOverview.jsx",
+    "?? frontend/src/components/MeasurementTimeline.jsx",
+    "?? frontend/src/components/OrbitalEntry.jsx",
+    "?? frontend/src/components/OrbitalGlobe.jsx",
+    "?? frontend/src/components/SanitaryAnalysisForms.jsx",
+    "?? frontend/src/components/SanitaryWorkspace.css",
+    "?? frontend/src/components/SanitaryWorkspace.jsx",
+    "?? frontend/src/components/SoiFleet.jsx",
+    "?? frontend/src/components/TerritoryLive.css",
+    "?? frontend/src/components/TerritoryLiveBar.jsx",
+    "?? frontend/src/lib/soi.js",
+    "?? frontend/src/lib/soiNavigation.mjs",
+    "?? frontend/src/lib/territory.js",
+    "?? frontend/src/lib/useLiveResource.js",
+    "?? frontend/src/pages/CleanCom.css",
+    "?? frontend/src/pages/CleanCom.jsx",
+    "?? frontend/src/pages/LegacyAdvancedComparator.jsx",
+    "?? frontend/src/pages/SoiRoutes.jsx",
+    "?? frontend/src/pages/SoiWorkspace.css",
+    "?? frontend/src/pages/SoiWorkspace.jsx",
+    "?? frontend/src/styles/immersive.css",
+    "?? frontend/tests/session.test.mjs",
+    "?? frontend/tests/soiNavigation.test.mjs",
+    "?? frontend/tests/territory.test.mjs",
+    "?? probability/__pycache__/test_statistical_engine.cpython-314.pyc",
+    "?? sanitary/benchmark.py",
+    "?? sanitary/engine.py",
+    "?? sanitary/predictive.py",
+    "?? sanitary/requirements.txt",
+    "?? sanitary/routing.py",
+    "?? sanitary/test_engine.py",
+    "?? scripts/bsie.js",
+    "?? scripts/clean-soi-browser-profiles.py",
+    "?? scripts/configure-soi-cloud.js",
+    "?? scripts/deploy-soi-cloud.js",
+    "?? scripts/prepare-soi-deployment.js",
+    "?? scripts/prepare-soi-web-deployment.js",
+    "?? scripts/setup-scientific.js",
+    "?? scripts/verify-soi-cloud-science.js",
+    "?? scripts/verify-soi-public.js",
+    "?? scripts/verify-soi-release.js",
+    "?? shared/soiComparison.mjs"
+  ],
+  "frontend_navigation": [
+    {
+      "key": "mission-control",
+      "label": "Centro de operaciones",
+      "group": "Operación"
+    },
+    {
+      "key": "territorial-explorer",
+      "label": "Explorador territorial",
+      "group": "Operación"
+    },
+    {
+      "key": "soi",
+      "label": "SOI · Operaciones de Inteligencia Sanitaria",
+      "group": "Operación"
+    },
+    {
+      "key": "soi-routes",
+      "label": "SOI Route Intelligence",
+      "group": "Operación"
+    },
+    {
+      "key": "earthart",
+      "label": "AirHeart",
+      "group": "Operación"
+    },
+    {
+      "key": "portfolio-assets",
+      "label": "Activos",
+      "group": "Portafolio"
+    },
+    {
+      "key": "portfolio-projects",
+      "label": "Proyectos",
+      "group": "Portafolio"
+    },
+    {
+      "key": "portfolio-comparator",
+      "label": "Comparador inteligente",
+      "group": "Portafolio"
+    },
+    {
+      "key": "profile",
+      "label": "Perfil",
+      "group": "Cuenta"
+    },
+    {
+      "key": "organization-settings",
+      "label": "Organización",
+      "group": "Cuenta"
+    }
+  ],
+  "frontend_routes": [
+    "/login",
+    "/signup",
+    "/dashboard",
+    "/soi",
+    "/soi/routes",
+    "/clean-com",
+    "/",
+    "*"
+  ],
+  "frontend_route_cases": [
+    "clean-com",
+    "soi",
+    "soi-routes",
+    "mission-control",
+    "territorial-explorer",
+    "portfolio-assets",
+    "portfolio-projects",
+    "portfolio-comparator",
+    "profile",
+    "organization-settings",
+    "intelligence-evaluations",
+    "intelligence-risks",
+    "intelligence-opportunities",
+    "intelligence-recommendations",
+    "probability-engine",
+    "earthart",
+    "reports",
+    "admin-users",
+    "admin-datasets",
+    "admin-layer-catalog",
+    "admin-audit-logs"
+  ],
+  "backend_route_inventory_static": [
+    {
+      "mount": null,
+      "method": "POST",
+      "route": "/login",
+      "file": "backend/routes/auth.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": null,
+      "method": "POST",
+      "route": "/register",
+      "file": "backend/routes/auth.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": null,
+      "method": "GET",
+      "route": "/me",
+      "file": "backend/routes/auth.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": null,
+      "method": "GET",
+      "route": "/organizations",
+      "file": "backend/routes/auth.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": null,
+      "method": "POST",
+      "route": "/switch-organization",
+      "file": "backend/routes/auth.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/locations",
+      "method": "GET",
+      "route": "/",
+      "file": "backend/routes/locations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/locations",
+      "method": "GET",
+      "route": "/nearby",
+      "file": "backend/routes/locations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/locations",
+      "method": "GET",
+      "route": "/:id",
+      "file": "backend/routes/locations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/locations",
+      "method": "POST",
+      "route": "/",
+      "file": "backend/routes/locations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/locations",
+      "method": "PUT",
+      "route": "/:id",
+      "file": "backend/routes/locations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/locations",
+      "method": "DELETE",
+      "route": "/:id",
+      "file": "backend/routes/locations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/insights",
+      "method": "GET",
+      "route": "/summary",
+      "file": "backend/routes/insights.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/insights",
+      "method": "GET",
+      "route": "/opportunities",
+      "file": "backend/routes/insights.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/insights",
+      "method": "POST",
+      "route": "/opportunities/:locationId/projects",
+      "file": "backend/routes/insights.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/real-estate",
+      "method": "GET",
+      "route": "/portfolio",
+      "file": "backend/routes/realEstate.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/real-estate",
+      "method": "GET",
+      "route": "/properties",
+      "file": "backend/routes/realEstate.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/real-estate",
+      "method": "GET",
+      "route": "/valuations",
+      "file": "backend/routes/realEstate.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/real-estate",
+      "method": "GET",
+      "route": "/valuations/:id",
+      "file": "backend/routes/realEstate.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/real-estate",
+      "method": "POST",
+      "route": "/valuations",
+      "file": "backend/routes/realEstate.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/real-estate",
+      "method": "PUT",
+      "route": "/valuations/:id",
+      "file": "backend/routes/realEstate.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/real-estate",
+      "method": "DELETE",
+      "route": "/valuations/:id",
+      "file": "backend/routes/realEstate.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/retail-zones",
+      "method": "GET",
+      "route": "/",
+      "file": "backend/routes/retailZones.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/retail-zones",
+      "method": "GET",
+      "route": "/:id",
+      "file": "backend/routes/retailZones.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/retail-zones",
+      "method": "POST",
+      "route": "/",
+      "file": "backend/routes/retailZones.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/retail-zones",
+      "method": "PUT",
+      "route": "/:id",
+      "file": "backend/routes/retailZones.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/retail-zones",
+      "method": "DELETE",
+      "route": "/:id",
+      "file": "backend/routes/retailZones.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/risk-components",
+      "method": "GET",
+      "route": "/",
+      "file": "backend/routes/riskComponents.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/risk-components",
+      "method": "GET",
+      "route": "/:id",
+      "file": "backend/routes/riskComponents.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/risk-components",
+      "method": "POST",
+      "route": "/",
+      "file": "backend/routes/riskComponents.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/risk-components",
+      "method": "PUT",
+      "route": "/:id",
+      "file": "backend/routes/riskComponents.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/risk-components",
+      "method": "DELETE",
+      "route": "/:id",
+      "file": "backend/routes/riskComponents.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/risk-assessments",
+      "method": "GET",
+      "route": "/",
+      "file": "backend/routes/riskAssessments.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/risk-assessments",
+      "method": "GET",
+      "route": "/locations/:locationId/history",
+      "file": "backend/routes/riskAssessments.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/risk-assessments",
+      "method": "GET",
+      "route": "/:id",
+      "file": "backend/routes/riskAssessments.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/risk-assessments",
+      "method": "POST",
+      "route": "/",
+      "file": "backend/routes/riskAssessments.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/risk-assessments",
+      "method": "PUT",
+      "route": "/:id",
+      "file": "backend/routes/riskAssessments.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/risk-assessments",
+      "method": "DELETE",
+      "route": "/:id",
+      "file": "backend/routes/riskAssessments.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/recommendations",
+      "method": "GET",
+      "route": "/",
+      "file": "backend/routes/recommendations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/recommendations",
+      "method": "GET",
+      "route": "/summary",
+      "file": "backend/routes/recommendations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/recommendations",
+      "method": "GET",
+      "route": "/:id",
+      "file": "backend/routes/recommendations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/recommendations",
+      "method": "POST",
+      "route": "/",
+      "file": "backend/routes/recommendations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/recommendations",
+      "method": "POST",
+      "route": "/from-analysis/:analysisRunId",
+      "file": "backend/routes/recommendations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/recommendations",
+      "method": "POST",
+      "route": "/:id/review",
+      "file": "backend/routes/recommendations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/recommendations",
+      "method": "PUT",
+      "route": "/:id",
+      "file": "backend/routes/recommendations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/recommendations",
+      "method": "DELETE",
+      "route": "/:id",
+      "file": "backend/routes/recommendations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/integrations",
+      "method": "POST",
+      "route": "/sources",
+      "file": "backend/routes/integrations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/integrations",
+      "method": "POST",
+      "route": "/events",
+      "file": "backend/routes/integrations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/integrations",
+      "method": "GET",
+      "route": "/events/pending",
+      "file": "backend/routes/integrations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/integrations",
+      "method": "POST",
+      "route": "/events/:id/complete",
+      "file": "backend/routes/integrations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/scoring",
+      "method": "POST",
+      "route": "/evaluate",
+      "file": "backend/routes/scoring.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/scoring",
+      "method": "GET",
+      "route": "/latest/:location_id",
+      "file": "backend/routes/scoring.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "GET",
+      "route": "/units",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "GET",
+      "route": "/units/:id",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "POST",
+      "route": "/units",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "PUT",
+      "route": "/units/:id",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "DELETE",
+      "route": "/units/:id",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "GET",
+      "route": "/facilities",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "POST",
+      "route": "/facilities",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "GET",
+      "route": "/dimension-scores",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "POST",
+      "route": "/dimension-scores",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "GET",
+      "route": "/units/:id/index",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "POST",
+      "route": "/units/:id/index/recompute",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "GET",
+      "route": "/units/:id/gaps",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "POST",
+      "route": "/units/:id/gaps/detect",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "POST",
+      "route": "/units/:id/gaps/:gapId/projects",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "GET",
+      "route": "/gaps",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "POST",
+      "route": "/units/:id/simulate",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/territorial",
+      "method": "GET",
+      "route": "/units/:id/simulations",
+      "file": "backend/routes/territorial.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/users",
+      "method": "GET",
+      "route": "/",
+      "file": "backend/routes/users.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/users",
+      "method": "GET",
+      "route": "/:id",
+      "file": "backend/routes/users.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/users",
+      "method": "POST",
+      "route": "/",
+      "file": "backend/routes/users.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/users",
+      "method": "PUT",
+      "route": "/:id",
+      "file": "backend/routes/users.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/users",
+      "method": "PUT",
+      "route": "/:id/password",
+      "file": "backend/routes/users.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/users",
+      "method": "DELETE",
+      "route": "/:id",
+      "file": "backend/routes/users.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/layers",
+      "method": "GET",
+      "route": "/",
+      "file": "backend/routes/layers.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/layers",
+      "method": "GET",
+      "route": "/:id",
+      "file": "backend/routes/layers.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/layers",
+      "method": "GET",
+      "route": "/:id/features",
+      "file": "backend/routes/layers.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "POST",
+      "route": "/projects",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "POST",
+      "route": "/plan",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "GET",
+      "route": "/:id/candidates",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "POST",
+      "route": "/:id/candidates",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "DELETE",
+      "route": "/:id/candidates/:locationId",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "POST",
+      "route": "/",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "POST",
+      "route": "/compare",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "GET",
+      "route": "/operations",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "GET",
+      "route": "/",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "GET",
+      "route": "/:id/risks",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "PUT",
+      "route": "/:id/risks/review",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "PUT",
+      "route": "/:id/probability",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "GET",
+      "route": "/:id/probability",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "POST",
+      "route": "/:id/commands",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "POST",
+      "route": "/:id/report/generate",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "GET",
+      "route": "/:id/report",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analysis",
+      "method": "GET",
+      "route": "/:id",
+      "file": "backend/routes/analysis.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/operational-events",
+      "method": "GET",
+      "route": "/",
+      "file": "backend/routes/operationalEvents.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/operational-events",
+      "method": "GET",
+      "route": "/alerts",
+      "file": "backend/routes/operationalEvents.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/operational-events",
+      "method": "GET",
+      "route": "/summary",
+      "file": "backend/routes/operationalEvents.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/operational-events",
+      "method": "PUT",
+      "route": "/:id/acknowledge",
+      "file": "backend/routes/operationalEvents.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/operational-events",
+      "method": "PUT",
+      "route": "/:id/resolve",
+      "file": "backend/routes/operationalEvents.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/operations",
+      "method": "GET",
+      "route": "/health",
+      "file": "backend/routes/operations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/operations",
+      "method": "GET",
+      "route": "/metrics",
+      "file": "backend/routes/operations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/operations",
+      "method": "GET",
+      "route": "/executions",
+      "file": "backend/routes/operations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/operations",
+      "method": "GET",
+      "route": "/analysis/:id/diagnostics",
+      "file": "backend/routes/operations.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/audit-logs",
+      "method": "GET",
+      "route": "/",
+      "file": "backend/routes/auditLogs.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/audit-logs",
+      "method": "GET",
+      "route": "/chain-status",
+      "file": "backend/routes/auditLogs.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analytics",
+      "method": "GET",
+      "route": "/algorithms",
+      "file": "backend/routes/analytics.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analytics",
+      "method": "GET",
+      "route": "/jobs",
+      "file": "backend/routes/analytics.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analytics",
+      "method": "GET",
+      "route": "/jobs/:id",
+      "file": "backend/routes/analytics.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analytics",
+      "method": "POST",
+      "route": "/multicriteria",
+      "file": "backend/routes/analytics.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analytics",
+      "method": "POST",
+      "route": "/multicriteria/sensitivity",
+      "file": "backend/routes/analytics.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analytics",
+      "method": "POST",
+      "route": "/multicriteria/ahp-weights",
+      "file": "backend/routes/analytics.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analytics",
+      "method": "POST",
+      "route": "/financial",
+      "file": "backend/routes/analytics.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/analytics",
+      "method": "POST",
+      "route": "/risk-simulation",
+      "file": "backend/routes/analytics.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/terrain",
+      "method": "GET",
+      "route": "/surface",
+      "file": "backend/routes/terrain.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/terrain",
+      "method": "POST",
+      "route": "/analyze",
+      "file": "backend/routes/terrain.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/terrain",
+      "method": "POST",
+      "route": "/hydrology",
+      "file": "backend/routes/terrain.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/terrain",
+      "method": "POST",
+      "route": "/profile",
+      "file": "backend/routes/terrain.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "GET",
+      "route": "/weather",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "GET",
+      "route": "/live-context",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "GET",
+      "route": "/intent",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "GET",
+      "route": "/sources",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "POST",
+      "route": "/sources",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "PATCH",
+      "route": "/sources/:id/status",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "GET",
+      "route": "/jobs",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "GET",
+      "route": "/status",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "GET",
+      "route": "/geocode",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "GET",
+      "route": "/reverse-geocode",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "GET",
+      "route": "/search",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "GET",
+      "route": "/nearby",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "POST",
+      "route": "/routes/compute",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "POST",
+      "route": "/risk/evaluate",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "POST",
+      "route": "/risk/scenario",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "POST",
+      "route": "/measure",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "POST",
+      "route": "/ingest/geojson",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "POST",
+      "route": "/ingest/remote",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/spatial",
+      "method": "GET",
+      "route": "/tiles/:z/:x/:y",
+      "file": "backend/routes/spatialIngestion.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/clean-com",
+      "method": "GET",
+      "route": "/cases",
+      "file": "backend/routes/cleanCom.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/clean-com",
+      "method": "GET",
+      "route": "/cases/:caseId/audit",
+      "file": "backend/routes/cleanCom.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/clean-com",
+      "method": "GET",
+      "route": "/cases/:caseId/layers/:layerId/features",
+      "file": "backend/routes/cleanCom.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi",
+      "method": "GET",
+      "route": "/catalog",
+      "file": "backend/routes/soi.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi",
+      "method": "GET",
+      "route": "/configuration",
+      "file": "backend/routes/soi.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi",
+      "method": "GET",
+      "route": "/summary",
+      "file": "backend/routes/soi.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi",
+      "method": "PUT",
+      "route": "/configuration",
+      "file": "backend/routes/soi.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi",
+      "method": "PATCH",
+      "route": "/assets/:id",
+      "file": "backend/routes/soi.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi",
+      "method": "GET",
+      "route": "/operations/:id/assets",
+      "file": "backend/routes/soi.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi",
+      "method": "PUT",
+      "route": "/operations/:id/assets",
+      "file": "backend/routes/soi.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi",
+      "method": "POST",
+      "route": "/imports/preview",
+      "file": "backend/routes/soi.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi",
+      "method": "POST",
+      "route": "/imports/commit",
+      "file": "backend/routes/soi.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi",
+      "method": "GET",
+      "route": "/comparisons",
+      "file": "backend/routes/soi.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi",
+      "method": "POST",
+      "route": "/comparisons",
+      "file": "backend/routes/soi.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/geo",
+      "method": "GET",
+      "route": "/capabilities",
+      "file": "backend/routes/soiGeo.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/geo",
+      "method": "GET",
+      "route": "/route-plans",
+      "file": "backend/routes/soiGeo.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/geo",
+      "method": "GET",
+      "route": "/route-plans/:id",
+      "file": "backend/routes/soiGeo.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/geo",
+      "method": "POST",
+      "route": "/route-plans",
+      "file": "backend/routes/soiGeo.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/trips",
+      "method": "GET",
+      "route": "/policy",
+      "file": "backend/routes/soiTrips.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/trips",
+      "method": "GET",
+      "route": "/",
+      "file": "backend/routes/soiTrips.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/trips",
+      "method": "GET",
+      "route": "/:id/points",
+      "file": "backend/routes/soiTrips.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/trips",
+      "method": "DELETE",
+      "route": "/expired",
+      "file": "backend/routes/soiTrips.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/trips",
+      "method": "POST",
+      "route": "/",
+      "file": "backend/routes/soiTrips.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/trips",
+      "method": "PATCH",
+      "route": "/:id",
+      "file": "backend/routes/soiTrips.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/trips",
+      "method": "POST",
+      "route": "/:id/points",
+      "file": "backend/routes/soiTrips.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/fleet",
+      "method": "GET",
+      "route": "/status",
+      "file": "backend/routes/soiFleet.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/fleet",
+      "method": "GET",
+      "route": "/sources",
+      "file": "backend/routes/soiFleet.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/fleet",
+      "method": "GET",
+      "route": "/vehicles/:id/positions",
+      "file": "backend/routes/soiFleet.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/fleet",
+      "method": "POST",
+      "route": "/sources",
+      "file": "backend/routes/soiFleet.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/fleet",
+      "method": "PATCH",
+      "route": "/sources/:id",
+      "file": "backend/routes/soiFleet.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/fleet",
+      "method": "POST",
+      "route": "/vehicles/:id/positions",
+      "file": "backend/routes/soiFleet.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/bsie",
+      "method": "GET",
+      "route": "/methods",
+      "file": "backend/routes/bsie.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/bsie",
+      "method": "GET",
+      "route": "/jobs",
+      "file": "backend/routes/bsie.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/bsie",
+      "method": "POST",
+      "route": "/jobs",
+      "file": "backend/routes/bsie.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/bsie",
+      "method": "GET",
+      "route": "/jobs/:id",
+      "file": "backend/routes/bsie.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/bsie",
+      "method": "POST",
+      "route": "/jobs/:id/cancel",
+      "file": "backend/routes/bsie.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/bsie",
+      "method": "POST",
+      "route": "/jobs/:id/retry",
+      "file": "backend/routes/bsie.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/bsie",
+      "method": "GET",
+      "route": "/jobs/:id/export",
+      "file": "backend/routes/bsie.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "GET",
+      "route": "/openapi.json",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "GET",
+      "route": "/catalog",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "GET",
+      "route": "/events",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "GET",
+      "route": "/dashboard",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/reports",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "GET",
+      "route": "/reports/:id/export",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/optimization",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/optimization/:id/approve",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "GET",
+      "route": "/optimization/:id/compare",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/predict",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/climate",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/coverage",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/executions/:kind/:id/retry",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/executions/:kind/:id/cancel",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "GET",
+      "route": "/integrations/:id/status",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/integrations/:id/sync",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "GET",
+      "route": "/resources/:kind",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "GET",
+      "route": "/resources/:kind/:id",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "GET",
+      "route": "/resources/:kind/:id/history",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/resources/:kind",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "PATCH",
+      "route": "/resources/:kind/:id",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/resources/:kind/:id/void",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    },
+    {
+      "mount": "/soi/sanitary",
+      "method": "POST",
+      "route": "/alerts/:id/state",
+      "file": "backend/routes/soiSanitary.routes.js",
+      "static_only": true
+    }
+  ],
+  "backend_route_count_static": 197,
+  "static_inventory_limit": "Factory routers, dynamic sanitary routes, aliases and middleware placement require individual source inspection; this list is not runtime or authorization proof.",
+  "folders": {
+    "backend/controllers": [
+      "backend/controllers/analysis.controller.js",
+      "backend/controllers/analytics.controller.js",
+      "backend/controllers/auditLogs.controller.js",
+      "backend/controllers/auth.controller.js",
+      "backend/controllers/cleanCom.controller.js",
+      "backend/controllers/insights.controller.js",
+      "backend/controllers/integrations.controller.js",
+      "backend/controllers/layers.controller.js",
+      "backend/controllers/locations.controller.js",
+      "backend/controllers/operationalEvents.controller.js",
+      "backend/controllers/operations.controller.js",
+      "backend/controllers/realEstate.controller.js",
+      "backend/controllers/recommendations.controller.js",
+      "backend/controllers/retailZones.controller.js",
+      "backend/controllers/riskAssessments.controller.js",
+      "backend/controllers/riskComponents.controller.js",
+      "backend/controllers/scoring.controller.js",
+      "backend/controllers/spatialIngestion.controller.js",
+      "backend/controllers/terrain.controller.js",
+      "backend/controllers/territorial.controller.js",
+      "backend/controllers/territoryLive.controller.js",
+      "backend/controllers/users.controller.js"
+    ],
+    "backend/services": [
+      "backend/services/analysis.service.js",
+      "backend/services/analysisOrchestrator.service.js",
+      "backend/services/analytics.service.js",
+      "backend/services/auditLogs.service.js",
+      "backend/services/autoRecovery.service.js",
+      "backend/services/bsie.service.js",
+      "backend/services/commandExecution.service.js",
+      "backend/services/dataResolver.service.js",
+      "backend/services/insights.service.js",
+      "backend/services/integrations.service.js",
+      "backend/services/layers.service.js",
+      "backend/services/locations.service.js",
+      "backend/services/mongoIdentity.service.js",
+      "backend/services/operationalEvents.service.js",
+      "backend/services/operationalMetrics.service.js",
+      "backend/services/operationalSupervisor.service.js",
+      "backend/services/organization.service.js",
+      "backend/services/publicMapEvidence.service.js",
+      "backend/services/realEstate.service.js",
+      "backend/services/recommendations.service.js",
+      "backend/services/retailZones.service.js",
+      "backend/services/riskAssessments.service.js",
+      "backend/services/riskComponents.service.js",
+      "backend/services/scientificRpc.service.js",
+      "backend/services/scoring.service.js",
+      "backend/services/soi.service.js",
+      "backend/services/soiFleet.service.js",
+      "backend/services/soiGeo.service.js",
+      "backend/services/soiGeo.service.test.js",
+      "backend/services/soiMongo.service.js",
+      "backend/services/soiMongoAudit.service.js",
+      "backend/services/soiSanitary.service.js",
+      "backend/services/soiSanitaryAnalytics.service.js",
+      "backend/services/soiSanitaryIntegrations.service.js",
+      "backend/services/soiTrips.service.js",
+      "backend/services/soiValidation.js",
+      "backend/services/spatialIngestion.service.js",
+      "backend/services/terrain.service.js",
+      "backend/services/territorial.service.js",
+      "backend/services/territoryIntent.service.js",
+      "backend/services/territoryLive.service.js",
+      "backend/services/territoryResolver.mongo.test.js",
+      "backend/services/territoryResolver.service.js",
+      "backend/services/tripValidation.js",
+      "backend/services/users.service.js"
+    ],
+    "backend/repositories": [
+      "backend/repositories/analysis.repository.js",
+      "backend/repositories/analyticsJobs.repository.js",
+      "backend/repositories/commandExecutions.repository.js",
+      "backend/repositories/layers.repository.js",
+      "backend/repositories/operationalEvents.repository.js"
+    ],
+    "backend/routes": [
+      "backend/routes/analysis.routes.js",
+      "backend/routes/analytics.routes.js",
+      "backend/routes/auditLogs.routes.js",
+      "backend/routes/auth.routes.js",
+      "backend/routes/bsie.routes.js",
+      "backend/routes/cleanCom.routes.js",
+      "backend/routes/insights.routes.js",
+      "backend/routes/integrations.routes.js",
+      "backend/routes/layers.routes.js",
+      "backend/routes/locations.routes.js",
+      "backend/routes/operationalEvents.routes.js",
+      "backend/routes/operations.routes.js",
+      "backend/routes/realEstate.routes.js",
+      "backend/routes/recommendations.routes.js",
+      "backend/routes/retailZones.routes.js",
+      "backend/routes/riskAssessments.routes.js",
+      "backend/routes/riskComponents.routes.js",
+      "backend/routes/scoring.routes.js",
+      "backend/routes/soi.routes.js",
+      "backend/routes/soiFleet.routes.js",
+      "backend/routes/soiGeo.routes.js",
+      "backend/routes/soiGeo.routes.test.js",
+      "backend/routes/soiSanitary.routes.js",
+      "backend/routes/soiTrips.routes.js",
+      "backend/routes/spatialIngestion.routes.js",
+      "backend/routes/terrain.routes.js",
+      "backend/routes/territorial.routes.js",
+      "backend/routes/users.routes.js"
+    ],
+    "backend/middleware": [
+      "backend/middleware/auditLogger.js",
+      "backend/middleware/errorHandler.js",
+      "backend/middleware/organizationContext.js",
+      "backend/middleware/platformSecurity.js",
+      "backend/middleware/rbac.js",
+      "backend/middleware/soiOrganizationContext.js"
+    ],
+    "backend/spatial": [
+      "backend/spatial/contours.js",
+      "backend/spatial/core.js",
+      "backend/spatial/geometryTools.js",
+      "backend/spatial/hydrology.js",
+      "backend/spatial/ingestion.js",
+      "backend/spatial/remoteSources.js",
+      "backend/spatial/riskModels.js",
+      "backend/spatial/riskScenarios.js",
+      "backend/spatial/routing.js",
+      "backend/spatial/simplify.js",
+      "backend/spatial/store.js",
+      "backend/spatial/terrain.js",
+      "backend/spatial/tileCache.js",
+      "backend/spatial/tiles.js",
+      "backend/spatial/worldModel.js"
+    ],
+    "backend/realtime": [
+      "backend/realtime/operationalEvents.js",
+      "backend/realtime/securityEvents.js",
+      "backend/realtime/wsServer.js"
+    ],
+    "backend/domain/analytics": [
+      "backend/domain/analytics/financial.js",
+      "backend/domain/analytics/multicriteria.js",
+      "backend/domain/analytics/normalization.js",
+      "backend/domain/analytics/risk.js"
+    ]
+  },
+  "packages": {
+    "package.json": {
+      "name": "backstage-3.1.0",
+      "version": "3.1.0",
+      "private": true,
+      "engines": {
+        "node": "24.x"
+      },
+      "scripts": {
+        "test:sanitary": "node scripts/bsie.js sanitary",
+        "setup:scientific": "node scripts/setup-scientific.js",
+        "verify:soi": "node scripts/verify-soi-release.js",
+        "test:bsie": "node scripts/bsie.js test",
+        "benchmark:bsie": "node scripts/bsie.js benchmark",
+        "test:frontend": "npm test --prefix frontend",
+        "verify:soi-route": "node backend/scripts/verify-soi-miami-la.js",
+        "setup": "node scripts/setup.js",
+        "dev": "node scripts/dev.js",
+        "test": "npm run test:backend && npm run test:probability",
+        "test:backend": "npm test --prefix backend",
+        "test:probability": "python -m unittest discover -s probability -p test_*.py -v",
+        "build": "npm run build --prefix frontend"
+      }
+    },
+    "backend/package.json": {
+      "name": "backstage-intelligence-backend",
+      "version": "3.1.0",
+      "private": true,
+      "description": "API de BACKSTAGE Intelligence para recomendaciones de ubicación",
+      "main": "index.js",
+      "engines": {
+        "node": "24.x"
+      },
+      "scripts": {
+        "bsie:worker": "node scripts/bsie-worker.js",
+        "mongo:plan": "node scripts/initialize-soi-mongo.js",
+        "mongo:init": "node scripts/initialize-soi-mongo.js --apply",
+        "mongo:inspect": "node scripts/inspect-soi-mongo.js",
+        "start": "node index.js",
+        "test": "node --test",
+        "vercel-build": "npm run mongo:plan",
+        "clean-com:bind": "node scripts/bind-cleancom-cases.js",
+        "verify:live-sources": "node scripts/check-live-sources.js"
+      },
+      "dependencies": {
+        "@mapbox/vector-tile": "^3.0.0",
+        "@vercel/functions": "^3.10.2",
+        "bcryptjs": "^2.4.3",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.1",
+        "express": "^4.18.4",
+        "jsonwebtoken": "^9.0.3",
+        "mongodb": "^6.21.0",
+        "pbf": "^5.1.2",
+        "ws": "^8.18.0"
+      },
+      "devDependencies": {}
+    },
+    "frontend/package.json": {
+      "name": "backstage-intelligence-frontend",
+      "version": "3.1.0",
+      "private": true,
+      "description": "Interfaz de BACKSTAGE Intelligence",
+      "engines": {
+        "node": "24.x"
+      },
+      "scripts": {
+        "test": "node --test tests/*.test.mjs",
+        "test:soi-ui": "node scripts/soi-browser-smoke.mjs",
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "deploy": "node scripts/deploy.mjs"
+      },
+      "dependencies": {
+        "maplibre-gl": "^6.11.2",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-icons": "^5.7.0",
+        "react-router-dom": "^7.18.3"
+      },
+      "devDependencies": {
+        "@vitejs/plugin-react": "^4.5.1",
+        "vite": "^5.4.1"
+      }
+    }
+  },
+  "python_requirements": {
+    "bsie/requirements.txt": [
+      "numpy>=2.1,<3",
+      "scipy>=1.14,<2",
+      "shapely>=2.1,<3",
+      "pyproj>=3.7,<4",
+      "spreg==1.9.1"
+    ],
+    "sanitary/requirements.txt": [
+      "-r ../bsie/requirements.txt",
+      "ortools==9.15.6755"
+    ],
+    "probability/requirements.txt": [
+      "pandas>=2.2.0",
+      "numpy>=2.0.0",
+      "scipy>=1.14.0",
+      "matplotlib>=3.9.0"
+    ],
+    "cleancom/requirements.txt": [
+      "numpy>=2.0,<3",
+      "pandas>=2.2,<4",
+      "pyogrio>=0.13,<0.14",
+      "shapely>=2.2,<2.3",
+      "pyproj>=3.8,<3.9"
+    ]
+  },
+  "design_tokens": {
+    "--primary": "#050505",
+    "--surface": "#0b0b0d",
+    "--surface-light": "#151518",
+    "--border": "#2b2b30",
+    "--text-primary": "#ffffff",
+    "--text-secondary": "#a0a0a5",
+    "--accent-cyan": "#ff2b2b",
+    "--accent-blue": "#e11d2e",
+    "--accent-orange": "#ff8c42",
+    "--accent-green": "#10d981",
+    "--accent-red": "#b51222",
+    "--success": "#10d981",
+    "--warning": "#fbbf24",
+    "--danger": "#ff3b30",
+    "--info": "#3b82f6"
+  },
+  "environment_variable_names_only": [
+    "AUTH_RATE_LIMIT_MAX",
+    "AUTH_RATE_LIMIT_WINDOW_MS",
+    "AUTH_REGISTER_RATE_LIMIT_MAX",
+    "AUTH_REGISTER_RATE_LIMIT_WINDOW_MS",
+    "AUTO_RECOVERY_BASE_COOLDOWN_MS",
+    "AUTO_RECOVERY_CIRCUIT_FAILURE_THRESHOLD",
+    "AUTO_RECOVERY_CIRCUIT_OPEN_MS",
+    "AUTO_RECOVERY_MAX_ATTEMPTS",
+    "AUTO_RECOVERY_MAX_COOLDOWN_MS",
+    "BACKEND_URL",
+    "BCRYPT_ROUNDS",
+    "BSIE_PYTHON",
+    "BSIE_REQUEST_WORKER",
+    "CLEAN_COM_BINDINGS_JSON",
+    "CORS_ORIGIN",
+    "JSON_BODY_LIMIT",
+    "JWT_AUDIENCE",
+    "JWT_ISSUER",
+    "JWT_SECRET",
+    "MONGODB_APP_NAME",
+    "MONGODB_CONNECT_TIMEOUT_MS",
+    "MONGODB_DB",
+    "MONGODB_DNS_SERVERS",
+    "MONGODB_MAX_POOL_SIZE",
+    "MONGODB_MIN_POOL_SIZE",
+    "MONGODB_SERVER_SELECTION_TIMEOUT_MS",
+    "MONGODB_SPATIAL_DB",
+    "MONGODB_URI",
+    "NODE_ENV",
+    "NOMINATIM_BASE_URL",
+    "NOMINATIM_USER_AGENT",
+    "OPEN_METEO_API_KEY",
+    "OPERATIONAL_SUPERVISOR_INTERVAL_MS",
+    "OVERPASS_URL",
+    "PORT",
+    "PROBABILITY_PYTHON",
+    "PYTHON",
+    "SOI_ELEVATION_URL",
+    "SOI_GPS_RETENTION_DAYS",
+    "SOI_LIVE_GEO_TEST",
+    "SOI_OSRM_CYCLING_URL",
+    "SOI_OSRM_DRIVING_URL",
+    "SOI_OSRM_WALKING_URL",
+    "SOI_PHOTON_URL",
+    "SOI_SCIENCE_RPC_SECRET",
+    "SOI_SCIENCE_RPC_URL",
+    "SOI_TEST_BROWSER",
+    "SPATIAL_STORE",
+    "SPATIAL_TILE_CACHE_MAX",
+    "SPATIAL_TILE_CACHE_TTL_MS",
+    "TERRITORY_COUNTRY_CODES",
+    "VERCEL",
+    "VERCEL_URL",
+    "VITE_API_BASE_URL",
+    "VITE_API_URL",
+    "VITE_LOCAL_API_TARGET",
+    "VITE_SECURITY_WS_URL",
+    "VITE_WS_BASE_URL"
+  ],
+  "neutral_surface_module_couplings": [
+    {
+      "file": "frontend/src/pages/AdvancedComparator.jsx",
+      "line": 3,
+      "kind": "core_surface_to_soi_named_contract",
+      "reference": "import { evaluateComparison } from '../../../shared/soiComparison.mjs';"
+    },
+    {
+      "file": "frontend/src/pages/AdvancedComparator.jsx",
+      "line": 84,
+      "kind": "core_surface_to_soi_named_contract",
+      "reference": "apiRequest('/soi/assets?limit=500')"
+    },
+    {
+      "file": "frontend/src/pages/AdvancedComparator.jsx",
+      "line": 221,
+      "kind": "core_surface_to_soi_named_contract",
+      "reference": "const response = await apiRequest('/soi/comparisons', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...comparisonInput, project_name: projectName, city }) });"
+    },
+    {
+      "file": "frontend/src/pages/NativeTerritorialExplorer.jsx",
+      "line": 439,
+      "kind": "core_surface_to_soi_named_contract",
+      "reference": "apiRequest('/soi/assets?limit=500')"
+    },
+    {
+      "file": "frontend/src/pages/NativeTerritorialExplorer.jsx",
+      "line": 484,
+      "kind": "core_surface_to_soi_named_contract",
+      "reference": "const response = await apiRequest(`/soi/geo/surface?bbox=${bbox.join(',')}&resolution=${resolution}&contourInterval=25`, { signal: controller.signal });"
+    },
+    {
+      "file": "frontend/src/pages/NativeTerritorialExplorer.jsx",
+      "line": 764,
+      "kind": "core_surface_to_soi_named_contract",
+      "reference": "const response = await apiRequest('/soi/assets?limit=500');"
+    }
+  ],
+  "historical_retired_source_archives": [
+    {
+      "path": ".vercel/retired-persistence-20261021-175935.zip",
+      "crc_verified": false,
+      "entries": []
+    },
+    {
+      "path": ".vercel/retired-persistence-20261021-180348.zip",
+      "crc_verified": true,
+      "entries": [
+        "backend/db.js",
+        "backend/init-db.js",
+        "backend/ensure-database.js",
+        "backend/utils/postgresVersion.js",
+        "backend/services/soi.sqlLegacy.service.js",
+        "backend/services/soiTrips.sqlLegacy.service.js",
+        "backend/domain/ensureDatabase.test.js",
+        "backend/domain/databaseTransaction.test.js",
+        "backend/domain/postgresVersion.test.js",
+        "backend/migrations/1680000000000_create_initial_schema.js",
+        "backend/migrations/1680000001000_add_retail_intelligence_schema.js",
+        "backend/migrations/1680000002000_add_spatial_and_risk_intelligence.js",
+        "backend/migrations/1680000003000_enable_postgis.js",
+        "backend/migrations/1680000004000_add_spatial_geometry_columns.js",
+        "backend/migrations/1680000005000_add_security_and_integration_schema.js",
+        "backend/migrations/1680000006000_add_real_estate_intelligence.js",
+        "backend/migrations/1680000007000_add_earthart_territorial_schema.js",
+        "backend/migrations/1680000008000_add_geostrategic_mvp_schema.js",
+        "backend/migrations/1680000009000_add_multiorg_and_audit_logs.js",
+        "backend/migrations/1680000010000_add_audit_hash_chain.js",
+        "backend/migrations/1680000011000_add_analytics_core.js",
+        "backend/migrations/1680000012000_add_recommendation_workflow.js",
+        "backend/migrations/1680000013000_add_operational_project_candidates.js",
+        "backend/migrations/1680000014000_add_operational_events.js",
+        "backend/migrations/1680000015000_add_operational_event_lifecycle.js",
+        "backend/migrations/1680000016000_add_command_executions.js",
+        "backend/migrations/1680000017000_add_earthart_organization_scope.js",
+        "backend/migrations/1680000018000_seed_system_roles.js",
+        "backend/migrations/1680000019000_add_location_asset_metadata.js",
+        "backend/migrations/1680000020000_add_soi_core.js",
+        "backend/migrations/1680000021000_add_soi_route_plans.js",
+        "backend/migrations/1680000022000_add_soi_trip_lifecycle.js",
+        "backend/migrations/1680000023000_add_soi_operation_assets.js",
+        "backend/backend-seed-auth.sql",
+        "backend/sample-data.sql",
+        "backend/schema-full.sql",
+        "backend/schema.sql",
+        "geospatial/sql/validation.sql",
+        "backend/domain/soiCore.test.js",
+        "backend/domain/soiTrips.test.js",
+        "backend/domain/soiHttp.test.js",
+        "backend/domain/assetMetadata.test.js",
+        "backend/domain/authProxy.test.js"
+      ]
+    }
+  ],
+  "recovery_snapshot": {
+    "directory": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\backstage_v310\\BACKSTAGE-3.1.0\\.vercel\\backstage-recovery-20261022T004525Z",
+    "base_commit": "ce18b6d7b79867d940e1689d61755446acbf974c",
+    "source_archive_verified": true
+  },
+  "database_backup_verified": false,
+  "application_source_changed_in_phase_0": false
+}

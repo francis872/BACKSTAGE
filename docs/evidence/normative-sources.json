@@ -1,0 +1,733 @@
+{
+  "catalog_version": "co-ph-2026-10-26.1",
+  "verified_on": "2026-10-26",
+  "verification_scope": "official_references_observed_not_exhaustive_legal_currentness",
+  "sources": [
+    {
+      "id": "CO-L675-2001-25",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "25",
+      "reference": "Ley 675 de 2001, artículo 25",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2021-01-14",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [
+        {
+          "instrument": "CO-L2079-2021",
+          "article": "43",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_2079_2021.htm",
+          "effective_from": "2021-01-14"
+        }
+      ],
+      "repeals": [],
+      "dependencies": [
+        "CO-L2079-2021",
+        "CO-C522-2002"
+      ],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Coeficientes y criterios del reglamento."
+      ],
+      "exceptions": [
+        "Módulos de contribución.",
+        "Asamblea potestativa en VIS/VIP de hasta cinco unidades."
+      ]
+    },
+    {
+      "id": "CO-L675-2001-29",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "29",
+      "reference": "Ley 675 de 2001, artículo 29",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [
+        {
+          "instrument": "CO-L2079-2021",
+          "article": "44",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_2079_2021.htm",
+          "effective_from": "2021-01-14"
+        }
+      ],
+      "repeals": [],
+      "dependencies": [],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Participación en expensas según reglas aplicables."
+      ],
+      "exceptions": [
+        "Supuesto de ascensores del parágrafo tercero.",
+        "VIS/VIP de hasta cinco unidades."
+      ]
+    },
+    {
+      "id": "CO-L675-2001-31",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "31",
+      "reference": "Ley 675 de 2001, artículo 31",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [],
+      "repeals": [],
+      "dependencies": [],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Sectores y módulos según reglamento en usos comerciales o mixtos."
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "CO-L675-2001-35",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "35",
+      "reference": "Ley 675 de 2001, artículo 35",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [
+        {
+          "instrument": "CO-L2079-2021",
+          "article": "45",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_2079_2021.htm",
+          "effective_from": "2021-01-14"
+        }
+      ],
+      "repeals": [],
+      "dependencies": [
+        "CO-L2079-2021"
+      ],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Fondo de imprevistos y autorización de uso."
+      ],
+      "exceptions": [
+        "Suspensión de cobro con decisión y suficiencia del fondo.",
+        "Creación potestativa en VIS/VIP de hasta cinco unidades."
+      ]
+    },
+    {
+      "id": "CO-L675-2001-36",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "36",
+      "reference": "Ley 675 de 2001, artículo 36",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [
+        {
+          "instrument": "CO-L2079-2021",
+          "article": "46",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_2079_2021.htm",
+          "effective_from": "2021-01-14"
+        }
+      ],
+      "repeals": [],
+      "dependencies": [
+        "CO-L2079-2021"
+      ],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [],
+      "exceptions": [
+        "Administración simplificada en VIS/VIP de hasta cinco unidades."
+      ]
+    },
+    {
+      "id": "CO-L675-2001-38",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "38",
+      "reference": "Ley 675 de 2001, artículo 38",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [],
+      "repeals": [],
+      "dependencies": [
+        "CO-L675-2001-25"
+      ],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Competencia de la asamblea para presupuesto y cuotas."
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "CO-L675-2001-39",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "39",
+      "reference": "Ley 675 de 2001, artículo 39",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [],
+      "repeals": [],
+      "dependencies": [],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Convocatoria, antelación y comunicación."
+      ],
+      "exceptions": [
+        "Reuniones especiales requieren reglas propias."
+      ]
+    },
+    {
+      "id": "CO-L675-2001-45",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "45",
+      "reference": "Ley 675 de 2001, artículo 45",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [],
+      "repeals": [],
+      "dependencies": [
+        "CO-L675-2001-46",
+        "CO-C522-2002"
+      ],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Quórum y mayoría según tipo de decisión."
+      ],
+      "exceptions": [
+        "Reglamento con exigencias superiores admisibles.",
+        "Segunda convocatoria.",
+        "Mayorías calificadas."
+      ]
+    },
+    {
+      "id": "CO-L675-2001-46",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "46",
+      "reference": "Ley 675 de 2001, artículo 46",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [],
+      "repeals": [],
+      "dependencies": [],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Mayoría calificada en los supuestos enumerados."
+      ],
+      "exceptions": [
+        "Restricciones a reuniones no presenciales y segunda convocatoria."
+      ]
+    },
+    {
+      "id": "CO-L675-2001-47",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "47",
+      "reference": "Ley 675 de 2001, artículo 47",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [],
+      "repeals": [],
+      "dependencies": [],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Contenido, firmas y disponibilidad de actas."
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "CO-L675-2001-50",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "50",
+      "reference": "Ley 675 de 2001, artículo 50",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [],
+      "repeals": [],
+      "dependencies": [
+        "CO-L675-2001-36"
+      ],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Designación del administrador por órgano competente."
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "CO-L675-2001-51",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "51",
+      "reference": "Ley 675 de 2001, artículo 51",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [],
+      "repeals": [],
+      "dependencies": [],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Presupuesto y documentación administrativa."
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "CO-L675-2001-49-inc2-historico",
+      "version": 1,
+      "instrument": "CO-L675-2001",
+      "disposition_type": "statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "675",
+      "year": 2001,
+      "article": "49, inciso segundo histórico",
+      "reference": "Ley 675 de 2001, artículo 49-inc2-historico",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm",
+      "publication_date": "2001-08-04",
+      "publication_reference": "Diario Oficial 44.509",
+      "valid_from": "2001-08-04",
+      "valid_until": "2014-01-01",
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "copropiedades sujetas al régimen PH"
+      ],
+      "verification": {
+        "status": "repeal_observed_in_official_compilation",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false,
+      "modifications": [],
+      "repeals": [
+        {
+          "instrument": "CO-L1564-2012",
+          "article": "626(c)",
+          "effective_from": "2014-01-01",
+          "source_url": "https://normas.cra.gov.co/gestor/docs/ley_0675_2001.htm"
+        }
+      ],
+      "dependencies": [],
+      "conditions": [
+        "Verificar régimen, reglamento y supuesto concreto."
+      ],
+      "obligations": [
+        "Referencia histórica; no ejecutar plazos derogados."
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "CO-L2079-2021",
+      "version": 1,
+      "instrument": "CO-L2079-2021",
+      "disposition_type": "amending_statute",
+      "authority": "Congreso de la República de Colombia",
+      "number": "2079",
+      "year": 2021,
+      "article": "43–46",
+      "reference": "Ley 2079 de 2021, modificaciones PH",
+      "source_url": "https://normas.cra.gov.co/gestor/docs/ley_2079_2021.htm",
+      "publication_date": "2021-01-14",
+      "publication_reference": "Diario Oficial 51.557",
+      "valid_from": "2021-01-14",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "Copropiedades, con supuestos específicos VIS/VIP."
+      ],
+      "conditions": [
+        "Categoría y número de unidades acreditados."
+      ],
+      "obligations": [
+        "Aplicar excepciones y cambios PH."
+      ],
+      "exceptions": [],
+      "modifications": [],
+      "repeals": [],
+      "dependencies": [],
+      "verification": {
+        "status": "official_compilation_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false
+    },
+    {
+      "id": "CO-C522-2002",
+      "version": 1,
+      "instrument": "CO-C522-2002",
+      "disposition_type": "constitutional_judgment",
+      "authority": "Corte Constitucional",
+      "number": "C-522",
+      "year": 2002,
+      "article": "Decisión y Auto 180/03",
+      "reference": "Sentencia C-522/02, con corrección del Auto 180/03",
+      "source_url": "https://www.corteconstitucional.gov.co/relatoria/2002/c-522-02.htm",
+      "publication_date": null,
+      "decision_date": "2002-07-10",
+      "valid_from": "2002-07-10",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "Copropiedades y operadores jurídicos."
+      ],
+      "conditions": [
+        "Distinguir destino y naturaleza económica de la decisión."
+      ],
+      "obligations": [
+        "Revisar el condicionamiento del voto por coeficiente."
+      ],
+      "exceptions": [
+        "Decisiones no económicas en vivienda."
+      ],
+      "modifications": [
+        {
+          "reference": "Auto 180/03: corrección de párrafo, no parágrafo",
+          "date": "2003-11-19"
+        }
+      ],
+      "repeals": [],
+      "dependencies": [
+        "CO-L675-2001-25",
+        "CO-L675-2001-45"
+      ],
+      "verification": {
+        "status": "official_judgment_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false
+    },
+    {
+      "id": "CO-CIRCULAR-028-2026",
+      "version": 1,
+      "instrument": "CO-CIRCULAR-028-2026",
+      "disposition_type": "administrative_guidance",
+      "authority": "Ministerio del Trabajo y Ministerio de Vivienda, Ciudad y Territorio",
+      "number": "028",
+      "year": 2026,
+      "article": "Fijación e incremento de cuotas",
+      "reference": "Circular Externa conjunta 028 de 2026; orientación informativa",
+      "source_url": "https://www.minvivienda.gov.co/normativa/circular-externa-028-2026",
+      "corroborating_url": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?dt=S&i=194105",
+      "publication_date": null,
+      "issued_on": "2026-03-04",
+      "valid_from": "2026-03-04",
+      "valid_until": null,
+      "territorial_scope": {
+        "level": "national",
+        "country": "CO"
+      },
+      "obligated_subjects": [
+        "Referencia para administradores y copropietarios."
+      ],
+      "conditions": [
+        "No tratar una circular informativa como ley nueva."
+      ],
+      "obligations": [
+        "Contrastar el fundamento documental del incremento."
+      ],
+      "exceptions": [
+        "Fórmula expresa del reglamento debe revisarse."
+      ],
+      "modifications": [],
+      "repeals": [],
+      "dependencies": [
+        "CO-L675-2001-38"
+      ],
+      "verification": {
+        "status": "official_guidance_observed",
+        "verified_on": "2026-10-26",
+        "exhaustive_currentness_certified": false
+      },
+      "official_text_stored": false
+    }
+  ],
+  "source_failures": [
+    {
+      "source": "SUIN-Juriscol",
+      "reason": "fetch_timeout"
+    },
+    {
+      "source": "Secretaría del Senado",
+      "reason": "fetch_timeout"
+    },
+    {
+      "source": "Función Pública",
+      "reason": "fetch_gateway_error"
+    },
+    {
+      "source": "Cancillería",
+      "reason": "fetch_forbidden"
+    }
+  ],
+  "reference_metadata_sha256": "e5a0ca5c8b37e993b014f27e3d1eb1f32c157083e606b8a3a20c98a36b00590e",
+  "official_full_text_hash_claimed": false,
+  "organization_interpretations_approved_by_default": false
+}

@@ -1,0 +1,56 @@
+/* Readable everyday controls; scientific plots and map label scales retain their own units. */
+:root { --ui-readable-font: 1rem; --ui-small-font: .875rem; }
+:root[data-reading="comfortable"] { --ui-readable-font: 1.125rem; --ui-small-font: 1rem; }
+.app.shell, .immersive-auth, dialog.workspace-help { font-family: var(--font-family-base,system-ui,sans-serif); }
+.home-place-search { margin: 16px clamp(18px,2.6vw,42px) 0; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface-base); }
+.home-place-search > summary { padding: 16px; min-height: 48px; font-size: var(--ui-readable-font); line-height: 1.5; color: var(--ink); cursor: pointer; }
+.home-place-search > summary:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+.workspace-guide { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; padding: 24px clamp(18px,2.6vw,42px); border-bottom: 1px solid var(--line); background: var(--surface-base); }
+.workspace-guide__location { flex: 1 1 300px; min-width: 0; }
+.workspace-guide nav { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; color: var(--ink-secondary); font-size: var(--ui-small-font); }
+.workspace-guide nav button { background: transparent; color: var(--ink); border: 0; padding: 8px 0; text-decoration: underline; text-underline-offset: 4px; }
+.workspace-guide h2 { margin: 8px 0; color: var(--ink); font-size: clamp(1.35rem,2.2vw,1.8rem); line-height: 1.3; overflow-wrap: anywhere; }
+.workspace-guide h2:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 6px; }
+.workspace-guide p { max-width: 65ch; margin: 0; color: var(--ink-secondary); line-height: 1.6; }
+.workspace-guide__actions { display: flex; align-items: stretch; flex-wrap: wrap; gap: 10px; }
+.workspace-guide__actions button { min-height: 48px; }
+.workspace-guide__actions [aria-pressed="true"] { border-color: var(--focus-ring); background: var(--brand-subtle); color: var(--ink); }
+.workspace-help { font-size: var(--ui-readable-font); line-height: 1.65; }
+.workspace-help ol { padding-left: 24px; }
+.workspace-help li + li { margin-top: 14px; }
+.workspace-help dl > div { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.workspace-help dt { font-weight: 700; color: var(--ink); }
+.workspace-help dd { margin: 6px 0 0; color: var(--ink-secondary); }
+.workspace-help button { min-height: 48px; font-size: var(--ui-readable-font); }
+.quick-start { margin: 24px 0; padding: clamp(18px,2vw,28px); border: 1px solid var(--line-strong); border-radius: 14px; background: var(--surface-base); }
+.quick-start__eyebrow { margin: 0 0 8px; font-weight: 700; color: var(--ink-secondary); }
+.quick-start h2 { margin: 0 0 10px; font-size: clamp(1.5rem,2.5vw,2rem); color: var(--ink); }
+.quick-start > div > p { max-width: 65ch; }
+.quick-start__options { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,220px),1fr)); gap: 16px; margin-top: 24px; }
+.quick-start__options article { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: 20px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface-panel); }
+.quick-start__number { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--brand); border-radius: 50%; color: var(--ink); font-weight: 700; }
+.quick-start__options h3 { margin: 16px 0 8px; font-size: 1.2rem; line-height: 1.4; color: var(--ink); }
+.quick-start__options p { flex: 1; margin: 0 0 24px; color: var(--ink-secondary); line-height: 1.65; }
+.quick-start__options button { width: 100%; min-height: 48px; }
+.app.shell .content-panel :is(p,label,li,dt,dd), .immersive-auth .auth-form-panel :is(p,label) { font-size: var(--ui-readable-font); line-height: 1.6; }
+.app.shell .content-panel :is(input,select,textarea), .immersive-auth :is(input,select,textarea) { font-size: var(--ui-readable-font); min-height: 48px; }
+.app.shell .content-panel button:not([class*="maplibregl-"]), .app.shell .side-menu button, .immersive-auth button { min-height: 44px; font-size: var(--ui-readable-font); line-height: 1.4; white-space: normal; }
+.app.shell .content-panel :is(small,th,td,.workflow-state,.priority-badge,.health-badge,.sla-badge,.timeline-summary,.section-label,.hero-label,.realtime-status,.system-status) { font-size: var(--ui-small-font); line-height: 1.5; }
+.app.shell .identity-role, .app.shell .menu-group h3 { font-size: var(--ui-small-font); line-height: 1.5; opacity: 1; }
+.app.shell .mission-control .hero-desc { max-width: 65ch; }
+.app.shell .mission-control .timeline-steps { grid-template-columns: repeat(auto-fit,minmax(130px,1fr)); }
+.app.shell .mission-control .workflow-project-action button { padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 6px; }
+.app.shell .side-menu button { overflow-wrap: anywhere; }
+.app.shell .content-panel button:focus-visible, .workspace-help button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+.app.shell .content-panel .form-actions { flex-wrap: wrap; }
+.immersive-auth .auth-form-panel .auth-hint { font-size: .875rem; }
+.immersive-auth .password-visibility { justify-self: start; padding: 8px 12px; }
+.immersive-auth .auth-grid .field-row { gap: 8px; }
+@media (max-width: 768px) {
+  .app.shell .mobile-nav-toggle { flex-direction: row; gap: 10px; width: auto; min-width: 100px; min-height: 46px; padding: 8px 14px; color: var(--ink); }
+  .app.shell .mobile-nav-toggle span { display: inline; width: auto; height: auto; background: none; font-size: 16px; line-height: 1.4; }
+  .workspace-guide__actions { width: 100%; }
+  .workspace-guide__actions button { flex: 1 1 150px; }
+  .app.shell .mission-control .hero-actions { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .workspace-guide *, .quick-start *, .workspace-help * { transition: none !important; animation: none !important; } }

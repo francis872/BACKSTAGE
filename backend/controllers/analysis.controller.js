@@ -1,5 +1,6 @@
 const asyncHandler = require('../utils/asyncHandler');
 const analysisService = require('../services/analysis.service');
+const analysisOrchestrator = require('../services/analysisOrchestrator.service').createAnalysisOrchestrator();
 
 
 const createOperationalProject = asyncHandler(async (req, res) => {
@@ -55,6 +56,15 @@ const getOperationalBoard = asyncHandler(async (req, res) => {
 const compareCandidates = asyncHandler(async (req, res) => {
   const result = await analysisService.compareCandidates(req.body || {}, req.user || null, req.organization || null);
   res.status(201).json(result);
+});
+
+const createAnalysisPlan = asyncHandler(async (req, res) => {
+  const result = await analysisOrchestrator.createPlan(
+    req.organization?.organization_id,
+    req.body?.prompt,
+    req.body?.context || {}
+  );
+  res.json(result);
 });
 
 
@@ -123,6 +133,7 @@ module.exports = {
   getAnalysisById,
   listAnalysisRuns,
   compareCandidates,
+  createAnalysisPlan,
   getPrintableReport,
   generateOperationalReport,
   getOperationalBoard,

@@ -1,0 +1,96 @@
+{
+  "checked_at": "2026-10-27T02:47:53.108Z",
+  "status": "passed",
+  "scope": "protected_vercel_preview_aliases_and_exact_accepted_source",
+  "production_changes": false,
+  "production_targets_and_aliases_unchanged": true,
+  "production_readiness": "NO_GO",
+  "checks": [
+    {
+      "name": "api_alias_protected_healthy_and_matches_verified_build",
+      "passed": true,
+      "url": "https://backstage-staging-api.vercel.app",
+      "deployment_id": "dpl_3UCZHLatCJz2cnQ3EsA6gv9VNmnv",
+      "anonymous_status": 302,
+      "health_status": 200,
+      "no_application_session_status": 401,
+      "snapshot_files": 317
+    },
+    {
+      "name": "web_alias_protected_healthy_and_matches_verified_build",
+      "passed": true,
+      "url": "https://backstage-staging-web.vercel.app",
+      "deployment_id": "dpl_6c168X4e52wSU4DdvmKCmSkjFt6K",
+      "anonymous_status": 302,
+      "health_status": 200,
+      "no_application_session_status": 401,
+      "snapshot_files": 188
+    }
+  ],
+  "deployments": {
+    "api": {
+      "id": "dpl_3UCZHLatCJz2cnQ3EsA6gv9VNmnv",
+      "url": "backstage-staging-qfa549cd9-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_6c168X4e52wSU4DdvmKCmSkjFt6K",
+      "url": "backstage-staging-2umpgob6o-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "owned_test_data_removed": true,
+  "accepted_source_files_unchanged": 25,
+  "scoped_secret_scan_passed": true,
+  "local_links_checked": 109,
+  "tools": [
+    {
+      "file": "scripts/deploy-community-preview.js",
+      "sha256": "829731ea0716c1f4de4fc3bcd7b996ffceb660bd6fe5333d7855beb9ebc97c09"
+    },
+    {
+      "file": "scripts/verify-community-preview.js",
+      "sha256": "3484aa09d6191a76e3a1c44afffa51516b90d7adfec616fc6b04840472e69da8"
+    },
+    {
+      "file": "scripts/verify-community-preview-postflight.js",
+      "sha256": "1c68b566a0ad511457df892e33246a251bbf88b2dd8c6cd7cf91dd814a607ab6"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "docs/evidence/community-preview-live.json",
+      "sha256": "db7b30a0c6cace586edf2a73f42be89c2e60aa56ed7d2e01858a5d494ffe9726"
+    },
+    {
+      "file": "docs/evidence/community-preview-deployment.json",
+      "sha256": "c322c48193a6aab975291e668169fc178bed362797c04e37862e3227ca9bedd8"
+    },
+    {
+      "file": "docs/evidence/community-preview-desktop.png",
+      "sha256": "a8e834acfd56ffc977fe4b67f6ba2a69c5b29b3288e6bf327c83b1d44c19e2f9"
+    },
+    {
+      "file": "docs/BACKSTAGE_COMMUNITY_PREVIEW.md",
+      "sha256": "1eddd4b09e7156ab4c7c6740a628ba1d70fd0b2e3f6de0c8187e530d22460d62"
+    },
+    {
+      "file": "docs/BACKSTAGE_COMMUNITY.md",
+      "sha256": "3a167387b4ac2c414e028c6f20a6f40fa8f646796d8eee39a350bf3b520a8aa1"
+    },
+    {
+      "file": "docs/backstage-2.0/READINESS_REPORT.md",
+      "sha256": "982dbd30f8674b8057dc20554bb185b353c891eaad67f2aa497c590725e5d2a3"
+    },
+    {
+      "file": "docs/BACKSTAGE_IMPLEMENTATION_STATUS.md",
+      "sha256": "f96aa6ccecc6b005a92b6bd3b18e3452b22682f9974e33b96b791ad0835d0ee7"
+    },
+    {
+      "file": "docs/BACKSTAGE_PRODUCTION_GO_NO_GO.md",
+      "sha256": "3352186ce36f2d39946c736d289670af65df0a71c904f840f3df37e11766aad2"
+    }
+  ]
+}

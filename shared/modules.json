@@ -1,0 +1,64 @@
+{
+  "modules": [
+    {
+      "id": "soi",
+      "name": "SOI · Operaciones de Inteligencia Sanitaria",
+      "kind": "industry",
+      "industry": "sanitary",
+      "pages": [
+        {
+          "key": "soi",
+          "label": "SOI · Operaciones de Inteligencia Sanitaria"
+        },
+        {
+          "key": "soi-routes",
+          "label": "SOI Route Intelligence"
+        }
+      ],
+      "apiPrefixes": [
+        "/soi"
+      ],
+      "readRoles": [
+        "admin",
+        "analyst",
+        "viewer"
+      ],
+      "writeRoles": [
+        "admin",
+        "analyst"
+      ],
+      "requires": [
+        "identity",
+        "audit",
+        "assets",
+        "geography",
+        "comparison"
+      ]
+    },
+    {
+      "id": "clean-com",
+      "name": "Clean Com",
+      "kind": "reference_case",
+      "pages": [
+        {
+          "key": "clean-com",
+          "label": "Clean Com"
+        }
+      ],
+      "apiPrefixes": [
+        "/clean-com",
+        "/soi/historical"
+      ],
+      "readRoles": [
+        "admin",
+        "analyst",
+        "viewer"
+      ],
+      "writeRoles": [],
+      "requires": [
+        "identity",
+        "geography"
+      ]
+    }
+  ]
+}

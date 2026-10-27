@@ -1,0 +1,44 @@
+{
+  "run_id": "atlas-full-20261024182953-8eb7e9315a77",
+  "started_at": "2026-10-24T18:29:53.416Z",
+  "scope": "all_accessible_user_databases_all_collections",
+  "system_databases_excluded": [
+    "admin",
+    "config",
+    "local"
+  ],
+  "cluster_configuration_and_atlas_users_included": false,
+  "managed_snapshot_or_pitr": false,
+  "source_writes": 0,
+  "restore_requested": false,
+  "checks": [
+    "all_user_databases_inventoried",
+    "shared_snapshot_time",
+    "unchanged_collection_and_index_metadata",
+    "encrypted_backup_readback",
+    "authenticated_encryption_tamper_rejected"
+  ],
+  "target_fingerprint": "fbffa8102f5a942537ef7b6916b1ff83750acc0bb8329e21d49400e39d480a45",
+  "snapshot_at_cluster_time": {
+    "$timestamp": {
+      "t": 1792866606,
+      "i": 70
+    }
+  },
+  "databases": 1,
+  "collections": 75,
+  "documents": 149,
+  "bson_document_bytes": 69262,
+  "indexes": 238,
+  "backup": {
+    "private_file": ".vercel/atlas-full-20261024182953-8eb7e9315a77/data.bson.aes256gcm",
+    "sha256": "03a644f59eb04abc63ce862f934e6e06e35c36d14018e53f8911ebc73457c849",
+    "plaintext_sha256": "d267c3bffc3a329c28c7ffaab49529447d7fb794efcb8fc8a37e1a89bdd2fd7c",
+    "key_storage": "separate_private_directory_not_packaged",
+    "encrypted": "AES-256-GCM",
+    "readback_verified": true,
+    "tamper_rejected": true
+  },
+  "status": "backup_passed",
+  "completed_at": "2026-10-24T18:30:21.645Z"
+}

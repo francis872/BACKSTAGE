@@ -1,299 +1,106 @@
-﻿# ðŸ“Š BACKSTAGE Intelligence - Estado del Proyecto
+> Publicación vigente (24/10/2026, 13:33 Bogotá): [BACKSTAGE](https://backstage-web-seven.vercel.app) publicado y verificado en sus proyectos originales. Conexión Atlas y credenciales conservadas; el destino sigue siendo el Atlas compartido de pruebas. [Resultado, reversión y pendientes](docs/backstage-2.0/PRODUCTION_RELEASE.md). Los estados inferiores conservan alcance histórico.
 
-## ðŸŽ¯ Objetivo Completado
-Crear una **plataforma integral de inteligencia empresarial** con:
-- âœ… Frontend interactivo (React)
-- âœ… Backend REST API (Express + PostgreSQL)
-- âœ… AnÃ¡lisis geoespacial (PostGIS)
-- âœ… Modelos de scoring y recomendaciones
-- âœ… MÃ³dulos especializados: EARTHART, Retail Intelligence, Real Estate Valuation
+> Estado vigente (24/10/2026, Bogotá): UI/UX simplificadas y publicadas en [staging protegido](https://backstage-staging-web.vercel.app). Inicio por tareas, ayuda contextual y lectura cómoda; 76 comprobaciones UI y 20 grupos reales aprobados. Carga, reversión, limpieza y respaldo completo actualizado con restauración aislada comprobados. Producción original intacta. [UI/UX](docs/backstage-2.0/USABILITY_REPORT.md), [preparación y pendientes reales](docs/backstage-2.0/READINESS_REPORT.md). Las notas inferiores son históricas.
 
----
+> Estado actualizado (24/10/2026, Bogotá): respaldo lógico completo de Atlas y restauración aislada comprobados (75 colecciones, 106 documentos, 238 índices); 325 pruebas backend y 26 frontend aprobadas. Reglas comerciales y alertas del administrador preparadas en nuevos Preview. Faltan aceptación integrada, carga, reversión remota y cobertura continua antes de producción. La revisión automática impidió iniciar la aceptación por falta de créditos del workspace. [Estado y continuación](docs/backstage-2.0/READINESS_REPORT.md). Las notas siguientes conservan su alcance histórico.
 
-## âœ… LO QUE YA ESTÃ OPERATIVO
+> Intelligence Core aplicado al comparador y proyectos (23/10/2026): [abrir staging](https://backstage-staging-web.vercel.app). Decimales exactos, versión y huellas de análisis, comprobación y exportación; doce grupos de integración real aprobados y datos temporales retirados. MongoDB Atlas e identidad de BACKSTAGE conservados; producción sin cambios. [Informe y límites](docs/backstage-2.0/PHASE_5_REPORT.md).
 
-### 1. ðŸŒ Frontend en Vercel
-**URL:** https://backstage-intelligence.vercel.app
+> Estado vigente (23/10/2026, Bogotá): reglas versionadas y trazabilidad GIS/optimización desplegadas en staging con Atlas de pruebas. 312 pruebas backend aprobadas y una externa omitida; 18 grupos reales de integración aprobados y datos temporales retirados. Producción original intacta. [Resultado y límites](docs/backstage-2.0/PHASE_5_SPATIAL_REPORT.md), [reglas del negocio](docs/backstage-2.0/BUSINESS_RULES.md). Las notas siguientes conservan su alcance histórico.
 
-**Stack:**
-- React 18 + Vite
-- SPA con 6 mÃ³dulos principales
-- Mapas interactivos (Leaflet)
-- GrÃ¡ficos (Chart.js)
-- Tablas dinÃ¡micas
+> Estado vigente (23/10/2026, Bogotá): finanzas y simulación Monte Carlo desplegadas y verificadas en staging protegido con MongoDB Atlas. Quince grupos integrados aprobados; 299 pruebas backend aprobadas y una externa omitida; suites existentes sin fallos. Producción original sin cambios. [Resultado y límites](docs/backstage-2.0/PHASE_5_ENGINES_REPORT.md). Los estados siguientes conservan su alcance histórico.
 
-**MÃ³dulos Implementados:**
-1. **Dashboard** - Vista general de KPIs
-2. **Location Intelligence** - AnÃ¡lisis de ubicaciones
-3. **Retail Analytics** - Zonas comerciales
-4. **Real Estate** - Valuaciones inmobiliarias
-5. **EARTHART** - Ãndice territorial
-6. **Risk Assessment** - EvaluaciÃ³n de riesgos
+> Estado vigente (22/10/2026): validación integrada de Platform Core en Atlas de pruebas completada. [Informe y evidencia](docs/backstage-2.0/ATLAS_VALIDATION_REPORT.md). Índices aplicados y datos temporales retirados; siguiente paso: validación en hosting de staging. No se ha desplegado este incremento.
 
-**Deployment:**
-- âœ… Git: https://github.com/francis872/BACKSTAGE
-- âœ… Vercel: Auto-deploy en cada push
+> Estado vigente de recuperación (22/10/2026): Fase 4 implementada y verificada en local. [Informe y límites](docs/backstage-2.0/PHASE_4_REPORT.md). No se ha desplegado; falta validar transacciones e índices nuevos en Atlas de pruebas.
 
----
+> Estado vigente de recuperación (22/10/2026): recorrido aprobado de Fase 3 completado en local. [Informe y límites](docs/backstage-2.0/PHASE_3_REPORT.md). La siguiente propuesta es Platform Core; no se ha publicado esta recuperación.
 
-## â³ LO QUE FALTA (5 minutos de trabajo)
+> Recuperación actualizada (22/10/2026): Fase 2 completada en local dentro del alcance visual aprobado. [Informe y límites](docs/backstage-2.0/PHASE_2_REPORT.md). Sin publicación de esta recuperación.
 
-### Backend + Base de Datos en Railway
+> Estado actual de recuperación (21/10/2026): Fase 1 aprobada e implementada en local. BACKSTAGE es la plataforma; SOI es un módulo y Clean Com tiene acceso propio. MongoDB Atlas se conserva. No se ha publicado esta recuperación ni escrito en Atlas. Ver [informe vigente](docs/backstage-2.0/PHASE_1_REPORT.md). Las referencias a publicaciones debajo son históricas.
 
-**Tareas:**
-```
-1. [ ] Crear cuenta en Railway.app
-2. [ ] Instalar Railway CLI: npm i -g @railway/cli
-3. [ ] railway login
-4. [ ] railway init (crear proyecto)
-5. [ ] railway add -u (agregar PostgreSQL)
-6. [ ] cd backend && railway up
-7. [ ] railway exec node init-railway.js (sembrar datos)
-8. [ ] Copiar URL de Railway en .env.production
-9. [ ] git push (Vercel redeploy automÃ¡tico)
-```
+> Actualización SOI: MongoDB de pruebas y fases sanitarias verificadas según [estado vigente](docs/SOI_SANITARY_PROGRESS.md). Este documento conserva despliegues e instrucciones históricos; el incremento sanitario ya está publicado; consultar las evidencias del enlace.
 
-**Resultado Esperado:**
-- âœ“ Backend operativo en: `https://backstage-intelligence-prod.railway.app`
-- âœ“ PostgreSQL con datos de ejemplo
-- âœ“ Frontend conectado al backend real
 
-**Tiempo:** 10 minutos
+# BACKSTAGE 3.1.0 — Estado
 
----
+## SOI — implementación local del 20 de octubre de 2026
 
-## ðŸ“ Estructura del Proyecto
+Identidad y núcleo SOI integrados; rutas viales y DEM comprobados contra fuentes reales. Migraciones preparadas sin ejecutar; persistencia real, GPS físico y telemetría de flotas pendientes. No constituye un despliegue ni una aprobación de producción. Ver [progreso y evidencias](docs/SOI_PROGRESS.md).
 
-```
-BACKSTAGE/
-â”œâ”€â”€ frontend/                          # React SPA en Vercel
-â”‚   â”œâ”€â”€ src/
-â”‚   â”‚   â”œâ”€â”€ pages/                    # 6 pÃ¡ginas principales
-â”‚   â”‚   â”œâ”€â”€ components/               # Componentes reutilizables
-â”‚   â”‚   â”œâ”€â”€ lib/
-â”‚   â”‚   â”‚   â””â”€â”€ api.js               # Helper para API
-â”‚   â”‚   â””â”€â”€ App.jsx
-â”‚   â”œâ”€â”€ api/
-â”‚   â”‚   â””â”€â”€ index.js                 # Proxy a backend
-â”‚   â”œâ”€â”€ package.json
-â”‚   â”œâ”€â”€ vite.config.js
-â”‚   â”œâ”€â”€ vercel.json
-â”‚   â””â”€â”€ .env.* (local, production)
-â”‚
-â”œâ”€â”€ backend/                           # Express.js API
-â”‚   â”œâ”€â”€ index.js                      # Servidor principal
-â”‚   â”œâ”€â”€ db.js                         # Pool PostgreSQL
-â”‚   â”œâ”€â”€ auth.js                       # JWT auth
-â”‚   â”œâ”€â”€ scoring.js                    # Modelo de scoring
-â”‚   â”œâ”€â”€ earthart.js                   # Ãndice territorial
-â”‚   â”œâ”€â”€ ingestion.js                  # Ingestion pipeline
-â”‚   â”œâ”€â”€ migrations/                   # 7 migraciones SQL
-â”‚   â”œâ”€â”€ schema.sql                    # Schema completo
-â”‚   â”œâ”€â”€ sample-data.sql               # Datos de ejemplo
-â”‚   â”œâ”€â”€ Dockerfile                    # Contenedor
-â”‚   â”œâ”€â”€ railway.json                  # Config Railway
-â”‚   â”œâ”€â”€ init-railway.js               # Init script
-â”‚   â””â”€â”€ package.json
-â”‚
-â”œâ”€â”€ data/                              # Datos geoespaciales BogotÃ¡
-â”‚   â””â”€â”€ bogota-geospatial-sources.md
-â”‚
-â”œâ”€â”€ docs/                              # DocumentaciÃ³n
-â”‚   â”œâ”€â”€ ARCHITECTURE.md
-â”‚   â”œâ”€â”€ API.md
-â”‚   â”œâ”€â”€ EARTHART_GUIDE.md
-â”‚   â””â”€â”€ ...
-â”‚
-â”œâ”€â”€ docker-compose.yml                 # Stack local
-â”œâ”€â”€ DEPLOYMENT_GUIDE.md                # â­ GUÃA PRINCIPAL
-â”œâ”€â”€ RAILWAY_DEPLOYMENT.md              # GuÃ­a Railroad
-â”œâ”€â”€ README.md                          # Principal
-â””â”€â”€ .gitignore
+## Archivo histórico anterior — publicación del 13 de octubre de 2026
 
-```
+- El antiguo menú CleanCom se reemplazó por SOI. Su caso Empresas Varias 2025 permanece compartido, identificado como DEMO, en el archivo histórico de SOI.
+- Worker geoespacial modular, auditoría de 21 capas/tablas y visualización de geometrías reales; fuente original sin modificar.
+- Tickets: 73.144 registros de 2025; los 14.294 de 2026 quedan fuera de los recuentos anuales. Eficiencia aún no evaluable por falta de unidades/entradas verificadas.
+- Detalles: [auditoría Clean Com](docs/CLEAN_COM_AUDIT.md) y [arquitectura/API/reproducción](cleancom/README.md).
 
----
+Los apartados siguientes conservan el estado de los trabajos anteriores.
 
-## ðŸ“Š Arquitectura TÃ©cnica
+Actualizado: 12 de octubre de 2026.
 
-### Frontend â†’ Backend â†’ Database
+## Despliegue verificado
 
-```
-Usuario (Browser)
-    â†“
-Vercel (Frontend - React SPA)
-    â†“ API Calls (/api/*)
-Vercel Serverless Functions (Proxy)
-    â†“ HTTP Requests
-Railway Backend (Express.js)
-    â†“ SQL Queries
-Railway PostgreSQL + PostGIS
-    â†“ Geospatial Analysis
-```
+- Web: https://backstage-web-seven.vercel.app
+- API: https://backstage-api.vercel.app
+- Frontend, página de login, JavaScript y CSS responden HTTP 200.
+- Rutas de identidad, ubicaciones, fuentes y trabajos espaciales, portafolio y unidades territoriales rechazan acceso anónimo con HTTP 401.
+- 11 comprobaciones de lectura pasaron en las URL públicas. Informe local: `.vercel/production-readonly-report.json`.
+- Migración de metadata de activos aplicada previamente en producción.
+- 161 pruebas backend y 6 pruebas del motor probabilístico aprobadas en la validación anterior.
 
-### Modelos de Datos
+## Interfaz actualizada
 
-**Tablas Principales:**
-1. `locations` - Ubicaciones con geom (PostGIS)
-2. `risk_assessments` - EvaluaciÃ³n de riesgos
-3. `retail_zones` - Zonas comerciales
-4. `property_valuations` - Valuaciones inmobiliarias
-5. `earthart_territorial_index` - Ãndice EARTHART
-6. `integration_events` - Pipeline de ingestion
-7. `audit_log` - AuditorÃ­a
+- Portada con planeta en rotación, acceso circular "Explora tu territorio" y transición de acercamiento hacia el login.
+- Login y registro centrados, con desplazamiento natural en pantallas bajas y ajustes de distribución en las vistas principales.
+- Componentes compartidos sincronizados en BACKSTAGE-3.1.0 y BACKSTAGE-3.1.0-main; ambas versiones compilaron.
+- 115 comprobaciones de navegador aprobadas usando APIs simuladas a siete tamaños de pantalla; rotación, zoom, teclado, navegación y movimiento reducido verificados.
+- Frontend anterior: dpl_JRZVbKG64tc7w9XaqMREajXuJ4oq; la publicación final se registra debajo.
+- Esta verificación de interfaz no ejecuta la prueba QA de escritura en producción pendiente de autorización.
 
----
+- Paleta visual recuperada: azul marino, fondo casi negro, letras blancas y acentos/sombreados rojos. Conserva la rotación, el zoom de entrada y la distribución responsiva; ambas versiones compilaron y la URL pública fue revisada en móvil y escritorio.
 
-## ðŸ”„ Flujo de Datos
+## Acceso de Atlas
 
-### 1. Ingestion (Datos BogotÃ¡)
-```
-Datos abiertos BogotÃ¡ (CSV)
-    â†’ Backend Pipeline (ingestion.js)
-    â†’ ValidaciÃ³n
-    â†’ PostgreSQL + Geom (PostGIS)
-```
+El bloqueo de conexión a Atlas se resolvió después de actualizar su lista de acceso de red. Se indicó crear una regla temporal `0.0.0.0/0` de seis horas. Es necesario confirmar su vencimiento en Atlas y configurar el acceso permanente previsto: una regla temporal no garantiza operación continua tras expirar.
 
-### 2. Processing (Scoring)
-```
-Nueva ubicaciÃ³n
-    â†’ EvaluaciÃ³n de riesgos (scoring.js)
-    â†’ CÃ¡lculo de Ã­ndices
-    â†’ PuntuaciÃ³n final
-    â†’ Almacenado en DB
-```
+## Verificación pendiente
 
-### 3. PresentaciÃ³n (Frontend)
-```
-Usuario selecciona ubicaciÃ³n
-    â†’ Frontend solicita /api/locations/:id
-    â†’ Proxy â†’ Backend â†’ DB
-    â†’ VisualizaciÃ³n en mapas/grÃ¡ficos
-```
+La prueba integrada de registro/login, aislamiento organizacional, CRUD y persistencia espacial no se ejecutó. La revisión automática la rechazó porque crea datos en producción y requiere autorización explícita.
 
----
+La propuesta está preparada en `.vercel/production-smoke.pending.cjs`, sin ejecutar. Crea dos organizaciones y usuarios QA, una ubicación, una fuente procedimental y un punto GeoJSON con su trabajo/tesela. La limpieza elimina los usuarios QA y la ubicación y archiva la fuente; permanecen las organizaciones vacías, registros espaciales archivados y trazas de auditoría. No usa ni modifica datos de organizaciones existentes.
 
-## ðŸ“ˆ CaracterÃ­sticas Incluidas
+La comparación multiciudad con datos analíticos reales requiere validación adicional. La actualización operativa actual utiliza consultas periódicas; no se presenta como una conexión WebSocket persistente en Vercel. Los estados healthy no prueban los flujos privados de escritura.
 
-### Dashboard
-- KPIs principales
-- Resumen de ubicaciones
-- DistribuciÃ³n de riesgos
-- Top zonas comerciales
+Consulta DEPLOYMENT_GUIDE.md para publicar con las configuraciones correctas de backend y frontend.
+## Evolución territorial con fuentes actuales
 
-### Location Intelligence
-- BÃºsqueda de ubicaciones
-- Mapa interactivo
-- Filtros por tipo/riesgo
-- AnÃ¡lisis por proximidad
+Búsqueda mundial explícita, seguimiento de ubicación con permiso del navegador, meteorología Open-Meteo y selección territorial compartida entre Explorer, AirHeart, activos y proyectos. Actividad y portafolio se actualizan cada 30 segundos; clima y cartografía se consultan cada 5 minutos. Diagnósticos internos plegados para administradores.
 
-### Retail Analytics
-- Zonas comerciales mapeadas
-- Indicadores de actividad
-- Potencial comercial
-- Competencia
+Open-Meteo y el respaldo cartográfico OpenFreeMap/OpenMapTiles respondieron desde Vercel: se obtuvo una muestra limitada de 250 lugares del punto consultado en Medellín, con versión cartográfica identificada. Overpass no respondió. Población, riesgo, avalúos y DEM siguen requiriendo evidencia verificable.
 
-### Real Estate
-- Valuaciones de propiedades
-- Proyecciones de apreciaciÃ³n
-- Potencial de desarrollo
-- Zonas
+Contratos, límites y comprobaciones: [Operación territorial actual](docs/LIVE_TERRITORY.md).
 
-### EARTHART
-- Ãndice territorial
-- DetecciÃ³n de brechas
-- Simulaciones de infraestructura
-- Recomendaciones
+## Publicación preparada el 12 de octubre
 
-### Risk Assessment
-- EvaluaciÃ³n de riesgos por componente
-- HistÃ³rico de cambios
-- Matriz de riesgo
+- Backend: dpl_8WbBRsVh5DW3H4WXQZRyQuZddbAB, https://backstage-gncop2fny-franciscogloopez-8505s-projects.vercel.app.
+- Frontend: dpl_HX8raB7e9192TbW9C28UMZfgVYCe, https://backstage-nn70encrg-franciscogloopez-8505s-projects.vercel.app.
+- Ambas versiones construidas por Vercel y activadas en https://backstage-web-seven.vercel.app y https://backstage-api.vercel.app tras recuperar Atlas.
+- 172 pruebas backend en la versión principal y 137 en la carpeta del IDE; ambas interfaces compilan.
+- 31 comprobaciones de flujos territoriales con APIs simuladas; 10 de actualización y permisos; 2 de coordenadas editadas.
+- La interfaz pública nueva pasó las comprobaciones de portada, login y registro en móvil y escritorio. La comprobación final confirmó que el dominio habitual sirve los mismos archivos de la versión verificada y que ambas bases están saludables.
 
----
 
-## ðŸš€ PrÃ³ximos Pasos (Opcional)
 
-DespuÃ©s de desplegar el backend:
+## Corrección de sesión y experiencia — 12 de octubre de 2026
 
-1. **Integrar datos BogotÃ¡ reales**
-   - `data/bogota-geospatial-sources.md` lista fuentes
-   - Ejecutar ingestion pipeline
-   - Backend automÃ¡ticamente procesa
+Los registros reales de Vercel confirmaron rechazos jwt expired en búsquedas, terreno y otros módulos: el frontend conservaba una sesión vencida y continuaba enviando su token. Ahora los HTTP 401 de peticiones protegidas limpian esa sesión y regresan al login una sola vez. Una respuesta tardía no cierra una sesión nueva; los errores de credenciales, permisos y disponibilidad no se confunden con caducidad. El login, registro y cambio de organización comprueban el token mediante /auth/me antes de abrir el espacio de trabajo. La API conserva la verificación de firma HS256, emisor, audiencia y vencimiento, y devuelve códigos de error estables. El proxy transmite también X-Organization-Id.
 
-2. **Agregar autenticaciÃ³n**
-   - `backend/auth.js` ya tiene JWT
-   - Implementar login en frontend
+Los buscadores tienen etiquetas visibles, fondo oscuro, texto claro y foco de teclado. La ubicación del dispositivo se resuelve a municipio, región y país, conservando el punto GPS exacto; también se nombra la ubicación guardada por versiones anteriores. El seguimiento requiere pulsar el botón y se detiene al elegir otro territorio. Las coordenadas y la procedencia meteorológica quedan en detalles desplegables. Los resultados priorizan el lugar y el mapa; los datos guardados y las rutas quedan como opciones. La ficha del lugar está debajo del mapa. El terreno permite reintentar una carga fallida y sus vistas indican cuando las alturas, pendientes y curvas son simuladas.
 
-3. **Monitoring**
-   - Railway tiene logs incluidos
-   - Agregar Sentry/Datadog si es necesario
 
-4. **Escalabilidad**
-   - Caching con Redis
-   - Ãndices PostgreSQL
-   - Read replicas si crece
+Frontend activo: dpl_SW6eA6ieQU5mxctp5B6jz35Gssxj. Backend activo: dpl_CBUA8LkmxR5kn4TQr5V8TKqYEkwW. Web: https://backstage-web-seven.vercel.app. Informes locales: .vercel/auth-browser-report.json, .vercel/auth-public-report.json y .vercel/final-release-report.json.
 
----
 
-## ðŸŽ“ CÃ³mo Usar Ahora
-
-### Localmente (Desarrollo)
-
-```bash
-# Terminal 1: Backend + DB
-docker-compose up
-
-# Terminal 2: Frontend
-cd frontend
-npm install
-npm run dev
-
-# Acceso:
-# - Frontend: http://localhost:3000
-# - Backend: http://localhost:4000
-# - API: http://localhost:4000/api/*
-```
-
-### En ProducciÃ³n (DespuÃ©s de Railway)
-
-```bash
-# Frontend: https://backstage-intelligence.vercel.app
-# Backend: https://backstage-intelligence-prod.railway.app
-# DB: Railway (automÃ¡tico)
-```
-
----
-
-## ðŸ“ž Soporte
-
-**Archivos de referencia:**
-- `DEPLOYMENT_GUIDE.md` - CÃ³mo desplegar paso a paso
-- `RAILWAY_DEPLOYMENT.md` - EspecÃ­fico para Railway
-- `backend/README.md` - API endpoints
-- `frontend/README.md` - Componentes React
-- `docs/API.md` - EspecificaciÃ³n API completa
-
----
-
-## â­ Estado Resumen
-
-```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  BACKSTAGE Intelligence                 â”‚
-â”‚                                         â”‚
-â”‚  Frontend:  âœ… OPERATIVO (Vercel)       â”‚
-â”‚  Backend:   â³ LISTO (sin desplegar)    â”‚
-â”‚  Database:  â³ LISTO (sin desplegar)    â”‚
-â”‚                                         â”‚
-â”‚  ðŸš€ Tiempo para producciÃ³n: 5 minutos   â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-```
-
-**Â¿Listo para desplegar el backend? âž¡ï¸ Ve a DEPLOYMENT_GUIDE.md**
-
----
-
-*Desarrollado con â¤ï¸ usando React, Express, PostgreSQL y PostGIS*
-*Datos abiertos de BogotÃ¡ (datosabiertos.bogota.gov.co)*
-
+### Registro real confirmado

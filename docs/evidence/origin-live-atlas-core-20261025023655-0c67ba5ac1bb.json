@@ -1,0 +1,270 @@
+{
+  "run_id": "atlas-core-20261025023655-0c67ba5ac1bb",
+  "started_at": "2026-10-25T02:36:55.547Z",
+  "mode": "real_protected_origin_browser_atlas_public_geocoding",
+  "api_interception": false,
+  "checks": [
+    {
+      "name": "protected_staging_target_and_original_production_aliases_unchanged",
+      "passed": true
+    },
+    {
+      "name": "three_new_owned_test_workspaces_registered",
+      "passed": true
+    },
+    {
+      "name": "account_contact_privilege_guard_private_shared_feed_comments_and_viewer_denial",
+      "passed": true
+    },
+    {
+      "name": "quibdo_yuto_istmina_actual_geocoder_results_colombia_not_quito",
+      "passed": true
+    },
+    {
+      "name": "real_browser_project_quibdo_2040_uses_selected_location_without_reentry",
+      "passed": true
+    },
+    {
+      "name": "actual_coordinate_distance_evidence_deterministic_comparison_and_existing_project_link",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "docs/evidence/origin-live-ui/comparison-real-evidence.png",
+    "docs/evidence/origin-live-ui/failure.png"
+  ],
+  "production_changes": false,
+  "deployments": {
+    "api": {
+      "id": "dpl_3MfGMMixQcCPqXtRXjoaSaUiSd4G",
+      "url": "backstage-staging-3knbjyonn-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_FUmxqTLDhZkiEpcEAbGxugvozjqn",
+      "url": "backstage-staging-fm5b495nl-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "geography": {
+    "quibdo": {
+      "id": "nominatim:relation:1343138",
+      "name": "Quibdó",
+      "displayName": "Quibdó, Atrato, Chocó, RAP Pacífico, Colombia",
+      "type": "administrative",
+      "country": "Colombia",
+      "countryCode": "co",
+      "region": "Chocó",
+      "municipality": "Quibdó",
+      "coordinates": [
+        -76.6531337,
+        5.6912838
+      ],
+      "bounds": [
+        -77.1427282,
+        5.6192719,
+        -76.1601892,
+        6.345917
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6531337,
+          5.6912838
+        ]
+      },
+      "provider": "OpenStreetMap Nominatim",
+      "objectType": "geocoded_place",
+      "properties": {
+        "name": "Quibdó",
+        "displayName": "Quibdó, Atrato, Chocó, RAP Pacífico, Colombia",
+        "type": "administrative",
+        "city": "Quibdó",
+        "municipality": "Quibdó",
+        "region": "Chocó",
+        "country": "Colombia",
+        "countryCode": "co",
+        "osmType": "relation",
+        "osmId": 1343138
+      },
+      "sourceId": "openstreetmap-nominatim",
+      "provenance": {
+        "source": "OpenStreetMap Nominatim",
+        "dataset": "OpenStreetMap geocoding index",
+        "license": "ODbL-1.0",
+        "dataMode": "derived",
+        "sourceCount": 1,
+        "confidence": null,
+        "updatedAt": null,
+        "query": "Quibdó, Chocó, Colombia"
+      },
+      "source": {
+        "name": "OpenStreetMap Nominatim",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "dataMode": "derived"
+      },
+      "precision": {
+        "level": "administrative",
+        "accuracyM": null
+      },
+      "validation": {
+        "coordinates": "valid_wgs84",
+        "address": "provider_match_unverified"
+      }
+    },
+    "yuto": {
+      "id": "nominatim:node:13952024201",
+      "name": "Yuto",
+      "displayName": "Yuto, El Atrato, Atrato, Chocó, RAP Pacífico, Colombia",
+      "type": "park",
+      "country": "Colombia",
+      "countryCode": "co",
+      "region": "Chocó",
+      "municipality": "El Atrato",
+      "coordinates": [
+        -76.6436088,
+        5.616981
+      ],
+      "bounds": [
+        -76.6436588,
+        5.616931,
+        -76.6435588,
+        5.617031
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6436088,
+          5.616981
+        ]
+      },
+      "provider": "OpenStreetMap Nominatim",
+      "objectType": "geocoded_place",
+      "properties": {
+        "name": "Yuto",
+        "displayName": "Yuto, El Atrato, Atrato, Chocó, RAP Pacífico, Colombia",
+        "type": "park",
+        "city": null,
+        "municipality": "El Atrato",
+        "region": "Chocó",
+        "country": "Colombia",
+        "countryCode": "co",
+        "osmType": "node",
+        "osmId": 13952024201
+      },
+      "sourceId": "openstreetmap-nominatim",
+      "provenance": {
+        "source": "OpenStreetMap Nominatim",
+        "dataset": "OpenStreetMap geocoding index",
+        "license": "ODbL-1.0",
+        "dataMode": "derived",
+        "sourceCount": 1,
+        "confidence": null,
+        "updatedAt": null,
+        "query": "Yuto, Chocó, Colombia"
+      },
+      "source": {
+        "name": "OpenStreetMap Nominatim",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "dataMode": "derived"
+      },
+      "precision": {
+        "level": "unknown",
+        "accuracyM": null
+      },
+      "validation": {
+        "coordinates": "valid_wgs84",
+        "address": "provider_match_unverified"
+      }
+    },
+    "istmina": {
+      "id": "nominatim:relation:1309472",
+      "name": "Istmina",
+      "displayName": "Istmina, San Juan, Chocó, RAP Pacífico, 274010, Colombia",
+      "type": "administrative",
+      "country": "Colombia",
+      "countryCode": "co",
+      "region": "Chocó",
+      "municipality": "Istmina",
+      "coordinates": [
+        -76.685528,
+        5.1593099
+      ],
+      "bounds": [
+        -77.1610903,
+        4.3729014,
+        -76.5249538,
+        5.2849813
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.685528,
+          5.1593099
+        ]
+      },
+      "provider": "OpenStreetMap Nominatim",
+      "objectType": "geocoded_place",
+      "properties": {
+        "name": "Istmina",
+        "displayName": "Istmina, San Juan, Chocó, RAP Pacífico, 274010, Colombia",
+        "type": "administrative",
+        "city": "Istmina",
+        "municipality": "Istmina",
+        "region": "Chocó",
+        "country": "Colombia",
+        "countryCode": "co",
+        "osmType": "relation",
+        "osmId": 1309472
+      },
+      "sourceId": "openstreetmap-nominatim",
+      "provenance": {
+        "source": "OpenStreetMap Nominatim",
+        "dataset": "OpenStreetMap geocoding index",
+        "license": "ODbL-1.0",
+        "dataMode": "derived",
+        "sourceCount": 1,
+        "confidence": null,
+        "updatedAt": null,
+        "query": "Istmina, Chocó, Colombia"
+      },
+      "source": {
+        "name": "OpenStreetMap Nominatim",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "dataMode": "derived"
+      },
+      "precision": {
+        "level": "administrative",
+        "accuracyM": null
+      },
+      "validation": {
+        "coordinates": "valid_wgs84",
+        "address": "provider_match_unverified"
+      }
+    },
+    "exact_municipal_parcel_verified": false,
+    "interpretation": "Public geocoded localities, not cadastral parcels or verified municipal headquarters"
+  },
+  "project_id": 34,
+  "comparison_id": 30,
+  "gis_job_id": 50,
+  "status": "failed",
+  "failure": {
+    "stage": "evidence_comparison",
+    "name": "Error",
+    "cause": null,
+    "message": "Browser timeout: document.querySelector('.explorer-capability-panel')?.innerText.includes('Distancia de referencia a Quibdó')"
+  },
+  "cleanup": {
+    "passed": true,
+    "only_owned_test_records": true,
+    "shared_counters_and_global_security_traces_preserved": true,
+    "backup_sha256": "8b839b3b5beb0e9bca77256f01ee3322f315f4bcd56fe70408dc37b0b22cb831"
+  },
+  "completed_at": "2026-10-25T02:38:33.688Z"
+}

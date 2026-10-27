@@ -1,0 +1,55 @@
+{
+  "checked_at": "2026-10-25T03:28:26.953Z",
+  "passed": true,
+  "staging_only": true,
+  "targets": [
+    {
+      "type": "api",
+      "domain": "backstage-staging-api.vercel.app",
+      "deployment_id": "dpl_H5FCBqTtQVx2cmFwhkoKxDQMmhSg",
+      "health": 200,
+      "anonymous_protection": 302,
+      "application_auth_required": 401,
+      "mapbox_keys": [
+        "MAPBOX_GEOCODING_PERMANENT",
+        "MAPBOX_ACCESS_TOKEN"
+      ]
+    },
+    {
+      "type": "web",
+      "domain": "backstage-staging-web.vercel.app",
+      "deployment_id": "dpl_AxQpwyDzK5vtJwsjV8ULuaQF15md",
+      "health": 200,
+      "anonymous_protection": 302,
+      "application_auth_required": 401,
+      "mapbox_keys": []
+    }
+  ],
+  "monitor": {
+    "checked_at": "2026-10-25T03:28:27.885Z",
+    "samples": [
+      {
+        "component": "api",
+        "healthy": true,
+        "status": "healthy",
+        "latency_ms": 456,
+        "latency_warning": false,
+        "http_status": 200,
+        "protection_verified": true
+      },
+      {
+        "component": "web",
+        "healthy": true,
+        "status": "healthy",
+        "latency_ms": 452,
+        "latency_warning": false,
+        "http_status": 200,
+        "protection_verified": true
+      }
+    ],
+    "open_incidents": 0,
+    "new_events": [],
+    "external_alert_delivery": false,
+    "admin_in_app_delivery": true
+  }
+}

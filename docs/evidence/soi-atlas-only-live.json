@@ -1,0 +1,20 @@
+{
+  "started_at": "2026-10-21T23:38:09.368Z",
+  "scope": "atlas_native_services_test_tenant",
+  "checks": [
+    "additive_native_collection_indexes",
+    "native_assets_zero_coordinates_and_tenant_isolation",
+    "native_risk_assessments_components_and_history",
+    "native_valuations_and_portfolio",
+    "native_analysis_transaction_candidates_and_nested_metadata",
+    "native_recommendation_review_events_and_aggregation",
+    "native_event_deduplication_resolution_and_summary",
+    "native_territorial_index_and_simulation",
+    "native_integration_events_and_tenant_isolation",
+    "native_dashboard_and_no_alternate_database_driver"
+  ],
+  "existing_records_modified": false,
+  "status": "passed",
+  "cleanup": "removed_only_owned_verification_tenant",
+  "finished_at": "2026-10-21T23:39:17.795Z"
+}

@@ -1,0 +1,38 @@
+ML_Lag
+ML_Error
+test_all_kernel_mass (bsie.test_engine.EngineTests.test_all_kernel_mass) ... ok
+test_bh_against_scipy (bsie.test_engine.EngineTests.test_bh_against_scipy) ... ok
+test_degeneracy_and_islands (bsie.test_engine.EngineTests.test_degeneracy_and_islands) ... ok
+test_explicit_repair_and_missing_values (bsie.test_engine.EngineTests.test_explicit_repair_and_missing_values) ... ok
+test_kde_mass_metric_and_point_only (bsie.test_engine.EngineTests.test_kde_mass_metric_and_point_only) ... ok
+test_knn_and_metric_distances (bsie.test_engine.EngineTests.test_knn_and_metric_distances) ... ok
+test_local_and_hotspot_inference (bsie.test_engine.EngineTests.test_local_and_hotspot_inference) ... ok
+test_moran_manual_and_reproducible (bsie.test_engine.EngineTests.test_moran_manual_and_reproducible) ... ok
+test_moran_no_evidence_is_not_randomness_proof (bsie.test_engine.EngineTests.test_moran_no_evidence_is_not_randomness_proof) ... ok
+test_negative_pattern (bsie.test_engine.EngineTests.test_negative_pattern) ... ok
+test_ols_matches_scipy (bsie.test_engine.EngineTests.test_ols_matches_scipy) ... ok
+test_pysal_reference (bsie.test_engine.EngineTests.test_pysal_reference) ... ok
+test_rook_queen_grid (bsie.test_engine.EngineTests.test_rook_queen_grid) ... ok
+test_temporal_requires_identical_units (bsie.test_engine.EngineTests.test_temporal_requires_identical_units) ... ok
+test_temporal_series_persistence_and_shared_kde_grid (bsie.test_engine.EngineTests.test_temporal_series_persistence_and_shared_kde_grid) ... ok
+test_validation_and_repair_do_not_mutate (bsie.test_engine.EngineTests.test_validation_and_repair_do_not_mutate) ... ok
+test_diagnostics_match_spreg_and_auto_explains_selection (bsie.test_advanced.AdvancedRegressionTests.test_diagnostics_match_spreg_and_auto_explains_selection) ... ok
+test_diagnostics_reject_undefined_design_and_wrong_weights (bsie.test_advanced.AdvancedRegressionTests.test_diagnostics_reject_undefined_design_and_wrong_weights) ... ok
+test_manual_ml_matches_direct_library (bsie.test_advanced.AdvancedRegressionTests.test_manual_ml_matches_direct_library) ... C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\.venv-bsie\Lib\site-packages\scipy\sparse\linalg\_dsolve\linsolve.py:653: SparseEfficiencyWarning: splu converted its input to CSC format
+  return splu(A).solve
+C:\Users\Usuario\OneDrive\Escritorio\backstage_v310\BACKSTAGE-3.1.0\.venv-bsie\Lib\site-packages\scipy\sparse\linalg\_matfuncs.py:76: SparseEfficiencyWarning: spsolve is more efficient when sparse b is in the CSC matrix format
+  Ainv = spsolve(A, I)
+ok
+test_spatial_error_recovers_parameter_and_filtered_residuals (bsie.test_advanced.AdvancedRegressionTests.test_spatial_error_recovers_parameter_and_filtered_residuals) ... ok
+test_spatial_lag_recovers_parameter_and_impacts (bsie.test_advanced.AdvancedRegressionTests.test_spatial_lag_recovers_parameter_and_impacts) ... ok
+test_explicit_null_and_dates_required (bsie.test_temporal.TemporalTests.test_explicit_null_and_dates_required) ... ok
+test_moran_change_statistic_is_difference_not_two_pvalues (bsie.test_temporal.TemporalTests.test_moran_change_statistic_is_difference_not_two_pvalues) ... ok
+test_paired_change_and_descriptive_trend (bsie.test_temporal.TemporalTests.test_paired_change_and_descriptive_trend) ... ok
+test_rolling_half_open_windows_mean_and_overlap (bsie.test_temporal.TemporalTests.test_rolling_half_open_windows_mean_and_overlap) ... ok
+test_rolling_rejects_missing_units_and_large_work (bsie.test_temporal.TemporalTests.test_rolling_rejects_missing_units_and_large_work) ... ok
+test_zero_mean_change_has_no_significance (bsie.test_temporal.TemporalTests.test_zero_mean_change_has_no_significance) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 11.888s
+
+OK

@@ -13,17 +13,6 @@ const DEFAULT_WEIGHTS = {
   territorial_risk: 0.25,
 };
 
-const REQUIRED_COMPARISON_METRICS = {
-  population_total_zone: 'población del área',
-  poi_count_1200m: 'equipamientos y accesibilidad en 1,2 km',
-  competitor_distance_m: 'distancia a competidores',
-  own_store_distance_m: 'distancia a activos propios',
-  flood_risk: 'riesgo de inundación',
-  landslide_risk: 'riesgo de deslizamiento',
-  crime_risk: 'riesgo de seguridad',
-  climate_exposure: 'exposición climática',
-};
-
 function clamp(value, min = 0, max = 100) {
   return Math.max(min, Math.min(max, value));
 }
@@ -43,88 +32,99 @@ function normalizeWeights(inputWeights) {
 }
 
 function buildDimensionScores(metrics) {
-  const populationPotential = clamp((Number(metrics.population_total_zone) / 50000) * 100);
-  const accessibility = clamp(Number(metrics.poi_count_1200m) * 6.5);
-  const competitionIntensity = clamp((Number(metrics.competitor_distance_m) / 3500) * 100);
-  const cannibalization = clamp((Number(metrics.own_store_distance_m) / 3000) * 100);
+  const valueOf = (value) => value == null || !Number.isFinite(Number(value)) ? null : Number(value);
+  const scores = {};
+  const population = valueOf(metrics.population_total_zone);
+  const poiCount = valueOf(metrics.poi_count_1200m);
+  const competitorDistance = valueOf(metrics.competitor_distance_m);
+  const ownStoreDistance = valueOf(metrics.own_store_distance_m);
 
-  const flood = Number(metrics.flood_risk);
-  const landslide = Number(metrics.landslide_risk);
-  const crime = Number(metrics.crime_risk);
-  const climate = Number(metrics.climate_exposure);
-  const riskValues = [flood, landslide, crime, climate];
-  const riskAverage = riskValues.reduce((acc, value) => acc + value, 0) / riskValues.length;
-  const territorialRisk = clamp((1 - riskAverage) * 100);
+  if (population != null) scores.population_potential = Number(clamp((population / 50000) * 100).toFixed(2));
+  if (poiCount != null) scores.accessibility = Number(clamp(poiCount * 6.5).toFixed(2));
+  if (competitorDistance != null) scores.competition_intensity = Number(clamp((competitorDistance / 3500) * 100).toFixed(2));
+  if (ownStoreDistance != null) scores.cannibalization = Number(clamp((ownStoreDistance / 3000) * 100).toFixed(2));
 
-  return {
-    population_potential: Number(populationPotential.toFixed(2)),
-    accessibility: Number(accessibility.toFixed(2)),
-    competition_intensity: Number(competitionIntensity.toFixed(2)),
-    cannibalization: Number(cannibalization.toFixed(2)),
-    territorial_risk: Number(territorialRisk.toFixed(2)),
-  };
+  const riskValues = [metrics.flood_risk, metrics.landslide_risk, metrics.crime_risk, metrics.climate_exposure]
+    .map(valueOf)
+    .filter((value) => value != null);
+  if (riskValues.length) {
+    const riskAverage = riskValues.reduce((acc, value) => acc + value, 0) / riskValues.length;
+    scores.territorial_risk = Number(clamp((1 - riskAverage) * 100).toFixed(2));
+  }
+
+  return scores;
 }
 
 function buildExplanation(metrics, scores, weights) {
   return [
     {
       criterion: 'population_potential',
+      method_type: 'heuristic',
       variable: 'population_total_zone',
-      observed_value: Number(metrics.population_total_zone),
+      observed_value: Number(metrics.population_total_zone) || 0,
       weight: weights.population_potential,
       score: scores.population_potential,
       contribution: Number((scores.population_potential * weights.population_potential).toFixed(2)),
       source: 'territorial_zones / demographic_indicators',
       confidence: null,
+      data_status: 'available',
       notes: 'Población disponible en la zona donde cae la ubicación candidata.',
     },
     {
       criterion: 'accessibility',
+      method_type: 'heuristic',
       variable: 'poi_count_1200m',
-      observed_value: Number(metrics.poi_count_1200m),
+      observed_value: Number(metrics.poi_count_1200m) || 0,
       weight: weights.accessibility,
       score: scores.accessibility,
       contribution: Number((scores.accessibility * weights.accessibility).toFixed(2)),
       source: 'points_of_interest',
       confidence: null,
+      data_status: 'available',
       notes: 'Conteo de equipamientos y generadores de demanda en radio geométrico de 1200m.',
     },
     {
       criterion: 'competition_intensity',
+      method_type: 'heuristic',
       variable: 'competitor_distance_m',
-      observed_value: Number(metrics.competitor_distance_m),
+      observed_value: Number(metrics.competitor_distance_m) || null,
       weight: weights.competition_intensity,
       score: scores.competition_intensity,
       contribution: Number((scores.competition_intensity * weights.competition_intensity).toFixed(2)),
       source: 'competitors',
       confidence: null,
+      data_status: 'available',
       notes: 'Mayor distancia al competidor cercano aumenta oportunidad.',
     },
     {
       criterion: 'cannibalization',
+      method_type: 'heuristic',
       variable: 'own_store_distance_m',
-      observed_value: Number(metrics.own_store_distance_m),
+      observed_value: Number(metrics.own_store_distance_m) || null,
       weight: weights.cannibalization,
       score: scores.cannibalization,
       contribution: Number((scores.cannibalization * weights.cannibalization).toFixed(2)),
       source: 'business_locations + locations',
       confidence: null,
+      data_status: 'available',
       notes: 'Mayor distancia a tienda propia reduce canibalización.',
     },
     {
       criterion: 'territorial_risk',
+      method_type: 'heuristic',
       variable: 'flood/landslide/crime/climate',
       observed_value: {
-        flood_risk: Number(metrics.flood_risk),
-        landslide_risk: Number(metrics.landslide_risk),
-        crime_risk: Number(metrics.crime_risk),
-        climate_exposure: Number(metrics.climate_exposure),
+        flood_risk: Number(metrics.flood_risk) || null,
+        landslide_risk: Number(metrics.landslide_risk) || null,
+        crime_risk: Number(metrics.crime_risk) || null,
+        climate_exposure: Number(metrics.climate_exposure) || null,
       },
       weight: weights.territorial_risk,
       score: scores.territorial_risk,
       contribution: Number((scores.territorial_risk * weights.territorial_risk).toFixed(2)),
       source: 'risk_assessments',
       confidence: null,
+      data_status: 'available',
       notes: 'Se invierte el promedio de riesgos para puntuar seguridad territorial.',
     },
   ];
@@ -158,7 +158,7 @@ async function resolveCandidatePoint(candidate, fallbackCity, organizationId) {
 
   const lat = Number(candidate.lat);
   const lng = Number(candidate.lng);
-  if (Number.isNaN(lat) || Number.isNaN(lng)) {
+  if (!Number.isFinite(lat) || lat < -90 || lat > 90 || !Number.isFinite(lng) || lng < -180 || lng > 180) {
     throw new ApiError(400, 'Cada candidato debe incluir location_id o coordenadas lat/lng válidas.');
   }
 
@@ -177,41 +177,40 @@ async function scoreCandidates(payload, organizationId, sessionUser) {
   }
 
   const weights = normalizeWeights(payload.criteria_weights);
-  const candidatesWithMetrics = [];
+  const scoredCandidates = [];
 
   for (const candidate of candidates) {
     const resolved = await resolveCandidatePoint(candidate, payload.city, organizationId);
     const metrics = await analysisRepository.computeCandidateMetrics({
+      organizationId,
       city: resolved.city,
       latitude: resolved.latitude,
       longitude: resolved.longitude,
       ownBrandName: payload.own_brand_name || null,
     });
-    candidatesWithMetrics.push({ resolved, metrics });
-  }
-
-  const missingByCandidate = candidatesWithMetrics.map(({ resolved, metrics }) => ({
-    candidate: resolved.name,
-    fields: Object.entries(REQUIRED_COMPARISON_METRICS)
-      .filter(([key]) => metrics[key] == null || !Number.isFinite(Number(metrics[key])))
-      .map(([, label]) => label),
-  })).filter(({ fields }) => fields.length > 0);
-  if (missingByCandidate.length > 0) {
-    const details = missingByCandidate.map(({ candidate, fields }) => `${candidate}: ${fields.join(', ')}`).join('; ');
-    throw new ApiError(422, `Datos observados insuficientes. No se generó un ranking. Datos faltantes: ${details}.`);
-  }
-
-  const scoredCandidates = candidatesWithMetrics.map(({ resolved, metrics }) => {
     const scoreByDimension = buildDimensionScores(metrics);
-    return {
+
+    scoredCandidates.push({
       candidate_name: resolved.name,
       location_id: resolved.location_id,
       city: resolved.city,
       score_by_dimension: scoreByDimension,
       metrics,
-      explanation: buildExplanation(metrics, scoreByDimension, weights),
-    };
-  });
+    });
+  }
+
+  const missingCriteria = scoredCandidates.map((candidate) => ({
+    candidate: candidate.candidate_name,
+    criteria: Object.keys(DEFAULT_WEIGHTS).filter((criterion) => candidate.score_by_dimension[criterion] == null),
+  })).filter((candidate) => candidate.criteria.length);
+  if (missingCriteria.length) {
+    const details = missingCriteria.map(({ candidate, criteria }) => `${candidate}: ${criteria.join(', ')}`).join('; ');
+    throw new ApiError(422, `Datos insuficientes para comparar. No se generó un ranking. Criterios sin evidencia: ${details}.`);
+  }
+
+  for (const candidate of scoredCandidates) {
+    candidate.explanation = buildExplanation(candidate.metrics, candidate.score_by_dimension, weights);
+  }
 
   // Real multicriteria ranking (TOPSIS): every dimension in
   // buildDimensionScores() is already constructed so that "higher is
@@ -352,8 +351,35 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
   if (!organizationId) {
     throw new ApiError(403, 'No hay organización activa para ejecutar comparación.');
   }
+  const candidates = Array.isArray(payload.candidates) ? payload.candidates : [];
+  const candidateKeys = candidates.map((candidate, index) => {
+    if (candidate.location_id) return `location:${candidate.location_id}`;
+    if (candidate.id) return `id:${candidate.id}`;
+    const lat = Number(candidate.lat);
+    const lng = Number(candidate.lng);
+    return Number.isFinite(lat) && Number.isFinite(lng) ? `point:${lat.toFixed(6)}:${lng.toFixed(6)}` : `invalid:${index}`;
+  });
+  if (new Set(candidateKeys).size < 2) throw new ApiError(400, 'La comparación requiere al menos 2 candidatos distintos.');
+  if (candidates.length > 6) throw new ApiError(400, 'La comparación admite máximo 6 candidatos.');
 
   const { ranked, weights, rankingMethod, analyticsJobId } = await scoreCandidates(payload, organizationId, sessionUser);
+  const comparisonCandidates = payload.candidates.slice(0, 6).map((candidate) => {
+    const geometry = candidate.geometry && JSON.stringify(candidate.geometry).length <= 100000 ? candidate.geometry : null;
+    return {
+      id: candidate.id || null,
+      type: candidate.type || null,
+      name: candidate.name || null,
+      city: candidate.city || null,
+      region: candidate.region || null,
+      country: candidate.country || null,
+      location_id: candidate.location_id || null,
+      lat: candidate.lat == null ? null : Number(candidate.lat),
+      lng: candidate.lng == null ? null : Number(candidate.lng),
+      bbox: Array.isArray(candidate.bbox) && candidate.bbox.length === 4 ? candidate.bbox.map(Number) : null,
+      geometry,
+      source: candidate.source || null,
+    };
+  });
 
   let run;
   if (payload.analysis_run_id) {
@@ -378,6 +404,7 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
         ranking_method: rankingMethod,
         analytics_job_id: analyticsJobId,
         comparison_started_from: payload.source || 'advanced-comparator',
+        comparison_candidates: comparisonCandidates,
       },
     });
   } else {
@@ -394,6 +421,7 @@ async function compareCandidates(payload, sessionUser, organizationContext) {
         ranking_method: rankingMethod,
         analytics_job_id: analyticsJobId,
         comparison_started_from: payload.source || 'advanced-comparator',
+        comparison_candidates: comparisonCandidates,
       },
     });
     await analysisRepository.replaceAnalysisResults({ analysisRunId: run.analysis_run_id, ranked });
@@ -472,12 +500,34 @@ async function createOperationalProject(payload, sessionUser, organizationContex
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
   const projectName = String(payload.project_name || '').trim();
   if (!projectName) throw new ApiError(400, 'project_name es obligatorio.');
+  const territory = payload.territory && typeof payload.territory === 'object' ? payload.territory : null;
+  const territoryGeometry = territory?.geometry && JSON.stringify(territory.geometry).length <= 100000
+    ? territory.geometry
+    : null;
   const project = await analysisRepository.createOperationalProject({
     projectName,
-    city: payload.city || null,
+    city: payload.city || territory?.city || territory?.municipality || null,
     objective: payload.objective || 'Evaluar y comparar ubicaciones candidatas.',
     requestedByUserId: sessionUser?.user_id || null,
     organizationId,
+    metadata: {
+      territory: territory ? {
+        id: territory.id || null,
+        type: territory.type || territory.objectType || null,
+        name: territory.name || territory.displayName || null,
+        city: territory.city || territory.municipality || null,
+        region: territory.region || null,
+        country: territory.country || null,
+        coordinates: territory.coordinates || (territory.lng != null && territory.lat != null ? [territory.lng, territory.lat] : null),
+        bbox: territory.bbox || territory.bounds || null,
+        geometry: territoryGeometry,
+        source: territory.source || territory.provider || territory.provenance?.source || null,
+      } : null,
+      project_type: payload.project_type || 'custom',
+      analysis_profile: payload.analysis_profile || { criteria: [] },
+      analysis_context: payload.analysis_context || null,
+      selected_assets: Array.isArray(payload.selected_assets) ? payload.selected_assets.slice(0, 100) : [],
+    },
   });
   await operationalEvents.emit({
     organizationId, analysisRunId: project.analysis_run_id, actorUserId: sessionUser?.user_id,
@@ -574,8 +624,21 @@ async function removeProjectCandidate(id, locationId, sessionUser, organizationC
 
 function validateProbabilityPayload(payload) {
   if (!payload || typeof payload !== 'object') throw new ApiError(400, 'Resultado probabilístico inválido.');
+  require('./intelligenceContract.service').canonicalJson(payload);
   if (!payload.dataset_key) throw new ApiError(400, 'dataset_key es obligatorio.');
   if (!payload.selected_distribution) throw new ApiError(400, 'selected_distribution es obligatorio.');
+  if (payload.data_mode != null && !['measured', 'derived', 'declared', 'procedural', 'insufficient_data'].includes(payload.data_mode)) {
+    throw new ApiError(400, 'data_mode no es válido.');
+  }
+  if (payload.sample_size != null && (!Number.isInteger(Number(payload.sample_size)) || Number(payload.sample_size) < 0)) {
+    throw new ApiError(400, 'sample_size debe ser un entero no negativo.');
+  }
+  if (payload.source_count != null && (!Number.isInteger(Number(payload.source_count)) || Number(payload.source_count) < 0)) {
+    throw new ApiError(400, 'source_count debe ser un entero no negativo.');
+  }
+  if (payload.confidence_score != null && (!Number.isFinite(Number(payload.confidence_score)) || Number(payload.confidence_score) < 0 || Number(payload.confidence_score) > 1)) {
+    throw new ApiError(400, 'confidence_score debe estar entre 0 y 1.');
+  }
   const observation = payload.observation_evaluation || {};
   const numericFields = ['percentile', 'cdf', 'survival_probability'];
   numericFields.forEach((field) => {
@@ -591,14 +654,36 @@ async function saveProbabilityResult(id, payload, sessionUser, organizationConte
   await getAnalysisRunById(id, organizationId);
   validateProbabilityPayload(payload);
   const probabilityResult = {
+    algorithm: payload.algorithm || 'backstage.probability.distribution_fit',
     dataset_key: payload.dataset_key,
     dataset_label: payload.dataset_label || payload.dataset_key,
+    algorithm_version: payload.algorithm_version || null,
+    data_mode: payload.data_mode || null,
+    sample_size: payload.sample_size == null ? null : Number(payload.sample_size),
+    confidence_score: payload.confidence_score == null ? null : Number(payload.confidence_score),
+    confidence_method: payload.confidence_method || null,
+    source_count: payload.source_count == null ? null : Number(payload.source_count),
+    missing_inputs: Array.isArray(payload.missing_inputs) ? payload.missing_inputs : [],
+    data_quality: payload.data_quality && typeof payload.data_quality === 'object' ? payload.data_quality : null,
+    provenance: payload.provenance && typeof payload.provenance === 'object' ? payload.provenance : null,
     selected_distribution: payload.selected_distribution,
+    selected_distribution_parameters: payload.selected_distribution_parameters || null,
+    thresholds: payload.thresholds || null,
+    tail_thresholds: payload.tail_thresholds || null,
     observation_evaluation: payload.observation_evaluation || {},
     integral_validation: payload.integral_validation || {},
     heuristic_note: payload.heuristic_note || null,
     source: payload.source || 'probability-engine',
     recorded_at: new Date().toISOString(),
+  };
+  const { hash } = require('./intelligenceContract.service');
+  probabilityResult.evidence = {
+    contract_version: 'backstage-imported-probability-1',
+    summary_sha256: hash(probabilityResult),
+    verification: 'declared_summary_only',
+    reproducible: false,
+    missing_inputs: ['original_sample', 'original_engine_environment'],
+    note: 'Se conserva el resumen aportado, sus parámetros y procedencia; no se ha ejecutado ni certificado su ajuste en el servidor.',
   };
   const updated = await analysisRepository.saveProbabilityResult({
     analysisRunId: id,
@@ -845,13 +930,14 @@ function deriveOperationalState(run) {
 async function listOperationalBoard(organizationId, limit) {
   if (!organizationId) throw new ApiError(403, 'No hay organización activa.');
   const rows = await analysisRepository.listOperationalBoard({ organizationId, limit });
+  const businessPolicy = await require('./businessRules.service').service.get(organizationId);
   const now = Date.now();
   return rows.map((run) => {
     const workflow = deriveOperationalState(run);
     const timeline = buildOperationalTimeline(run);
     const referenceTime = new Date(run.updated_at || run.created_at).getTime();
     const ageHours = Number.isNaN(referenceTime) ? 0 : (now - referenceTime) / 3600000;
-    const slaHours = workflow.state === 'probability_pending' ? 48 : workflow.state === 'risk_review_pending' ? 24 : workflow.state === 'recommendation_review_pending' ? 24 : 72;
+    const slaHours = businessPolicy.rules.sla_hours[workflow.state] ?? businessPolicy.rules.sla_hours.default;
     const slaBreached = !['report_ready'].includes(workflow.state) && ageHours > slaHours;
     const criticalRisk = Number(run.metadata?.risk_review?.counts?.critical || 0);
     const priority = workflow.state === 'stale' || criticalRisk > 0 || slaBreached ? 'critical'
@@ -861,7 +947,7 @@ async function listOperationalBoard(organizationId, limit) {
       : Math.max(0, Math.round(timeline.progress_pct - (workflow.state === 'stale' ? 35 : 0) - (slaBreached ? 15 : 0)));
     return {
       ...run, workflow, timeline, priority, health,
-      sla: { breached: slaBreached, age_hours: Number(ageHours.toFixed(1)), limit_hours: slaHours },
+      sla: { breached: slaBreached, age_hours: Number(ageHours.toFixed(1)), limit_hours: slaHours, basis: businessPolicy.rules.basis, policy_version: businessPolicy.rules.version, policy_revision: businessPolicy.revision, policy_sha256: businessPolicy.sha256, clock: businessPolicy.rules.sla_clock },
       blocked_reason: workflow.blocked_reason || (slaBreached ? `La etapa actual supera el SLA de ${slaHours} horas.` : null),
     };
   }).sort((a, b) => {
@@ -1029,4 +1115,5 @@ module.exports = {
   getOperationalRisks,
   reviewOperationalRisks,
   executeOperationalCommand,
+  buildDimensionScores,
 };

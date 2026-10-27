@@ -1,0 +1,75 @@
+name: Validate BACKSTAGE sources and release packages
+
+on:
+  push:
+    branches: [main, codex/platform-stabilization, backstage-3.1.0-final, 'recovery/**']
+  pull_request:
+    branches: [main, codex/platform-stabilization, backstage-3.1.0-final]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: ci-only-${{ github.run_id }}-test-validation-key
+      NODE_ENV: test
+      MONGODB_URI: ''
+      PROJ_NETWORK: 'OFF'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install locked JavaScript dependencies
+        run: |
+          npm ci --prefix backend
+          npm ci --prefix frontend
+      - name: Audit production dependencies
+        run: |
+          npm audit --prefix backend --omit=dev --audit-level=high
+          npm audit --prefix frontend --omit=dev --audit-level=high
+      - name: Install scientific engines and references
+        run: python -m pip install -r bsie/requirements.txt -r bsie/requirements-test.txt -r sanitary/requirements.txt -r probability/requirements.txt
+      - name: Verify all local contracts and numerical engines
+        run: node scripts/verify-soi-release.js
+      - name: Compile the existing frontend
+        run: npm run build --prefix frontend
+      - name: Verify browser flows with isolated API fixtures
+        run: |
+          browser=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$browser"
+          SOI_TEST_BROWSER="$browser" node frontend/scripts/soi-browser-smoke.mjs --phase4
+      - name: Prepare and verify the actual Node and Python release sources
+        run: |
+          node scripts/prepare-soi-deployment.js --unlinked
+          node scripts/prepare-soi-web-deployment.js --unlinked
+          node scripts/verify-prepared-backstage.js --phase4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backstage-reviewed-source-packages
+          include-hidden-files: true
+          path: |
+            .vercel/soi-api-*/
+            .vercel/soi-web-*/
+            docs/backstage-2.0/evidence/phase-1-packaging.json
+            docs/backstage-2.0/evidence/phase-1-ui/
+            docs/backstage-2.0/evidence/phase-2-ui/
+            docs/backstage-2.0/evidence/phase-2-browser.json
+            docs/backstage-2.0/evidence/phase-2-packaging.json
+            docs/backstage-2.0/evidence/phase-3-ui/
+            docs/backstage-2.0/evidence/phase-3-browser.json
+            docs/backstage-2.0/evidence/phase-3-packaging.json
+            docs/backstage-2.0/evidence/phase-4-ui/
+            docs/backstage-2.0/evidence/phase-4-browser.json
+            docs/backstage-2.0/evidence/phase-4-packaging.json
+            docs/evidence/soi-browser-smoke.json
+            docs/evidence/soi-release-checks.json
+
+# Validation deliberately has no deployment job. Production publication requires
+# a separate owner-approved release after staging/rollback review.

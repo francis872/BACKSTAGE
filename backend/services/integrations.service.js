@@ -1,32 +1,41 @@
-const ApiError = require('../utils/ApiError');
-const {
-  registerIntegrationSource,
-  recordIntegrationEvent,
-  getPendingEvents,
-  markEventProcessed,
-} = require('../ingestion');
-
-async function registerSource(name, type, config) {
-  if (!name || !type) {
-    throw new ApiError(400, 'name y type son requeridos.');
-  }
-  return registerIntegrationSource(name, type, config || {});
+const C=require('../domain/computationalContract');
+const {currentActor}=require('./resourceAuthorization.service');
+const {appendPlatformAudit}=require('./platformAudit.service');
+const {createIntegrationsRepository}=require('../repositories/integrations.repository');
+function createIntegrationsService(infrastructure){
+ const repo=createIntegrationsRepository(infrastructure);
+ const publicSource=row=>{const {_id,config,ingest_revision,...data}=row;return {...data,configuration_present:Boolean(config&&Object.keys(config).length)};};
+ function configuration(config){C.safeJson(config);if(!config||typeof config!=='object'||Array.isArray(config)||Buffer.byteLength(JSON.stringify(config))>32000)C.fail('Configuración JSON de hasta 32 KB requerida.');
+  function check(value){if(value&&typeof value==='object')for(const[k,v]of Object.entries(value)){if(/password|secret|token|api[_-]?key|cookie|credential|signature/i.test(k))C.fail('Las credenciales deben permanecer en el entorno del servidor.');check(v);}else if(typeof value==='string'&&/^https?:\/\//i.test(value)){let u;try{u=new URL(value);}catch{C.fail('URL de configuración inválida.');}if(u.protocol!=='https:'||u.username||u.password||u.search||u.hash)C.fail('Las URL de configuración deben ser HTTPS públicas, sin credenciales, consulta ni fragmento.');}}
+  check(config);return structuredClone(config);
+ }
+ async function actor(db,session,context,roles){const a=await currentActor(db,session,context);if(!roles.includes(a.role))C.fail('Permiso denegado.',403);return a;}
+ async function audit(db,session,context,action,row,metadata={}){await appendPlatformAudit(repo.infra(),db,session,context,action,'integrations',row.event_id||row.source_id,metadata);}
+ async function register(context,input){C.object(input,['name','type','config']);const name=C.text(input.name,'Nombre'),type=C.text(input.type,'Tipo',100),config=configuration(input.config??{});return repo.transaction(async(db,session)=>{
+  const a=await actor(db,session,context,['admin']),before=await db.collection('integration_sources').findOne({...repo.scope(a.organizationId),name},{session});
+  const row=before?{...before,type,config,enabled:true,archived:false,revision:(before.revision||0)+1,updated_at:new Date()}:{source_id:await repo.infra().nextId('integration_sources',session),...repo.scope(a.organizationId),name,type,config,enabled:true,archived:false,revision:0,created_at:new Date(),updated_at:new Date()};
+  if(before)await db.collection('integration_sources').updateOne({...repo.scope(a.organizationId),source_id:before.source_id},{$set:{type,config,enabled:true,archived:false,revision:row.revision,updated_at:row.updated_at}},{session});else await db.collection('integration_sources').insertOne(row,{session});
+  await audit(db,session,a,'integration.source_registered',row,{revision:row.revision});return publicSource(row);
+ });}
+ async function list(context){const db=await repo.database(),a=await actor(db,undefined,context,['admin','analyst','viewer']);return (await db.collection('integration_sources').find({...repo.scope(a.organizationId),archived:{$ne:true}}).sort({source_id:-1}).limit(100).toArray()).map(publicSource);}
+ async function get(context,id){const db=await repo.database(),a=await actor(db,undefined,context,['admin','analyst','viewer']);return publicSource(await repo.source(db,undefined,a.organizationId,id));}
+ async function update(context,id,input,{archive=false}={}){C.object(input,archive?['revision']:['revision','enabled','type','config']);C.integer(input.revision,0,Number.MAX_SAFE_INTEGER,'Revisión');return repo.transaction(async(db,session)=>{
+  const a=await actor(db,session,context,['admin']),before=await repo.source(db,session,a.organizationId,id);if((before.revision||0)!==input.revision)C.fail('La fuente cambió; vuelve a consultarla.',409);
+  const fields={revision:input.revision+1,updated_at:new Date()};if(archive){fields.enabled=false;fields.archived=true;}else{if(Object.hasOwn(input,'enabled')){if(typeof input.enabled!=='boolean')C.fail('enabled requiere booleano.');fields.enabled=input.enabled;}if(Object.hasOwn(input,'type'))fields.type=C.text(input.type,'Tipo',100);if(Object.hasOwn(input,'config'))fields.config=configuration(input.config);}
+  await db.collection('integration_sources').updateOne({...repo.scope(a.organizationId),source_id:before.source_id},{$set:fields},{session});const row={...before,...fields};await audit(db,session,a,archive?'integration.source_archived':'integration.source_updated',row,{revision:row.revision});return publicSource(row);
+ });}
+ async function record(context,input){C.object(input,['source_id','external_id','payload']);const sourceId=C.identifier(input.source_id),external=input.external_id==null?null:C.text(input.external_id,'ID externo');const payload=input.payload??{};if(typeof payload!=='object'||Array.isArray(payload))C.fail('payload requiere un objeto JSON.');C.safeJson(payload);if(Buffer.byteLength(JSON.stringify(payload))>200000)C.fail('El evento supera 200 KB.',413);const fingerprint=C.hash({source_id:sourceId,external_id:external,payload});
+  async function write(){return repo.transaction(async(db,session)=>{const a=await actor(db,session,context,['admin']),source=await repo.source(db,session,a.organizationId,sourceId);
+   const recordKey=external?`integration:${a.organizationId}:${sourceId}:${C.hash(external)}`:null;const existing=recordKey&&await db.collection('integration_events').findOne({_id:recordKey,...repo.scope(a.organizationId)},{session});if(existing){if(existing.payload_sha256!==fingerprint)C.fail('El ID externo ya pertenece a otro contenido.',409);return repo.infra().cleanDocument(existing);}
+   if(!source.enabled||source.archived)C.fail('La fuente no está activa.',409);
+   const touched=await db.collection('integration_sources').updateOne({...repo.scope(a.organizationId),source_id:sourceId,enabled:true,archived:{$ne:true}},{$inc:{ingest_revision:1}},{session});if(touched.matchedCount!==1)C.fail('La fuente dejó de estar activa.',409);
+   const row={...(recordKey?{_id:recordKey}:{}),...repo.scope(a.organizationId),source_id:sourceId,event_id:await repo.infra().nextId('integration_events',session),external_id:external,payload,payload_sha256:fingerprint,status:'pending',received_at:new Date(),created_at:new Date(),revision:0};await db.collection('integration_events').insertOne(row,{session});await audit(db,session,a,'integration.event_recorded',row,{payload_sha256:fingerprint,source_id:sourceId});return repo.infra().cleanDocument(row);
+  });}try{return await write();}catch(error){if(error.code===11000&&external)return write();throw error;}
+ }
+ async function pending(context,limit=100){C.integer(Number(limit),1,100,'Límite');const db=await repo.database(),a=await actor(db,undefined,context,['admin','analyst']);return (await db.collection('integration_events').find({...repo.scope(a.organizationId),status:'pending'}).sort({received_at:1}).limit(Number(limit)).toArray()).map(repo.infra().cleanDocument);}
+ async function complete(context,id){return repo.transaction(async(db,session)=>{const a=await actor(db,session,context,['admin','analyst']),row=await repo.event(db,session,a.organizationId,id);await repo.source(db,session,a.organizationId,row.source_id);if(row.status==='processed')return {event_id:row.event_id,status:'processed'};if(row.status!=='pending')C.fail('Transición de evento inválida.',409);await db.collection('integration_events').updateOne({...repo.scope(a.organizationId),event_id:row.event_id,status:'pending'},{$set:{status:'processed',processed_at:new Date(),processed_by:a.userId},$inc:{revision:1}},{session});await audit(db,session,a,'integration.event_processed',row,{source_id:row.source_id});return {event_id:row.event_id,status:'processed'};});}
+ return {register,list,get,update,record,pending,complete};
 }
-
-async function recordEvent(sourceId, externalId, payload) {
-  if (!sourceId) {
-    throw new ApiError(400, 'source_id es requerido.');
-  }
-  return recordIntegrationEvent(sourceId, externalId, payload || {});
-}
-
-async function listPending(limit = 100) {
-  return getPendingEvents(limit);
-}
-
-async function completeEvent(eventId) {
-  await markEventProcessed(eventId, 'processed');
-  return { event_id: eventId, status: 'processed' };
-}
-
-module.exports = { registerSource, recordEvent, listPending, completeEvent };
+const service=createIntegrationsService();
+const context=(organizationId,userId)=>({organizationId,userId});
+module.exports={createIntegrationsService,service,registerSource:(name,type,config,org,userId)=>service.register(context(org,userId),{name,type,config}),recordEvent:(source_id,external_id,payload,org,userId)=>service.record(context(org,userId),{source_id,external_id,payload}),listPending:(limit,org,userId)=>service.pending(context(org,userId),limit),completeEvent:(id,org,userId)=>service.complete(context(org,userId),id)};

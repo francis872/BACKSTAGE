@@ -4,26 +4,35 @@
   "private": true,
   "description": "API de BACKSTAGE Intelligence para recomendaciones de ubicación",
   "main": "index.js",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
+    "compute:worker": "node scripts/computational-worker.js",
+    "bsie:worker": "node scripts/bsie-worker.js",
+    "mongo:plan": "node scripts/initialize-soi-mongo.js",
+    "mongo:init": "node scripts/initialize-soi-mongo.js --apply",
+    "mongo:inspect": "node scripts/inspect-soi-mongo.js",
     "start": "node index.js",
-    "test": "node --test domain/*.test.js domain/analytics/__tests__/*.test.js",
-    "db:init": "node init-db.js",
-    "migrate": "dotenv -e .env -- node-pg-migrate",
-    "migrate:up": "dotenv -e .env -- node-pg-migrate up",
-    "migrate:down": "dotenv -e .env -- node-pg-migrate down"
+    "test": "node scripts/run-regression.js",
+    "vercel-build": "npm run mongo:plan",
+    "clean-com:bind": "node scripts/bind-cleancom-cases.js",
+    "verify:live-sources": "node scripts/check-live-sources.js"
   },
   "dependencies": {
+    "@mapbox/vector-tile": "^3.0.0",
+    "@vercel/functions": "^3.10.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",
     "express": "^4.18.4",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^6.21.0",
-    "pg": "^8.11.3",
+    "pbf": "^5.1.2",
     "ws": "^8.18.0"
   },
-  "devDependencies": {
-    "dotenv-cli": "^7.1.0",
-    "node-pg-migrate": "^7.4.0"
+  "devDependencies": {},
+  "overrides": {
+    "@vercel/cli-config": { "zod": "^4.6.6" }
   }
 }

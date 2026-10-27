@@ -1,0 +1,35 @@
+{
+  "run_id": "atlas-core-20261025023601-59a9e49a245e",
+  "started_at": "2026-10-25T02:36:01.069Z",
+  "mode": "real_protected_origin_browser_atlas_public_geocoding",
+  "api_interception": false,
+  "checks": [
+    {
+      "name": "protected_staging_target_and_original_production_aliases_unchanged",
+      "passed": true
+    }
+  ],
+  "screenshots": [],
+  "production_changes": false,
+  "deployments": {
+    "api": {
+      "id": "dpl_3MfGMMixQcCPqXtRXjoaSaUiSd4G",
+      "url": "backstage-staging-3knbjyonn-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    },
+    "web": {
+      "id": "dpl_FUmxqTLDhZkiEpcEAbGxugvozjqn",
+      "url": "backstage-staging-fm5b495nl-franciscogloopez-8505s-projects.vercel.app",
+      "readyState": "READY",
+      "target": "preview"
+    }
+  },
+  "status": "failed",
+  "failure": {
+    "stage": "register",
+    "name": "TypeError",
+    "message": "fetch failed"
+  },
+  "completed_at": "2026-10-25T02:36:03.789Z"
+}
